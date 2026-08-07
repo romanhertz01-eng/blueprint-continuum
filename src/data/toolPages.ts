@@ -4721,15 +4721,6 @@ export const toolPages: ToolPageData[] = [
         { name: "Gemini 3.1 Pro", role: "Новая версия", price: "6 кр за сообщение", desc: "Новейший Gemini Pro", isDefault: false }
       ]
     },
-    modelVersions: {
-      heading: "Версии Gemini в ЭРА2",
-      sub: "Три уровня под задачу и бюджет",
-      versions: [
-        { name: "Gemini 3 Flash", role: "Скорость", price: "3 кр за сообщение", desc: "Мгновенные ответы на простые вопросы, разбор скриншотов", unlimited: "Безлимит с тарифа Про" },
-        { name: "Gemini 3 Pro", role: "Основная рабочая", price: "10 кр за сообщение", desc: "Мультимодальные задачи: изображения, таблицы, длинный контекст", isDefault: true, unlimited: "Безлимит с тарифа Макс" },
-        { name: "Gemini 3.1 Pro", role: "Максимум", price: "15 кр за сообщение", desc: "Самая свежая версия с улучшенной фактической точностью" }
-      ]
-    },
     modelChips: {
       heading: "Другие текстовые модели",
       sub: "Все языковые модели в одной подписке",
@@ -4890,14 +4881,6 @@ export const toolPages: ToolPageData[] = [
         { name: "Grok 4.5", role: "Сложные задачи", price: "13 кр за сообщение", desc: "Флагман xAI для сложных задач", isDefault: false }
       ]
     },
-    modelVersions: {
-      heading: "Версии Grok в ЭРА2",
-      sub: "Два уровня под задачу и бюджет",
-      versions: [
-        { name: "Grok 4.3", role: "Основная рабочая", price: "7 кр за сообщение", desc: "Свежие события, прямые оценки, мозговой штурм", isDefault: true, unlimited: "Безлимит с тарифа Макс" },
-        { name: "Grok 4.5", role: "Максимум", price: "13 кр за сообщение", desc: "Более глубокий анализ и работа с длинным контекстом" }
-      ]
-    },
     modelChips: {
       heading: "Другие текстовые модели",
       sub: "Все языковые модели в одной подписке",
@@ -5056,15 +5039,6 @@ export const toolPages: ToolPageData[] = [
       versions: [
         { name: "DeepSeek V4-Flash", role: "Быстрые ответы", price: "3 кр за сообщение", desc: "Быстрый open-source для повседневных задач", isDefault: false },
         { name: "DeepSeek V4-Pro", role: "Рабочая версия", price: "10 кр за сообщение", desc: "Мощный DeepSeek для сложных задач и рассуждений", isDefault: false }
-      ]
-    },
-    modelVersions: {
-      heading: "Версии DeepSeek в ЭРА2",
-      sub: "Три уровня под задачу и бюджет",
-      versions: [
-        { name: "V3", role: "Быстрые ответы", price: "3 кр за сообщение", desc: "Обычные вопросы без пошагового разбора — дешёвый универсал", unlimited: "Безлимит с тарифа Базовый" },
-        { name: "R1", role: "С рассуждением", price: "6 кр за сообщение", desc: "Проговаривает ход решения: посылки, шаги, проверку", isDefault: true },
-        { name: "Reasoner", role: "Сложные задачи", price: "12 кр за сообщение", desc: "Математика, логика, алгоритмы — где важен способ, а не только ответ" }
       ]
     },
     modelChips: {
