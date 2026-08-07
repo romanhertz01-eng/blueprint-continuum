@@ -4717,6 +4717,26 @@ export const toolPages: ToolPageData[] = [
         },
       ],
     },
+    modelVersions: {
+      heading: "Версии Gemini в ЭРА2",
+      sub: "Три уровня под задачу и бюджет",
+      versions: [
+        { name: "Gemini 3 Flash", role: "Скорость", price: "3 кр за сообщение", desc: "Мгновенные ответы на простые вопросы, разбор скриншотов", unlimited: "Безлимит с тарифа Про" },
+        { name: "Gemini 3 Pro", role: "Основная рабочая", price: "10 кр за сообщение", desc: "Мультимодальные задачи: изображения, таблицы, длинный контекст", isDefault: true, unlimited: "Безлимит с тарифа Макс" },
+        { name: "Gemini 3.1 Pro", role: "Максимум", price: "15 кр за сообщение", desc: "Самая свежая версия с улучшенной фактической точностью" }
+      ]
+    },
+    capabilityCards: {
+      heading: "Три сценария Gemini",
+      sub: "Что чаще всего решают на этой модели",
+      cards: [
+        { title: "Разбор изображений", desc: "Загрузите скриншот или фото — модель прочитает, объяснит и найдёт ошибку", image: "/community/01.jpg" },
+        { title: "Работа с данными", desc: "Таблицы, графики, выгрузки — находит аномалии и объясняет, что видит", image: "/community/03.jpg" },
+        { title: "Скорость Flash", desc: "Мгновенные ответы на простые вопросы по цене втрое ниже флагманов", image: "/community/05.jpg" }
+      ]
+    },
+    pricingBlock: { heading: "Тарифы ЭРА2", sub: "Одна подписка на все модели каталога — оплата в рублях, без VPN" },
+    ctaBanner: { title: "Работайте с Gemini\nбез VPN и зарубежной карты", button: "Начать бесплатно", image: "/community/01.jpg" },
     modelChips: {
       heading: "Другие текстовые модели",
       sub: "Все языковые модели в одной подписке",
@@ -4728,6 +4748,7 @@ export const toolPages: ToolPageData[] = [
         { name: "Perplexity", slug: "perplexity" },
       ],
     },
+
   },
   {
     slug: "grok",
