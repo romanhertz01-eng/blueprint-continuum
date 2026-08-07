@@ -292,8 +292,13 @@ const ToolPage = () => {
             <section key="intro" className={cn("mx-auto px-4", isWidePilot ? "max-w-[1360px] text-left" : "max-w-3xl text-center py-16 md:py-24")}>
               <div className={cn(isWidePilot ? "max-w-[720px]" : "mx-auto")}>
                 {data.intro.heading && <h2 className="text-2xl md:text-[32px] font-bold mb-8 md:mb-12">{data.intro.heading}</h2>}
-                <div className="text-muted-foreground leading-relaxed whitespace-pre-line space-y-6 intro-content">
-                  {data.intro.text}
+                <div className="text-muted-foreground leading-relaxed space-y-6 intro-content">
+                  {data.intro.text.split("\n\n").map((part, i) => {
+                    if (part.startsWith("### ")) {
+                      return <h3 key={i} className="text-xl md:text-2xl font-bold text-foreground mt-8 mb-4">{part.replace("### ", "")}</h3>;
+                    }
+                    return <p key={i} className="whitespace-pre-line">{part}</p>;
+                  })}
                 </div>
               </div>
             </section>
