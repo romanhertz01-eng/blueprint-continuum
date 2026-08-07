@@ -819,19 +819,33 @@ const ToolPage = () => {
           return (
             <div className="tool-wide">
               {rendered.map((k, i) => (
-                <div key={k} className={i % 2 === 0 ? "w-full bg-background" : "w-full bg-muted/30"}>
+                <div key={k} className={cn(
+                  "w-full", 
+                  i % 2 === 0 ? "bg-background" : "bg-muted/30",
+                  i === 0 && "first-section"
+                )}>
                   {sections[k]}
                 </div>
               ))}
             </div>
           );
         }
-        return <>{order.map((k) => sections[k])}</>;
+        return (
+          <div className="tool-standard">
+            {order.map((k, i) => (
+              <div key={k} className={i === 0 ? "first-section" : ""}>
+                {sections[k]}
+              </div>
+            ))}
+          </div>
+        );
       })()}
 
       {showRelated && (
-        <section className="max-w-5xl mx-auto px-4 py-12">
-          <h2 className="text-2xl md:text-[32px] font-bold mb-8 text-center md:text-left">Похожие инструменты</h2>
+        <section className="max-w-5xl mx-auto px-4 py-14 md:py-20">
+          <div className="mb-8 md:mb-12">
+            <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">Похожие инструменты</h2>
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {related.map((r) => (
               <Link

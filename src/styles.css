@@ -480,3 +480,9 @@ body:not(.dark) {
     column-count: 5;
   }
 }
+
+/* Spacing fix for first section after hero */
+.tool-wide .first-section section,
+.tool-standard .first-section section {
+  padding-top: 0 !important;
+}

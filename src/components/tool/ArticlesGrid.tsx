@@ -5,7 +5,7 @@ interface ArticleItem {
   image: string;
   tag: string;
   title: string;
-  slug: string;
+  slug?: string;
   href?: string;
   date?: string;
 }
@@ -48,7 +48,7 @@ export function ArticlesGrid({
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
         {shownItems.map((item) => (
           <Link
-            key={item.slug}
+            key={item.slug || item.title}
             to="/studios"
             search={{ q: "" }}
             className="group block"
