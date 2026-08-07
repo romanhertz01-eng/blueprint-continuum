@@ -20,6 +20,7 @@ import { ModelGallery } from "@/components/tool/ModelGallery";
 import { PricingBlock } from "@/components/tool/PricingBlock";
 import { CtaBanner } from "@/components/tool/CtaBanner";
 import { ModelVersions } from "@/components/tool/ModelVersions";
+import { ArticlesGrid } from "@/components/tool/ArticlesGrid";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 
@@ -404,6 +405,16 @@ const ToolPage = () => {
               onClick={scrollToWorkspace}
             />
           ) : null,
+          articles: data.articles ? (
+            <ArticlesGrid
+              key="articles"
+              heading={data.articles.heading}
+              sub={data.articles.sub}
+              items={data.articles.items}
+              moreHref={data.articles.moreHref}
+              moreLabel={data.articles.moreLabel}
+            />
+          ) : null,
 
           specs: data.specs ? (() => {
             const modelPage = data.kind === 'tool' ? getModelForTool(data) : null;
@@ -753,6 +764,7 @@ const ToolPage = () => {
           "comparisonTable",
           "tips",
           "howItWorks",
+          "articles",
           "pricingBlock",
           "ctaBanner",
         ];
