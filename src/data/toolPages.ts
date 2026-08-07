@@ -4264,7 +4264,7 @@ export const toolPages: ToolPageData[] = [
       "Семейство больших языковых моделей OpenAI: флагманские версии GPT 5 для рассуждений и анализа, быстрые варианты 4.1 и Mini для повседневных задач — все через единый интерфейс ЭРА2.",
     tool: {
       layout: "row",
-      model: "gpt-5.2",
+      model: "gpt-5-2",
       modelName: "GPT 5.2",
       credits: 6,
       planNote: "Luna безлимитно с тарифа Про, GPT 5.4 — с Ультры",
@@ -4273,7 +4273,7 @@ export const toolPages: ToolPageData[] = [
       textPlaceholder: "Спросите что угодно: «составь план запуска интернет-магазина за месяц»…",
       maxChars: 4000,
       selects: [
-        { label: "Версия", options: ["GPT 5.2", "GPT-5.6 Luna", "GPT 5.4", "GPT 5.5"] },
+        { label: "Версия", options: ["GPT-5.6 Luna", "GPT 5.2", "GPT 5.4", "GPT-5.6 Terra", "GPT 5.5", "GPT-5.6 Sol"] },
       ],
       pricing: {
         mode: "per-message",
@@ -4282,7 +4282,9 @@ export const toolPages: ToolPageData[] = [
           { label: "GPT-5.6 Luna", rate: 4, matchOption: "GPT-5.6 Luna" },
           { label: "GPT 5.2", rate: 6, matchOption: "GPT 5.2" },
           { label: "GPT 5.4", rate: 10, matchOption: "GPT 5.4" },
+          { label: "GPT-5.6 Terra", rate: 10, matchOption: "GPT-5.6 Terra" },
           { label: "GPT 5.5", rate: 18, matchOption: "GPT 5.5" },
+          { label: "GPT-5.6 Sol", rate: 18, matchOption: "GPT-5.6 Sol" },
         ],
       },
     },
@@ -4344,7 +4346,7 @@ export const toolPages: ToolPageData[] = [
     specs: {
       heading: "Возможности и лимиты",
       items: [
-        { label: "Версии в ЭРА2", value: "GPT 5.4 Pro, 5.4, 5.3, 5.2, 5.1, GPT-4.1, 4.1 Mini, 4.1 Nano, GPT Web" },
+        { label: "Версии в ЭРА2", value: "GPT-5.6 Luna, GPT 5.2, GPT 5.4, GPT-5.6 Terra, GPT 5.5, GPT-5.6 Sol" },
         { label: "Язык", value: "Русский, английский и 90+ других" },
         { label: "Ввод", value: "Текст, файлы, изображения" },
         { label: "Длина запроса", value: "До 4000 символов" },
@@ -4451,9 +4453,9 @@ export const toolPages: ToolPageData[] = [
       "Семейство языковых моделей Anthropic: Opus — максимальная глубина рассуждений, Sonnet — баланс скорости и качества, Haiku — мгновенные ответы. Все версии работают с большим контекстом и файлами.",
     tool: {
       layout: "row",
-      model: "claude-3.5-haiku",
-      modelName: "Claude 3.5 Haiku",
-      credits: 10,
+      model: "claude-haiku-4-5",
+      modelName: "Haiku 4.5",
+      credits: 3,
 
       planNote: "Haiku безлимитно с тарифа Про, Sonnet — с Ультры",
       bricks: [],
@@ -4461,7 +4463,7 @@ export const toolPages: ToolPageData[] = [
       textPlaceholder: "Опишите задачу: «перепиши это письмо мягче, сохранив требования»…",
       maxChars: 4000,
       selects: [
-        { label: "Версия", options: ["Sonnet 4.6", "Haiku 4.5", "Opus 4.7"] },
+        { label: "Версия", options: ["Haiku 4.5", "Sonnet 4.6", "Sonnet 5", "Opus 4.7", "Opus 4.8", "Fable 5"] },
       ],
       pricing: {
         mode: "per-message",
@@ -4469,7 +4471,10 @@ export const toolPages: ToolPageData[] = [
         rates: [
           { label: "Haiku 4.5", rate: 3, matchOption: "Haiku 4.5" },
           { label: "Sonnet 4.6", rate: 10, matchOption: "Sonnet 4.6" },
+          { label: "Sonnet 5", rate: 10, matchOption: "Sonnet 5" },
           { label: "Opus 4.7", rate: 18, matchOption: "Opus 4.7" },
+          { label: "Opus 4.8", rate: 20, matchOption: "Opus 4.8" },
+          { label: "Fable 5", rate: 40, matchOption: "Fable 5" },
         ],
       },
     },
@@ -4512,7 +4517,7 @@ export const toolPages: ToolPageData[] = [
     specs: {
       heading: "Возможности и лимиты",
       items: [
-        { label: "Версии в ЭРА2", value: "Claude 4.6 Opus, 4.6 Sonnet, 4.5 Opus, 4.5 Sonnet, 4.1 Opus, 4 Opus, 4 Sonnet, 3.5 Haiku" },
+        { label: "Версии в ЭРА2", value: "Haiku 4.5, Sonnet 4.6, Sonnet 5, Opus 4.7, Opus 4.8, Fable 5" },
         { label: "Контекст", value: "Сотни страниц в одном диалоге" },
         { label: "Ввод", value: "Текст, файлы, изображения" },
         { label: "Язык", value: "Русский и десятки других" },
@@ -4628,7 +4633,7 @@ export const toolPages: ToolPageData[] = [
       "Семейство мультимодальных моделей Google DeepMind: единая архитектура обрабатывает текст и изображения, линейка Flash оптимизирована под скорость, Pro — под глубину рассуждений.",
     tool: {
       layout: "row",
-      model: "gemini-2.5-flash",
+      model: "gemini-2-5-flash",
       modelName: "Gemini 2.5 Flash",
       credits: 3,
 
@@ -4638,14 +4643,18 @@ export const toolPages: ToolPageData[] = [
       textPlaceholder: "Спросите или прикрепите скриншот: «объясни, что не так в этой таблице»…",
       maxChars: 4000,
       selects: [
-        { label: "Версия", options: ["Flash", "Pro"] },
+        { label: "Версия", options: ["Gemini 2.5 Flash", "Gemini 3 Flash", "Gemini 3.5 Flash", "Gemini 2.5 Pro", "Gemini 3 Pro", "Gemini 3.1 Pro"] },
       ],
       pricing: {
         mode: "per-message",
         unitLabel: "за сообщение",
         rates: [
-          { label: "Flash", rate: 3, matchOption: "Flash" },
-          { label: "Pro", rate: 6, matchOption: "Pro" },
+          { label: "Gemini 2.5 Flash", rate: 3, matchOption: "Gemini 2.5 Flash" },
+          { label: "Gemini 3 Flash", rate: 3, matchOption: "Gemini 3 Flash" },
+          { label: "Gemini 3.5 Flash", rate: 6, matchOption: "Gemini 3.5 Flash" },
+          { label: "Gemini 2.5 Pro", rate: 6, matchOption: "Gemini 2.5 Pro" },
+          { label: "Gemini 3 Pro", rate: 6, matchOption: "Gemini 3 Pro" },
+          { label: "Gemini 3.1 Pro", rate: 6, matchOption: "Gemini 3.1 Pro" },
         ],
       },
     },
@@ -4688,7 +4697,7 @@ export const toolPages: ToolPageData[] = [
     specs: {
       heading: "Возможности и лимиты",
       items: [
-        { label: "Версии в ЭРА2", value: "2.5 Flash, 2.5 Pro, 3 Pro, 3.1 Pro Preview" },
+        { label: "Версии в ЭРА2", value: "Gemini 2.5 Flash, Gemini 3 Flash, Gemini 3.5 Flash, Gemini 2.5 Pro, Gemini 3 Pro, Gemini 3.1 Pro" },
         { label: "Ввод", value: "Текст, изображения, файлы" },
         { label: "Язык", value: "Русский и десятки других" },
         { label: "Длина запроса", value: "До 4000 символов" },
@@ -4804,8 +4813,8 @@ export const toolPages: ToolPageData[] = [
       "Языковые модели xAI: Grok 3 с режимами Reasoner (пошаговые рассуждения) и Deep Search (поиск по свежим данным), флагман Grok 4 — максимальная глубина анализа.",
     tool: {
       layout: "row",
-      model: "grok-3",
-      modelName: "Grok 3",
+      model: "grok-4-3",
+      modelName: "Grok 4.3",
       credits: 7,
 
       planNote: "Grok 4.3 безлимитно с тарифа Макс, 4.5 — с Ультры",
@@ -4978,8 +4987,8 @@ export const toolPages: ToolPageData[] = [
       "Открытые модели DeepSeek: V3 — универсальная языковая модель, R1 — версия с цепочкой рассуждений (chain-of-thought), которая проговаривает ход решения перед ответом.",
     tool: {
       layout: "row",
-      model: "deepseek-v3",
-      modelName: "DeepSeek V3",
+      model: "deepseek-v4-flash",
+      modelName: "DeepSeek V4-Flash",
       credits: 3,
 
       planNote: "Безлимит с тарифа Базовый — 100 сообщений в день",
@@ -4988,14 +4997,14 @@ export const toolPages: ToolPageData[] = [
       textPlaceholder: "Задайте задачу: «найди ошибку в этой формуле и объясни ход решения»…",
       maxChars: 4000,
       selects: [
-        { label: "Версия", options: ["V4-Flash", "V4-Pro"] },
+        { label: "Версия", options: ["DeepSeek V4-Flash", "DeepSeek V4-Pro"] },
       ],
       pricing: {
         mode: "per-message",
         unitLabel: "за сообщение",
         rates: [
-          { label: "V4-Flash", rate: 3, matchOption: "V4-Flash" },
-          { label: "V4-Pro", rate: 10, matchOption: "V4-Pro" },
+          { label: "DeepSeek V4-Flash", rate: 3, matchOption: "DeepSeek V4-Flash" },
+          { label: "DeepSeek V4-Pro", rate: 10, matchOption: "DeepSeek V4-Pro" },
         ],
       },
     },
@@ -5152,8 +5161,8 @@ export const toolPages: ToolPageData[] = [
       "Модели Perplexity Sonar объединяют языковую модель с поисковым конвейером: запрос → поиск по актуальной сети → синтез ответа с цитированием источников.",
     tool: {
       layout: "row",
-      model: "sonar-pro",
-      modelName: "Sonar Pro",
+      model: "sonar",
+      modelName: "Sonar",
       credits: 15,
 
       planNote: "Работает только за кредиты — безлимиты тарифов не распространяются",
@@ -5162,16 +5171,16 @@ export const toolPages: ToolPageData[] = [
       textPlaceholder: "Спросите как у поисковика: «сравни тарифы CDN-провайдеров для видео в РФ»…",
       maxChars: 4000,
       selects: [
-        { label: "Режим", options: ["Sonar", "Sonar Pro", "Reasoning Pro", "Deep Research"] },
+        { label: "Режим", options: ["Sonar", "Sonar Pro", "Sonar Reasoning Pro", "Sonar Deep Research"] },
       ],
       pricing: {
         mode: "per-message",
         unitLabel: "за сообщение",
         rates: [
-          { label: "Sonar Pro", rate: 35, matchOption: "Sonar Pro" },
-          { label: "Reasoning Pro", rate: 25, matchOption: "Reasoning Pro" },
-          { label: "Deep Research", rate: 150, matchOption: "Deep Research" },
           { label: "Sonar", rate: 15, matchOption: "Sonar" },
+          { label: "Sonar Pro", rate: 35, matchOption: "Sonar Pro" },
+          { label: "Sonar Reasoning Pro", rate: 25, matchOption: "Sonar Reasoning Pro" },
+          { label: "Sonar Deep Research", rate: 150, matchOption: "Sonar Deep Research" },
         ],
       },
     },
