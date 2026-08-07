@@ -4888,6 +4888,25 @@ export const toolPages: ToolPageData[] = [
         },
       ],
     },
+    modelVersions: {
+      heading: "Версии Grok в ЭРА2",
+      sub: "Два уровня под задачу и бюджет",
+      versions: [
+        { name: "Grok 4.3", role: "Основная рабочая", price: "7 кр за сообщение", desc: "Свежие события, прямые оценки, мозговой штурм", isDefault: true, unlimited: "Безлимит с тарифа Макс" },
+        { name: "Grok 4.5", role: "Максимум", price: "13 кр за сообщение", desc: "Более глубокий анализ и работа с длинным контекстом" }
+      ]
+    },
+    capabilityCards: {
+      heading: "Три сценария Grok",
+      sub: "Что чаще всего решают на этой модели",
+      cards: [
+        { title: "Свежие события", desc: "Знает, что произошло на этой неделе — в отличие от моделей с фиксированной датой обучения", image: "/community/03.jpg" },
+        { title: "Прямая оценка", desc: "Говорит, что думает, без обтекаемых формулировок и лишних оговорок", image: "/community/06.jpg" },
+        { title: "Мозговой штурм", desc: "Нестандартные ходы там, где остальные модели предлагают очевидное", image: "/community/04.jpg" }
+      ]
+    },
+    pricingBlock: { heading: "Тарифы ЭРА2", sub: "Одна подписка на все модели каталога — оплата в рублях, без VPN" },
+    ctaBanner: { title: "Работайте с Grok\nбез VPN и зарубежной карты", button: "Начать бесплатно", image: "/community/03.jpg" },
     modelChips: {
       heading: "Другие текстовые модели",
       sub: "Все языковые модели в одной подписке",
@@ -4899,6 +4918,7 @@ export const toolPages: ToolPageData[] = [
         { name: "Perplexity", slug: "perplexity" },
       ],
     },
+
   },
   {
     slug: "deepseek",
