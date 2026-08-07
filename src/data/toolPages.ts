@@ -4395,6 +4395,26 @@ export const toolPages: ToolPageData[] = [
         },
       ],
     },
+    modelVersions: {
+      heading: "Версии GPT в ЭРА2",
+      sub: "Три уровня под задачу и бюджет",
+      versions: [
+        { name: "GPT-5.6 Luna", role: "Быстрые задачи", price: "4 кр за сообщение", desc: "Короткие вопросы, черновики, переписка — отвечает почти мгновенно", isDefault: false },
+        { name: "GPT 5.4", role: "Основная рабочая", price: "6 кр за сообщение", desc: "Код, документы, длинные тексты — универсальный вариант для большинства задач", isDefault: true, unlimited: "Безлимит с тарифа Ультра" },
+        { name: "GPT 5.4 Pro", role: "Сложные задачи", price: "20 кр за сообщение", desc: "Многоступенчатые рассуждения и задачи, где важна точность каждого шага" }
+      ]
+    },
+    capabilityCards: {
+      heading: "Три сценария ChatGPT",
+      sub: "Что чаще всего решают на этой модели",
+      cards: [
+        { title: "Код и отладка", desc: "Пишет функции, находит ошибки, объясняет чужой код на любом языке", image: "/community/03.jpg" },
+        { title: "Документы и файлы", desc: "Загрузите PDF, таблицу или презентацию — модель разберёт и ответит по содержимому", image: "/community/01.jpg" },
+        { title: "Тексты для работы", desc: "Письма, посты, описания, инструкции — с нужным тоном и структурой", image: "/community/05.jpg" }
+      ]
+    },
+    pricingBlock: { heading: "Тарифы ЭРА2", sub: "Одна подписка на все модели каталога — оплата в рублях, без VPN" },
+    ctaBanner: { title: "Работайте с ChatGPT\nбез VPN и зарубежной карты", button: "Начать бесплатно", image: "/community/03.jpg" },
     modelChips: {
       heading: "Другие текстовые модели",
       sub: "Все языковые модели в одной подписке",
@@ -4406,6 +4426,7 @@ export const toolPages: ToolPageData[] = [
         { name: "Perplexity", slug: "perplexity" },
       ],
     },
+
   },
   {
     slug: "claude",
