@@ -19,7 +19,7 @@ export function ModelVersions({ heading, sub, versions, className }: ModelVersio
   if (!versions?.length) return null;
 
   return (
-    <section className={cn("max-w-[1360px] mx-auto px-4 py-14 md:py-20", className)}>
+    <section className={cn("max-w-[1360px] mx-auto px-4 py-16 md:py-24", className)}>
       {heading && (
         <div className="mb-8 md:mb-12">
           <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">{heading}</h2>

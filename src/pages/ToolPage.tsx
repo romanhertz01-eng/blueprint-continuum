@@ -218,7 +218,7 @@ const ToolPage = () => {
         />
       )}
       {/* Hero with prompt bar */}
-      <div ref={heroWrapRef} className="relative w-full overflow-hidden min-h-[520px] md:min-h-[calc(100vh-var(--header-offset,180px))]">
+      <div ref={heroWrapRef} className="relative w-full overflow-hidden aspect-video min-h-[420px] md:aspect-auto md:min-h-[calc(100vh-var(--header-offset,180px))]">
         {data.heroVideo && (
           <HeroVideoBackground
             src={data.heroVideo.src}
@@ -281,7 +281,7 @@ const ToolPage = () => {
             <ShowcaseStrip key="showcaseStrip" images={data.showcaseStrip.images} />
           ) : null,
           intro: data.intro ? (
-            <section key="intro" className="max-w-3xl mx-auto px-4 py-14 md:py-20 text-center">
+            <section key="intro" className={cn("max-w-3xl mx-auto px-4 text-center", !isWidePilot && "py-16 md:py-24")}>
               {data.intro.heading && <h2 className="text-2xl md:text-[32px] font-bold mb-4">{data.intro.heading}</h2>}
               <p className="text-muted-foreground leading-relaxed">{data.intro.text}</p>
             </section>
@@ -296,7 +296,7 @@ const ToolPage = () => {
           ) : null,
           showreel: data.showreel ? (
             data.kind === 'tool' ? (
-              <section key="showreel" className="max-w-5xl mx-auto px-4 py-14 md:py-20">
+              <section key="showreel" className={cn("max-w-5xl mx-auto px-4", !isWidePilot && "py-16 md:py-24")}>
                 {data.showreel.heading && (
                   <div className="mb-8 md:mb-12">
                     <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">{data.showreel.heading}</h2>
@@ -461,7 +461,7 @@ const ToolPage = () => {
             );
           })() : null,
           keyFeature: data.keyFeatureTitle ? (
-            <section key="keyFeature" className="max-w-4xl mx-auto px-4 py-14 md:py-20">
+            <section key="keyFeature" className={cn("max-w-4xl mx-auto px-4", !isWidePilot && "py-16 md:py-24")}>
               {data.keyFeatureTitle && <h2 className="text-2xl md:text-[32px] font-bold mb-4">{data.keyFeatureTitle}</h2>}
               {data.keyFeatureDescription && (
                 <p className="text-muted-foreground leading-relaxed whitespace-pre-line">{data.keyFeatureDescription}</p>
@@ -475,7 +475,7 @@ const ToolPage = () => {
             </section>
           ) : null,
           comparisonTable: data.comparisonTable ? (
-            <section key="comparisonTable" className="max-w-5xl mx-auto px-4 py-14 md:py-20">
+            <section key="comparisonTable" className={cn("max-w-5xl mx-auto px-4", !isWidePilot && "py-16 md:py-24")}>
               {data.comparisonTable.heading && (
                 <div className="mb-8 md:mb-12">
                   <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">{data.comparisonTable.heading}</h2>
@@ -524,7 +524,7 @@ const ToolPage = () => {
           featureBlocks: data.featureBlocks ? (() => {
             const withImg = data.featureBlocks.filter((b) => !!b.image);
             return (
-              <section key="featureBlocks" className="max-w-5xl mx-auto px-4 py-14 md:py-20 flex flex-col gap-16">
+              <section key="featureBlocks" className={cn("max-w-5xl mx-auto px-4 flex flex-col gap-16", !isWidePilot && "py-16 md:py-24")}>
                 {withImg.map((b, i) => (
                   <div
                     key={`img-${i}`}
@@ -553,7 +553,7 @@ const ToolPage = () => {
             );
           })() : null,
           tips: data.tips ? (
-            <section key="tips" className="max-w-5xl mx-auto px-4 py-14 md:py-20">
+            <section key="tips" className={cn("max-w-5xl mx-auto px-4", !isWidePilot && "py-16 md:py-24")}>
               {data.tips.heading && (
                 <div className="mb-8 md:mb-12">
                   <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">{data.tips.heading}</h2>
@@ -573,7 +573,7 @@ const ToolPage = () => {
             </section>
           ) : null,
           useCases: data.useCases ? (
-            <section key="useCases" className="max-w-5xl mx-auto px-4 py-14 md:py-20">
+            <section key="useCases" className={cn("max-w-5xl mx-auto px-4", !isWidePilot && "py-16 md:py-24")}>
               {data.useCases.heading && (
                 <div className="mb-8 md:mb-12">
                   <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">{data.useCases.heading}</h2>
@@ -593,7 +593,7 @@ const ToolPage = () => {
             </section>
           ) : null,
           modelChips: data.modelChips ? (
-            <section key="modelChips" className="max-w-5xl mx-auto px-4 py-14 md:py-20">
+            <section key="modelChips" className={cn("max-w-5xl mx-auto px-4", !isWidePilot && "py-16 md:py-24")}>
               {data.modelChips.heading && (
                 <div className="mb-8 md:mb-12">
                   <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">{data.modelChips.heading}</h2>
@@ -665,7 +665,7 @@ const ToolPage = () => {
             </section>
           ) : null,
           howItWorks: data.howItWorks ? (
-            <section key="howItWorks" className="max-w-5xl mx-auto px-4 py-14 md:py-20">
+            <section key="howItWorks" className={cn("max-w-5xl mx-auto px-4", !isWidePilot && "py-16 md:py-24")}>
               {data.howItWorks.title && (
                 <div className="mb-8 md:mb-12">
                   <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">
@@ -702,7 +702,7 @@ const ToolPage = () => {
             if (tools.length === 1) {
               const t = tools[0];
               return (
-                <section key="modelTools" className="max-w-5xl mx-auto px-4 py-14 md:py-20">
+                <section key="modelTools" className={cn("max-w-5xl mx-auto px-4", !isWidePilot && "py-16 md:py-24")}>
                   <div className="mb-8 md:mb-12">
                     <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">Что делают на этой модели</h2>
                   </div>
@@ -724,7 +724,7 @@ const ToolPage = () => {
               );
             }
             return (
-              <section key="modelTools" className="max-w-5xl mx-auto px-4 py-14 md:py-20">
+              <section key="modelTools" className={cn("max-w-5xl mx-auto px-4", !isWidePilot && "py-16 md:py-24")}>
                 <div className="mb-8 md:mb-12">
                   <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">Что делают на этой модели</h2>
                 </div>

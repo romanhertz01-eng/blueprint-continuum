@@ -33,7 +33,7 @@ export function ArticlesGrid({
   const showMore = items.length > 3;
 
   return (
-    <section className={cn("max-w-[1360px] mx-auto px-4 py-14 md:py-20", className)}>
+    <section className={cn("max-w-[1360px] mx-auto px-4 py-16 md:py-24", className)}>
       {heading && (
         <div className="mb-8 md:mb-12">
           <h2 className="text-2xl md:text-[28px] font-bold text-center md:text-left">{heading}</h2>
