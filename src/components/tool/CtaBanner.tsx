@@ -8,9 +8,9 @@ interface CtaBannerProps {
 
 export function CtaBanner({ title, button, image, video, onClick }: CtaBannerProps) {
   return (
-    <section className="w-full py-14 md:py-20">
+    <section className="w-full py-16 md:py-24">
       <div className="max-w-[1360px] mx-auto px-4">
-        <div className="relative rounded-3xl overflow-hidden aspect-[16/5] min-h-[320px] md:min-h-0 flex items-center justify-center">
+        <div className="relative rounded-3xl overflow-hidden aspect-[16/5] flex items-center justify-center">
           {video ? (
             <video
               src={video}
