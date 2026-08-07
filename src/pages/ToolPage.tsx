@@ -97,25 +97,34 @@ const ToolPage = () => {
   const { data } = toolRouteApi.useLoaderData() as { data: ToolPageData };
   const workspaceRef = useRef<HTMLDivElement | null>(null);
   const heroWrapRef = useRef<HTMLDivElement | null>(null);
+  const footerRef = useRef<HTMLElement | null>(null);
   const [showFloatingBar, setShowFloatingBar] = useState(false);
 
   useHeaderOffset(heroWrapRef, true);
 
   useEffect(() => {
     if (!data.tool) return;
-    const el = workspaceRef.current;
-    if (!el) return;
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        // Показывать липкий бар только когда ToolWorkspace ПОЛНОСТЬЮ ушёл вверх.
-        const scrolledAbove =
-          !entry.isIntersecting && entry.boundingClientRect.bottom <= 0;
-        setShowFloatingBar(scrolledAbove);
-      },
-      { threshold: 0 }
-    );
-    io.observe(el);
-    return () => io.disconnect();
+    const heroEl = heroWrapRef.current;
+    const workspaceEl = workspaceRef.current;
+    const footerEl = document.querySelector('footer');
+    
+    const updateVisibility = () => {
+      if (!heroEl) return;
+      const heroRect = heroEl.getBoundingClientRect();
+      const scrolledPastHero = heroRect.bottom <= 0;
+      
+      let isFooterVisible = false;
+      if (footerEl) {
+        const footerRect = footerEl.getBoundingClientRect();
+        isFooterVisible = footerRect.top < window.innerHeight;
+      }
+
+      setShowFloatingBar(scrolledPastHero && !isFooterVisible);
+    };
+
+    window.addEventListener("scroll", updateVisibility, { passive: true });
+    updateVisibility();
+    return () => window.removeEventListener("scroll", updateVisibility);
   }, [data.tool, data.slug]);
 
   const scrollToWorkspace = () => {
@@ -869,6 +878,26 @@ const ToolPage = () => {
                 <p className="text-sm text-muted-foreground leading-relaxed">
                   {r.heroDescription.length > 90 ? `${r.heroDescription.slice(0, 90).trimEnd()}…` : r.heroDescription}
                 </p>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {data.usefulLinks && (
+        <section className="max-w-[1360px] mx-auto px-4 py-16 md:py-24 border-t border-border/40">
+          <div className="mb-8 md:mb-12">
+            <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">{data.usefulLinks.heading}</h2>
+          </div>
+          <div className="grid grid-cols-2 gap-x-8 gap-y-4 max-w-2xl">
+            {data.usefulLinks.items.map((link, i) => (
+              <Link
+                key={i}
+                to={link.to as any}
+                className="text-sm md:text-base text-muted-foreground hover:text-primary transition-colors flex items-center gap-2 group"
+              >
+                <ChevronRight className="w-4 h-4 text-primary/40 group-hover:text-primary transition-colors" />
+                {link.label}
               </Link>
             ))}
           </div>
