@@ -593,10 +593,14 @@ const ToolPage = () => {
             </section>
           ) : null,
           modelChips: data.modelChips ? (
-            <section key="modelChips" className="max-w-5xl mx-auto px-4 py-12">
-              <h2 className="text-2xl md:text-[32px] font-bold mb-3 text-center md:text-left">{data.modelChips.heading}</h2>
-              {data.modelChips.sub && (
-                <p className="text-muted-foreground text-center md:text-left mb-8 max-w-2xl mx-auto md:mx-0">{data.modelChips.sub}</p>
+            <section key="modelChips" className="max-w-5xl mx-auto px-4 py-14 md:py-20">
+              {data.modelChips.heading && (
+                <div className="mb-8 md:mb-12">
+                  <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">{data.modelChips.heading}</h2>
+                  {data.modelChips.sub && (
+                    <p className="text-muted-foreground text-center md:text-left max-w-2xl mx-auto md:mx-0">{data.modelChips.sub}</p>
+                  )}
+                </div>
               )}
               {(() => {
                 const all = data.modelChips.models.filter((m) => (m.slug ? isPublished(m.slug) : true));
@@ -661,10 +665,14 @@ const ToolPage = () => {
             </section>
           ) : null,
           howItWorks: data.howItWorks ? (
-            <section key="howItWorks" className="max-w-5xl mx-auto px-4 py-12">
-              <h2 className="text-2xl md:text-[32px] font-bold mb-8 text-center md:text-left">
-                {data.howItWorks.title}
-              </h2>
+            <section key="howItWorks" className="max-w-5xl mx-auto px-4 py-14 md:py-20">
+              {data.howItWorks.title && (
+                <div className="mb-8 md:mb-12">
+                  <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">
+                    {data.howItWorks.title}
+                  </h2>
+                </div>
+              )}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {data.howItWorks.steps.map((step, i) => (
                   <div
@@ -694,8 +702,10 @@ const ToolPage = () => {
             if (tools.length === 1) {
               const t = tools[0];
               return (
-                <section key="modelTools" className="max-w-5xl mx-auto px-4 py-12">
-                  <h2 className="text-2xl md:text-[32px] font-bold mb-8 text-center md:text-left">Что делают на этой модели</h2>
+                <section key="modelTools" className="max-w-5xl mx-auto px-4 py-14 md:py-20">
+                  <div className="mb-8 md:mb-12">
+                    <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">Что делают на этой модели</h2>
+                  </div>
                   <Link
                     to="/tools/$slug"
                     params={{ slug: t.slug }}
@@ -714,8 +724,10 @@ const ToolPage = () => {
               );
             }
             return (
-              <section key="modelTools" className="max-w-5xl mx-auto px-4 py-12">
-                <h2 className="text-2xl md:text-[32px] font-bold mb-8 text-center md:text-left">Что делают на этой модели</h2>
+              <section key="modelTools" className="max-w-5xl mx-auto px-4 py-14 md:py-20">
+                <div className="mb-8 md:mb-12">
+                  <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">Что делают на этой модели</h2>
+                </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {tools.map((t) => (
                     <Link
