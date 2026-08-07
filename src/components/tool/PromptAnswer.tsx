@@ -20,7 +20,7 @@ export function PromptAnswer({ heading, sub, items }: Props) {
   const active = items[activeIdx] ?? items[0];
 
   return (
-    <section className="max-w-5xl mx-auto px-4 py-14 md:py-20">
+    <section className="max-w-5xl mx-auto px-4 py-16 md:py-24">
       {heading && (
         <div className="mb-8 md:mb-12">
           <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">{heading}</h2>

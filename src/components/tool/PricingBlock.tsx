@@ -12,7 +12,7 @@ export function PricingBlock({ heading, sub }: PricingBlockProps) {
   const shown = plans.filter((p) => !p.enterprise).slice(0, 3);
 
   return (
-    <section className="max-w-[1360px] mx-auto px-4 py-14 md:py-20">
+    <section className="max-w-[1360px] mx-auto px-4 py-16 md:py-24">
       {heading && (
         <div className="mb-8 md:mb-12">
           <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">{heading}</h2>

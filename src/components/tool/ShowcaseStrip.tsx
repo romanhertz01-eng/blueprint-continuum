@@ -5,7 +5,7 @@ interface ShowcaseStripProps {
 export function ShowcaseStrip({ images }: ShowcaseStripProps) {
   if (!images.length) return null;
   return (
-    <section className="py-14 md:py-20">
+    <section className="py-16 md:py-24">
       <div className="no-scrollbar flex gap-3 overflow-x-auto snap-x px-4">
         {images.map((src, i) => (
           <div
