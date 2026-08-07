@@ -289,9 +289,13 @@ const ToolPage = () => {
             <ShowcaseStrip key="showcaseStrip" images={data.showcaseStrip.images} />
           ) : null,
           intro: data.intro ? (
-            <section key="intro" className={cn("max-w-3xl mx-auto px-4 text-center", !isWidePilot && "py-16 md:py-24")}>
-              {data.intro.heading && <h2 className="text-2xl md:text-[32px] font-bold mb-4">{data.intro.heading}</h2>}
-              <p className="text-muted-foreground leading-relaxed">{data.intro.text}</p>
+            <section key="intro" className={cn("mx-auto px-4", isWidePilot ? "max-w-[1360px] text-left" : "max-w-3xl text-center py-16 md:py-24")}>
+              <div className={cn(isWidePilot ? "max-w-[720px]" : "mx-auto")}>
+                {data.intro.heading && <h2 className="text-2xl md:text-[32px] font-bold mb-8 md:mb-12">{data.intro.heading}</h2>}
+                <div className="text-muted-foreground leading-relaxed whitespace-pre-line space-y-6 intro-content">
+                  {data.intro.text}
+                </div>
+              </div>
             </section>
           ) : null,
           visualCards: data.visualCards ? (
