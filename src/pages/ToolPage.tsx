@@ -97,34 +97,25 @@ const ToolPage = () => {
   const { data } = toolRouteApi.useLoaderData() as { data: ToolPageData };
   const workspaceRef = useRef<HTMLDivElement | null>(null);
   const heroWrapRef = useRef<HTMLDivElement | null>(null);
-  const footerRef = useRef<HTMLElement | null>(null);
   const [showFloatingBar, setShowFloatingBar] = useState(false);
 
   useHeaderOffset(heroWrapRef, true);
 
   useEffect(() => {
     if (!data.tool) return;
-    const heroEl = heroWrapRef.current;
-    const workspaceEl = workspaceRef.current;
-    const footerEl = document.querySelector('footer');
-    
-    const updateVisibility = () => {
-      if (!heroEl) return;
-      const heroRect = heroEl.getBoundingClientRect();
-      const scrolledPastHero = heroRect.bottom <= 0;
-      
-      let isFooterVisible = false;
-      if (footerEl) {
-        const footerRect = footerEl.getBoundingClientRect();
-        isFooterVisible = footerRect.top < window.innerHeight;
-      }
-
-      setShowFloatingBar(scrolledPastHero && !isFooterVisible);
-    };
-
-    window.addEventListener("scroll", updateVisibility, { passive: true });
-    updateVisibility();
-    return () => window.removeEventListener("scroll", updateVisibility);
+    const el = workspaceRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        // Показывать липкий бар только когда ToolWorkspace ПОЛНОСТЬЮ ушёл вверх.
+        const scrolledAbove =
+          !entry.isIntersecting && entry.boundingClientRect.bottom <= 0;
+        setShowFloatingBar(scrolledAbove);
+      },
+      { threshold: 0 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
   }, [data.tool, data.slug]);
 
   const scrollToWorkspace = () => {
@@ -298,18 +289,9 @@ const ToolPage = () => {
             <ShowcaseStrip key="showcaseStrip" images={data.showcaseStrip.images} />
           ) : null,
           intro: data.intro ? (
-            <section key="intro" className={cn("mx-auto px-4", isWidePilot ? "max-w-[1360px] text-left" : "max-w-3xl text-center py-16 md:py-24")}>
-              <div className={cn(isWidePilot ? "max-w-[720px]" : "mx-auto")}>
-                {data.intro.heading && <h2 className="text-2xl md:text-[32px] font-bold mb-8 md:mb-12">{data.intro.heading}</h2>}
-                <div className="text-muted-foreground leading-relaxed space-y-6 intro-content">
-                  {data.intro.text.split("\n\n").map((part, i) => {
-                    if (part.startsWith("### ")) {
-                      return <h3 key={i} className="text-xl md:text-2xl font-bold text-foreground mt-8 mb-4">{part.replace("### ", "")}</h3>;
-                    }
-                    return <p key={i} className="whitespace-pre-line">{part}</p>;
-                  })}
-                </div>
-              </div>
+            <section key="intro" className={cn("max-w-3xl mx-auto px-4 text-center", !isWidePilot && "py-16 md:py-24")}>
+              {data.intro.heading && <h2 className="text-2xl md:text-[32px] font-bold mb-4">{data.intro.heading}</h2>}
+              <p className="text-muted-foreground leading-relaxed">{data.intro.text}</p>
             </section>
           ) : null,
           visualCards: data.visualCards ? (
@@ -463,7 +445,7 @@ const ToolPage = () => {
               return <span className="font-medium text-right">{value}</span>;
             };
             return (
-              <section key="specs" className="max-w-3xl mx-auto px-4 py-16 md:py-24">
+              <section key="specs" className="max-w-3xl mx-auto px-4 py-14 md:py-20">
                 {data.specs.heading && (
                   <div className="mb-8 md:mb-12">
                     <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">{data.specs.heading}</h2>
@@ -862,7 +844,7 @@ const ToolPage = () => {
       })()}
 
       {showRelated && (
-        <section className="max-w-5xl mx-auto px-4 py-16 md:py-24">
+        <section className="max-w-5xl mx-auto px-4 py-14 md:py-20">
           <div className="mb-8 md:mb-12">
             <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">Похожие инструменты</h2>
           </div>
@@ -884,31 +866,11 @@ const ToolPage = () => {
         </section>
       )}
 
-      {data.usefulLinks && (
-        <section className="max-w-[1360px] mx-auto px-4 py-16 md:py-24 border-t border-border/40">
-          <div className="mb-8 md:mb-12">
-            <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">{data.usefulLinks.heading}</h2>
-          </div>
-          <div className="grid grid-cols-2 gap-x-8 gap-y-4 max-w-2xl">
-            {data.usefulLinks.items.map((link, i) => (
-              <Link
-                key={i}
-                to={link.to as any}
-                className="text-sm md:text-base text-muted-foreground hover:text-primary transition-colors flex items-center gap-2 group"
-              >
-                <ChevronRight className="w-4 h-4 text-primary/40 group-hover:text-primary transition-colors" />
-                {link.label}
-              </Link>
-            ))}
-          </div>
-        </section>
-      )}
-
       <FAQ items={data.faqItems ?? toolPageItems} />
 
       {/* Final CTA (tool pages) */}
       {data.tool && data.finalCta && (
-        <section className="max-w-3xl mx-auto px-4 py-16 md:py-24 text-center">
+        <section className="max-w-3xl mx-auto px-4 py-16 md:py-20 text-center">
           <h2 className="text-[24px] md:text-[32px] font-bold mb-4 leading-tight">{data.finalCta.title}</h2>
           <p className="text-muted-foreground text-sm md:text-base mb-8 max-w-[600px] mx-auto">{data.finalCta.subtitle}</p>
           <button

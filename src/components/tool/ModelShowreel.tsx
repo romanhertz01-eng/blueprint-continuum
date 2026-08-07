@@ -43,7 +43,7 @@ export function ModelShowreel({ heading, sub, items, aspect = '2/1' }: ModelShow
 
   const mediaMaxWidth = aspect === '1/1' ? 'max-w-[640px]' : 'max-w-5xl';
   return (
-    <section className="max-w-5xl mx-auto px-4 py-16 md:py-24">
+    <section className="max-w-5xl mx-auto px-4 py-14 md:py-20">
       {heading && (
         <div className="mb-8 md:mb-12">
           <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">{heading}</h2>

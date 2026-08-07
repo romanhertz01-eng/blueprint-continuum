@@ -1,7 +1,5 @@
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import { Copy, Check } from "lucide-react";
-import { toast } from "sonner";
 
 type Item = {
   label?: string;
@@ -18,21 +16,8 @@ type Props = {
 
 export function PromptAnswer({ heading, sub, items }: Props) {
   const [activeIdx, setActiveIdx] = useState(0);
-  const [copied, setCopied] = useState(false);
-  
   if (!items?.length) return null;
   const active = items[activeIdx] ?? items[0];
-
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(active.prompt);
-      setCopied(true);
-      toast.success("Запрос скопирован");
-      setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      toast.error("Не удалось скопировать");
-    }
-  };
 
   return (
     <section className="max-w-5xl mx-auto px-4 py-16 md:py-24">
@@ -69,18 +54,9 @@ export function PromptAnswer({ heading, sub, items }: Props) {
       ) : null}
 
       <div className={cn("grid gap-4 md:grid-cols-2 items-stretch", items.length > 1 && "mt-8")}>
-        <div className="rounded-2xl border border-border bg-muted/40 p-5 relative group">
-          <div className="flex items-center justify-between mb-3">
-            <div className="text-xs uppercase tracking-wide text-muted-foreground">
-              Запрос
-            </div>
-            <button
-              onClick={handleCopy}
-              className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-background/50 border border-border text-[11px] font-medium text-muted-foreground hover:text-foreground hover:bg-background transition-all"
-            >
-              {copied ? <Check className="w-3 h-3 text-green-500" /> : <Copy className="w-3 h-3" />}
-              {copied ? "Скопировано" : "Копировать"}
-            </button>
+        <div className="rounded-2xl border border-border bg-muted/40 p-5">
+          <div className="text-xs uppercase tracking-wide text-muted-foreground mb-3">
+            Запрос
           </div>
           <div className="text-sm leading-relaxed whitespace-pre-line">
             {active.prompt}
