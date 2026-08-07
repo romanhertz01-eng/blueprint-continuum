@@ -4427,6 +4427,7 @@ export const toolPages: ToolPageData[] = [
       ],
     },
 
+
   },
   {
     slug: "claude",
@@ -4599,6 +4600,7 @@ export const toolPages: ToolPageData[] = [
       ],
     },
 
+
   },
   {
     slug: "gemini",
@@ -4770,6 +4772,7 @@ export const toolPages: ToolPageData[] = [
       ],
     },
 
+
   },
   {
     slug: "grok",
@@ -4939,6 +4942,7 @@ export const toolPages: ToolPageData[] = [
         { name: "Perplexity", slug: "perplexity" },
       ],
     },
+
 
   },
   {
@@ -5111,6 +5115,7 @@ export const toolPages: ToolPageData[] = [
       ],
     },
 
+
   },
   {
     slug: "perplexity",
@@ -5281,6 +5286,7 @@ export const toolPages: ToolPageData[] = [
         { name: "DeepSeek", slug: "deepseek" },
       ],
     },
+
 
   },
   {
