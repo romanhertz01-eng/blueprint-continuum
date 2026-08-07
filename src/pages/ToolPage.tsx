@@ -169,7 +169,7 @@ const ToolPage = () => {
     ? {
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
-        name: `${data.modelName} в ERA2`,
+        name: `${data.modelName} in ERA2`,
         applicationCategory: "MultimediaApplication",
         operatingSystem: "Web",
         url: `${ORIGIN}/tools/${data.slug}`,
@@ -177,7 +177,7 @@ const ToolPage = () => {
           "@type": "Offer",
           price: minPaidPrice,
           priceCurrency: "RUB",
-          description: "Доступ в составе подписки ERA2",
+          description: "Access within ERA2 subscription",
         },
       }
     : null;
@@ -195,25 +195,13 @@ const ToolPage = () => {
       }
     : null;
 
-  const faqForLd = data.faqItems ?? toolPageItems;
-  const faqLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faqForLd.map((item) => ({
-      "@type": "Question",
-      name: item.q,
-      acceptedAnswer: { "@type": "Answer", text: item.a },
-    })),
-  };
-  const breadcrumbLd = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Главная", item: `${ORIGIN}/` },
-      { "@type": "ListItem", position: 2, name: "Инструменты", item: `${ORIGIN}/studios` },
-      { "@type": "ListItem", position: 3, name: data.heroTitle, item: `${ORIGIN}/tools/${data.slug}` },
-    ],
-  };
+  // Широкий шаблон: модельные страницы видео и изображений + текст
+  const wideSlugs = [
+    "kling", "sora", "veo", "seedance", "hailuo", "runway", "wan", "heygen",
+    "nano-banana", "seedream", "flux", "gpt-image", "grok-imagine", "qwen-image",
+    "chatgpt", "claude", "gemini", "grok", "deepseek", "perplexity",
+  ];
+  const isWidePilot = data.kind === "model" && wideSlugs.includes(data.slug);
 
   // Широкий шаблон: модельные страницы видео и изображений + текст
   const wideSlugs = [
@@ -776,8 +764,7 @@ const ToolPage = () => {
           })() : null,
         };
 
-        // Wide template detection is now at component level to avoid TDZ issues
-        const videoOrder = [
+        // Wide template orders
         const videoOrder = [
           "capabilityCards",
           "showreel",
