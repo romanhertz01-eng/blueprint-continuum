@@ -146,6 +146,19 @@ export interface ToolPageData {
       isDefault?: boolean;
     }[];
   };
+  articles?: {
+    heading: string;
+    sub?: string;
+    items: {
+      title: string;
+      tag: string;
+      image: string;
+      href?: string;
+      date?: string;
+    }[];
+    moreHref?: string;
+    moreLabel?: string;
+  };
 }
 
 
