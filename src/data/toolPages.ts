@@ -1,7 +1,7 @@
 export interface ToolPageData {
   slug: string;
   kind: 'tool' | 'model';
-  /** Optional per-page override of section render order. Keys must match ToolPage `sections` map. */
+  /** Optional per-page override of section order. Keys must match ToolPage sections map. */
   sectionOrder?: string[];
   status?: 'published' | 'draft';
   updatedAt?: string;
@@ -133,6 +133,18 @@ export interface ToolPageData {
     heading: string;
     images: string[];
     initialCount?: number;
+  };
+  modelVersions?: {
+    heading: string;
+    sub?: string;
+    versions: {
+      name: string;
+      role: string;
+      price: string;
+      desc: string;
+      unlimited?: string;
+      isDefault?: boolean;
+    }[];
   };
 }
 
@@ -4242,7 +4254,6 @@ export const toolPages: ToolPageData[] = [
       model: "gpt-5.2",
       modelName: "GPT 5.2",
       credits: 6,
-
       planNote: "Luna безлимитно с тарифа Про, GPT 5.4 — с Ультры",
       bricks: [],
       resultType: "text",
@@ -4266,6 +4277,26 @@ export const toolPages: ToolPageData[] = [
       heading: "ChatGPT в России: полный доступ в одном окне",
       text: "ChatGPT — самая известная нейросеть мира: тексты, код, анализ документов, идеи и планы. Официальный доступ из России закрыт: нужен VPN, зарубежный номер для регистрации и иностранная карта для подписки Plus. В ЭРА2 всё это не нужно — модели OpenAI встроены в сервис напрямую: открыли вкладку, написали вопрос по-русски, получили ответ. Стоимость — от 1 кредита за запрос, история диалогов сохраняется в личном кабинете.",
     },
+    modelVersions: {
+      heading: "Версии GPT в ЭРА2",
+      sub: "Три уровня под задачу и бюджет",
+      versions: [
+        { name: "GPT-5.6 Luna", role: "Быстрые задачи", price: "4 кр за сообщение", desc: "Короткие вопросы, черновики, переписка — отвечает почти мгновенно", isDefault: false },
+        { name: "GPT 5.4", role: "Основная рабочая", price: "6 кр за сообщение", desc: "Код, документы, длинные тексты — универсальный вариант для большинства задач", isDefault: true, unlimited: "Безлимит с тарифа Ультра" },
+        { name: "GPT 5.4 Pro", role: "Сложные задачи", price: "20 кр за сообщение", desc: "Многоступенчатые рассуждения и задачи, где важна точность каждого шага" }
+      ]
+    },
+    capabilityCards: {
+      heading: "Три сценария ChatGPT",
+      sub: "Что чаще всего решают на этой модели",
+      cards: [
+        { title: "Код и отладка", desc: "Пишет функции, находит ошибки, объясняет чужой код на любом языке", image: "/community/03.jpg" },
+        { title: "Документы и файлы", desc: "Загрузите PDF, таблицу или презентацию — модель разберёт и ответит по содержимому", image: "/community/01.jpg" },
+        { title: "Тексты для работы", desc: "Письма, посты, описания, инструкции — с нужным тоном и структурой", image: "/community/05.jpg" }
+      ]
+    },
+    pricingBlock: { heading: "Тарифы ЭРА2", sub: "Одна подписка на все модели каталога — оплата в рублях, без VPN" },
+    ctaBanner: { title: "Работайте с ChatGPT\nбез VPN и зарубежной карты", button: "Начать бесплатно", image: "/community/03.jpg" },
     useCases: {
       heading: "Что делают в ChatGPT каждый день",
       items: [
@@ -4347,6 +4378,7 @@ export const toolPages: ToolPageData[] = [
           label: "Разбор кода",
           version: "GPT 5.4",
           prompt: "Почему этот запрос выполняется 8 секунд?\n\nSELECT * FROM orders o\nJOIN users u ON u.id = o.user_id\nWHERE o.created_at > '2026-01-01'\nORDER BY o.created_at DESC",
+
           answer: "Три вероятные причины, по убыванию влияния:\n\n1. Нет индекса на orders.created_at. Условие в WHERE и сортировка идут по одному полю — составной индекс закроет обе операции сразу.\n\n2. SELECT * тянет все колонки обеих таблиц, включая те, что не нужны. Перечислите явно только используемые.\n\n3. Нет LIMIT. Если строк много, база сортирует весь результат целиком.\n\nПроверьте план: EXPLAIN ANALYZE покажет, идёт ли Seq Scan вместо Index Scan.",
         },
         {
@@ -4363,6 +4395,26 @@ export const toolPages: ToolPageData[] = [
         },
       ],
     },
+    modelVersions: {
+      heading: "Версии GPT в ЭРА2",
+      sub: "Три уровня под задачу и бюджет",
+      versions: [
+        { name: "GPT-5.6 Luna", role: "Быстрые задачи", price: "4 кр за сообщение", desc: "Короткие вопросы, черновики, переписка — отвечает почти мгновенно", isDefault: false },
+        { name: "GPT 5.4", role: "Основная рабочая", price: "6 кр за сообщение", desc: "Код, документы, длинные тексты — универсальный вариант для большинства задач", isDefault: true, unlimited: "Безлимит с тарифа Ультра" },
+        { name: "GPT 5.4 Pro", role: "Сложные задачи", price: "20 кр за сообщение", desc: "Многоступенчатые рассуждения и задачи, где важна точность каждого шага" }
+      ]
+    },
+    capabilityCards: {
+      heading: "Три сценария ChatGPT",
+      sub: "Что чаще всего решают на этой модели",
+      cards: [
+        { title: "Код и отладка", desc: "Пишет функции, находит ошибки, объясняет чужой код на любом языке", image: "/community/03.jpg" },
+        { title: "Документы и файлы", desc: "Загрузите PDF, таблицу или презентацию — модель разберёт и ответит по содержимому", image: "/community/01.jpg" },
+        { title: "Тексты для работы", desc: "Письма, посты, описания, инструкции — с нужным тоном и структурой", image: "/community/05.jpg" }
+      ]
+    },
+    pricingBlock: { heading: "Тарифы ЭРА2", sub: "Одна подписка на все модели каталога — оплата в рублях, без VPN" },
+    ctaBanner: { title: "Работайте с ChatGPT\nбез VPN и зарубежной карты", button: "Начать бесплатно", image: "/community/03.jpg" },
     modelChips: {
       heading: "Другие текстовые модели",
       sub: "Все языковые модели в одной подписке",
@@ -4374,6 +4426,8 @@ export const toolPages: ToolPageData[] = [
         { name: "Perplexity", slug: "perplexity" },
       ],
     },
+
+
   },
   {
     slug: "claude",
@@ -4514,6 +4568,26 @@ export const toolPages: ToolPageData[] = [
         },
       ],
     },
+    modelVersions: {
+      heading: "Версии Claude в ЭРА2",
+      sub: "Три уровня под задачу и бюджет",
+      versions: [
+        { name: "Haiku 4.5", role: "Быстрые ответы", price: "3 кр за сообщение", desc: "Короткие тексты, правки, переписка — самая дешёвая версия линейки", unlimited: "Безлимит с тарифа Про" },
+        { name: "Sonnet 4.6", role: "Основная рабочая", price: "10 кр за сообщение", desc: "Длинные документы, аналитика, тексты в публикацию", isDefault: true, unlimited: "Безлимит с тарифа Ультра" },
+        { name: "Opus 4.7", role: "Сложные задачи", price: "25 кр за сообщение", desc: "Глубокий разбор, юридические тексты, задачи с большим контекстом" }
+      ]
+    },
+    capabilityCards: {
+      heading: "Три сценария Claude",
+      sub: "Что чаще всего решают на этой модели",
+      cards: [
+        { title: "Длинные документы", desc: "Держит контекст на сотни страниц — договор, отчёт, техзадание целиком", image: "/community/02.jpg" },
+        { title: "Текст, который не надо править", desc: "Живой язык на выходе: результат идёт в публикацию почти как есть", image: "/community/06.jpg" },
+        { title: "Разбор и анализ", desc: "Находит противоречия, слабые места и то, что упустили в исходнике", image: "/community/04.jpg" }
+      ]
+    },
+    pricingBlock: { heading: "Тарифы ЭРА2", sub: "Одна подписка на все модели каталога — оплата в рублях, без VPN" },
+    ctaBanner: { title: "Работайте с Claude\nбез VPN и зарубежной карты", button: "Начать бесплатно", image: "/community/02.jpg" },
     modelChips: {
       heading: "Другие текстовые модели",
       sub: "Все языковые модели в одной подписке",
@@ -4525,6 +4599,8 @@ export const toolPages: ToolPageData[] = [
         { name: "Perplexity", slug: "perplexity" },
       ],
     },
+
+
   },
   {
     slug: "gemini",
@@ -4664,6 +4740,26 @@ export const toolPages: ToolPageData[] = [
         },
       ],
     },
+    modelVersions: {
+      heading: "Версии Gemini в ЭРА2",
+      sub: "Три уровня под задачу и бюджет",
+      versions: [
+        { name: "Gemini 3 Flash", role: "Скорость", price: "3 кр за сообщение", desc: "Мгновенные ответы на простые вопросы, разбор скриншотов", unlimited: "Безлимит с тарифа Про" },
+        { name: "Gemini 3 Pro", role: "Основная рабочая", price: "10 кр за сообщение", desc: "Мультимодальные задачи: изображения, таблицы, длинный контекст", isDefault: true, unlimited: "Безлимит с тарифа Макс" },
+        { name: "Gemini 3.1 Pro", role: "Максимум", price: "15 кр за сообщение", desc: "Самая свежая версия с улучшенной фактической точностью" }
+      ]
+    },
+    capabilityCards: {
+      heading: "Три сценария Gemini",
+      sub: "Что чаще всего решают на этой модели",
+      cards: [
+        { title: "Разбор изображений", desc: "Загрузите скриншот или фото — модель прочитает, объяснит и найдёт ошибку", image: "/community/01.jpg" },
+        { title: "Работа с данными", desc: "Таблицы, графики, выгрузки — находит аномалии и объясняет, что видит", image: "/community/03.jpg" },
+        { title: "Скорость Flash", desc: "Мгновенные ответы на простые вопросы по цене втрое ниже флагманов", image: "/community/05.jpg" }
+      ]
+    },
+    pricingBlock: { heading: "Тарифы ЭРА2", sub: "Одна подписка на все модели каталога — оплата в рублях, без VPN" },
+    ctaBanner: { title: "Работайте с Gemini\nбез VPN и зарубежной карты", button: "Начать бесплатно", image: "/community/01.jpg" },
     modelChips: {
       heading: "Другие текстовые модели",
       sub: "Все языковые модели в одной подписке",
@@ -4675,6 +4771,8 @@ export const toolPages: ToolPageData[] = [
         { name: "Perplexity", slug: "perplexity" },
       ],
     },
+
+
   },
   {
     slug: "grok",
@@ -4814,6 +4912,25 @@ export const toolPages: ToolPageData[] = [
         },
       ],
     },
+    modelVersions: {
+      heading: "Версии Grok в ЭРА2",
+      sub: "Два уровня под задачу и бюджет",
+      versions: [
+        { name: "Grok 4.3", role: "Основная рабочая", price: "7 кр за сообщение", desc: "Свежие события, прямые оценки, мозговой штурм", isDefault: true, unlimited: "Безлимит с тарифа Макс" },
+        { name: "Grok 4.5", role: "Максимум", price: "13 кр за сообщение", desc: "Более глубокий анализ и работа с длинным контекстом" }
+      ]
+    },
+    capabilityCards: {
+      heading: "Три сценария Grok",
+      sub: "Что чаще всего решают на этой модели",
+      cards: [
+        { title: "Свежие события", desc: "Знает, что произошло на этой неделе — в отличие от моделей с фиксированной датой обучения", image: "/community/03.jpg" },
+        { title: "Прямая оценка", desc: "Говорит, что думает, без обтекаемых формулировок и лишних оговорок", image: "/community/06.jpg" },
+        { title: "Мозговой штурм", desc: "Нестандартные ходы там, где остальные модели предлагают очевидное", image: "/community/04.jpg" }
+      ]
+    },
+    pricingBlock: { heading: "Тарифы ЭРА2", sub: "Одна подписка на все модели каталога — оплата в рублях, без VPN" },
+    ctaBanner: { title: "Работайте с Grok\nбез VPN и зарубежной карты", button: "Начать бесплатно", image: "/community/03.jpg" },
     modelChips: {
       heading: "Другие текстовые модели",
       sub: "Все языковые модели в одной подписке",
@@ -4825,6 +4942,8 @@ export const toolPages: ToolPageData[] = [
         { name: "Perplexity", slug: "perplexity" },
       ],
     },
+
+
   },
   {
     slug: "deepseek",
@@ -4964,6 +5083,26 @@ export const toolPages: ToolPageData[] = [
         },
       ],
     },
+    modelVersions: {
+      heading: "Версии DeepSeek в ЭРА2",
+      sub: "Три уровня под задачу и бюджет",
+      versions: [
+        { name: "V3", role: "Быстрые ответы", price: "3 кр за сообщение", desc: "Обычные вопросы без пошагового разбора — дешёвый универсал", unlimited: "Безлимит с тарифа Базовый" },
+        { name: "R1", role: "С рассуждением", price: "6 кр за сообщение", desc: "Проговаривает ход решения: посылки, шаги, проверку", isDefault: true },
+        { name: "Reasoner", role: "Сложные задачи", price: "12 кр за сообщение", desc: "Математика, логика, алгоритмы — где важен способ, а не только ответ" }
+      ]
+    },
+    capabilityCards: {
+      heading: "Три сценария DeepSeek",
+      sub: "Что чаще всего решают на этой модели",
+      cards: [
+        { title: "Виден ход решения", desc: "R1 проговаривает шаги: посылки, вычисления, проверку — ошибку легко найти", image: "/community/02.jpg" },
+        { title: "Математика и логика", desc: "Задачи, где важен не ответ, а способ — расчёты, доказательства, алгоритмы", image: "/community/05.jpg" },
+        { title: "Цена от 3 кредитов", desc: "Одна из самых дешёвых моделей каталога при качестве флагманского уровня", image: "/community/01.jpg" }
+      ]
+    },
+    pricingBlock: { heading: "Тарифы ЭРА2", sub: "Одна подписка на все модели каталога — оплата в рублях, без VPN" },
+    ctaBanner: { title: "Работайте с DeepSeek\nбез VPN и зарубежной карты", button: "Начать бесплатно", image: "/community/02.jpg" },
     modelChips: {
       heading: "Другие текстовые модели",
       sub: "Все языковые модели в одной подписке",
@@ -4975,6 +5114,8 @@ export const toolPages: ToolPageData[] = [
         { name: "Perplexity", slug: "perplexity" },
       ],
     },
+
+
   },
   {
     slug: "perplexity",
@@ -5115,6 +5256,25 @@ export const toolPages: ToolPageData[] = [
         },
       ],
     },
+    modelVersions: {
+      heading: "Режимы Perplexity в ЭРА2",
+      sub: "Два режима поиска под глубину задачи",
+      versions: [
+        { name: "Sonar Pro", role: "Поиск с источниками", price: "35 кр за запрос", desc: "Ищет в интернете и приводит ссылку к каждому утверждению", isDefault: true },
+        { name: "Deep Research", role: "Глубокое исследование", price: "150 кр за запрос", desc: "Десятки запросов, сверка источников между собой, связный отчёт" }
+      ]
+    },
+    capabilityCards: {
+      heading: "Три сценария Perplexity",
+      sub: "Что чаще всего решают на этой модели",
+      cards: [
+        { title: "Ответ со ссылками", desc: "К каждому утверждению — источник, который можно открыть и проверить", image: "/community/06.jpg" },
+        { title: "Актуальные данные", desc: "Ищет в интернете в момент запроса, а не отвечает по памяти обучения", image: "/community/03.jpg" },
+        { title: "Глубокое исследование", desc: "Deep Research делает десятки запросов и сводит источники в один отчёт", image: "/community/02.jpg" }
+      ]
+    },
+    pricingBlock: { heading: "Тарифы ЭРА2", sub: "Одна подписка на все модели каталога — оплата в рублях, без VPN" },
+    ctaBanner: { title: "Ищите с источниками\nбез VPN и зарубежной карты", button: "Начать бесплатно", image: "/community/06.jpg" },
     modelChips: {
       heading: "Другие текстовые модели",
       sub: "Все языковые модели в одной подписке",
@@ -5126,6 +5286,8 @@ export const toolPages: ToolPageData[] = [
         { name: "DeepSeek", slug: "deepseek" },
       ],
     },
+
+
   },
   {
     slug: "imagen",

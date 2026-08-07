@@ -19,8 +19,10 @@ import { TransformShowcase } from "@/components/tool/TransformShowcase";
 import { ModelGallery } from "@/components/tool/ModelGallery";
 import { PricingBlock } from "@/components/tool/PricingBlock";
 import { CtaBanner } from "@/components/tool/CtaBanner";
+import { ModelVersions } from "@/components/tool/ModelVersions";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
+
 
 const toolRouteApi = getRouteApi("/tools/$slug");
 
@@ -384,6 +386,14 @@ const ToolPage = () => {
               sub={data.pricingBlock.sub}
             />
           ) : null,
+          modelVersions: data.modelVersions ? (
+            <ModelVersions
+              key="modelVersions"
+              heading={data.modelVersions.heading}
+              sub={data.modelVersions.sub}
+              versions={data.modelVersions.versions}
+            />
+          ) : null,
           ctaBanner: data.ctaBanner ? (
             <CtaBanner
               key="ctaBanner"
@@ -394,6 +404,7 @@ const ToolPage = () => {
               onClick={scrollToWorkspace}
             />
           ) : null,
+
           specs: data.specs ? (() => {
             const modelPage = data.kind === 'tool' ? getModelForTool(data) : null;
             const items = [...data.specs.items];
@@ -694,10 +705,11 @@ const ToolPage = () => {
           })() : null,
         };
 
-        // Широкий шаблон: модельные страницы видео и изображений
+        // Широкий шаблон: модельные страницы видео и изображений + текст
         const wideSlugs = [
           "kling", "sora", "veo", "seedance", "hailuo", "runway", "wan", "heygen",
           "nano-banana", "seedream", "flux", "gpt-image", "grok-imagine", "qwen-image",
+          "chatgpt", "claude", "gemini", "grok", "deepseek", "perplexity",
         ];
         const isWidePilot = data.kind === "model" && wideSlugs.includes(data.slug);
         const videoOrder = [
@@ -730,14 +742,31 @@ const ToolPage = () => {
           "pricingBlock",
           "ctaBanner",
         ];
+        const textOrder = [
+          "capabilityCards",
+          "featureBlocks",
+          "modelVersions",
+          "promptAnswer",
+          "modelChips",
+          "intro",
+          "specs",
+          "comparisonTable",
+          "tips",
+          "howItWorks",
+          "pricingBlock",
+          "ctaBanner",
+        ];
         const baseModelOrder = ["showcaseStrip", "modelChips", "intro", "visualCards", "audioShowreel", "promptAnswer", "specs", "comparisonTable", "keyFeature", "featureBlocks", "showreel", "transformShowcase", "gallery", "tips", "useCases", "modelTools", "howItWorks"];
         const modelOrder =
           isWidePilot && data.category === "video"
             ? videoOrder
             : isWidePilot && data.category === "image"
               ? imageOrder
-              : baseModelOrder;
+              : isWidePilot && data.category === "text"
+                ? textOrder
+                : baseModelOrder;
         const toolOrder = ["intro", "showreel", "audioShowreel", "promptAnswer", "featureBlocks", "useCases", "howItWorks", "keyFeature", "specs", "modelChips"];
+
         const defaultOrder = data.kind === "model" ? modelOrder : toolOrder;
         // Optional per-page full override of section order (only affects pages that set it).
         const order: string[] = data.sectionOrder ?? defaultOrder;
