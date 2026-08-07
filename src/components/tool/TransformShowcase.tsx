@@ -22,15 +22,19 @@ export function TransformShowcase({
   onCtaClick,
 }: Props) {
   return (
-    <section className="max-w-[1360px] mx-auto px-4 py-16">
-      <h2 className="text-3xl md:text-[40px] font-bold text-center leading-tight">{heading}</h2>
-      {sub && (
-        <p className="mt-5 text-base text-muted-foreground text-center max-w-3xl mx-auto leading-relaxed">
-          {sub}
-        </p>
+    <section className="max-w-[1360px] mx-auto px-4 py-14 md:py-20">
+      {heading && (
+        <div className="mb-8 md:mb-12">
+          <h2 className="text-3xl md:text-[40px] font-bold text-center leading-tight">{heading}</h2>
+          {sub && (
+            <p className="mt-5 text-base text-muted-foreground text-center max-w-3xl mx-auto leading-relaxed">
+              {sub}
+            </p>
+          )}
+        </div>
       )}
       {cta && (
-        <div className="mt-8 flex justify-center">
+        <div className="flex justify-center">
           <button
             type="button"
             onClick={onCtaClick}
@@ -41,7 +45,7 @@ export function TransformShowcase({
         </div>
       )}
 
-      <div className="mt-14 flex flex-col lg:flex-row items-center justify-center gap-6 lg:gap-2">
+      <div className={cn("flex flex-col lg:flex-row items-center justify-center gap-6 lg:gap-2", (heading || cta) && "mt-14")}>
         {/* ВХОД */}
         <div className="relative w-full max-w-[480px] lg:w-[40%] shrink-0">
           <div className="relative aspect-[4/5] rounded-2xl overflow-hidden border border-border">

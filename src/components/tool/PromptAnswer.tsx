@@ -20,14 +20,18 @@ export function PromptAnswer({ heading, sub, items }: Props) {
   const active = items[activeIdx] ?? items[0];
 
   return (
-    <section className="max-w-5xl mx-auto px-4 py-12">
-      <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">{heading}</h2>
-      {sub ? (
-        <p className="mt-3 text-sm text-muted-foreground text-center md:text-left">{sub}</p>
-      ) : null}
+    <section className="max-w-5xl mx-auto px-4 py-14 md:py-20">
+      {heading && (
+        <div className="mb-8 md:mb-12">
+          <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">{heading}</h2>
+          {sub && (
+            <p className="mt-3 text-sm text-muted-foreground text-center md:text-left">{sub}</p>
+          )}
+        </div>
+      )}
 
       {items.length > 1 ? (
-        <div className="mt-8 flex flex-wrap justify-center gap-2">
+        <div className="flex flex-wrap justify-center gap-2">
           {items.map((it, i) => {
             const isActive = i === activeIdx;
             return (
@@ -49,7 +53,7 @@ export function PromptAnswer({ heading, sub, items }: Props) {
         </div>
       ) : null}
 
-      <div className="mt-8 grid gap-4 md:grid-cols-2 items-stretch">
+      <div className={cn("grid gap-4 md:grid-cols-2 items-stretch", items.length > 1 && "mt-8")}>
         <div className="rounded-2xl border border-border bg-muted/40 p-5">
           <div className="text-xs uppercase tracking-wide text-muted-foreground mb-3">
             Запрос

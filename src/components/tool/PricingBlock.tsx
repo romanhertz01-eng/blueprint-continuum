@@ -12,15 +12,19 @@ export function PricingBlock({ heading, sub }: PricingBlockProps) {
   const shown = plans.filter((p) => !p.enterprise).slice(0, 3);
 
   return (
-    <section className="max-w-[1360px] mx-auto px-4 py-16">
-      <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">{heading}</h2>
-      {sub && (
-        <p className="mt-3 text-sm text-muted-foreground text-center md:text-left max-w-2xl mx-auto md:mx-0">
-          {sub}
-        </p>
+    <section className="max-w-[1360px] mx-auto px-4 py-14 md:py-20">
+      {heading && (
+        <div className="mb-8 md:mb-12">
+          <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">{heading}</h2>
+          {sub && (
+            <p className="mt-3 text-sm text-muted-foreground text-center md:text-left max-w-2xl mx-auto md:mx-0">
+              {sub}
+            </p>
+          )}
+        </div>
       )}
 
-      <div className="mt-12 grid gap-5 md:grid-cols-3">
+      <div className="grid gap-5 md:grid-cols-3">
         {shown.map((plan) => {
           const price =
             plan.monthPrice === null
