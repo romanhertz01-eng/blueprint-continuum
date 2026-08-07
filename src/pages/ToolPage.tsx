@@ -195,6 +195,34 @@ const ToolPage = () => {
       }
     : null;
 
+  const faqForLd = data.faqItems ?? toolPageItems;
+  const faqLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqForLd.map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: { "@type": "Answer", text: item.a },
+    })),
+  };
+  const breadcrumbLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Главная", item: `${ORIGIN}/` },
+      { "@type": "ListItem", position: 2, name: "Инструменты", item: `${ORIGIN}/studios` },
+      { "@type": "ListItem", position: 3, name: data.heroTitle, item: `${ORIGIN}/tools/${data.slug}` },
+    ],
+  };
+
+  // Широкий шаблон: модельные страницы видео и изображений + текст
+  const wideSlugs = [
+    "kling", "sora", "veo", "seedance", "hailuo", "runway", "wan", "heygen",
+    "nano-banana", "seedream", "flux", "gpt-image", "grok-imagine", "qwen-image",
+    "chatgpt", "claude", "gemini", "grok", "deepseek", "perplexity",
+  ];
+  const isWidePilot = data.kind === "model" && wideSlugs.includes(data.slug);
+
   return (
     <div className="min-w-0">
       <script
@@ -748,13 +776,8 @@ const ToolPage = () => {
           })() : null,
         };
 
-        // Широкий шаблон: модельные страницы видео и изображений + текст
-        const wideSlugs = [
-          "kling", "sora", "veo", "seedance", "hailuo", "runway", "wan", "heygen",
-          "nano-banana", "seedream", "flux", "gpt-image", "grok-imagine", "qwen-image",
-          "chatgpt", "claude", "gemini", "grok", "deepseek", "perplexity",
-        ];
-        const isWidePilot = data.kind === "model" && wideSlugs.includes(data.slug);
+        // Wide template detection is now at component level to avoid TDZ issues
+        const videoOrder = [
         const videoOrder = [
           "capabilityCards",
           "showreel",
@@ -820,7 +843,7 @@ const ToolPage = () => {
             <div className="tool-wide">
               {rendered.map((k, i) => (
                 <div key={k} className={cn(
-                  "w-full", 
+                  "w-full py-16 md:py-24", 
                   i % 2 === 0 ? "bg-background" : "bg-muted/30",
                   i === 0 && "first-section"
                 )}>
