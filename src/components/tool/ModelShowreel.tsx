@@ -43,15 +43,19 @@ export function ModelShowreel({ heading, sub, items, aspect = '2/1' }: ModelShow
 
   const mediaMaxWidth = aspect === '1/1' ? 'max-w-[640px]' : 'max-w-5xl';
   return (
-    <section className="max-w-5xl mx-auto px-4 py-12">
-      <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">{heading}</h2>
-      {sub && (
-        <p className="mt-3 text-sm text-muted-foreground text-center md:text-left max-w-2xl mx-auto md:mx-0">
-          {sub}
-        </p>
+    <section className="max-w-5xl mx-auto px-4 py-14 md:py-20">
+      {heading && (
+        <div className="mb-8 md:mb-12">
+          <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">{heading}</h2>
+          {sub && (
+            <p className="mt-3 text-sm text-muted-foreground text-center md:text-left max-w-2xl mx-auto md:mx-0">
+              {sub}
+            </p>
+          )}
+        </div>
       )}
 
-      <div className={`mt-8 ${aspectClass} ${mediaMaxWidth} mx-auto w-full max-h-[520px] rounded-2xl overflow-hidden border border-white/10 bg-white/[0.03] relative`}>
+      <div className={`${aspectClass} ${mediaMaxWidth} mx-auto w-full max-h-[520px] rounded-2xl overflow-hidden border border-white/10 bg-white/[0.03] relative`}>
         {active.video ? (
           <video
             key={active.video}

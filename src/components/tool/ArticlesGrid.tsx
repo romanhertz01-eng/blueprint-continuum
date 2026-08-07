@@ -6,6 +6,8 @@ interface ArticleItem {
   tag: string;
   title: string;
   slug: string;
+  href?: string;
+  date?: string;
 }
 
 interface ArticlesGridProps {
@@ -48,6 +50,7 @@ export function ArticlesGrid({
           <Link
             key={item.slug}
             to="/studios"
+            search={{ q: "" }}
             className="group block"
           >
             <div className="relative aspect-[16/10] rounded-xl overflow-hidden mb-3">
@@ -72,6 +75,7 @@ export function ArticlesGrid({
         <div className="mt-8 flex justify-center md:justify-start">
           <Link
             to="/studios"
+            search={{ q: "" }}
             className={cn(
               "px-6 py-2.5 rounded-full border border-white/10 text-sm font-semibold hover:bg-white/[0.05] transition-colors",
               !moreHref && "opacity-50 cursor-not-allowed"
