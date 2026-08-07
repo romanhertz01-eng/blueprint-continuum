@@ -281,8 +281,8 @@ const ToolPage = () => {
             <ShowcaseStrip key="showcaseStrip" images={data.showcaseStrip.images} />
           ) : null,
           intro: data.intro ? (
-            <section key="intro" className="max-w-3xl mx-auto px-4 py-12 text-center">
-              <h2 className="text-2xl md:text-[32px] font-bold mb-4">{data.intro.heading}</h2>
+            <section key="intro" className="max-w-3xl mx-auto px-4 py-14 md:py-20 text-center">
+              {data.intro.heading && <h2 className="text-2xl md:text-[32px] font-bold mb-4">{data.intro.heading}</h2>}
               <p className="text-muted-foreground leading-relaxed">{data.intro.text}</p>
             </section>
           ) : null,
@@ -296,12 +296,16 @@ const ToolPage = () => {
           ) : null,
           showreel: data.showreel ? (
             data.kind === 'tool' ? (
-              <section key="showreel" className="max-w-5xl mx-auto px-4 py-12">
-                <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">{data.showreel.heading}</h2>
-                {data.showreel.sub && (
-                  <p className="mt-3 text-sm text-muted-foreground text-center md:text-left max-w-2xl mx-auto md:mx-0">{data.showreel.sub}</p>
+              <section key="showreel" className="max-w-5xl mx-auto px-4 py-14 md:py-20">
+                {data.showreel.heading && (
+                  <div className="mb-8 md:mb-12">
+                    <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">{data.showreel.heading}</h2>
+                    {data.showreel.sub && (
+                      <p className="mt-3 text-sm text-muted-foreground text-center md:text-left max-w-2xl mx-auto md:mx-0">{data.showreel.sub}</p>
+                    )}
+                  </div>
                 )}
-                <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                   {data.showreel.items.slice(0, 8).map((it, i) => (
                     <figure key={i} className="flex flex-col gap-2">
                       <div className="aspect-square rounded-xl overflow-hidden border border-white/10 bg-white/[0.03]">
@@ -433,8 +437,12 @@ const ToolPage = () => {
               return <span className="font-medium text-right">{value}</span>;
             };
             return (
-              <section key="specs" className="max-w-3xl mx-auto px-4 py-12">
-                <h2 className="text-2xl md:text-[32px] font-bold mb-8 text-center md:text-left">{data.specs.heading}</h2>
+              <section key="specs" className="max-w-3xl mx-auto px-4 py-14 md:py-20">
+                {data.specs.heading && (
+                  <div className="mb-8 md:mb-12">
+                    <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">{data.specs.heading}</h2>
+                  </div>
+                )}
                 <div className="flex flex-col">
                   {items.map((it, i) => (
                     <div key={i} className="flex justify-between py-3 border-b border-border/60 gap-4">
@@ -453,8 +461,8 @@ const ToolPage = () => {
             );
           })() : null,
           keyFeature: data.keyFeatureTitle ? (
-            <section key="keyFeature" className="max-w-4xl mx-auto px-4 py-12">
-              <h2 className="text-2xl md:text-[32px] font-bold mb-4">{data.keyFeatureTitle}</h2>
+            <section key="keyFeature" className="max-w-4xl mx-auto px-4 py-14 md:py-20">
+              {data.keyFeatureTitle && <h2 className="text-2xl md:text-[32px] font-bold mb-4">{data.keyFeatureTitle}</h2>}
               {data.keyFeatureDescription && (
                 <p className="text-muted-foreground leading-relaxed whitespace-pre-line">{data.keyFeatureDescription}</p>
               )}
@@ -467,8 +475,12 @@ const ToolPage = () => {
             </section>
           ) : null,
           comparisonTable: data.comparisonTable ? (
-            <section key="comparisonTable" className="max-w-5xl mx-auto px-4 py-12">
-              <h2 className="text-2xl md:text-[32px] font-bold mb-8 text-center md:text-left">{data.comparisonTable.heading}</h2>
+            <section key="comparisonTable" className="max-w-5xl mx-auto px-4 py-14 md:py-20">
+              {data.comparisonTable.heading && (
+                <div className="mb-8 md:mb-12">
+                  <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">{data.comparisonTable.heading}</h2>
+                </div>
+              )}
               <div className="overflow-x-auto -mx-4 px-4">
                 <table className="w-full min-w-[640px] text-sm">
                   <thead>
@@ -512,7 +524,7 @@ const ToolPage = () => {
           featureBlocks: data.featureBlocks ? (() => {
             const withImg = data.featureBlocks.filter((b) => !!b.image);
             return (
-              <section key="featureBlocks" className="max-w-5xl mx-auto px-4 py-12 flex flex-col gap-16">
+              <section key="featureBlocks" className="max-w-5xl mx-auto px-4 py-14 md:py-20 flex flex-col gap-16">
                 {withImg.map((b, i) => (
                   <div
                     key={`img-${i}`}
@@ -541,8 +553,12 @@ const ToolPage = () => {
             );
           })() : null,
           tips: data.tips ? (
-            <section key="tips" className="max-w-5xl mx-auto px-4 py-12">
-              <h2 className="text-2xl md:text-[32px] font-bold mb-8 text-center md:text-left">{data.tips.heading}</h2>
+            <section key="tips" className="max-w-5xl mx-auto px-4 py-14 md:py-20">
+              {data.tips.heading && (
+                <div className="mb-8 md:mb-12">
+                  <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">{data.tips.heading}</h2>
+                </div>
+              )}
               <div className="grid md:grid-cols-2 gap-4">
                 {data.tips.items.map((it, i) => (
                   <div
@@ -557,8 +573,12 @@ const ToolPage = () => {
             </section>
           ) : null,
           useCases: data.useCases ? (
-            <section key="useCases" className="max-w-5xl mx-auto px-4 py-12">
-              <h2 className="text-2xl md:text-[32px] font-bold mb-8 text-center md:text-left">{data.useCases.heading}</h2>
+            <section key="useCases" className="max-w-5xl mx-auto px-4 py-14 md:py-20">
+              {data.useCases.heading && (
+                <div className="mb-8 md:mb-12">
+                  <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">{data.useCases.heading}</h2>
+                </div>
+              )}
               <div className="grid md:grid-cols-2 gap-4">
                 {data.useCases.items.map((it, i) => (
                   <div
@@ -573,10 +593,14 @@ const ToolPage = () => {
             </section>
           ) : null,
           modelChips: data.modelChips ? (
-            <section key="modelChips" className="max-w-5xl mx-auto px-4 py-12">
-              <h2 className="text-2xl md:text-[32px] font-bold mb-3 text-center md:text-left">{data.modelChips.heading}</h2>
-              {data.modelChips.sub && (
-                <p className="text-muted-foreground text-center md:text-left mb-8 max-w-2xl mx-auto md:mx-0">{data.modelChips.sub}</p>
+            <section key="modelChips" className="max-w-5xl mx-auto px-4 py-14 md:py-20">
+              {data.modelChips.heading && (
+                <div className="mb-8 md:mb-12">
+                  <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">{data.modelChips.heading}</h2>
+                  {data.modelChips.sub && (
+                    <p className="text-muted-foreground text-center md:text-left max-w-2xl mx-auto md:mx-0">{data.modelChips.sub}</p>
+                  )}
+                </div>
               )}
               {(() => {
                 const all = data.modelChips.models.filter((m) => (m.slug ? isPublished(m.slug) : true));
@@ -641,10 +665,14 @@ const ToolPage = () => {
             </section>
           ) : null,
           howItWorks: data.howItWorks ? (
-            <section key="howItWorks" className="max-w-5xl mx-auto px-4 py-12">
-              <h2 className="text-2xl md:text-[32px] font-bold mb-8 text-center md:text-left">
-                {data.howItWorks.title}
-              </h2>
+            <section key="howItWorks" className="max-w-5xl mx-auto px-4 py-14 md:py-20">
+              {data.howItWorks.title && (
+                <div className="mb-8 md:mb-12">
+                  <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">
+                    {data.howItWorks.title}
+                  </h2>
+                </div>
+              )}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {data.howItWorks.steps.map((step, i) => (
                   <div
@@ -674,8 +702,10 @@ const ToolPage = () => {
             if (tools.length === 1) {
               const t = tools[0];
               return (
-                <section key="modelTools" className="max-w-5xl mx-auto px-4 py-12">
-                  <h2 className="text-2xl md:text-[32px] font-bold mb-8 text-center md:text-left">Что делают на этой модели</h2>
+                <section key="modelTools" className="max-w-5xl mx-auto px-4 py-14 md:py-20">
+                  <div className="mb-8 md:mb-12">
+                    <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">Что делают на этой модели</h2>
+                  </div>
                   <Link
                     to="/tools/$slug"
                     params={{ slug: t.slug }}
@@ -694,8 +724,10 @@ const ToolPage = () => {
               );
             }
             return (
-              <section key="modelTools" className="max-w-5xl mx-auto px-4 py-12">
-                <h2 className="text-2xl md:text-[32px] font-bold mb-8 text-center md:text-left">Что делают на этой модели</h2>
+              <section key="modelTools" className="max-w-5xl mx-auto px-4 py-14 md:py-20">
+                <div className="mb-8 md:mb-12">
+                  <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">Что делают на этой модели</h2>
+                </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {tools.map((t) => (
                     <Link
@@ -787,19 +819,33 @@ const ToolPage = () => {
           return (
             <div className="tool-wide">
               {rendered.map((k, i) => (
-                <div key={k} className={i % 2 === 0 ? "w-full bg-background" : "w-full bg-muted/30"}>
+                <div key={k} className={cn(
+                  "w-full", 
+                  i % 2 === 0 ? "bg-background" : "bg-muted/30",
+                  i === 0 && "first-section"
+                )}>
                   {sections[k]}
                 </div>
               ))}
             </div>
           );
         }
-        return <>{order.map((k) => sections[k])}</>;
+        return (
+          <div className="tool-standard">
+            {order.map((k, i) => (
+              <div key={k} className={i === 0 ? "first-section" : ""}>
+                {sections[k]}
+              </div>
+            ))}
+          </div>
+        );
       })()}
 
       {showRelated && (
-        <section className="max-w-5xl mx-auto px-4 py-12">
-          <h2 className="text-2xl md:text-[32px] font-bold mb-8 text-center md:text-left">Похожие инструменты</h2>
+        <section className="max-w-5xl mx-auto px-4 py-14 md:py-20">
+          <div className="mb-8 md:mb-12">
+            <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">Похожие инструменты</h2>
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {related.map((r) => (
               <Link

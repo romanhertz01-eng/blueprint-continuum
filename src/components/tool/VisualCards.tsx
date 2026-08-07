@@ -47,17 +47,21 @@ export function VisualCards({ heading, sub, cards }: VisualCardsProps) {
   }, [cards.length]);
 
   return (
-    <section className="max-w-6xl mx-auto px-4 py-12">
-      <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">{heading}</h2>
-      {sub && (
-        <p className="mt-3 text-sm text-muted-foreground text-center md:text-left max-w-2xl mx-auto md:mx-0">
-          {sub}
-        </p>
+    <section className="max-w-6xl mx-auto px-4 py-14 md:py-20">
+      {heading && (
+        <div className="mb-8 md:mb-12">
+          <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">{heading}</h2>
+          {sub && (
+            <p className="mt-3 text-sm text-muted-foreground text-center md:text-left max-w-2xl mx-auto md:mx-0">
+              {sub}
+            </p>
+          )}
+        </div>
       )}
 
       <div
         ref={scrollerRef}
-        className={`mt-8 flex md:grid ${gridColsClass} gap-4 overflow-x-auto snap-x snap-mandatory md:overflow-visible md:snap-none -mx-4 px-4 md:mx-0 md:px-0`}
+        className={`flex md:grid ${gridColsClass} gap-4 overflow-x-auto snap-x snap-mandatory md:overflow-visible md:snap-none -mx-4 px-4 md:mx-0 md:px-0`}
       >
         {cards.map((card, i) => (
           <article
