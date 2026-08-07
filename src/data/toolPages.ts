@@ -5058,6 +5058,26 @@ export const toolPages: ToolPageData[] = [
         },
       ],
     },
+    modelVersions: {
+      heading: "Версии DeepSeek в ЭРА2",
+      sub: "Три уровня под задачу и бюджет",
+      versions: [
+        { name: "V3", role: "Быстрые ответы", price: "3 кр за сообщение", desc: "Обычные вопросы без пошагового разбора — дешёвый универсал", unlimited: "Безлимит с тарифа Базовый" },
+        { name: "R1", role: "С рассуждением", price: "6 кр за сообщение", desc: "Проговаривает ход решения: посылки, шаги, проверку", isDefault: true },
+        { name: "Reasoner", role: "Сложные задачи", price: "12 кр за сообщение", desc: "Математика, логика, алгоритмы — где важен способ, а не только ответ" }
+      ]
+    },
+    capabilityCards: {
+      heading: "Три сценария DeepSeek",
+      sub: "Что чаще всего решают на этой модели",
+      cards: [
+        { title: "Виден ход решения", desc: "R1 проговаривает шаги: посылки, вычисления, проверку — ошибку легко найти", image: "/community/02.jpg" },
+        { title: "Математика и логика", desc: "Задачи, где важен не ответ, а способ — расчёты, доказательства, алгоритмы", image: "/community/05.jpg" },
+        { title: "Цена от 3 кредитов", desc: "Одна из самых дешёвых моделей каталога при качестве флагманского уровня", image: "/community/01.jpg" }
+      ]
+    },
+    pricingBlock: { heading: "Тарифы ЭРА2", sub: "Одна подписка на все модели каталога — оплата в рублях, без VPN" },
+    ctaBanner: { title: "Работайте с DeepSeek\nбез VPN и зарубежной карты", button: "Начать бесплатно", image: "/community/02.jpg" },
     modelChips: {
       heading: "Другие текстовые модели",
       sub: "Все языковые модели в одной подписке",
@@ -5069,6 +5089,7 @@ export const toolPages: ToolPageData[] = [
         { name: "Perplexity", slug: "perplexity" },
       ],
     },
+
   },
   {
     slug: "perplexity",
