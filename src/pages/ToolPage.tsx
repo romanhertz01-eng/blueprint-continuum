@@ -445,7 +445,7 @@ const ToolPage = () => {
               return <span className="font-medium text-right">{value}</span>;
             };
             return (
-              <section key="specs" className="max-w-3xl mx-auto px-4 py-14 md:py-20">
+              <section key="specs" className="max-w-3xl mx-auto px-4 py-16 md:py-24">
                 {data.specs.heading && (
                   <div className="mb-8 md:mb-12">
                     <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">{data.specs.heading}</h2>
@@ -844,7 +844,7 @@ const ToolPage = () => {
       })()}
 
       {showRelated && (
-        <section className="max-w-5xl mx-auto px-4 py-14 md:py-20">
+        <section className="max-w-5xl mx-auto px-4 py-16 md:py-24">
           <div className="mb-8 md:mb-12">
             <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">Похожие инструменты</h2>
           </div>
@@ -870,7 +870,7 @@ const ToolPage = () => {
 
       {/* Final CTA (tool pages) */}
       {data.tool && data.finalCta && (
-        <section className="max-w-3xl mx-auto px-4 py-16 md:py-20 text-center">
+        <section className="max-w-3xl mx-auto px-4 py-16 md:py-24 text-center">
           <h2 className="text-[24px] md:text-[32px] font-bold mb-4 leading-tight">{data.finalCta.title}</h2>
           <p className="text-muted-foreground text-sm md:text-base mb-8 max-w-[600px] mx-auto">{data.finalCta.subtitle}</p>
           <button
