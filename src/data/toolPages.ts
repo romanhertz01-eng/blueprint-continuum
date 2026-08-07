@@ -4309,8 +4309,20 @@ export const toolPages: ToolPageData[] = [
         { title: "Тексты для работы", desc: "Письма, посты, описания, инструкции — с нужным тоном и структурой", image: "/community/05.jpg" }
       ]
     },
+    articles: {
+      heading: "Статьи про ChatGPT",
+      sub: "Разбираем возможности, версии и сценарии применения",
+      items: [
+        { title: "Как пользоваться ChatGPT из России без VPN", tag: "Гайд", image: "/community/01.jpg" },
+        { title: "Чем GPT 5.4 отличается от GPT 5.2 и когда переплачивать не нужно", tag: "Версии", image: "/community/03.jpg" },
+        { title: "20 промптов для работы с документами и таблицами", tag: "Промты", image: "/community/05.jpg" },
+        { title: "ChatGPT для кода: как разбирать чужой проект", tag: "Разработка", image: "/community/02.jpg" },
+        { title: "Оплата ChatGPT российской картой — что изменилось", tag: "Новости", image: "/community/06.jpg" },
+        { title: "ChatGPT или Claude: что выбрать под свои задачи", tag: "Сравнение", image: "/community/04.jpg" }
+      ]
+    },
     pricingBlock: { heading: "Тарифы ЭРА2", sub: "Одна подписка на все модели каталога — оплата в рублях, без VPN" },
-    ctaBanner: { title: "Работайте с ChatGPT\nбез VPN и зарубежной карты", button: "Начать бесплатно", image: "/community/03.jpg" },
+    ctaBanner: { title: "Работайте с ChatGPT\nбез VPN и зарубежной карты", button: "Начать бесплатно", image: "/community/01.jpg" },
     useCases: {
       heading: "Что делают в ChatGPT каждый день",
       items: [
