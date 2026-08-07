@@ -5230,6 +5230,25 @@ export const toolPages: ToolPageData[] = [
         },
       ],
     },
+    modelVersions: {
+      heading: "Режимы Perplexity в ЭРА2",
+      sub: "Два режима поиска под глубину задачи",
+      versions: [
+        { name: "Sonar Pro", role: "Поиск с источниками", price: "35 кр за запрос", desc: "Ищет в интернете и приводит ссылку к каждому утверждению", isDefault: true },
+        { name: "Deep Research", role: "Глубокое исследование", price: "150 кр за запрос", desc: "Десятки запросов, сверка источников между собой, связный отчёт" }
+      ]
+    },
+    capabilityCards: {
+      heading: "Три сценария Perplexity",
+      sub: "Что чаще всего решают на этой модели",
+      cards: [
+        { title: "Ответ со ссылками", desc: "К каждому утверждению — источник, который можно открыть и проверить", image: "/community/06.jpg" },
+        { title: "Актуальные данные", desc: "Ищет в интернете в момент запроса, а не отвечает по памяти обучения", image: "/community/03.jpg" },
+        { title: "Глубокое исследование", desc: "Deep Research делает десятки запросов и сводит источники в один отчёт", image: "/community/02.jpg" }
+      ]
+    },
+    pricingBlock: { heading: "Тарифы ЭРА2", sub: "Одна подписка на все модели каталога — оплата в рублях, без VPN" },
+    ctaBanner: { title: "Ищите с источниками\nбез VPN и зарубежной карты", button: "Начать бесплатно", image: "/community/06.jpg" },
     modelChips: {
       heading: "Другие текстовые модели",
       sub: "Все языковые модели в одной подписке",
@@ -5241,6 +5260,7 @@ export const toolPages: ToolPageData[] = [
         { name: "DeepSeek", slug: "deepseek" },
       ],
     },
+
   },
   {
     slug: "imagen",
