@@ -203,14 +203,6 @@ const ToolPage = () => {
   ];
   const isWidePilot = data.kind === "model" && wideSlugs.includes(data.slug);
 
-  // Широкий шаблон: модельные страницы видео и изображений + текст
-  const wideSlugs = [
-    "kling", "sora", "veo", "seedance", "hailuo", "runway", "wan", "heygen",
-    "nano-banana", "seedream", "flux", "gpt-image", "grok-imagine", "qwen-image",
-    "chatgpt", "claude", "gemini", "grok", "deepseek", "perplexity",
-  ];
-  const isWidePilot = data.kind === "model" && wideSlugs.includes(data.slug);
-
   return (
     <div className="min-w-0">
       <script
