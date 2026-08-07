@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { Copy, Check } from "lucide-react";
+import { toast } from "sonner";
 
 type Item = {
   label?: string;
