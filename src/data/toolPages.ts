@@ -1,7 +1,7 @@
 export interface ToolPageData {
   slug: string;
   kind: 'tool' | 'model';
-  /** Optional per-page override of section render order. Keys must match ToolPage `sections` map. */
+  /** Optional per-page override of section order. Keys must match ToolPage sections map. */
   sectionOrder?: string[];
   status?: 'published' | 'draft';
   updatedAt?: string;
@@ -133,6 +133,18 @@ export interface ToolPageData {
     heading: string;
     images: string[];
     initialCount?: number;
+  };
+  modelVersions?: {
+    heading: string;
+    sub?: string;
+    versions: {
+      name: string;
+      role: string;
+      price: string;
+      desc: string;
+      unlimited?: string;
+      isDefault?: boolean;
+    }[];
   };
 }
 
