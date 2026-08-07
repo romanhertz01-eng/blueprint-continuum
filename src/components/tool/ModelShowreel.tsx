@@ -55,7 +55,7 @@ export function ModelShowreel({ heading, sub, items, aspect = '2/1' }: ModelShow
         </div>
       )}
 
-      <div className={`${aspectClass} ${mediaMaxWidth} mx-auto w-full rounded-2xl overflow-hidden border border-white/10 bg-white/[0.03] relative`}>
+      <div className={`${aspectClass} ${mediaMaxWidth} mx-auto w-full max-h-[520px] rounded-2xl overflow-hidden border border-white/10 bg-white/[0.03] relative`}>
         {active.video ? (
           <video
             key={active.video}

@@ -23,7 +23,7 @@ export function TransformShowcase({
   onCtaClick,
 }: Props) {
   return (
-    <section className="max-w-[1360px] mx-auto px-4 py-16 md:py-24">
+    <section className="max-w-[1360px] mx-auto px-4 py-14 md:py-20">
       {heading && (
         <div className="mb-8 md:mb-12">
           <h2 className="text-3xl md:text-[40px] font-bold text-center leading-tight">{heading}</h2>

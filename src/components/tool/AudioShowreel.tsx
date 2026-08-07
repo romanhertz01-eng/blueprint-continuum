@@ -23,7 +23,7 @@ interface Props {
 
 export function AudioShowreel({ heading, sub, textLabel = "Озвученный текст", items, className }: Props) {
   return (
-    <section className={cn("max-w-4xl mx-auto px-4 py-16 md:py-24", className)}>
+    <section className={cn("max-w-4xl mx-auto px-4 py-14 md:py-20", className)}>
       {heading && (
         <div className="mb-8 md:mb-12">
           <h2 className="text-2xl md:text-3xl font-bold text-center md:text-left">{heading}</h2>
