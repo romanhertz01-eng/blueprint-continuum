@@ -1,3 +1,5 @@
+import { cn } from "@/lib/utils";
+
 type CapabilityCard = {
   title: string;
   desc: string;

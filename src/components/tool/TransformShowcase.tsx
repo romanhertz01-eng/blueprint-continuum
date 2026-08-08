@@ -10,6 +10,7 @@ interface Props {
   outputs: string[];
   outputCols?: 2 | 3;
   onCtaClick?: () => void;
+  className?: string;
 }
 
 export function TransformShowcase({
@@ -21,6 +22,7 @@ export function TransformShowcase({
   outputs,
   outputCols = 2,
   onCtaClick,
+  className,
 }: Props) {
   return (
     <section className={cn("max-w-[1360px] mx-auto px-4 py-14 md:py-20", className)}>

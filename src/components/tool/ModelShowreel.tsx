@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { cn } from "@/lib/utils";
 
 type ShowreelItem = { image: string; video?: string; prompt?: string; label?: string };
 
