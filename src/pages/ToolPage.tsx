@@ -227,7 +227,7 @@ const ToolPage = () => {
           />
         )}
         <div className={cn("relative z-10", data.heroVideo && "pb-32")}>
-      <section className="relative overflow-hidden" style={data.heroVideo ? undefined : { background: "linear-gradient(to bottom, hsl(var(--background)), hsl(var(--card)))" }}>
+      <section className="relative overflow-hidden section-hero" style={data.heroVideo ? undefined : { background: "linear-gradient(to bottom, hsl(var(--background)), hsl(var(--card)))" }}>
         {!data.heroVideo && (
           <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 80% 100% at 50% 0%, rgba(232,84,32,0.15) 0%, rgba(255,122,61,0.05) 40%, transparent 70%)" }} />
         )}
