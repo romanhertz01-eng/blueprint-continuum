@@ -227,7 +227,7 @@ const ToolPage = () => {
           />
         )}
         <div className={cn("relative z-10", data.heroVideo && "pb-32")}>
-      <section className="relative overflow-hidden" style={data.heroVideo ? undefined : { background: "linear-gradient(to bottom, hsl(var(--background)), hsl(var(--card)))" }}>
+      <section className="relative overflow-hidden section-hero" style={data.heroVideo ? undefined : { background: "linear-gradient(to bottom, hsl(var(--background)), hsl(var(--card)))" }}>
         {!data.heroVideo && (
           <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 80% 100% at 50% 0%, rgba(232,84,32,0.15) 0%, rgba(255,122,61,0.05) 40%, transparent 70%)" }} />
         )}
@@ -278,10 +278,14 @@ const ToolPage = () => {
       {(() => {
         const sections: Record<string, React.ReactNode> = {
           showcaseStrip: data.showcaseStrip ? (
-            <ShowcaseStrip key="showcaseStrip" images={data.showcaseStrip.images} />
+            <ShowcaseStrip 
+              key="showcaseStrip" 
+              images={data.showcaseStrip.images}
+              className="section-showcaseStrip" 
+            />
           ) : null,
           intro: data.intro ? (
-            <section key="intro" className="max-w-3xl mx-auto px-4 py-14 md:py-20 text-center">
+            <section key="intro" className="max-w-3xl mx-auto px-4 py-14 md:py-20 text-center section-intro">
               {data.intro.heading && <h2 className="text-2xl md:text-[32px] font-bold mb-4">{data.intro.heading}</h2>}
               <p className="text-muted-foreground leading-relaxed">{data.intro.text}</p>
             </section>
@@ -289,6 +293,7 @@ const ToolPage = () => {
           visualCards: data.visualCards ? (
             <VisualCards
               key="visualCards"
+              className="section-visualCards"
               heading={data.visualCards.heading}
               sub={data.visualCards.sub}
               cards={data.visualCards.cards}
@@ -296,7 +301,7 @@ const ToolPage = () => {
           ) : null,
           showreel: data.showreel ? (
             data.kind === 'tool' ? (
-              <section key="showreel" className="max-w-5xl mx-auto px-4 py-14 md:py-20">
+              <section key="showreel" className="max-w-5xl mx-auto px-4 py-14 md:py-20 section-showreel">
                 {data.showreel.heading && (
                   <div className="mb-8 md:mb-12">
                     <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">{data.showreel.heading}</h2>
@@ -331,6 +336,7 @@ const ToolPage = () => {
             ) : (
               <ModelShowreel
                 key="showreel"
+                className="section-showreel"
                 heading={data.showreel.heading}
                 sub={data.showreel.sub}
                 aspect={data.showreel.aspect}
@@ -341,6 +347,7 @@ const ToolPage = () => {
           capabilityCards: data.capabilityCards ? (
             <CapabilityCards
               key="capabilityCards"
+              className="section-capabilityCards"
               heading={data.capabilityCards.heading}
               sub={data.capabilityCards.sub}
               cards={data.capabilityCards.cards}
@@ -349,6 +356,7 @@ const ToolPage = () => {
           audioShowreel: data.audioShowreel ? (
             <AudioShowreel
               key="audioShowreel"
+              className="section-audioShowreel"
               heading={data.audioShowreel.heading}
               sub={data.audioShowreel.sub}
               textLabel={data.audioShowreel.textLabel}
@@ -358,6 +366,7 @@ const ToolPage = () => {
           promptAnswer: data.promptAnswer ? (
             <PromptAnswer
               key="promptAnswer"
+              className="section-promptAnswer"
               heading={data.promptAnswer.heading}
               sub={data.promptAnswer.sub}
               items={data.promptAnswer.items}
@@ -366,6 +375,7 @@ const ToolPage = () => {
           transformShowcase: data.transformShowcase ? (
             <TransformShowcase
               key="transformShowcase"
+              className="section-transformShowcase"
               heading={data.transformShowcase.heading}
               sub={data.transformShowcase.sub}
               cta={data.transformShowcase.cta}
@@ -379,6 +389,7 @@ const ToolPage = () => {
           gallery: data.gallery ? (
             <ModelGallery
               key="gallery"
+              className="section-gallery"
               heading={data.gallery.heading}
               images={data.gallery.images}
               initialCount={data.gallery.initialCount}
@@ -387,6 +398,7 @@ const ToolPage = () => {
           pricingBlock: data.pricingBlock ? (
             <PricingBlock
               key="pricingBlock"
+              className="section-pricingBlock"
               heading={data.pricingBlock.heading}
               sub={data.pricingBlock.sub}
             />
@@ -394,6 +406,7 @@ const ToolPage = () => {
           modelVersions: data.modelVersions ? (
             <ModelVersions
               key="modelVersions"
+              className="section-modelVersions"
               heading={data.modelVersions.heading}
               sub={data.modelVersions.sub}
               versions={data.modelVersions.versions}
@@ -402,6 +415,7 @@ const ToolPage = () => {
           ctaBanner: data.ctaBanner ? (
             <CtaBanner
               key="ctaBanner"
+              className="section-ctaBanner"
               title={data.ctaBanner.title}
               button={data.ctaBanner.button}
               image={data.ctaBanner.image}
@@ -412,6 +426,7 @@ const ToolPage = () => {
           articles: data.articles ? (
             <ArticlesGrid
               key="articles"
+              className="section-articles"
               heading={data.articles.heading}
               sub={data.articles.sub}
               items={data.articles.items}
@@ -437,7 +452,7 @@ const ToolPage = () => {
               return <span className="font-medium text-right">{value}</span>;
             };
             return (
-              <section key="specs" className="max-w-3xl mx-auto px-4 py-14 md:py-20">
+              <section key="specs" className="max-w-3xl mx-auto px-4 py-14 md:py-20 section-specs">
                 {data.specs.heading && (
                   <div className="mb-8 md:mb-12">
                     <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">{data.specs.heading}</h2>
@@ -461,7 +476,7 @@ const ToolPage = () => {
             );
           })() : null,
           keyFeature: data.keyFeatureTitle ? (
-            <section key="keyFeature" className="max-w-4xl mx-auto px-4 py-14 md:py-20">
+            <section key="keyFeature" className="max-w-4xl mx-auto px-4 py-14 md:py-20 section-keyFeature">
               {data.keyFeatureTitle && <h2 className="text-2xl md:text-[32px] font-bold mb-4">{data.keyFeatureTitle}</h2>}
               {data.keyFeatureDescription && (
                 <p className="text-muted-foreground leading-relaxed whitespace-pre-line">{data.keyFeatureDescription}</p>
@@ -475,7 +490,7 @@ const ToolPage = () => {
             </section>
           ) : null,
           comparisonTable: data.comparisonTable ? (
-            <section key="comparisonTable" className="max-w-5xl mx-auto px-4 py-14 md:py-20">
+            <section key="comparisonTable" className="max-w-5xl mx-auto px-4 py-14 md:py-20 section-comparisonTable">
               {data.comparisonTable.heading && (
                 <div className="mb-8 md:mb-12">
                   <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">{data.comparisonTable.heading}</h2>
@@ -524,7 +539,7 @@ const ToolPage = () => {
           featureBlocks: data.featureBlocks ? (() => {
             const withImg = data.featureBlocks.filter((b) => !!b.image);
             return (
-              <section key="featureBlocks" className="max-w-5xl mx-auto px-4 py-14 md:py-20 flex flex-col gap-16">
+              <section key="featureBlocks" className="max-w-5xl mx-auto px-4 py-14 md:py-20 flex flex-col gap-16 section-featureBlocks">
                 {withImg.map((b, i) => (
                   <div
                     key={`img-${i}`}
@@ -553,7 +568,7 @@ const ToolPage = () => {
             );
           })() : null,
           tips: data.tips ? (
-            <section key="tips" className="max-w-5xl mx-auto px-4 py-14 md:py-20">
+            <section key="tips" className="max-w-5xl mx-auto px-4 py-14 md:py-20 section-tips">
               {data.tips.heading && (
                 <div className="mb-8 md:mb-12">
                   <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">{data.tips.heading}</h2>
@@ -573,7 +588,7 @@ const ToolPage = () => {
             </section>
           ) : null,
           useCases: data.useCases ? (
-            <section key="useCases" className="max-w-5xl mx-auto px-4 py-14 md:py-20">
+            <section key="useCases" className="max-w-5xl mx-auto px-4 py-14 md:py-20 section-useCases">
               {data.useCases.heading && (
                 <div className="mb-8 md:mb-12">
                   <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">{data.useCases.heading}</h2>
@@ -593,7 +608,7 @@ const ToolPage = () => {
             </section>
           ) : null,
           modelChips: data.modelChips ? (
-            <section key="modelChips" className="max-w-5xl mx-auto px-4 py-14 md:py-20">
+            <section key="modelChips" className="max-w-5xl mx-auto px-4 py-14 md:py-20 section-modelChips">
               {data.modelChips.heading && (
                 <div className="mb-8 md:mb-12">
                   <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">{data.modelChips.heading}</h2>
@@ -665,7 +680,7 @@ const ToolPage = () => {
             </section>
           ) : null,
           howItWorks: data.howItWorks ? (
-            <section key="howItWorks" className="max-w-5xl mx-auto px-4 py-14 md:py-20">
+            <section key="howItWorks" className="max-w-5xl mx-auto px-4 py-14 md:py-20 section-howItWorks">
               {data.howItWorks.title && (
                 <div className="mb-8 md:mb-12">
                   <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">
@@ -702,7 +717,7 @@ const ToolPage = () => {
             if (tools.length === 1) {
               const t = tools[0];
               return (
-                <section key="modelTools" className="max-w-5xl mx-auto px-4 py-14 md:py-20">
+                <section key="modelTools" className="max-w-5xl mx-auto px-4 py-14 md:py-20 section-modelTools">
                   <div className="mb-8 md:mb-12">
                     <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">Что делают на этой модели</h2>
                   </div>
@@ -724,7 +739,7 @@ const ToolPage = () => {
               );
             }
             return (
-              <section key="modelTools" className="max-w-5xl mx-auto px-4 py-14 md:py-20">
+              <section key="modelTools" className="max-w-5xl mx-auto px-4 py-14 md:py-20 section-modelTools">
                 <div className="mb-8 md:mb-12">
                   <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">Что делают на этой модели</h2>
                 </div>
@@ -822,7 +837,7 @@ const ToolPage = () => {
                 <div key={k} className={cn(
                   "w-full", 
                   i % 2 === 0 ? "bg-background" : "bg-muted/30",
-                  i === 0 && "first-section"
+                  i === 0 && "[&_.section-" + k + "]:pt-0"
                 )}>
                   {sections[k]}
                 </div>
@@ -833,7 +848,7 @@ const ToolPage = () => {
         return (
           <div className="tool-standard">
             {order.map((k, i) => (
-              <div key={k} className={i === 0 ? "first-section" : ""}>
+              <div key={k} className={cn(i === 0 && "[&_.section-" + k + "]:pt-0")}>
                 {sections[k]}
               </div>
             ))}

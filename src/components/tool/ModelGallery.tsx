@@ -1,12 +1,14 @@
 import { useState } from "react";
+import { cn } from "@/lib/utils";
 
 interface ModelGalleryProps {
   heading: string;
   images: string[];
   initialCount?: number;
+  className?: string;
 }
 
-export function ModelGallery({ heading, images, initialCount = 12 }: ModelGalleryProps) {
+export function ModelGallery({ heading, images, initialCount = 12, className }: ModelGalleryProps) {
   const [shown, setShown] = useState(initialCount);
 
   if (!images.length) return null;
@@ -15,7 +17,7 @@ export function ModelGallery({ heading, images, initialCount = 12 }: ModelGaller
   const canShowMore = shown < images.length;
 
   return (
-    <section className="max-w-6xl mx-auto px-4 py-14 md:py-20">
+    <section className={cn("max-w-6xl mx-auto px-4 py-14 md:py-20", className)}>
       {heading && (
         <div className="mb-8 md:mb-12">
           <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">{heading}</h2>

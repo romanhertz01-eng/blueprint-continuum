@@ -12,15 +12,16 @@ type Props = {
   heading: string;
   sub?: string;
   items: Item[];
+  className?: string;
 };
 
-export function PromptAnswer({ heading, sub, items }: Props) {
+export function PromptAnswer({ heading, sub, items, className }: Props) {
   const [activeIdx, setActiveIdx] = useState(0);
   if (!items?.length) return null;
   const active = items[activeIdx] ?? items[0];
 
   return (
-    <section className="max-w-5xl mx-auto px-4 py-14 md:py-20">
+    <section className={cn("max-w-5xl mx-auto px-4 py-14 md:py-20", className)}>
       {heading && (
         <div className="mb-8 md:mb-12">
           <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">{heading}</h2>

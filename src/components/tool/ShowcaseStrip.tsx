@@ -1,11 +1,14 @@
+import { cn } from "@/lib/utils";
+
 interface ShowcaseStripProps {
   images: string[];
+  className?: string;
 }
 
-export function ShowcaseStrip({ images }: ShowcaseStripProps) {
+export function ShowcaseStrip({ images, className }: ShowcaseStripProps) {
   if (!images.length) return null;
   return (
-    <section className="py-14 md:py-20">
+    <section className={cn("py-14 md:py-20", className)}>
       <div className="no-scrollbar flex gap-3 overflow-x-auto snap-x px-4">
         {images.map((src, i) => (
           <div
