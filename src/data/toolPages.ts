@@ -14,6 +14,11 @@ export interface ToolPageData {
   technologyDescription: string;
   category: "image" | "video" | "audio" | "text";
   heroFacts?: string[];
+  heroVideo?: {
+    src: string;
+    poster?: string;
+    overlay?: number;
+  };
   tool?: {
     layout: "panel" | "row";
     model: string;
@@ -115,11 +120,6 @@ export interface ToolPageData {
     }[];
   };
   showcaseStrip?: { images: string[] };
-  heroVideo?: {
-    src: string;
-    poster?: string;
-    overlay?: number;
-  };
   transformShowcase?: {
     heading: string;
     sub?: string;
