@@ -740,6 +740,16 @@ export const toolPages: ToolPageData[] = [
         { image: "/community/08.jpg", label: "Резкость лица" },
       ],
     },
+    modelChips: {
+      heading: "Инструменты для работы с фото",
+      sub: "Верните жизнь старым снимкам",
+      models: [
+        { name: "Оживить фото", slug: "ozhivit-foto" },
+        { name: "Раскрасить фото", slug: "colorize-photo" },
+        { name: "Улучшить качество", slug: "image-upscaler" },
+        { name: "Удалить фон", slug: "remove-background" },
+      ],
+    },
   },
   {
     slug: "colorize-photo",
