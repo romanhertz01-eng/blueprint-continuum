@@ -1,14 +1,17 @@
+import { cn } from "@/lib/utils";
+
 interface CtaBannerProps {
   title: string;
   button: string;
   image?: string;
   video?: string;
   onClick?: () => void;
+  className?: string;
 }
 
-export function CtaBanner({ title, button, image, video, onClick }: CtaBannerProps) {
+export function CtaBanner({ title, button, image, video, onClick, className }: CtaBannerProps) {
   return (
-    <section className="w-full py-14 md:py-20">
+    <section className={cn("w-full py-14 md:py-20", className)}>
       <div className="max-w-[1360px] mx-auto px-4">
         <div className="relative rounded-3xl overflow-hidden min-h-[420px] flex items-center justify-center">
           {video ? (

@@ -10,9 +10,10 @@ interface VisualCardsProps {
   heading: string;
   sub?: string;
   cards: VisualCard[];
+  className?: string;
 }
 
-export function VisualCards({ heading, sub, cards }: VisualCardsProps) {
+export function VisualCards({ heading, sub, cards, className }: VisualCardsProps) {
   const scrollerRef = useRef<HTMLDivElement | null>(null);
   const itemRefs = useRef<Array<HTMLElement | null>>([]);
   const [activeIdx, setActiveIdx] = useState(0);
@@ -47,7 +48,7 @@ export function VisualCards({ heading, sub, cards }: VisualCardsProps) {
   }, [cards.length]);
 
   return (
-    <section className="max-w-6xl mx-auto px-4 py-14 md:py-20">
+    <section className={cn("max-w-6xl mx-auto px-4 py-14 md:py-20", className)}>
       {heading && (
         <div className="mb-8 md:mb-12">
           <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">{heading}</h2>
