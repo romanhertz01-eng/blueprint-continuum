@@ -14,6 +14,11 @@ export interface ToolPageData {
   technologyDescription: string;
   category: "image" | "video" | "audio" | "text";
   heroFacts?: string[];
+  heroVideo?: {
+    src: string;
+    poster?: string;
+    overlay?: number;
+  };
   tool?: {
     layout: "panel" | "row";
     model: string;
@@ -115,11 +120,6 @@ export interface ToolPageData {
     }[];
   };
   showcaseStrip?: { images: string[] };
-  heroVideo?: {
-    src: string;
-    poster?: string;
-    overlay?: number;
-  };
   transformShowcase?: {
     heading: string;
     sub?: string;
@@ -309,6 +309,17 @@ export const toolPages: ToolPageData[] = [
         { image: "/community/04.jpg", label: "Ч/б в цвете" },
       ],
     },
+    modelChips: {
+      heading: "Другие инструменты для видео",
+      sub: "Все ИИ-инструменты в одной подписке",
+      models: [
+        { name: "Kling 3.0", slug: "kling" },
+        { name: "Runway Gen-3", slug: "runway" },
+        { name: "Luma Dream Machine", slug: "luma" },
+        { name: "Hailuo AI", slug: "hailuo" },
+        { name: "HeyGen", slug: "heygen" },
+      ],
+    },
   },
   {
     slug: "remove-background",
@@ -440,6 +451,16 @@ export const toolPages: ToolPageData[] = [
         { image: "/community/06.jpg", label: "Портрет без фона" },
         { image: "/community/07.jpg", label: "Продукт для лендинга" },
         { image: "/community/08.jpg", label: "Одежда для маркетплейса" },
+      ],
+    },
+    modelChips: {
+      heading: "Другие инструменты для графики",
+      sub: "Улучшайте и редактируйте фото в один клик",
+      models: [
+        { name: "Апскейлер", slug: "image-upscaler" },
+        { name: "Реставрация", slug: "photo-restoration" },
+        { name: "Раскрашивание", slug: "colorize-photo" },
+        { name: "Удаление объектов", slug: "remove-object" },
       ],
     },
   },
@@ -576,6 +597,16 @@ export const toolPages: ToolPageData[] = [
         { image: "/community/07.jpg", label: "Логотип 4×" },
       ],
     },
+    modelChips: {
+      heading: "Другие инструменты для графики",
+      sub: "Улучшайте и редактируйте фото в один клик",
+      models: [
+        { name: "Удаление фона", slug: "remove-background" },
+        { name: "Реставрация", slug: "photo-restoration" },
+        { name: "Раскрашивание", slug: "colorize-photo" },
+        { name: "Векторизация", slug: "vectorizer" },
+      ],
+    },
   },
   {
     slug: "photo-restoration",
@@ -707,6 +738,16 @@ export const toolPages: ToolPageData[] = [
         { image: "/community/04.jpg", label: "Царапины убраны" },
         { image: "/community/06.jpg", label: "Цвет восстановлен" },
         { image: "/community/08.jpg", label: "Резкость лица" },
+      ],
+    },
+    modelChips: {
+      heading: "Инструменты для работы с фото",
+      sub: "Верните жизнь старым снимкам",
+      models: [
+        { name: "Оживить фото", slug: "ozhivit-foto" },
+        { name: "Раскрасить фото", slug: "colorize-photo" },
+        { name: "Улучшить качество", slug: "image-upscaler" },
+        { name: "Удалить фон", slug: "remove-background" },
       ],
     },
   },

@@ -842,6 +842,11 @@ const ToolPage = () => {
                   {sections[k]}
                 </div>
               ))}
+              {!rendered.includes("modelChips") && sections["modelChips"] && (
+                <div className={cn("w-full", rendered.length % 2 === 0 ? "bg-background" : "bg-muted/30")}>
+                  {sections["modelChips"]}
+                </div>
+              )}
             </div>
           );
         }
