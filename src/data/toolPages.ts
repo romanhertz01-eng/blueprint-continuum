@@ -309,6 +309,17 @@ export const toolPages: ToolPageData[] = [
         { image: "/community/04.jpg", label: "Ч/б в цвете" },
       ],
     },
+    modelChips: {
+      heading: "Другие инструменты для видео",
+      sub: "Все ИИ-инструменты в одной подписке",
+      models: [
+        { name: "Kling 3.0", slug: "kling" },
+        { name: "Runway Gen-3", slug: "runway" },
+        { name: "Luma Dream Machine", slug: "luma" },
+        { name: "Hailuo AI", slug: "hailuo" },
+        { name: "HeyGen", slug: "heygen" },
+      ],
+    },
   },
   {
     slug: "remove-background",
@@ -440,6 +451,16 @@ export const toolPages: ToolPageData[] = [
         { image: "/community/06.jpg", label: "Портрет без фона" },
         { image: "/community/07.jpg", label: "Продукт для лендинга" },
         { image: "/community/08.jpg", label: "Одежда для маркетплейса" },
+      ],
+    },
+    modelChips: {
+      heading: "Другие инструменты для графики",
+      sub: "Улучшайте и редактируйте фото в один клик",
+      models: [
+        { name: "Апскейлер", slug: "image-upscaler" },
+        { name: "Реставрация", slug: "photo-restoration" },
+        { name: "Раскрашивание", slug: "colorize-photo" },
+        { name: "Удаление объектов", slug: "remove-object" },
       ],
     },
   },
@@ -574,6 +595,16 @@ export const toolPages: ToolPageData[] = [
         { image: "/community/03.jpg", label: "Пейзаж 4×" },
         { image: "/community/05.jpg", label: "Скриншот 2×" },
         { image: "/community/07.jpg", label: "Логотип 4×" },
+      ],
+    },
+    modelChips: {
+      heading: "Другие инструменты для графики",
+      sub: "Улучшайте и редактируйте фото в один клик",
+      models: [
+        { name: "Удаление фона", slug: "remove-background" },
+        { name: "Реставрация", slug: "photo-restoration" },
+        { name: "Раскрашивание", slug: "colorize-photo" },
+        { name: "Векторизация", slug: "vectorizer" },
       ],
     },
   },
