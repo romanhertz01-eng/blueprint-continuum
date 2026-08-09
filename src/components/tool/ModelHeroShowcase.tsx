@@ -1,20 +1,56 @@
 import { cn } from "@/lib/utils";
 import { Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
+
+interface Poster {
+  src: string;
+  alt: string;
+  aspect: "3:4" | "4:3";
+}
 
 interface ModelHeroShowcaseProps {
   heading: string;
   subheading: string;
   buttonText: string;
-  images: string[];
+  posters: Poster[];
   className?: string;
 }
+
+const PosterItem = ({ poster }: { poster: Poster }) => {
+  const [error, setError] = useState(false);
+
+  return (
+    <div
+      className={cn(
+        "relative rounded-[12px] overflow-hidden bg-[#EAE2DC] border border-[#CFC2B4]",
+        poster.aspect === "3:4" ? "aspect-[3/4]" : "aspect-[4/3]"
+      )}
+    >
+      {!error ? (
+        <img
+          src={poster.src}
+          alt={poster.alt}
+          className="w-full h-full object-cover transition-transform duration-700 hover:scale-110"
+          loading="lazy"
+          onError={() => setError(true)}
+        />
+      ) : (
+        <div className="w-full h-full flex items-center justify-center p-4 text-center">
+          <span className="text-[10px] md:text-xs text-[#8E8277] font-medium leading-tight">
+            {poster.alt}
+          </span>
+        </div>
+      )}
+    </div>
+  );
+};
 
 export const ModelHeroShowcase = ({
   heading,
   subheading,
   buttonText,
-  images,
+  posters,
   className,
 }: ModelHeroShowcaseProps) => {
   return (
@@ -56,25 +92,10 @@ export const ModelHeroShowcase = ({
           </div>
         </div>
 
-        {/* Right Column - Masonry Grid */}
+        {/* Right Column - Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 content-start">
-          {images.slice(0, 8).map((src, i) => (
-            <div 
-              key={i} 
-              className={cn(
-                "relative rounded-[12px] overflow-hidden bg-muted",
-                i % 3 === 0 ? "aspect-[3/4]" : "aspect-[4/3]",
-                // Special vertical/horizontal mix based on index for variety
-                i === 0 || i === 5 || i === 6 ? "row-span-2 aspect-auto h-full" : ""
-              )}
-            >
-              <img 
-                src={src} 
-                alt="" 
-                className="w-full h-full object-cover transition-transform duration-700 hover:scale-110"
-                loading="lazy"
-              />
-            </div>
+          {posters.slice(0, 8).map((poster, i) => (
+            <PosterItem key={i} poster={poster} />
           ))}
         </div>
       </div>

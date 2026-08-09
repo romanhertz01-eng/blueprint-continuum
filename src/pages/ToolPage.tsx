@@ -441,7 +441,7 @@ const ToolPage = () => {
               heading={data.modelHeroShowcase.heading}
               subheading={data.modelHeroShowcase.subheading}
               buttonText={data.modelHeroShowcase.buttonText}
-              images={data.modelHeroShowcase.images}
+              posters={data.modelHeroShowcase.posters}
             />
           ) : null,
 

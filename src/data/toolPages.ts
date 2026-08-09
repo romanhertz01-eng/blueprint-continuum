@@ -163,7 +163,7 @@ export interface ToolPageData {
     heading: string;
     subheading: string;
     buttonText: string;
-    images: string[];
+    posters: { src: string; alt: string; aspect: "3:4" | "4:3" }[];
   };
 }
 
@@ -4356,15 +4356,15 @@ export const toolPages: ToolPageData[] = [
       heading: "Встречайте\nGPT-5.6",
       subheading: "Понимает длинные задачи и отвечает на русском без акцента",
       buttonText: "Попробовать",
-      images: [
-        "/community/01.jpg",
-        "/community/02.jpg",
-        "/community/03.jpg",
-        "/community/04.jpg",
-        "/community/05.jpg",
-        "/community/06.jpg",
-        "/community/07.jpg",
-        "/community/08.jpg",
+      posters: [
+        { src: "/posters/chatgpt-01.webp", alt: "План запуска за 30 дней", aspect: "3:4" },
+        { src: "/posters/chatgpt-02.webp", alt: "УСН или НПД", aspect: "4:3" },
+        { src: "/posters/chatgpt-03.webp", alt: "Письмо, которое не испортит отношения", aspect: "4:3" },
+        { src: "/posters/chatgpt-04.webp", alt: "Разбор договора: 4 риска", aspect: "3:4" },
+        { src: "/posters/chatgpt-05.webp", alt: "Код, который работает", aspect: "3:4" },
+        { src: "/posters/chatgpt-06.webp", alt: "Пост для ВК за 30 секунд", aspect: "4:3" },
+        { src: "/posters/chatgpt-07.webp", alt: "200 страниц → 5 тезисов", aspect: "4:3" },
+        { src: "/posters/chatgpt-08.webp", alt: "Ответ на русском, без акцента", aspect: "3:4" },
       ]
     },
     capabilityCards: {
