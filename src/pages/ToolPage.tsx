@@ -1013,7 +1013,14 @@ const ToolPage = () => {
         const order: string[] = data.sectionOrder ?? defaultOrder;
         if (isWidePilot) {
           const renderedKeys = order.filter((k) => !!sections[k] && (k !== 'priceCompare' || !!data.priceCompare));
-          console.log('Rendering wide layout for slug:', data.slug, 'keys:', renderedKeys, 'priceCompareData:', !!data.priceCompare, 'priceCompareSection:', !!sections['priceCompare']);
+          console.log('DEBUG: Rendering wide layout for slug:', data.slug);
+          console.log('DEBUG: Data keys:', Object.keys(data));
+          console.log('DEBUG: order:', order);
+          console.log('DEBUG: sections keys:', Object.keys(sections));
+          console.log('DEBUG: priceCompare in sections:', !!sections['priceCompare']);
+          console.log('DEBUG: priceCompare in data:', !!data.priceCompare);
+          const renderedKeys = order.filter((k) => !!sections[k] && (k !== 'priceCompare' || !!data.priceCompare));
+          console.log('DEBUG: renderedKeys:', renderedKeys);
           
           return (
             <div className="tool-wide">
