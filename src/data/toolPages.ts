@@ -4384,7 +4384,6 @@ export const toolPages: ToolPageData[] = [
       },
     },
     sectionOrder: [
-      "modelHeroShowcase",
       "capabilityCards",
       "featureBlocks",
       "pricingBlock",

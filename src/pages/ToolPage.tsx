@@ -983,7 +983,7 @@ const ToolPage = () => {
           "ctaBanner",
         ];
         const textOrder = [
-          "modelHeroShowcase",
+          "capabilityCards",
           "capabilityCards",
           "featureBlocks",
           "pricingBlock",
@@ -1012,8 +1012,7 @@ const ToolPage = () => {
         // Optional per-page full override of section order (only affects pages that set it).
         const order: string[] = data.sectionOrder ?? defaultOrder;
         if (isWidePilot) {
-          const renderedKeys = order.filter((k) => !!sections[k]);
-          console.log('Rendering wide layout for slug:', data.slug, 'keys:', renderedKeys);
+          const renderedKeys = order.filter((k) => !!sections[k] && (k !== 'priceCompare' || !!data.priceCompare));
           
           return (
             <div className="tool-wide">
