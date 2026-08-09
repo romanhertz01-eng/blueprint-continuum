@@ -69,7 +69,7 @@ const Mockup = ({ type }: MockupProps) => {
 
   if (type === 'multi') {
     return (
-      <div className="relative w-full h-full flex flex-col items-center justify-center p-0 gap-2">
+      <div className="relative w-[92%] h-[92%] flex flex-col items-center justify-center p-0 gap-2">
         {/* Prompt plate */}
         <div className="w-[90%] bg-[#1A1817] rounded-lg p-2.5 shadow-lg border border-white/5 z-30">
           <div className="h-1.5 w-full bg-white/20 rounded-full mb-1" />
