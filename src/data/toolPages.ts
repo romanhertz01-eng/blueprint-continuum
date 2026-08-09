@@ -4370,7 +4370,7 @@ export const toolPages: ToolPageData[] = [
       "pricingBlock",
       "modelVersions",
       "promptAnswer",
-      "modelChips",
+      "relatedTextModels",
       "intro",
       "specs",
       "comparisonTable",
