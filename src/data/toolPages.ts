@@ -4375,18 +4375,6 @@ export const toolPages: ToolPageData[] = [
       "faq",
       "related"
     ],
-        mode: "per-message",
-        unitLabel: "за сообщение",
-        rates: [
-          { label: "GPT-5.6 Luna", rate: 4, matchOption: "GPT-5.6 Luna" },
-          { label: "GPT 5.2", rate: 6, matchOption: "GPT 5.2" },
-          { label: "GPT 5.4", rate: 10, matchOption: "GPT 5.4" },
-          { label: "GPT-5.6 Terra", rate: 10, matchOption: "GPT-5.6 Terra" },
-          { label: "GPT 5.5", rate: 18, matchOption: "GPT 5.5" },
-          { label: "GPT-5.6 Sol", rate: 18, matchOption: "GPT-5.6 Sol" },
-        ],
-      },
-    },
     intro: {
       heading: "ChatGPT в России: полный доступ в одном окне",
       text: "ChatGPT — самая известная нейросеть мира: тексты, код, анализ документов, идеи и планы. Официальный доступ из России закрыт: нужен VPN, зарубежный номер для регистрации и иностранная карта для подписки Plus. В ЭРА2 всё это не нужно — модели OpenAI встроены в сервис напрямую: открыли вкладку, написали вопрос по-русски, получили ответ. Стоимость — от 4 кр за запрос, история диалогов сохраняется в личном кабинете.",
@@ -4544,6 +4532,45 @@ export const toolPages: ToolPageData[] = [
         { label: "Цена за сообщение", values: ["От 4 кр", "От 3 кр", "От 3 кр"] },
         { label: "Берите, когда", values: ["Нужен универсал", "Важен текст на выходе", "В задаче есть картинка"] },
       ],
+    },
+    relatedTextModels: {
+      heading: "Другие",
+      sub: "текстовые модели",
+      description: "Все языковые модели в одной подписке — без регистрации в каждом сервисе отдельно",
+      models: [
+        {
+          name: "Claude",
+          desc: "Умный помощник для текстов и кода с человеческим стилем общения",
+          price: "1 кр",
+          href: "/tools/claude",
+          image: "/posters/model-claude.webp",
+          tileConfig: { gradient: "linear-gradient(135deg, #D97757 0%, #A64D32 100%)" }
+        },
+        {
+          name: "Gemini",
+          desc: "Модель от Google с огромным окном контекста для разбора целых книг",
+          price: "1 кр",
+          href: "/tools/gemini",
+          image: "/posters/model-gemini.webp",
+          tileConfig: { gradient: "linear-gradient(135deg, #4A5DFF 0%, #8E2DE2 100%)" }
+        },
+        {
+          name: "Grok",
+          desc: "Нейросеть от Илона Маска: ироничная и с доступом к данные X (Twitter)",
+          price: "4 кр",
+          href: "/tools/grok",
+          image: "/posters/model-grok.webp",
+          tileConfig: { gradient: "linear-gradient(135deg, #2D2D2D 0%, #000000 100%)" }
+        },
+        {
+          name: "DeepSeek",
+          desc: "Мощный китайский ИИ, который лидирует в коде и математике",
+          price: "1 кр",
+          href: "/tools/deepseek",
+          image: "/posters/model-deepseek.webp",
+          tileConfig: { gradient: "linear-gradient(135deg, #1E3A5F 0%, #0F172A 100%)" }
+        }
+      ]
     },
     featureBlocks: [
       { title: "Без VPN, номера и иностранной карты", desc: "Три барьера официального ChatGPT сняты разом: доступ из российских сетей, регистрация по обычной почте, оплата рублями в составе единой подписки ЭРА2. Модель та же — путь к ней в три клика.", image: "/community/01.jpg", cta: "Открыть ChatGPT" },
