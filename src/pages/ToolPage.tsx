@@ -111,7 +111,6 @@ function truncate(s: string, n: number) {
 
 const ToolPage = () => {
   const { data } = toolRouteApi.useLoaderData() as { data: ToolPageData };
-  const isWidePilot = ['chatgpt', 'claude', 'gemini', 'grok', 'deepseek', 'perplexity'].includes(data.slug);
   const workspaceRef = useRef<HTMLDivElement | null>(null);
   const heroWrapRef = useRef<HTMLDivElement | null>(null);
   const [showFloatingBar, setShowFloatingBar] = useState(false);
