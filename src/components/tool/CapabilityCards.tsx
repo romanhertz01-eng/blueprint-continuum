@@ -71,13 +71,13 @@ const Mockup = ({ type }: MockupProps) => {
     return (
       <div className="relative w-full h-full flex flex-col items-center justify-center p-0 gap-2">
         {/* Prompt plate */}
-        <div className="w-[85%] bg-[#1A1817] rounded-lg p-2.5 shadow-lg border border-white/5 z-30">
+        <div className="w-[90%] bg-[#1A1817] rounded-lg p-2.5 shadow-lg border border-white/5 z-30">
           <div className="h-1.5 w-full bg-white/20 rounded-full mb-1" />
           <div className="h-1.5 w-2/3 bg-white/20 rounded-full" />
         </div>
         {/* AI Cards Stack */}
         <div className="relative w-full flex-1 mt-1">
-          <div className="absolute left-1/2 -translate-x-1/2 top-0 w-[85%] bg-white rounded-lg shadow-md border border-black/5 p-2 z-20 scale-100">
+          <div className="absolute left-1/2 -translate-x-1/2 top-0 w-[90%] bg-white rounded-lg shadow-md border border-black/5 p-2 z-20 scale-100">
             <div className="text-[7px] font-bold text-black/40 mb-1 uppercase tracking-wider">ChatGPT</div>
             <div className="space-y-1">
               <div className="h-1 w-full bg-black/5 rounded-full" />
@@ -85,7 +85,7 @@ const Mockup = ({ type }: MockupProps) => {
               <div className="h-1 w-2/3 bg-black/5 rounded-full" />
             </div>
           </div>
-          <div className="absolute left-1/2 -translate-x-1/2 top-4 w-[85%] bg-white rounded-lg shadow-md border border-black/5 p-2 z-15 scale-95 rotate-1">
+          <div className="absolute left-1/2 -translate-x-1/2 top-4 w-[90%] bg-white rounded-lg shadow-md border border-black/5 p-2 z-15 scale-95 rotate-1">
             <div className="text-[7px] font-bold text-black/40 mb-1 uppercase tracking-wider">Gemini</div>
             <div className="space-y-1">
               <div className="h-1 w-full bg-black/5 rounded-full" />
@@ -93,7 +93,7 @@ const Mockup = ({ type }: MockupProps) => {
               <div className="h-1 w-1/2 bg-black/5 rounded-full" />
             </div>
           </div>
-          <div className="absolute left-1/2 -translate-x-1/2 top-8 w-[85%] bg-white rounded-lg shadow-md border border-black/5 p-2 z-10 scale-90 -rotate-1">
+          <div className="absolute left-1/2 -translate-x-1/2 top-8 w-[90%] bg-white rounded-lg shadow-md border border-black/5 p-2 z-10 scale-90 -rotate-1">
             <div className="text-[7px] font-bold text-black/40 mb-1 uppercase tracking-wider">Claude</div>
             <div className="space-y-1">
               <div className="h-1 w-full bg-black/5 rounded-full" />
