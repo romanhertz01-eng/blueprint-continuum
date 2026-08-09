@@ -309,6 +309,7 @@ const ToolPage = () => {
                       {data.intro.heading && <h2 className="text-2xl md:text-[32px] font-bold leading-tight">{data.intro.heading}</h2>}
                     </div>
                   </div>
+                  </div>
                   <div className="md:w-[66%] max-w-[720px]">
                     <div className="text-muted-foreground leading-relaxed space-y-8">
                       <div className="space-y-3">
