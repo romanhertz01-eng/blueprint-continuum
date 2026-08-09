@@ -108,7 +108,7 @@ const Mockup = ({ type }: MockupProps) => {
 
   if (type === 'files') {
     return (
-      <div className="relative w-full h-full flex items-center justify-center p-0 group-hover:scale-[1.05] transition-transform duration-500">
+      <div className="relative w-[92%] h-[92%] flex items-center justify-center p-0 group-hover:scale-[1.05] transition-transform duration-500">
         {/* Answer card */}
         <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[90%] bg-white rounded-xl shadow-xl border border-black/5 p-4 z-20 rotate-2">
           <div className="space-y-1.5">
