@@ -22,7 +22,7 @@ const PosterItem = ({ poster, className }: { poster: Poster; className?: string 
   return (
     <div
       className={cn(
-        "relative rounded-[12px] overflow-hidden bg-[#EAE2DC] border border-[#CFC2B4]",
+        "relative rounded-[12px] overflow-hidden bg-[#EAE2DC] border border-[#CFC2B4] flex flex-col",
         className
       )}
     >
@@ -30,12 +30,12 @@ const PosterItem = ({ poster, className }: { poster: Poster; className?: string 
         <img
           src={poster.src}
           alt={poster.alt}
-          className="w-full h-full object-cover transition-transform duration-700 hover:scale-110"
+          className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 hover:scale-110"
           loading="lazy"
           onError={() => setError(true)}
         />
       ) : (
-        <div className="w-full h-full flex items-center justify-center p-4 text-center">
+        <div className="absolute inset-0 w-full h-full flex items-center justify-center p-4 text-center">
           <span className="text-[10px] md:text-xs text-[#8E8277] font-medium leading-tight">
             {poster.alt}
           </span>
@@ -92,18 +92,30 @@ export const ModelHeroShowcase = ({
         </div>
 
         {/* Right Column - Strict Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 grid-rows-[repeat(6,1fr)] lg:grid-rows-6 gap-3 min-h-[400px] lg:min-h-0">
-          {posters[0] && <PosterItem poster={posters[0]} className="lg:row-span-4 sm:row-span-4 row-span-1 h-full" />}
-          {posters[4] && <PosterItem poster={posters[4]} className="lg:row-span-4 sm:row-span-4 row-span-1 h-full lg:order-none sm:order-2" />}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 lg:grid-rows-6 gap-3 min-h-[500px] lg:min-h-0">
+          {/* Column 1: Big (4), Small (2) */}
+          <div className="lg:contents sm:contents flex flex-col gap-3 lg:col-start-1">
+            {posters[0] && <PosterItem poster={posters[0]} className="lg:row-span-4 sm:row-span-4 min-h-[200px]" />}
+            {posters[1] && <PosterItem poster={posters[1]} className="lg:row-span-2 sm:row-span-2 min-h-[100px]" />}
+          </div>
           
-          {posters[1] && <PosterItem poster={posters[1]} className="lg:row-span-2 sm:row-span-2 row-span-1 h-full lg:order-none sm:order-4" />}
-          {posters[5] && <PosterItem poster={posters[5]} className="lg:row-span-2 sm:row-span-2 row-span-1 h-full lg:order-none sm:order-3" />}
+          {/* Column 2: Small (2), Big (4) */}
+          <div className="lg:contents sm:contents flex flex-col gap-3 lg:col-start-2">
+            {posters[2] && <PosterItem poster={posters[2]} className="lg:row-span-2 sm:row-span-2 min-h-[100px]" />}
+            {posters[3] && <PosterItem poster={posters[3]} className="lg:row-span-4 sm:row-span-4 min-h-[200px]" />}
+          </div>
           
-          {posters[2] && <PosterItem poster={posters[2]} className="lg:row-span-4 sm:row-span-4 row-span-1 h-full lg:order-none sm:order-5" />}
-          {posters[6] && <PosterItem poster={posters[6]} className="lg:row-span-4 sm:row-span-4 row-span-1 h-full lg:order-none sm:order-7" />}
+          {/* Column 3: Big (4), Small (2) */}
+          <div className="lg:contents sm:contents flex flex-col gap-3 lg:col-start-3">
+            {posters[4] && <PosterItem poster={posters[4]} className="lg:row-span-4 sm:row-span-4 min-h-[200px]" />}
+            {posters[5] && <PosterItem poster={posters[5]} className="lg:row-span-2 sm:row-span-2 min-h-[100px]" />}
+          </div>
           
-          {posters[3] && <PosterItem poster={posters[3]} className="lg:row-span-2 sm:row-span-2 row-span-1 h-full lg:order-none sm:order-8" />}
-          {posters[7] && <PosterItem poster={posters[7]} className="lg:row-span-2 sm:row-span-2 row-span-1 h-full lg:order-none sm:order-6" />}
+          {/* Column 4: Small (2), Big (4) */}
+          <div className="lg:contents sm:contents flex flex-col gap-3 lg:col-start-4">
+            {posters[6] && <PosterItem poster={posters[6]} className="lg:row-span-2 sm:row-span-2 min-h-[100px]" />}
+            {posters[7] && <PosterItem poster={posters[7]} className="lg:row-span-4 sm:row-span-4 min-h-[200px]" />}
+          </div>
         </div>
       </div>
     </section>
