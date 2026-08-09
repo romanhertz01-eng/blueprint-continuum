@@ -8,9 +8,9 @@ interface MockupProps {
 const Mockup = ({ type }: MockupProps) => {
   if (type === 'tasks') {
     return (
-      <div className="relative w-full h-full flex items-center justify-center p-4">
+      <div className="relative w-full h-full flex items-center justify-center p-0">
         {/* Answer card (Right/Front) */}
-        <div className="absolute right-2 top-1/2 -translate-y-1/2 w-[65%] bg-white rounded-xl shadow-xl border border-black/5 p-4 z-20 rotate-2">
+        <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[85%] bg-white rounded-xl shadow-xl border border-black/5 p-4 z-20 rotate-2">
           <div className="flex items-center gap-2 mb-2 border-b border-black/5 pb-2">
             <div className="w-5 h-5 bg-black rounded-sm flex items-center justify-center text-[10px] font-bold text-white">Э</div>
             <span className="text-[10px] font-bold tracking-tight">ЭРА2</span>
@@ -23,7 +23,7 @@ const Mockup = ({ type }: MockupProps) => {
           </div>
         </div>
         {/* Source card (Left/Back) */}
-        <div className="absolute left-2 top-1/2 -translate-y-1/2 w-[60%] bg-white/80 rounded-xl shadow-lg border border-black/5 p-4 z-10 -rotate-3 blur-[0.5px]">
+        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[80%] bg-white/80 rounded-xl shadow-lg border border-black/5 p-4 z-10 -rotate-3 blur-[0.5px]">
           <div className="space-y-2">
             <div className="h-2 w-1/2 bg-black/20 rounded-full" />
             <div className="space-y-1.5">
@@ -39,9 +39,9 @@ const Mockup = ({ type }: MockupProps) => {
 
   if (type === 'documents') {
     return (
-      <div className="relative w-full h-full flex items-center justify-center p-4">
+      <div className="relative w-full h-full flex items-center justify-center p-0">
         {/* Answer card (Right/Front) */}
-        <div className="absolute right-2 top-1/2 -translate-y-1/2 w-[65%] bg-white rounded-xl shadow-xl border border-black/5 p-4 z-20 rotate-1">
+        <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[85%] bg-white rounded-xl shadow-xl border border-black/5 p-4 z-20 rotate-1">
           <div className="flex items-center gap-2 mb-2 border-b border-black/5 pb-2">
             <div className="w-5 h-5 bg-black rounded-sm flex items-center justify-center text-[10px] font-bold text-white">Э</div>
             <span className="text-[10px] font-bold tracking-tight">ЭРА2</span>
@@ -56,7 +56,7 @@ const Mockup = ({ type }: MockupProps) => {
           </div>
         </div>
         {/* PDF plate (Left/Back) */}
-        <div className="absolute left-4 top-1/2 -translate-y-1/2 w-[55%] bg-[#F2EDE7] rounded-xl shadow-lg border border-black/5 p-4 z-10 -rotate-6">
+        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[75%] bg-[#F2EDE7] rounded-xl shadow-lg border border-black/5 p-4 z-10 -rotate-6">
           <div className="bg-red-500/10 text-red-600 font-bold text-[10px] px-1.5 py-0.5 rounded inline-block mb-2">PDF</div>
           <div className="space-y-1.5">
             <div className="h-1.5 w-full bg-black/10 rounded-full" />
@@ -69,15 +69,15 @@ const Mockup = ({ type }: MockupProps) => {
 
   if (type === 'multi') {
     return (
-      <div className="relative w-full h-full flex flex-col items-center justify-center p-4 gap-2">
+      <div className="relative w-full h-full flex flex-col items-center justify-center p-0 gap-2">
         {/* Prompt plate */}
-        <div className="w-4/5 bg-[#1A1817] rounded-lg p-2.5 shadow-lg border border-white/5 z-30">
+        <div className="w-[85%] bg-[#1A1817] rounded-lg p-2.5 shadow-lg border border-white/5 z-30">
           <div className="h-1.5 w-full bg-white/20 rounded-full mb-1" />
           <div className="h-1.5 w-2/3 bg-white/20 rounded-full" />
         </div>
         {/* AI Cards Stack */}
         <div className="relative w-full flex-1 mt-1">
-          <div className="absolute left-1/2 -translate-x-1/2 top-0 w-3/4 bg-white rounded-lg shadow-md border border-black/5 p-2 z-20 scale-100">
+          <div className="absolute left-1/2 -translate-x-1/2 top-0 w-[85%] bg-white rounded-lg shadow-md border border-black/5 p-2 z-20 scale-100">
             <div className="text-[7px] font-bold text-black/40 mb-1 uppercase tracking-wider">ChatGPT</div>
             <div className="space-y-1">
               <div className="h-1 w-full bg-black/5 rounded-full" />
@@ -85,7 +85,7 @@ const Mockup = ({ type }: MockupProps) => {
               <div className="h-1 w-2/3 bg-black/5 rounded-full" />
             </div>
           </div>
-          <div className="absolute left-1/2 -translate-x-1/2 top-4 w-3/4 bg-white rounded-lg shadow-md border border-black/5 p-2 z-15 scale-95 rotate-1">
+          <div className="absolute left-1/2 -translate-x-1/2 top-4 w-[85%] bg-white rounded-lg shadow-md border border-black/5 p-2 z-15 scale-95 rotate-1">
             <div className="text-[7px] font-bold text-black/40 mb-1 uppercase tracking-wider">Gemini</div>
             <div className="space-y-1">
               <div className="h-1 w-full bg-black/5 rounded-full" />
@@ -93,7 +93,7 @@ const Mockup = ({ type }: MockupProps) => {
               <div className="h-1 w-1/2 bg-black/5 rounded-full" />
             </div>
           </div>
-          <div className="absolute left-1/2 -translate-x-1/2 top-8 w-3/4 bg-white rounded-lg shadow-md border border-black/5 p-2 z-10 scale-90 -rotate-1">
+          <div className="absolute left-1/2 -translate-x-1/2 top-8 w-[85%] bg-white rounded-lg shadow-md border border-black/5 p-2 z-10 scale-90 -rotate-1">
             <div className="text-[7px] font-bold text-black/40 mb-1 uppercase tracking-wider">Claude</div>
             <div className="space-y-1">
               <div className="h-1 w-full bg-black/5 rounded-full" />
@@ -108,9 +108,9 @@ const Mockup = ({ type }: MockupProps) => {
 
   if (type === 'files') {
     return (
-      <div className="relative w-full h-full flex items-center justify-center p-4">
+      <div className="relative w-full h-full flex items-center justify-center p-0">
         {/* Answer card */}
-        <div className="absolute right-4 top-1/2 -translate-y-1/2 w-[60%] bg-white rounded-xl shadow-xl border border-black/5 p-4 z-20 rotate-2">
+        <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[80%] bg-white rounded-xl shadow-xl border border-black/5 p-4 z-20 rotate-2">
           <div className="space-y-1.5">
             <div className="h-1.5 w-full bg-black/10 rounded-full" />
             <div className="h-1.5 w-full bg-black/10 rounded-full" />
@@ -118,7 +118,7 @@ const Mockup = ({ type }: MockupProps) => {
           </div>
         </div>
         {/* Image plate */}
-        <div className="absolute left-4 top-1/2 -translate-y-1/2 w-[50%] aspect-square bg-[#EDE8E2] rounded-xl shadow-lg border border-black/5 p-2 z-10 -rotate-6 flex items-center justify-center">
+        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[70%] aspect-square bg-[#EDE8E2] rounded-xl shadow-lg border border-black/5 p-2 z-10 -rotate-6 flex items-center justify-center">
           <div className="w-10 h-10 bg-black/5 rounded-lg flex items-center justify-center">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-black/20">
               <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/>
@@ -165,24 +165,24 @@ export function CapabilityCards({ heading, sub, cards, className }: CapabilityCa
         </div>
 
         {/* Right Column */}
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-2 gap-4">
           {cards.map((card, i) => (
             <article 
               key={i}
-              className="bg-[#F7F3EF] rounded-[20px] p-8 flex flex-col items-center text-center group"
+              className="bg-[#F7F3EF] rounded-[20px] p-[28px] flex flex-col items-center text-center group aspect-square"
             >
-              <h3 className="text-xl font-bold mb-2">{card.title}</h3>
-              <p className="text-[15px] text-muted-foreground leading-snug mb-8 min-h-[2.5rem]">
+              <h3 className="text-xl font-bold mb-4">{card.title}</h3>
+              <p className="text-[15px] text-muted-foreground leading-snug mb-4 min-h-[2.5rem]">
                 {card.desc}
               </p>
               
-              <div className="w-full aspect-[16/10] bg-white/30 rounded-2xl mb-8 relative overflow-hidden">
+              <div className="w-full aspect-[4/3] mb-4 relative overflow-hidden">
                 {card.mockupType && <Mockup type={card.mockupType} />}
               </div>
 
               <button 
                 onClick={() => document.getElementById('prompt-bar')?.scrollIntoView({ behavior: 'smooth' })}
-                className="mt-auto px-8 py-2.5 bg-white border border-black/5 rounded-full text-sm font-semibold shadow-sm hover:shadow-md transition-all active:scale-95"
+                className="mt-0 px-8 py-2.5 bg-white border border-black/5 rounded-full text-sm font-semibold shadow-sm hover:shadow-md transition-all active:scale-95"
               >
                 Попробовать
               </button>
