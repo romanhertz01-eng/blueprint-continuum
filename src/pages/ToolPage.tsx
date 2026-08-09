@@ -1012,7 +1012,6 @@ const ToolPage = () => {
         const order: string[] = data.sectionOrder ?? defaultOrder;
         if (isWidePilot) {
           const renderedKeys = order.filter((k) => !!sections[k] && (k !== 'priceCompare' || !!data.priceCompare));
-          console.log('DEBUG: renderedKeys:', renderedKeys);
           
           return (
             <div className="tool-wide">
