@@ -163,7 +163,7 @@ export interface ToolPageData {
     heading: string;
     subheading: string;
     buttonText: string;
-    images: string[];
+    posters: { src: string; alt: string; aspect: "3:4" | "4:3" }[];
   };
 }
 
