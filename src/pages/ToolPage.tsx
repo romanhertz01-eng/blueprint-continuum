@@ -1,7 +1,7 @@
 import { ORIGIN } from "@/lib/origin";
 
 import { Link, getRouteApi } from "@tanstack/react-router";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Sparkles, Check } from "lucide-react";
 import { ModelGlyph } from "@/components/ui/era/ModelGlyph";
 import { useEffect, useRef, useState } from "react";
 import { getRelatedTools, isPublished, getModelPriceLabel, getToolsForModel, getModelForTool, getToolPageData, type ToolPageData } from "@/data/toolPages";
