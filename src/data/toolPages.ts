@@ -4349,7 +4349,7 @@ export const toolPages: ToolPageData[] = [
     kind: 'model',
     updatedAt: "2026-07-26",
     modelName: "ChatGPT",
-    heroTitle: "TEST TITLE FOR CHATGPT",
+    heroTitle: "ChatGPT на русском — без VPN и регистрации в OpenAI",
     heroDescription:
       "Полноценный ChatGPT в браузере: последние версии GPT, ответы на русском, файлы и картинки. Оплата в рублях, от 4 кр за запрос.",
     heroVideo: { poster: "/posters/chatgpt-hero.webp", overlay: 0.55 },
