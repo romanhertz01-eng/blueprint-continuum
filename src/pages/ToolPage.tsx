@@ -1012,7 +1012,7 @@ const ToolPage = () => {
         // Optional per-page full override of section order (only affects pages that set it).
         const order: string[] = data.sectionOrder ?? defaultOrder;
         if (isWidePilot) {
-          const renderedKeys = order.filter((k) => !!sections[k]);
+          const renderedKeys = order.filter((k) => !!sections[k] && (k !== 'priceCompare' || !!data.priceCompare));
           console.log('Rendering wide layout for slug:', data.slug, 'keys:', renderedKeys, 'priceCompareData:', !!data.priceCompare, 'priceCompareSection:', !!sections['priceCompare']);
           
           return (
