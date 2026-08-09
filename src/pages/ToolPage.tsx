@@ -810,6 +810,7 @@ const ToolPage = () => {
           "ctaBanner",
         ];
         const textOrder = [
+          ...(data.resultsWall ? ["resultsWall"] : []),
           "capabilityCards",
           "featureBlocks",
           "modelVersions",
