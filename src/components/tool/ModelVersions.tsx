@@ -77,9 +77,9 @@ export function ModelVersions({ heading, sub, versions, className }: ModelVersio
                 {/* Price Display */}
                 <div className="flex flex-col items-center z-10">
                   <span className="text-white text-4xl font-bold mb-1 tracking-tight">
-                    {v.price.replace(' кр за сообщение', '')} <span className="text-2xl">кр</span>
+                    {v.price} <span className="text-2xl">кр</span>
                   </span>
-                  <span className="text-white/40 text-[10px] uppercase tracking-wider font-medium">
+                  <span className="text-white/40 text-[10px] lowercase tracking-wider font-medium">
                     за сообщение
                   </span>
                 </div>
