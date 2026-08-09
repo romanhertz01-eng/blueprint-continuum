@@ -4363,7 +4363,37 @@ export const toolPages: ToolPageData[] = [
         },
         {
           prompt: "Сравни УСН и НПД для фрилансера таблицей",
-          answer: "| Критерий | УСН (Доходы) | НПД (Самозанятость) |\n| :--- | :--- | :--- |\n| Ставка | 6% | 4% (физ) / 6% (юр) |\n| Лимит | 199.35 млн ₽ | 2.4 млн ₽ |\n| Взносы | ~50к ₽/год | 0 ₽ (добровольно) |\n| Отчетность | Декларация раз в год | Только чеки в приложении |"
+          answer: `<table class="w-full border-collapse text-[13px]">
+  <thead>
+    <tr class="border-b border-[#2D2420]">
+      <th class="text-left py-2 pr-4 font-semibold text-[#8E8680]">Критерий</th>
+      <th class="text-left py-2 pr-4 font-semibold text-[#8E8680]">УСН (Доходы)</th>
+      <th class="text-left py-2 font-semibold text-[#8E8680]">НПД (Самозанятость)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="border-b border-[#2D2420]/50">
+      <td class="py-2 pr-4 text-[#8E8680]">Ставка</td>
+      <td class="py-2 pr-4">6%</td>
+      <td class="py-2">4% (физ) / 6% (юр)</td>
+    </tr>
+    <tr class="border-b border-[#2D2420]/50">
+      <td class="py-2 pr-4 text-[#8E8680]">Лимит</td>
+      <td class="py-2 pr-4">199.35 млн ₽</td>
+      <td class="py-2">2.4 млн ₽</td>
+    </tr>
+    <tr class="border-b border-[#2D2420]/50">
+      <td class="py-2 pr-4 text-[#8E8680]">Взносы</td>
+      <td class="py-2 pr-4">~50к ₽/год</td>
+      <td class="py-2">0 ₽ (добровольно)</td>
+    </tr>
+    <tr>
+      <td class="py-2 pr-4 text-[#8E8680]">Отчетность</td>
+      <td class="py-2 pr-4">Декларация раз в год</td>
+      <td class="py-2">Только чеки в приложении</td>
+    </tr>
+  </tbody>
+</table>`
         },
         {
           prompt: "Составь план запуска интернет-магазина за месяц",

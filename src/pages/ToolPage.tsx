@@ -219,7 +219,7 @@ const ToolPage = () => {
         />
       )}
       {/* Hero with prompt bar */}
-      <div ref={heroWrapRef} className="relative w-full overflow-hidden min-h-[520px] md:min-h-[calc(100vh-var(--header-offset,180px))]">
+      <div ref={heroWrapRef} className={cn("relative w-full overflow-hidden", data.slug === 'chatgpt' ? "min-h-0" : "min-h-[520px] md:min-h-[calc(100vh-var(--header-offset,180px))]")}>
         {data.heroVideo && (
           <HeroVideoBackground
             src={data.heroVideo.src}
