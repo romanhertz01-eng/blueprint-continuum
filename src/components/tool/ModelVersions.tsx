@@ -3,8 +3,8 @@ import { ArrowRight } from "lucide-react";
 
 interface ModelVersion {
   name: string;
-  price: string;
   role: string;
+  visualLabel?: string;
   desc: string;
   isDefault?: boolean;
 }
@@ -67,20 +67,17 @@ export function ModelVersions({ heading, sub, versions, className }: ModelVersio
                 </span>
               )}
 
-              {/* Top Visual Zone (60% height) */}
-              <div className="relative h-[220px] bg-[#141110] flex flex-col items-center justify-center overflow-hidden">
-                {/* Visual Label (Role) */}
+              {/* Top Visual Zone (55% height) */}
+              <div className="relative h-[200px] bg-[#141110] flex flex-col items-center justify-center overflow-hidden">
+                {/* Visual Role Label */}
                 <div className="absolute top-4 right-4 text-[9px] font-black text-white/40 uppercase tracking-[0.1em]">
                   {v.role}
                 </div>
 
-                {/* Price Display */}
+                {/* Visual Label (Main Display) */}
                 <div className="flex flex-col items-center z-10">
-                  <span className="text-white text-4xl font-bold mb-1 tracking-tight">
-                    {v.price} <span className="text-2xl">кр</span>
-                  </span>
-                  <span className="text-white/40 text-[10px] lowercase tracking-wider font-medium">
-                    за сообщение
+                  <span className="text-white text-3xl md:text-[34px] font-black tracking-tight uppercase">
+                    {v.visualLabel}
                   </span>
                 </div>
 
