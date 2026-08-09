@@ -503,6 +503,7 @@ const ToolPage = () => {
             <PriceCompare
               key="priceCompare"
               data={data.priceCompare}
+              className="section-priceCompare"
             />
           ) : null,
 
