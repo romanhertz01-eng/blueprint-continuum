@@ -21,7 +21,7 @@ import { PricingBlock } from "@/components/tool/PricingBlock";
 import { CtaBanner } from "@/components/tool/CtaBanner";
 import { ModelVersions } from "@/components/tool/ModelVersions";
 import { ArticlesGrid } from "@/components/tool/ArticlesGrid";
-import { ResultsWall } from "@/components/tool/ResultsWall";
+import { ModelHeroShowcase } from "@/components/tool/ModelHeroShowcase";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 
@@ -435,12 +435,13 @@ const ToolPage = () => {
               moreLabel={data.articles.moreLabel}
             />
           ) : null,
-          resultsWall: data.resultsWall ? (
-            <ResultsWall
-              key="resultsWall"
-              className="section-resultsWall"
-              heading={data.resultsWall.heading}
-              items={data.resultsWall.items}
+          modelHeroShowcase: data.modelHeroShowcase ? (
+            <ModelHeroShowcase
+              key="modelHeroShowcase"
+              heading={data.modelHeroShowcase.heading}
+              subheading={data.modelHeroShowcase.subheading}
+              buttonText={data.modelHeroShowcase.buttonText}
+              images={data.modelHeroShowcase.images}
             />
           ) : null,
 
@@ -810,7 +811,7 @@ const ToolPage = () => {
           "ctaBanner",
         ];
         const textOrder = [
-          ...(data.resultsWall ? ["resultsWall"] : []),
+          ...(data.modelHeroShowcase ? ["modelHeroShowcase"] : []),
           "capabilityCards",
           "featureBlocks",
           "modelVersions",

@@ -159,9 +159,11 @@ export interface ToolPageData {
     moreHref?: string;
     moreLabel?: string;
   };
-  resultsWall?: {
+  modelHeroShowcase?: {
     heading: string;
-    items: { prompt: string; answer: string }[];
+    subheading: string;
+    buttonText: string;
+    images: string[];
   };
 }
 
@@ -4350,63 +4352,19 @@ export const toolPages: ToolPageData[] = [
         { name: "GPT-5.6 Sol", role: "Новая версия", price: "18 кр за сообщение", desc: "Топ-версия 5.6 — самый умный OpenAI", isDefault: false }
       ]
     },
-    resultsWall: {
-      heading: "Что пишет ChatGPT — реальные форматы",
-      items: [
-        {
-          prompt: "Напиши письмо подрядчику: сроки сорваны, отношения портить не хочу",
-          answer: "Тема: Уточнение графика по проекту\n\nДобрый день!\n\nПо текущему плану этап должен был завершиться 15-го, но работы ещё идут. Понимаю, что причины могут быть объективными — хотел бы разобраться вместе.\n\nПрошу до конца недели прислать:\n— что именно вызвало задержку;\n— новый график с реалистичными датами;\n— какие риски видите на оставшихся этапах.\n\nС уважением,"
-        },
-        {
-          prompt: "Напиши функцию на Python, которая убирает дубли из списка заказов",
-          answer: "```python\ndef unique_orders(orders):\n    # Используем dict.fromkeys для сохранения порядка\n    return list(dict.fromkeys(orders))\n\n# Пример\nraw_data = ['001', '002', '001', '003']\nprint(unique_orders(raw_data)) # ['001', '002', '003']\n```"
-        },
-        {
-          prompt: "Сравни УСН и НПД для фрилансера таблицей",
-          answer: `<table class="w-full border-collapse text-[13px]">
-  <thead>
-    <tr class="border-b border-[#2D2420]">
-      <th class="text-left py-2 pr-4 font-semibold text-[#8E8680]">Критерий</th>
-      <th class="text-left py-2 pr-4 font-semibold text-[#8E8680]">УСН (Доходы)</th>
-      <th class="text-left py-2 font-semibold text-[#8E8680]">НПД (Самозанятость)</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr class="border-b border-[#2D2420]/50">
-      <td class="py-2 pr-4 text-[#8E8680]">Ставка</td>
-      <td class="py-2 pr-4">6%</td>
-      <td class="py-2">4% (физ) / 6% (юр)</td>
-    </tr>
-    <tr class="border-b border-[#2D2420]/50">
-      <td class="py-2 pr-4 text-[#8E8680]">Лимит</td>
-      <td class="py-2 pr-4">199.35 млн ₽</td>
-      <td class="py-2">2.4 млн ₽</td>
-    </tr>
-    <tr class="border-b border-[#2D2420]/50">
-      <td class="py-2 pr-4 text-[#8E8680]">Взносы</td>
-      <td class="py-2 pr-4">~50к ₽/год</td>
-      <td class="py-2">0 ₽ (добровольно)</td>
-    </tr>
-    <tr>
-      <td class="py-2 pr-4 text-[#8E8680]">Отчетность</td>
-      <td class="py-2 pr-4">Декларация раз в год</td>
-      <td class="py-2">Только чеки в приложении</td>
-    </tr>
-  </tbody>
-</table>`
-        },
-        {
-          prompt: "Составь план запуска интернет-магазина за месяц",
-          answer: "1. Неделя 1: Анализ ниши и выбор поставщиков. Регистрация ИП.\n2. Неделя 2: Создание сайта на конструкторе и наполнение товарами.\n3. Неделя 3: Настройка логистики, приемки платежей и CRM.\n4. Неделя 4: Запуск тестовой рекламы и получение первых заказов.\n5. Итог: Готовый работающий бизнес с первыми продажами.\n6. Фокус: Проверка спроса минимальными вложениями."
-        },
-        {
-          prompt: "Пост для ВК о скидке 30% на кофе, дружелюбно, до 100 слов",
-          answer: "Твой идеальный понедельник начинается здесь! ☕️✨\n\nМы знаем, как важно взбодриться в начале недели, поэтому дарим скидку -30% на все кофейные напитки до конца дня! Просто скажи бариста кодовое слово «ЭРА2».\n\nЗабегай за любимым латте или попробуй наш новый авторский раф. Ждем тебя! \n\n#кофе #скидка #утро #ERA2"
-        },
-        {
-          prompt: "Выдели риски из договора аренды",
-          answer: "1. Односторонний пересмотр ставки арендодателем чаще 1 раза в год (п. 4.2).\n2. Право арендодателя на досрочное расторжение без уведомления за 30 дней (п. 8.1).\n3. Полная ответственность арендатора за капитальный ремонт коммуникаций (п. 5.3).\n4. Штраф за просрочку платежа выше 0.1% в день от суммы долга (п. 7.2)."
-        }
+    modelHeroShowcase: {
+      heading: "Встречайте\nGPT-5.6",
+      subheading: "Понимает длинные задачи и отвечает на русском без акцента",
+      buttonText: "Попробовать",
+      images: [
+        "/community/01.jpg",
+        "/community/02.jpg",
+        "/community/03.jpg",
+        "/community/04.jpg",
+        "/community/05.jpg",
+        "/community/06.jpg",
+        "/community/07.jpg",
+        "/community/08.jpg",
       ]
     },
     capabilityCards: {
