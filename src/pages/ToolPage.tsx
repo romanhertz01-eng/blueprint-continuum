@@ -1016,15 +1016,18 @@ const ToolPage = () => {
           const rendered = order.filter((k) => sections[k]);
           return (
             <div className="tool-wide">
-              {rendered.map((k, i) => (
-                <div key={k} className={cn(
-                  "w-full", 
-                  i % 2 === 0 ? "bg-background" : "bg-muted/30",
-                  i === 0 && "[&_.section-" + k + "]:pt-0"
-                )}>
-                  {sections[k]}
-                </div>
-              ))}
+              {rendered.map((k, i) => {
+                const isFullWidthSection = ["comparisonTable", "priceCompare"].includes(k);
+                return (
+                  <div key={k} className={cn(
+                    "w-full", 
+                    !isFullWidthSection && (i % 2 === 0 ? "bg-background" : "bg-muted/30"),
+                    i === 0 && "[&_.section-" + k + "]:pt-0"
+                  )}>
+                    {sections[k]}
+                  </div>
+                );
+              })}
               {!rendered.includes("modelChips") && sections["modelChips"] && data.category !== "text" && (
                 <div className={cn("w-full", rendered.length % 2 === 0 ? "bg-background" : "bg-muted/30")}>
                   <div className="max-w-5xl mx-auto">
