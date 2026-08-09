@@ -4544,7 +4544,7 @@ export const toolPages: ToolPageData[] = [
         {
           name: "Claude",
           desc: "Умный помощник для текстов и кода с человеческим стилем общения",
-          price: "1 кр",
+          price: "от 3 кр",
           href: "/tools/claude",
           image: "/posters/model-claude.webp",
           tileConfig: { gradient: "linear-gradient(135deg, #D97757 0%, #A64D32 100%)" }
@@ -4552,15 +4552,15 @@ export const toolPages: ToolPageData[] = [
         {
           name: "Gemini",
           desc: "Модель от Google с огромным окном контекста для разбора целых книг",
-          price: "1 кр",
+          price: "от 3 кр",
           href: "/tools/gemini",
           image: "/posters/model-gemini.webp",
           tileConfig: { gradient: "linear-gradient(135deg, #4A5DFF 0%, #8E2DE2 100%)" }
         },
         {
           name: "Grok",
-          desc: "Нейросеть от Илона Маска: ироничная и с доступом к данные X (Twitter)",
-          price: "4 кр",
+          desc: "Нейросеть от Илона Маска: ироничная и с доступом к данным X (Twitter)",
+          price: "от 7 кр",
           href: "/tools/grok",
           image: "/posters/model-grok.webp",
           tileConfig: { gradient: "linear-gradient(135deg, #2D2D2D 0%, #000000 100%)" }
@@ -4568,7 +4568,7 @@ export const toolPages: ToolPageData[] = [
         {
           name: "DeepSeek",
           desc: "Мощный китайский ИИ, который лидирует в коде и математике",
-          price: "1 кр",
+          price: "от 3 кр",
           href: "/tools/deepseek",
           image: "/posters/model-deepseek.webp",
           tileConfig: { gradient: "linear-gradient(135deg, #1E3A5F 0%, #0F172A 100%)" }
