@@ -4532,7 +4532,7 @@ export const toolPages: ToolPageData[] = [
     specs: {
       heading: "Возможности и лимиты",
       items: [
-        { label: "Версии в ЭРА2", value: "GPT-5.6 Luna, GPT 5.2, GPT 5.4, GPT-5.6 Terra, GPT 5.5, GPT-5.6 Sol" },
+        { label: "Версии в ЭРА2", value: "GPT-5.6 Luna, GPT 5.2, GPT 5.4, GPT-5.6 Sol" },
         { label: "Язык", value: "Русский, английский и 90+ других" },
         { label: "Ввод", value: "Текст, файлы, изображения" },
         { label: "Длина запроса", value: "До 4000 символов" },
