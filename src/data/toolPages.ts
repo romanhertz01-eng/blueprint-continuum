@@ -91,6 +91,27 @@ export interface ToolPageData {
     heading: string;
     sub?: string;
   };
+  priceCompare?: {
+    heading: { main: string; sub: string };
+    description: string;
+    separateSubscriptions: {
+      title: string;
+      unit: string;
+      items: { name: string; price: string }[];
+      totalLabel: string;
+      totalPrice: string;
+    };
+    eraEconomics: {
+      title: string;
+      price: string;
+      priceFrom: string;
+      items: string[];
+      extra: string;
+      footer: string;
+      buttonText: string;
+    };
+    footerNote: string;
+  };
   ctaBanner?: {
     title: string;
     button: string;
@@ -4367,6 +4388,7 @@ export const toolPages: ToolPageData[] = [
       "capabilityCards",
       "featureBlocks",
       "pricingBlock",
+      "priceCompare",
       "modelVersions",
       "promptAnswer",
       "relatedTextModels",
@@ -4377,6 +4399,40 @@ export const toolPages: ToolPageData[] = [
       "articles",
       "ctaBanner"
     ],
+    priceCompare: {
+      heading: {
+        main: "Зачем платить за каждый сервис?",
+        sub: "Все популярные нейросети уже включены в ЭРА2 — по одной подписке в рублях. Без зарубежных карт и VPN."
+      },
+      description: "Все популярные нейросети уже включены в ЭРА2 — по одной подписке в рублях. Без зарубежных карт и VPN.",
+      separateSubscriptions: {
+        title: "ОТДЕЛЬНЫЕ ПОДПИСКИ",
+        unit: "в месяц",
+        items: [
+          { name: "ChatGPT Plus", price: "$20" },
+          { name: "Claude Pro", price: "$20" },
+          { name: "Gemini Advanced", price: "$20" },
+          { name: "Perplexity Pro", price: "$20" }
+        ],
+        totalLabel: "Итого",
+        totalPrice: "$80/мес"
+      },
+      eraEconomics: {
+        title: "ЭРА2",
+        price: "790 ₽",
+        priceFrom: "от",
+        items: [
+          "ChatGPT",
+          "Claude",
+          "Gemini",
+          "Perplexity"
+        ],
+        extra: "+ ещё 90 моделей",
+        footer: "Оплата в рублях · Кредиты не сгорают",
+        buttonText: "Начать бесплатно →"
+      },
+      footerNote: "Цены сервисов указаны на август 2026 года"
+    },
     intro: {
       heading: "ChatGPT в России: полный доступ в одном окне",
       text: "ChatGPT — самая известная нейросеть мира: тексты, код, анализ документов, идеи и планы. Официальный доступ из России закрыт: нужен VPN, зарубежный номер для регистрации и иностранная карта для подписки Plus. В ЭРА2 всё это не нужно — модели OpenAI встроены в сервис напрямую: открыли вкладку, написали вопрос по-русски, получили ответ. Стоимость — от 4 кр за запрос, история диалогов сохраняется в личном кабинете.",
