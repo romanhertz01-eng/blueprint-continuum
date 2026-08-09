@@ -159,6 +159,10 @@ export interface ToolPageData {
     moreHref?: string;
     moreLabel?: string;
   };
+  resultsWall?: {
+    heading: string;
+    items: { prompt: string; answer: string }[];
+  };
 }
 
 
