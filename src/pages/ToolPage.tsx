@@ -25,6 +25,7 @@ import { ModelHeroShowcase } from "@/components/tool/ModelHeroShowcase";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { RelatedTextModels } from "@/components/tool/RelatedTextModels";
+import { PriceCompare } from "@/components/tool/PriceCompare";
 
 
 const toolRouteApi = getRouteApi("/tools/$slug");
@@ -496,6 +497,12 @@ const ToolPage = () => {
               subheading={data.modelHeroShowcase.subheading}
               buttonText={data.modelHeroShowcase.buttonText}
               posters={data.modelHeroShowcase.posters}
+            />
+          ) : null,
+          priceCompare: data.priceCompare ? (
+            <PriceCompare
+              key="priceCompare"
+              data={data.priceCompare}
             />
           ) : null,
 
