@@ -21,6 +21,7 @@ import { PricingBlock } from "@/components/tool/PricingBlock";
 import { CtaBanner } from "@/components/tool/CtaBanner";
 import { ModelVersions } from "@/components/tool/ModelVersions";
 import { ArticlesGrid } from "@/components/tool/ArticlesGrid";
+import { ResultsWall } from "@/components/tool/ResultsWall";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 
