@@ -986,6 +986,7 @@ const ToolPage = () => {
           "capabilityCards",
           "featureBlocks",
           "pricingBlock",
+          "priceCompare",
           "modelVersions",
           "promptAnswer",
           "relatedTextModels",
