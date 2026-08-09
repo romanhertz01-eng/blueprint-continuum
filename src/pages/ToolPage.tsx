@@ -569,53 +569,72 @@ const ToolPage = () => {
               )}
             </section>
           ) : null,
-          comparisonTable: data.comparisonTable ? (
-            <section key="comparisonTable" className={cn("mx-auto px-4 py-14 md:py-20 section-comparisonTable", data.slug === 'chatgpt' ? "max-w-[1100px]" : "max-w-5xl")}>
-              {data.comparisonTable.heading && (
-                <div className="mb-8 md:mb-12">
-                  <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">{data.comparisonTable.heading}</h2>
-                </div>
-              )}
-              <div className="overflow-x-auto -mx-4 px-4">
-                <table className="w-full min-w-[640px] text-sm">
-                  <thead>
-                    <tr>
-                      <th className="text-left py-3 pr-4 font-normal text-muted-foreground w-1/4"></th>
-                      {data.comparisonTable.columns.map((c, i) => (
-                        <th
-                          key={c}
-                          className={
-                            "text-left py-3 px-4 font-semibold " +
-                            (i === 0 ? "bg-white/[0.04] rounded-t-lg" : "")
-                          }
-                        >
-                          {c}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {data.comparisonTable.rows.map((row, ri) => (
-                      <tr key={ri} className="border-t border-border/60">
-                        <td className="py-3 pr-4 text-muted-foreground align-top">{row.label}</td>
-                        {row.values.map((v, vi) => (
-                          <td
-                            key={vi}
-                            className={
-                              "py-3 px-4 align-top " +
-                              (vi === 0 ? "bg-white/[0.04] font-medium" : "")
-                            }
-                          >
-                            {v}
-                          </td>
+          comparisonTable: data.comparisonTable ? (() => {
+            const isChatGPT = data.slug === 'chatgpt';
+            return (
+              <section 
+                key="comparisonTable" 
+                className={cn(
+                  "py-20 section-comparisonTable",
+                  isChatGPT ? "w-full bg-[#141110] text-[#F7EEE8]" : "mx-auto px-4 max-w-5xl py-14 md:py-20"
+                )}
+              >
+                <div className={cn("mx-auto px-4", isChatGPT ? "max-w-[1100px]" : "w-full")}>
+                  {data.comparisonTable.heading && (
+                    <div className="mb-8 md:mb-12">
+                      <h2 className={cn("text-2xl md:text-[32px] font-bold", isChatGPT ? "text-white" : "text-center md:text-left")}>
+                        {data.comparisonTable.heading}
+                      </h2>
+                    </div>
+                  )}
+                  <div className="overflow-x-auto -mx-4 px-4">
+                    <table className="w-full min-w-[640px] text-sm table-fixed">
+                      <thead>
+                        <tr>
+                          <th className={cn(
+                            "text-left py-3 pr-4 font-normal",
+                            isChatGPT ? "w-[220px] text-[#8C7F78]" : "w-1/4 text-muted-foreground"
+                          )}></th>
+                          {data.comparisonTable.columns.map((c, i) => (
+                            <th
+                              key={c}
+                              className={cn(
+                                "text-left py-3 px-4 font-semibold",
+                                isChatGPT ? "text-white" : "",
+                                !isChatGPT && i === 0 ? "bg-white/[0.04] rounded-t-lg" : ""
+                              )}
+                            >
+                              {c}
+                            </th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {data.comparisonTable.rows.map((row, ri) => (
+                          <tr key={ri} className={cn("border-t", isChatGPT ? "border-[#2D2420]" : "border-border/60")}>
+                            <td className={cn("py-3 pr-4 align-top", isChatGPT ? "text-[#8C7F78]" : "text-muted-foreground")}>
+                              {row.label}
+                            </td>
+                            {row.values.map((v, vi) => (
+                              <td
+                                key={vi}
+                                className={cn(
+                                  "py-3 px-4 align-top",
+                                  isChatGPT ? (vi === 0 ? "text-white font-bold" : "text-[#F7EEE8]") : (vi === 0 ? "bg-white/[0.04] font-medium" : "")
+                                )}
+                              >
+                                {v}
+                              </td>
+                            ))}
+                          </tr>
                         ))}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </section>
-          ) : null,
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </section>
+            );
+          })() : null,
           featureBlocks: data.featureBlocks ? (() => {
             const withImg = data.featureBlocks.filter((b) => !!b.image);
             return (
