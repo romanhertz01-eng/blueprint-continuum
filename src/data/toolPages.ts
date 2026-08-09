@@ -163,7 +163,16 @@ export interface ToolPageData {
     heading: string;
     subheading: string;
     buttonText: string;
-    posters: { src: string; alt: string }[];
+    posters: { 
+      src: string; 
+      alt: string;
+      tileConfig?: {
+        text: string;
+        background: string;
+        textColor: string;
+        fontFamily?: string;
+      };
+    }[];
   };
 }
 
@@ -4358,14 +4367,79 @@ export const toolPages: ToolPageData[] = [
       subheading: "Понимает длинные задачи и отвечает на русском без акцента",
       buttonText: "Попробовать",
       posters: [
-        { src: "/posters/chatgpt-01.webp", alt: "План запуска за 30 дней" },
-        { src: "/posters/chatgpt-02.webp", alt: "Резюме, которое дочитают" },
-        { src: "/posters/chatgpt-03.webp", alt: "Письмо клиенту за две минуты" },
-        { src: "/posters/chatgpt-04.webp", alt: "Разбор договора: 4 риска" },
-        { src: "/posters/chatgpt-05.webp", alt: "Код, который работает" },
-        { src: "/posters/chatgpt-06.webp", alt: "Пост для ВК за 30 секунд" },
-        { src: "/posters/chatgpt-07.webp", alt: "200 страниц → 5 тезисов" },
-        { src: "/posters/chatgpt-08.webp", alt: "Ответ на русском, без акцента" },
+        { 
+          src: "/posters/chatgpt-01.webp", 
+          alt: "План запуска за 30 дней",
+          tileConfig: {
+            text: "ПЛАН ЗАПУСКА\nЗА 30 ДНЕЙ",
+            background: "linear-gradient(135deg, #FF9068 0%, #FF4B2B 100%)",
+            textColor: "#FFFFFF"
+          }
+        },
+        { 
+          src: "/posters/chatgpt-02.webp", 
+          alt: "Резюме, которое дочитают",
+          tileConfig: {
+            text: "РЕЗЮМЕ,\nКОТОРОЕ\nДОЧИТАЮТ",
+            background: "#F2EDE6",
+            textColor: "#000000"
+          }
+        },
+        { 
+          src: "/posters/chatgpt-03.webp", 
+          alt: "Письмо клиенту за две минуты",
+          tileConfig: {
+            text: "ПИСЬМО КЛИЕНТУ\nЗА ДВЕ МИНУТЫ",
+            background: "#1E3A5F",
+            textColor: "#FFFFFF"
+          }
+        },
+        { 
+          src: "/posters/chatgpt-04.webp", 
+          alt: "Разбор договора: 4 риска",
+          tileConfig: {
+            text: "РАЗБОР\nДОГОВОРА:\n4 РИСКА",
+            background: "#C8873C",
+            textColor: "#FFFFFF"
+          }
+        },
+        { 
+          src: "/posters/chatgpt-05.webp", 
+          alt: "Код, который работает",
+          tileConfig: {
+            text: "КОД,\nКОТОРЫЙ\nРАБОТАЕТ",
+            background: "#1B3B2F",
+            textColor: "#A3E635",
+            fontFamily: "mono"
+          }
+        },
+        { 
+          src: "/posters/chatgpt-06.webp", 
+          alt: "Пост для ВК за 30 секунд",
+          tileConfig: {
+            text: "ПОСТ ДЛЯ ВК\nЗА 30 СЕКУНД",
+            background: "#F5C518",
+            textColor: "#000000"
+          }
+        },
+        { 
+          src: "/posters/chatgpt-07.webp", 
+          alt: "200 страниц → 5 тезисов",
+          tileConfig: {
+            text: "200 СТРАНИЦ\n→ 5 ТЕЗИСОВ",
+            background: "linear-gradient(135deg, #7C5CBF 0%, #4E31AA 100%)",
+            textColor: "#FFFFFF"
+          }
+        },
+        { 
+          src: "/posters/chatgpt-08.webp", 
+          alt: "Ответ на русском, без акцента",
+          tileConfig: {
+            text: "ОТВЕТ НА\nРУССКОМ, БЕЗ\nАКЦЕНТА",
+            background: "#FBF7F2",
+            textColor: "#E85420"
+          }
+        },
       ]
     },
     capabilityCards: {
