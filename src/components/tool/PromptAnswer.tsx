@@ -54,27 +54,30 @@ export function PromptAnswer({ heading, sub, items, className }: Props) {
         </div>
       ) : null}
 
-      <div className={cn("grid gap-4 md:grid-cols-2 items-stretch", items.length > 1 && "mt-8")}>
-        <div className="rounded-2xl border border-border bg-muted/40 p-5">
-          <div className="text-xs uppercase tracking-wide text-muted-foreground mb-3">
+      <div className={cn("grid gap-6 lg:grid-cols-[38fr_62fr] items-start", items.length > 1 && "mt-10 md:mt-16")}>
+        {/* ЗАПРОС - без карточки */}
+        <div className="flex flex-col">
+          <div className="text-[10px] uppercase tracking-[0.1em] font-semibold text-muted-foreground mb-3">
             Запрос
           </div>
-          <div className="text-sm leading-relaxed whitespace-pre-line">
+          <div className="text-[18px] leading-[1.5] text-foreground font-normal whitespace-pre-line">
             {active.prompt}
           </div>
         </div>
-        <div className="rounded-2xl border border-border bg-card p-5">
-          <div className="flex items-center justify-between mb-3">
-            <div className="text-xs uppercase tracking-wide text-muted-foreground">
+
+        {/* ОТВЕТ - карточка */}
+        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 shadow-sm">
+          <div className="flex items-center justify-between mb-4">
+            <div className="text-[10px] uppercase tracking-[0.1em] font-semibold text-muted-foreground">
               Ответ
             </div>
             {active.version ? (
-              <span className="text-[11px] px-2 py-0.5 rounded-full bg-primary/10 text-primary">
+              <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-primary text-white font-bold uppercase tracking-wider">
                 {active.version}
               </span>
             ) : null}
           </div>
-          <div className="text-sm leading-relaxed whitespace-pre-line">
+          <div className="text-sm leading-relaxed text-foreground/90 whitespace-pre-line">
             {active.answer}
           </div>
         </div>
