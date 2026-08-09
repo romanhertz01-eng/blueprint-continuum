@@ -317,10 +317,11 @@ const ToolPage = () => {
                       <div className="space-y-3">
                         <h3 className="text-xl font-bold text-foreground">Сколько стоит</h3>
                         <p>Доступ к ChatGPT предоставляется в рамках единой подписки ЭРА2. Вам не нужно оплачивать каждый сервис отдельно. Оплата происходит в рублях любым удобным способом. Стоимость одного запроса зависит от выбранной версии (от GPT-5.6 Luna до GPT-5.6 Sol) и начинается от 4 кредитов.</p>
-                      </>
-                    ) : (
-                      <p className="whitespace-pre-line">{data.intro.text}</p>
-                    )}
+                      </div>
+                    </>
+                  ) : (
+                    <p className="whitespace-pre-line">{data.intro.text}</p>
+                  )}
                 </div>
               </div>
             </section>
