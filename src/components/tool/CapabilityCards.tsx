@@ -169,20 +169,20 @@ export function CapabilityCards({ heading, sub, cards, className }: CapabilityCa
           {cards.map((card, i) => (
             <article 
               key={i}
-              className="bg-[#F7F3EF] rounded-[20px] p-8 flex flex-col items-center text-center group"
+              className="bg-[#F7F3EF] rounded-[20px] p-[28px] flex flex-col items-center text-center group aspect-square"
             >
-              <h3 className="text-xl font-bold mb-2">{card.title}</h3>
-              <p className="text-[15px] text-muted-foreground leading-snug mb-8 min-h-[2.5rem]">
+              <h3 className="text-xl font-bold mb-4">{card.title}</h3>
+              <p className="text-[15px] text-muted-foreground leading-snug mb-4 min-h-[2.5rem]">
                 {card.desc}
               </p>
               
-              <div className="w-full aspect-[16/10] bg-white/30 rounded-2xl mb-8 relative overflow-hidden">
+              <div className="w-full aspect-[4/3] mb-4 relative overflow-hidden">
                 {card.mockupType && <Mockup type={card.mockupType} />}
               </div>
 
               <button 
                 onClick={() => document.getElementById('prompt-bar')?.scrollIntoView({ behavior: 'smooth' })}
-                className="mt-auto px-8 py-2.5 bg-white border border-black/5 rounded-full text-sm font-semibold shadow-sm hover:shadow-md transition-all active:scale-95"
+                className="mt-0 px-8 py-2.5 bg-white border border-black/5 rounded-full text-sm font-semibold shadow-sm hover:shadow-md transition-all active:scale-95"
               >
                 Попробовать
               </button>
