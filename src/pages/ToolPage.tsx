@@ -1032,8 +1032,8 @@ const ToolPage = () => {
                   </div>
                 );
               })}
-              {!rendered.includes("modelChips") && sections["modelChips"] && data.category !== "text" && (
-                <div className={cn("w-full", rendered.length % 2 === 0 ? "bg-background" : "bg-muted/30")}>
+              {!renderedKeys.includes("modelChips") && sections["modelChips"] && data.category !== "text" && (
+                <div className={cn("w-full", renderedKeys.length % 2 === 0 ? "bg-background" : "bg-muted/30")}>
                   <div className="max-w-5xl mx-auto">
                     {sections["modelChips"]}
                   </div>
