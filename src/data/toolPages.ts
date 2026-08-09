@@ -140,6 +140,7 @@ export interface ToolPageData {
     versions: {
       name: string;
       role: string;
+      price?: string;
       visualLabel?: string;
       desc: string;
       unlimited?: string;
