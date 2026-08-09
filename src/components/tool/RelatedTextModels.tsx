@@ -73,26 +73,25 @@ export function RelatedTextModels({ heading, sub, description, models, className
   return (
     <section className={cn("max-w-[1360px] mx-auto px-4 py-14 md:py-20 section-relatedTextModels", className)}>
       <div className="grid grid-cols-1 lg:grid-cols-[30fr_70fr] gap-10 lg:gap-16 items-start">
-        {/* Left Column */}
         <div className="flex flex-col items-start text-left lg:pt-2">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.03] border border-white/10 mb-6">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-foreground/[0.03] border border-foreground/10 mb-6">
             <div className="w-1.5 h-1.5 rounded-full bg-primary" />
-            <span className="text-[11px] uppercase tracking-wider font-bold text-white/90">Один сервис</span>
+            <span className="text-[11px] uppercase tracking-wider font-bold text-foreground/80">Один сервис</span>
           </div>
           
-          <h2 className="text-3xl md:text-[40px] font-bold leading-[1.1] tracking-tight mb-5">
+          <h2 className="text-3xl md:text-[40px] font-bold leading-[1.1] tracking-tight mb-5 text-foreground">
             Другие
             <br />
-            <span className="text-white/40">текстовые модели</span>
+            <span className="text-muted-foreground">текстовые модели</span>
           </h2>
           
-          <p className="text-white/50 text-sm md:text-base leading-relaxed mb-8 max-w-[320px]">
+          <p className="text-muted-foreground text-sm md:text-base leading-relaxed mb-8 max-w-[320px]">
             {description}
           </p>
           
           <Link 
             to="/ai/text" 
-            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full border border-white/20 text-white text-sm font-semibold hover:bg-white hover:text-black transition-all duration-300"
+            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full border border-primary/20 text-primary text-sm font-semibold hover:bg-primary hover:text-primary-foreground transition-all duration-300"
           >
             Смотреть все модели →
           </Link>
