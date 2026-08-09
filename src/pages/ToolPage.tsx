@@ -983,7 +983,7 @@ const ToolPage = () => {
           "ctaBanner",
         ];
         const textOrder = [
-          "modelHeroShowcase",
+          "capabilityCards",
           "capabilityCards",
           "featureBlocks",
           "pricingBlock",
