@@ -58,7 +58,7 @@ function ModelTile({ model }: { model: RelatedModel }) {
 
         <div>
           <span className="inline-flex items-center px-3 py-1 rounded-full bg-black/40 backdrop-blur-md border border-white/10 text-white text-[11px] font-semibold">
-            от {model.price}
+            {model.price}
           </span>
         </div>
       </div>
