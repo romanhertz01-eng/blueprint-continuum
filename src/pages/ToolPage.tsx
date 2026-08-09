@@ -435,6 +435,14 @@ const ToolPage = () => {
               moreLabel={data.articles.moreLabel}
             />
           ) : null,
+          resultsWall: data.resultsWall ? (
+            <ResultsWall
+              key="resultsWall"
+              className="section-resultsWall"
+              heading={data.resultsWall.heading}
+              items={data.resultsWall.items}
+            />
+          ) : null,
 
           specs: data.specs ? (() => {
             const modelPage = data.kind === 'tool' ? getModelForTool(data) : null;
