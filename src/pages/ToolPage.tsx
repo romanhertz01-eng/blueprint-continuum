@@ -951,7 +951,7 @@ const ToolPage = () => {
           "nano-banana", "seedream", "flux", "gpt-image", "grok-imagine", "qwen-image",
           "chatgpt", "claude", "gemini", "grok", "deepseek", "perplexity",
         ];
-        const isWidePilot = data.kind === "model" && wideSlugs.includes(data.slug);
+        const isWidePilot = wideSlugs.includes(data.slug);
         const videoOrder = [
           "capabilityCards",
           "showreel",
