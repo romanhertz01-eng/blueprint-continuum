@@ -3,7 +3,6 @@ import { ArrowRight } from "lucide-react";
 
 interface ModelVersion {
   name: string;
-  role: string;
   visualLabel?: string;
   desc: string;
   isDefault?: boolean;
@@ -62,21 +61,23 @@ export function ModelVersions({ heading, sub, versions, className }: ModelVersio
               )}
             >
               {v.isDefault && (
-                <span className="absolute top-4 left-4 z-20 px-2.5 py-0.5 rounded-full bg-primary text-[10px] font-bold text-white uppercase tracking-wider">
+                <span className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 px-2.5 py-0.5 rounded-full bg-primary text-[10px] font-bold text-white uppercase tracking-wider">
                   ОСНОВНАЯ
                 </span>
               )}
 
               {/* Top Visual Zone (55% height) */}
               <div className="relative h-[200px] bg-[#141110] flex flex-col items-center justify-center overflow-hidden">
-                {/* Visual Role Label */}
-                <div className="absolute top-4 right-4 text-[9px] font-black text-white/40 uppercase tracking-[0.1em]">
-                  {v.role}
-                </div>
-
                 {/* Visual Label (Main Display) */}
-                <div className="flex flex-col items-center z-10">
-                  <span className="text-white text-3xl md:text-[34px] font-black tracking-tight uppercase">
+                <div className="flex flex-col items-center z-10 w-full px-4">
+                  <span 
+                    className="text-white font-black tracking-tight uppercase text-center"
+                    style={{ 
+                      fontSize: v.visualLabel && v.visualLabel.length > 7 ? 'clamp(20px, 8cqw, 28px)' : 'clamp(24px, 10cqw, 34px)',
+                      width: '100%',
+                      display: 'block'
+                    }}
+                  >
                     {v.visualLabel}
                   </span>
                 </div>
