@@ -4306,6 +4306,7 @@ export const toolPages: ToolPageData[] = [
     heroTitle: "ChatGPT на русском — без VPN и регистрации в OpenAI",
     heroDescription:
       "Полноценный ChatGPT в браузере: последние версии GPT, ответы на русском, файлы и картинки. Оплата в рублях, от 4 кр за запрос.",
+    heroVideo: { poster: "/posters/chatgpt-hero.webp", overlay: 0.55 },
     category: "text",
     keyFeatureTitle: "Тот самый ChatGPT — без барьеров доступа",
     keyFeatureDescription:
