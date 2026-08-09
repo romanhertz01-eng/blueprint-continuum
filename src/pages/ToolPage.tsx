@@ -841,7 +841,7 @@ const ToolPage = () => {
           "pricingBlock",
           "modelVersions",
           "promptAnswer",
-          "modelChips",
+          "relatedTextModels",
           "intro",
           "specs",
           "comparisonTable",
