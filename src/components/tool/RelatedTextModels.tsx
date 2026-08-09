@@ -25,33 +25,36 @@ interface RelatedTextModelsProps {
 function ModelTile({ model }: { model: RelatedModel }) {
   const [imgError, setImgError] = useState(false);
 
-  const content = (
-    <div className="relative w-full h-full overflow-hidden group">
+  return (
+    <Link
+      to={model.href as any}
+      className="block relative aspect-[4/3] rounded-[14px] overflow-hidden border border-white/10 group"
+    >
       {/* Background */}
       {model.image && !imgError ? (
         <img
           src={model.image}
           alt={model.name}
           onError={() => setImgError(true)}
-          className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
         />
       ) : (
         <div 
-          className="absolute inset-0 w-full h-full transition-transform duration-500 group-hover:scale-105"
+          className="absolute inset-0 w-full h-full transition-transform duration-700 group-hover:scale-110"
           style={{ background: model.tileConfig?.gradient || "#333" }}
         />
       )}
       
       {/* Overlay Gradient */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
 
       {/* Text Content */}
       <div className="absolute inset-0 p-5 flex flex-col justify-between">
-        <div className="flex flex-col gap-1">
-          <h4 className="text-white text-xl md:text-2xl font-bold tracking-tight">
+        <div>
+          <h4 className="text-white text-xl md:text-2xl font-bold tracking-tight mb-1">
             {model.name}
           </h4>
-          <p className="text-white/70 text-[11px] md:text-[12px] leading-[1.3] max-w-[90%] font-medium">
+          <p className="text-white/60 text-[11px] md:text-[12px] leading-[1.3] max-w-[90%] font-medium">
             {model.desc}
           </p>
         </div>
@@ -62,15 +65,6 @@ function ModelTile({ model }: { model: RelatedModel }) {
           </span>
         </div>
       </div>
-    </div>
-  );
-
-  return (
-    <Link
-      to={model.href as any}
-      className="block relative aspect-[4/3] rounded-[14px] overflow-hidden border border-white/10"
-    >
-      {content}
     </Link>
   );
 }
@@ -80,19 +74,19 @@ export function RelatedTextModels({ heading, sub, description, models, className
     <section className={cn("max-w-[1360px] mx-auto px-4 py-14 md:py-20 section-relatedTextModels", className)}>
       <div className="grid grid-cols-1 lg:grid-cols-[30fr_70fr] gap-10 lg:gap-16 items-start">
         {/* Left Column */}
-        <div className="flex flex-col items-start text-left">
+        <div className="flex flex-col items-start text-left lg:pt-2">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.03] border border-white/10 mb-6">
-            <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+            <div className="w-1.5 h-1.5 rounded-full bg-primary" />
             <span className="text-[11px] uppercase tracking-wider font-bold text-white/90">Один сервис</span>
           </div>
           
-          <h2 className="text-3xl md:text-[42px] font-bold leading-[1.1] tracking-tight mb-5">
-            {heading}
+          <h2 className="text-3xl md:text-[40px] font-bold leading-[1.1] tracking-tight mb-5">
+            Другие
             <br />
-            <span className="text-muted-foreground">{sub}</span>
+            <span className="text-white/40">текстовые модели</span>
           </h2>
           
-          <p className="text-muted-foreground text-sm md:text-base leading-relaxed mb-8 max-w-[320px]">
+          <p className="text-white/50 text-sm md:text-base leading-relaxed mb-8 max-w-[320px]">
             {description}
           </p>
           
