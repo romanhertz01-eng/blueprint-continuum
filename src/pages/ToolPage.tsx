@@ -835,9 +835,10 @@ const ToolPage = () => {
           "ctaBanner",
         ];
         const textOrder = [
-          ...(data.modelHeroShowcase ? ["modelHeroShowcase"] : []),
+          "modelHeroShowcase",
           "capabilityCards",
           "featureBlocks",
+          "pricingBlock",
           "modelVersions",
           "promptAnswer",
           "modelChips",
@@ -845,9 +846,7 @@ const ToolPage = () => {
           "specs",
           "comparisonTable",
           "tips",
-          "howItWorks",
           "articles",
-          "pricingBlock",
           "ctaBanner",
         ];
         const baseModelOrder = ["showcaseStrip", "modelChips", "intro", "visualCards", "audioShowreel", "promptAnswer", "specs", "comparisonTable", "keyFeature", "featureBlocks", "showreel", "transformShowcase", "gallery", "tips", "useCases", "modelTools", "howItWorks"];
