@@ -4364,17 +4364,19 @@ export const toolPages: ToolPageData[] = [
       },
     },
     sectionOrder: [
-      "hero",
       "modelHeroShowcase",
+      "capabilityCards",
       "featureBlocks",
       "pricingBlock",
       "modelVersions",
       "promptAnswer",
-      "capabilityCards",
+      "modelChips",
+      "intro",
+      "specs",
+      "comparisonTable",
+      "tips",
       "articles",
-      "relatedTextModels",
-      "faq",
-      "related"
+      "ctaBanner"
     ],
     intro: {
       heading: "ChatGPT в России: полный доступ в одном окне",
@@ -4685,6 +4687,21 @@ export const toolPages: ToolPageData[] = [
         ],
       },
     },
+    sectionOrder: [
+      "modelHeroShowcase",
+      "capabilityCards",
+      "featureBlocks",
+      "pricingBlock",
+      "modelVersions",
+      "promptAnswer",
+      "modelChips",
+      "intro",
+      "specs",
+      "comparisonTable",
+      "tips",
+      "articles",
+      "ctaBanner"
+    ],
     articles: {
       heading: "Статьи про Claude",
       sub: "Работа с длинными документами, тексты и анализ",
@@ -4821,8 +4838,6 @@ export const toolPages: ToolPageData[] = [
         { name: "Perplexity", slug: "perplexity" },
       ],
     },
-
-
   },
   {
     slug: "gemini",
@@ -4861,10 +4876,23 @@ export const toolPages: ToolPageData[] = [
           { label: "Gemini 3.5 Flash", rate: 6, matchOption: "Gemini 3.5 Flash" },
           { label: "Gemini 2.5 Pro", rate: 6, matchOption: "Gemini 2.5 Pro" },
           { label: "Gemini 3 Pro", rate: 6, matchOption: "Gemini 3 Pro" },
-          { label: "Gemini 3.1 Pro", rate: 6, matchOption: "Gemini 3.1 Pro" },
         ],
       },
     },
+    sectionOrder: [
+      "modelHeroShowcase",
+      "capabilityCards",
+      "featureBlocks",
+      "pricingBlock",
+      "modelVersions",
+      "promptAnswer",
+      "modelChips",
+      "intro",
+      "specs",
+      "comparisonTable",
+      "articles",
+      "ctaBanner"
+    ],
     articles: {
       heading: "Статьи про Gemini",
       sub: "Мультимодальность, работа с изображениями и данными",
@@ -5001,8 +5029,6 @@ export const toolPages: ToolPageData[] = [
         { name: "Perplexity", slug: "perplexity" },
       ],
     },
-
-
   },
   {
     slug: "grok",
@@ -5041,6 +5067,21 @@ export const toolPages: ToolPageData[] = [
         ],
       },
     },
+    sectionOrder: [
+      "modelHeroShowcase",
+      "capabilityCards",
+      "featureBlocks",
+      "pricingBlock",
+      "modelVersions",
+      "promptAnswer",
+      "modelChips",
+      "intro",
+      "specs",
+      "comparisonTable",
+      "tips",
+      "articles",
+      "ctaBanner"
+    ],
     articles: {
       heading: "Статьи про Grok",
       sub: "Свежие данные, прямые оценки и нестандартные решения",
@@ -5175,8 +5216,6 @@ export const toolPages: ToolPageData[] = [
         { name: "Perplexity", slug: "perplexity" },
       ],
     },
-
-
   },
   {
     slug: "deepseek",
@@ -5215,6 +5254,21 @@ export const toolPages: ToolPageData[] = [
         ],
       },
     },
+    sectionOrder: [
+      "modelHeroShowcase",
+      "capabilityCards",
+      "featureBlocks",
+      "pricingBlock",
+      "modelVersions",
+      "promptAnswer",
+      "modelChips",
+      "intro",
+      "specs",
+      "comparisonTable",
+      "tips",
+      "articles",
+      "ctaBanner"
+    ],
     articles: {
       heading: "Статьи про DeepSeek",
       sub: "Рассуждения, математика и код за минимальную цену",
@@ -5349,8 +5403,6 @@ export const toolPages: ToolPageData[] = [
         { name: "Perplexity", slug: "perplexity" },
       ],
     },
-
-
   },
   {
     slug: "perplexity",
@@ -5391,6 +5443,21 @@ export const toolPages: ToolPageData[] = [
         ],
       },
     },
+    sectionOrder: [
+      "modelHeroShowcase",
+      "capabilityCards",
+      "featureBlocks",
+      "pricingBlock",
+      "modelVersions",
+      "promptAnswer",
+      "modelChips",
+      "intro",
+      "specs",
+      "comparisonTable",
+      "tips",
+      "articles",
+      "ctaBanner"
+    ],
     articles: {
       heading: "Статьи про Perplexity",
       sub: "Поиск с источниками и глубокие исследования",
@@ -5526,8 +5593,6 @@ export const toolPages: ToolPageData[] = [
         { name: "DeepSeek", slug: "deepseek" },
       ],
     },
-
-
   },
   {
     slug: "imagen",
@@ -5618,7 +5683,15 @@ export const toolPages: ToolPageData[] = [
     ],
   },
   {
-    slug: "hailuo",
+    slug: "hailuo-legacy",
+    kind: 'tool',
+    modelName: "Hailuo AI Legacy",
+    heroTitle: "Hailuo — видеонейросеть MiniMax (Legacy)",
+    heroDescription: "Быстрорастущая модель для коротких роликов (Legacy).",
+    keyFeatureTitle: "Тёмная лошадка видеогенерации",
+    keyFeatureDescription: "Hailuo от китайской MiniMax.",
+    technologyDescription: "Видеомодель MiniMax.",
+    category: "video",
     pricingBlock: {
       heading: "Тарифы ЭРА2",
       sub: "Одна подписка на все модели каталога — оплата в рублях, без VPN",
@@ -5637,7 +5710,6 @@ export const toolPages: ToolPageData[] = [
         { title: "Два режима", desc: "Standard для потока, Pro для финальных кадров — цена под задачу", image: "/community/02.jpg", inset: "/community/04.jpg", insetPosition: "top-right" },
       ],
     },
-
     gallery: {
       heading: "Создано с Hailuo",
       initialCount: 12,
@@ -5660,8 +5732,11 @@ export const toolPages: ToolPageData[] = [
       "/community/03.jpg",
       ],
     },
+  },
+  {
+    slug: "hailuo",
     kind: 'model',
-    updatedAt: "2026-07-26",
+    updatedAt: "2026-07-28",
     modelName: "Hailuo AI",
     heroTitle: "Hailuo — видеонейросеть MiniMax",
     heroDescription:
@@ -5696,6 +5771,8 @@ export const toolPages: ToolPageData[] = [
         ],
       },
     },
+    status: 'published',
+    updatedAt: "2026-07-29",
     intro: {
       heading: "Hailuo в России: динамика по разумной цене",
       text: "Hailuo — видеомодель компании MiniMax, один из самых быстрорастущих игроков генерации видео. Её почерк — энергия кадра: уверенные движения камеры, живые пролёты, динамичные сцены, которые у других моделей выходят статичными. Официальный сервис требует зарубежной регистрации; в ЭРА2 Hailuo работает в браузере — русские промпты, рубли, от 200 кр за клип 6 с.",
@@ -5823,16 +5900,17 @@ export const toolPages: ToolPageData[] = [
     },
   },
   {
-    slug: "runway",
-    pricingBlock: {
-      heading: "Тарифы ЭРА2",
-      sub: "Одна подписка на все модели каталога — оплата в рублях, без VPN",
-    },
-    ctaBanner: {
-      title: "Создавайте видео\nна Runway прямо сейчас",
-      button: "Начать бесплатно",
-      image: "/community/03.jpg",
-    },
+    slug: "runway-legacy",
+    kind: 'tool',
+    category: "video",
+    technologyDescription: "Runway Gen-4 Turbo.",
+    modelName: "Runway Gen-4 Turbo",
+    heroTitle: "Runway — профессиональная видеомодель",
+    heroDescription:
+      "Инструмент, которым снимают рекламу и клипы: генерация и редактирование видео, Aleph для правок готовых роликов. От 100 кр за клип 5 с. Без VPN, оплата в рублях.",
+    keyFeatureTitle: "Модель, с которой начался массовый видео-ИИ",
+    keyFeatureDescription:
+      "Runway задала стандарт коммерческой видеогенерации: ей снимают рекламу, музыкальные клипы и вставки для кино. Кроме генерации есть Aleph — правки готовых роликов по описанию, что заменяет часть работы монтажёра и колориста.",
     capabilityCards: {
       heading: "Три сценария Runway",
       sub: "Что чаще всего делают на этой модели",
@@ -5865,6 +5943,9 @@ export const toolPages: ToolPageData[] = [
       "/community/01.jpg",
       ],
     },
+  },
+  {
+    slug: "runway",
     kind: 'model',
     status: 'published',
     updatedAt: "2026-07-29",
