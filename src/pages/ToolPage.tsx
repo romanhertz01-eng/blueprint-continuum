@@ -1018,13 +1018,16 @@ const ToolPage = () => {
             <div className="tool-wide">
               {rendered.map((k, i) => {
                 const isFullWidthSection = ["comparisonTable", "priceCompare"].includes(k);
+                const section = sections[k];
+                if (!section) return null;
+
                 return (
                   <div key={k} className={cn(
                     "w-full", 
                     !isFullWidthSection && (i % 2 === 0 ? "bg-background" : "bg-muted/30"),
                     i === 0 && "[&_.section-" + k + "]:pt-0"
                   )}>
-                    {sections[k]}
+                    {section}
                   </div>
                 );
               })}
