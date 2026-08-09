@@ -4386,10 +4386,10 @@ export const toolPages: ToolPageData[] = [
       heading: "Версии GPT в ЭРА2",
       sub: "Четыре версии под задачу и бюджет",
       versions: [
-        { name: "GPT-5.6 Luna", role: "БЫСТРЫЕ ОТВЕТЫ", price: "4 кр", desc: "Быстрые ответы, лёгкие задачи и рутинные вопросы", isDefault: false },
-        { name: "GPT 5.2", role: "РАБОЧАЯ ВЕРСИЯ", price: "6 кр", desc: "Рабочая лошадка — оптимум цены и качества для большинства задач", isDefault: true },
-        { name: "GPT 5.4", role: "СЛОЖНЫЕ ЗАДАЧИ", price: "10 кр", desc: "Сложные задачи, длинный контекст и глубокие рассуждения", isDefault: false },
-        { name: "GPT-5.6 Sol", role: "НОВАЯ ВЕРСИЯ", price: "18 кр", desc: "Самая умная версия OpenAI для ультимативного качества", isDefault: false }
+        { name: "GPT-5.6 Luna", role: "БАЗОВЫЙ УРОВЕНЬ", price: "4", desc: "Быстрые ответы на простые вопросы и рутину", isDefault: false },
+        { name: "GPT 5.2", role: "ОПТИМАЛЬНЫЙ УРОВЕНЬ", price: "6", desc: "Оптимум цены и качества для большинства задач", isDefault: true },
+        { name: "GPT 5.4", role: "ПРОДВИНУТЫЙ УРОВЕНЬ", price: "10", desc: "Длинный контекст и глубокие рассуждения", isDefault: false },
+        { name: "GPT-5.6 Sol", role: "МАКСИМАЛЬНЫЙ УРОВЕНЬ", price: "18", desc: "Максимальное качество для сложных проектов", isDefault: false }
       ]
     },
     modelHeroShowcase: {
