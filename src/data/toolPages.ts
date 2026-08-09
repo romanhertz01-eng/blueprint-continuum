@@ -4574,7 +4574,6 @@ export const toolPages: ToolPageData[] = [
           tileConfig: { gradient: "linear-gradient(135deg, #1E3A5F 0%, #0F172A 100%)" }
         }
       ]
-      ]
     },
     featureBlocks: [
       { title: "Без VPN, номера и иностранной карты", desc: "Три барьера официального ChatGPT сняты разом: доступ из российских сетей, регистрация по обычной почте, оплата рублями в составе единой подписки ЭРА2. Модель та же — путь к ней в три клика.", image: "/community/01.jpg", cta: "Открыть ChatGPT" },
