@@ -4350,19 +4350,31 @@ export const toolPages: ToolPageData[] = [
       selects: [
         { label: "Версия", options: ["GPT-5.6 Luna", "GPT 5.2", "GPT 5.4", "GPT-5.6 Terra", "GPT 5.5", "GPT-5.6 Sol"] },
       ],
-      sectionOrder: [
-        "hero",
-        "modelHeroShowcase",
-        "modelVersions",
-        "promptAnswer",
-        "capabilityCards",
-        "articles",
-        "relatedTextModels",
-        "pricingBlock",
-        "faq",
-        "related"
-      ],
       pricing: {
+        mode: "per-message",
+        unitLabel: "за сообщение",
+        rates: [
+          { label: "GPT-5.6 Luna", rate: 4, matchOption: "GPT-5.6 Luna" },
+          { label: "GPT 5.2", rate: 6, matchOption: "GPT 5.2" },
+          { label: "GPT 5.4", rate: 10, matchOption: "GPT 5.4" },
+          { label: "GPT-5.6 Terra", rate: 10, matchOption: "GPT-5.6 Terra" },
+          { label: "GPT 5.5", rate: 18, matchOption: "GPT 5.5" },
+          { label: "GPT-5.6 Sol", rate: 18, matchOption: "GPT-5.6 Sol" },
+        ],
+      },
+    },
+    sectionOrder: [
+      "hero",
+      "modelHeroShowcase",
+      "modelVersions",
+      "promptAnswer",
+      "capabilityCards",
+      "articles",
+      "relatedTextModels",
+      "pricingBlock",
+      "faq",
+      "related"
+    ],
         mode: "per-message",
         unitLabel: "за сообщение",
         rates: [
