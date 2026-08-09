@@ -1,17 +1,17 @@
 import React from 'react';
 import { cn } from "@/lib/utils";
-import { Copy, Check } from "lucide-react";
+import { Copy, Check, MoreHorizontal } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
-interface ResultCard {
+interface ResultCardData {
   prompt: string;
   answer: string;
 }
 
 interface ResultsWallProps {
   heading: string;
-  items: ResultCard[];
+  items: ResultCardData[];
   className?: string;
 }
 
@@ -35,46 +35,93 @@ export function ResultsWall({ heading, items, className }: ResultsWallProps) {
   );
 }
 
-function ResultCard({ item }: { item: ResultCard }) {
+function ResultCard({ item }: { item: ResultCardData }) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(item.prompt);
+    // Strip HTML for copy if it was a table, but for now we just copy raw text
+    // The requirement says "Copy button - icon in the top right corner"
+    navigator.clipboard.writeText(item.answer);
     setCopied(true);
-    toast.success("Скопировано");
+    toast.success("Ответ скопирован");
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const isCode = item.answer.includes('```') || item.answer.includes('def ') || item.answer.includes('import ');
+  const isTable = item.answer.includes('<table');
 
   return (
-    <div className="break-inside-avoid relative group bg-card border border-border rounded-2xl p-6 transition-all hover:shadow-md">
-      <div className="flex justify-between items-start mb-4 gap-4">
-        <div className="font-mono text-[12px] text-muted-foreground uppercase tracking-wider line-clamp-2">
-          {item.prompt}
+    <div className="break-inside-avoid relative group bg-[#141110] border border-[#2D2420] rounded-[14px] overflow-hidden transition-all duration-300 shadow-xl shadow-black/25 hover:shadow-black/40">
+      {/* Header */}
+      <div className="flex items-center justify-between px-4 py-3 border-b border-[#2D2420]">
+        <div className="flex items-center gap-1.5">
+          <div className="w-2.5 h-2.5 rounded-full bg-[#2D2420]" />
+          <div className="w-2.5 h-2.5 rounded-full bg-[#2D2420]" />
+          <div className="w-2.5 h-2.5 rounded-full bg-[#2D2420]" />
         </div>
+        
+        <div className="text-[11px] font-medium text-[#8E8680] uppercase tracking-wider">
+          GPT-5.6 · ЭРА2
+        </div>
+
         <button
           onClick={handleCopy}
-          className="shrink-0 p-2 rounded-lg bg-muted hover:bg-accent text-muted-foreground hover:text-foreground transition-colors"
-          title="Копировать промпт"
+          className="p-1.5 rounded-md hover:bg-[#2D2420] text-[#8E8680] hover:text-[#F7EEE8] transition-colors"
+          title="Копировать ответ"
         >
-          {copied ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
+          {copied ? <Check className="w-3.5 h-3.5 text-green-500" /> : <Copy className="w-3.5 h-3.5" />}
         </button>
       </div>
 
-      <div className="relative overflow-hidden max-h-[400px]">
-        <div className={cn(
-          "text-[15px] leading-relaxed prose prose-sm dark:prose-invert max-w-none",
-          "prose-p:my-2 prose-headings:mb-3 prose-headings:mt-4 prose-ul:my-2 prose-li:my-1",
-          isCode && "prose-pre:bg-muted prose-pre:p-4 prose-pre:rounded-xl"
-        )}>
-          {item.answer.split('\n').map((line, idx) => {
-             if (line.trim().startsWith('|')) return <div key={idx} className="font-mono text-[13px] bg-muted/50 p-1">{line}</div>;
-             if (line.startsWith('```')) return null;
-             return <p key={idx}>{line}</p>;
-          })}
+      <div className="p-5">
+        {/* User Prompt Bubble */}
+        <div className="inline-block bg-[#39180A] rounded-2xl px-4 py-2 mb-5">
+          <div className="font-mono text-[12px] text-[#FF743D]">
+            {item.prompt}
+          </div>
         </div>
-        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-card to-transparent pointer-events-none" />
+
+        {/* Model Answer */}
+        <div className="relative overflow-hidden max-h-[420px]">
+          <div className={cn(
+            "text-[15px] leading-relaxed text-[#F7EEE8] prose-invert max-w-none",
+            "prose-p:my-2 prose-headings:mb-3 prose-headings:mt-4 prose-ul:my-2 prose-li:my-1",
+            "selection:bg-[#FF743D]/30"
+          )}>
+            {isTable ? (
+              <div 
+                className="my-4 overflow-x-auto"
+                dangerouslySetInnerHTML={{ __html: item.answer }} 
+              />
+            ) : (
+              item.answer.split('\n').map((line, idx) => {
+                // Code block detection
+                if (line.startsWith('```')) return null;
+                
+                // Very basic syntax highlighting for code logic (just coloring words)
+                const isCodeLine = item.answer.includes('```') && (line.includes('def ') || line.includes('import ') || line.includes('return ') || line.includes('print('));
+                
+                if (isCodeLine) {
+                  return (
+                    <div key={idx} className="font-mono text-[13px] py-0.5 whitespace-pre">
+                      {line.split(/(\s+)/).map((word, i) => {
+                        if (['def', 'import', 'return', 'from', 'as'].includes(word)) return <span key={i} className="text-[#98C379]">{word}</span>;
+                        if (['print', 'list', 'dict'].includes(word)) return <span key={i} className="text-[#61AFEF]">{word}</span>;
+                        if (word.startsWith('#')) return <span key={i} className="text-[#5C6370] italic">{word}</span>;
+                        if (word.match(/['"].*['"]/)) return <span key={i} className="text-[#D19A66]">{word}</span>;
+                        return word;
+                      })}
+                    </div>
+                  );
+                }
+                
+                return <p key={idx}>{line}</p>;
+              })
+            )}
+          </div>
+          
+          {/* Fade effect - color of the card background */}
+          <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-[#141110] to-transparent pointer-events-none" />
+        </div>
       </div>
     </div>
   );
