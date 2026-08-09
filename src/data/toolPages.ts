@@ -4767,7 +4767,6 @@ export const toolPages: ToolPageData[] = [
       "promptAnswer",
       "modelChips",
       "intro",
-      "specs",
       "comparisonTable",
       "tips",
       "articles",
