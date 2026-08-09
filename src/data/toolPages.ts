@@ -166,6 +166,7 @@ export const toolPages: ToolPageData[] = [
   {
     slug: "ozhivit-foto",
     kind: 'tool',
+    status: 'published',
     updatedAt: "2026-07-26",
     modelName: "Kling 3.0",
     heroTitle: "Оживить фото",
@@ -310,7 +311,7 @@ export const toolPages: ToolPageData[] = [
       ],
     },
     modelChips: {
-      heading: "Другие инструменты для видео",
+      heading: "Инструменты для видео",
       sub: "Все ИИ-инструменты в одной подписке",
       models: [
         { name: "Kling 3.0", slug: "kling" },
@@ -324,6 +325,7 @@ export const toolPages: ToolPageData[] = [
   {
     slug: "remove-background",
     kind: 'tool',
+    status: 'published',
     updatedAt: "2026-07-26",
     modelName: "Recraft",
     heroTitle: "Удалить фон с фото",
@@ -454,7 +456,7 @@ export const toolPages: ToolPageData[] = [
       ],
     },
     modelChips: {
-      heading: "Другие инструменты для графики",
+      heading: "Инструменты для графики",
       sub: "Улучшайте и редактируйте фото в один клик",
       models: [
         { name: "Апскейлер", slug: "image-upscaler" },
@@ -467,6 +469,7 @@ export const toolPages: ToolPageData[] = [
   {
     slug: "image-upscaler",
     kind: 'tool',
+    status: 'published',
     updatedAt: "2026-07-26",
     modelName: "Topaz Upscale",
     heroTitle: "Улучшить качество фото",
@@ -598,7 +601,7 @@ export const toolPages: ToolPageData[] = [
       ],
     },
     modelChips: {
-      heading: "Другие инструменты для графики",
+      heading: "Инструменты для графики",
       sub: "Улучшайте и редактируйте фото в один клик",
       models: [
         { name: "Удаление фона", slug: "remove-background" },
@@ -611,7 +614,7 @@ export const toolPages: ToolPageData[] = [
   {
     slug: "photo-restoration",
     kind: 'tool',
-    status: "draft",
+    status: "published",
     updatedAt: "2026-07-26",
     modelName: "ERA2 Restore",
     heroTitle: "Реставрация старых фото",
@@ -754,7 +757,7 @@ export const toolPages: ToolPageData[] = [
   {
     slug: "colorize-photo",
     kind: 'tool',
-    status: "draft",
+    status: "published",
     updatedAt: "2026-07-26",
     modelName: "ERA2 Colorize",
     heroTitle: "Раскрасить чёрно-белое фото",
@@ -2084,7 +2087,7 @@ export const toolPages: ToolPageData[] = [
       button: "Создать изображение",
     },
     modelChips: {
-      heading: "Другие модели для изображений",
+      heading: "Инструменты для графики",
       sub: "Переключайте модель под задачу в одной подписке",
       models: [
         { name: "Nano Banana", slug: "nano-banana" },
@@ -2283,7 +2286,7 @@ export const toolPages: ToolPageData[] = [
       button: "Создать изображение",
     },
     modelChips: {
-      heading: "Другие модели для изображений",
+      heading: "Инструменты для графики",
       sub: "Переключайте модель под задачу в одной подписке",
       models: [
         { name: "Nano Banana", slug: "nano-banana" },
@@ -2481,7 +2484,7 @@ export const toolPages: ToolPageData[] = [
       button: "Создать изображение",
     },
     modelChips: {
-      heading: "Другие модели для изображений",
+      heading: "Инструменты для графики",
       sub: "Переключайте модель под задачу в одной подписке",
       models: [
         { name: "Nano Banana", slug: "nano-banana" },
@@ -2496,7 +2499,7 @@ export const toolPages: ToolPageData[] = [
     slug: "midjourney",
     kind: 'model',
     updatedAt: "2026-07-26",
-    status: "draft",
+    status: "published",
     modelName: "Midjourney",
     heroTitle: "Генератор изображений Midjourney",
     heroDescription:
@@ -3227,7 +3230,7 @@ export const toolPages: ToolPageData[] = [
   {
     slug: "watermark-remover",
     kind: 'tool',
-    status: "draft",
+    status: "published",
     updatedAt: "2026-07-26",
     modelName: "ERA2 Eraser",
     heroTitle: "Удалить водяной знак с фото",
@@ -7064,7 +7067,7 @@ export const toolPages: ToolPageData[] = [
   {
     slug: "voice-changer",
     kind: 'tool',
-    status: "draft",
+    status: "published",
     updatedAt: "2026-07-27",
     modelName: "ERA2 Голос",
     heroTitle: "Смена голоса нейросетью",
@@ -7215,7 +7218,7 @@ export const toolPages: ToolPageData[] = [
   {
     slug: "audio-denoise",
     kind: 'tool',
-    status: "draft",
+    status: "published",
     updatedAt: "2026-07-27",
     modelName: "ERA2 Шумодав",
     heroTitle: "Удаление шума из аудио",
