@@ -1,7 +1,7 @@
 import { ORIGIN } from "@/lib/origin";
 
 import { Link, getRouteApi } from "@tanstack/react-router";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Sparkles, Check } from "lucide-react";
 import { ModelGlyph } from "@/components/ui/era/ModelGlyph";
 import { useEffect, useRef, useState } from "react";
 import { getRelatedTools, isPublished, getModelPriceLabel, getToolsForModel, getModelForTool, getToolPageData, type ToolPageData } from "@/data/toolPages";
@@ -578,18 +578,97 @@ const ToolPage = () => {
           ) : null,
           comparisonTable: data.comparisonTable ? (() => {
             const isChatGPT = data.slug === 'chatgpt';
+            if (isChatGPT) {
+              const columns = data.comparisonTable.columns;
+              const rows = data.comparisonTable.rows;
+              
+              return (
+                <section key="comparisonTable" className="w-full bg-[#141110] py-20 text-[#F7EEE8] section-comparisonTable">
+                  <div className="max-w-[1100px] mx-auto px-4">
+                    {/* Header */}
+                    <div className="flex flex-col items-center mb-12">
+                      <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-[11px] font-bold uppercase tracking-wider mb-6">
+                        <Sparkles size={12} fill="currentColor" />
+                        СРАВНЕНИЕ МОДЕЛЕЙ
+                      </div>
+                      <h2 className="text-3xl md:text-[40px] font-bold text-white text-center mb-6">
+                        {data.comparisonTable.heading}
+                      </h2>
+                      <div className="w-12 h-0.5 bg-primary" />
+                    </div>
+
+                    {/* Cards Grid */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                      {columns.map((colName, colIdx) => {
+                        const isMain = colName === 'ChatGPT';
+                        const desc = rows.find(r => r.label === 'Лучше всего для')?.values[colIdx];
+                        const price = rows.find(r => r.label === 'Цена за сообщение')?.values[colIdx];
+                        const items = rows.filter(r => 
+                          !['Лучше всего для', 'Цена за сообщение'].includes(r.label)
+                        );
+
+                        return (
+                          <div 
+                            key={colName}
+                            className={cn(
+                              "relative flex flex-col rounded-[20px] bg-[#1A1514] border p-7 transition-all duration-500",
+                              isMain 
+                                ? "border-primary shadow-[0_0_40px_-15px_rgba(232,84,32,0.4)] z-10 lg:-translate-y-2" 
+                                : "border-[#2D2420]"
+                            )}
+                          >
+                            {isMain && (
+                              <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-primary text-[#141110] text-[10px] font-bold uppercase tracking-wider whitespace-nowrap">
+                                ЭТА МОДЕЛЬ
+                              </div>
+                            )}
+
+                            <h3 className="text-2xl font-bold text-white mb-1">{colName}</h3>
+                            <p className="text-sm text-[#8C7F78] mb-6">{desc}</p>
+                            
+                            <div className="h-px bg-[#2D2420] w-full mb-6" />
+
+                            <ul className="flex flex-col gap-4 mb-8 flex-1">
+                              {items.map((row, rowIdx) => (
+                                <li key={rowIdx} className="flex items-start gap-3">
+                                  <Check size={16} className="text-primary shrink-0 mt-0.5" />
+                                  <div className="flex flex-col">
+                                    <span className="text-[10px] uppercase tracking-wider text-[#8C7F78] font-medium mb-0.5">
+                                      {row.label}
+                                    </span>
+                                    <span className="text-sm text-[#F7EEE8]">
+                                      {row.values[colIdx]}
+                                    </span>
+                                  </div>
+                                </li>
+                              ))}
+                            </ul>
+
+                            <div className="bg-[#0E0C0C] rounded-xl p-4 flex justify-between items-center">
+                              <span className="text-[10px] text-[#8C7F78] uppercase">за сообщение</span>
+                              <span className="text-xl font-bold text-primary">{price}</span>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </section>
+              );
+            }
+
             return (
               <section 
                 key="comparisonTable" 
                 className={cn(
                   "py-20 section-comparisonTable",
-                  isChatGPT ? "w-full bg-[#141110] text-[#F7EEE8]" : "mx-auto px-4 max-w-5xl py-14 md:py-20"
+                  "mx-auto px-4 max-w-5xl py-14 md:py-20"
                 )}
               >
-                <div className={cn("mx-auto px-4", isChatGPT ? "max-w-[1100px]" : "w-full")}>
+                <div className="w-full">
                   {data.comparisonTable.heading && (
                     <div className="mb-8 md:mb-12">
-                      <h2 className={cn("text-2xl md:text-[32px] font-bold", isChatGPT ? "text-white" : "text-center md:text-left")}>
+                      <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">
                         {data.comparisonTable.heading}
                       </h2>
                     </div>
@@ -598,17 +677,13 @@ const ToolPage = () => {
                     <table className="w-full min-w-[640px] text-sm table-fixed">
                       <thead>
                         <tr>
-                          <th className={cn(
-                            "text-left py-3 pr-4 font-normal",
-                            isChatGPT ? "w-[220px] text-[#8C7F78]" : "w-1/4 text-muted-foreground"
-                          )}></th>
+                          <th className="text-left py-3 pr-4 font-normal w-1/4 text-muted-foreground"></th>
                           {data.comparisonTable.columns.map((c, i) => (
                             <th
                               key={c}
                               className={cn(
                                 "text-left py-3 px-4 font-semibold",
-                                isChatGPT ? "text-white" : "",
-                                !isChatGPT && i === 0 ? "bg-white/[0.04] rounded-t-lg" : ""
+                                i === 0 ? "bg-white/[0.04] rounded-t-lg" : ""
                               )}
                             >
                               {c}
@@ -618,8 +693,8 @@ const ToolPage = () => {
                       </thead>
                       <tbody>
                         {data.comparisonTable.rows.map((row, ri) => (
-                          <tr key={ri} className={cn("border-t", isChatGPT ? "border-[#2D2420]" : "border-border/60")}>
-                            <td className={cn("py-3 pr-4 align-top", isChatGPT ? "text-[#8C7F78]" : "text-muted-foreground")}>
+                          <tr key={ri} className="border-t border-border/60">
+                            <td className="py-3 pr-4 align-top text-muted-foreground">
                               {row.label}
                             </td>
                             {row.values.map((v, vi) => (
@@ -627,7 +702,7 @@ const ToolPage = () => {
                                 key={vi}
                                 className={cn(
                                   "py-3 px-4 align-top",
-                                  isChatGPT ? (vi === 0 ? "text-white font-bold" : "text-[#F7EEE8]") : (vi === 0 ? "bg-white/[0.04] font-medium" : "")
+                                  vi === 0 ? "bg-white/[0.04] font-medium" : ""
                                 )}
                               >
                                 {v}
