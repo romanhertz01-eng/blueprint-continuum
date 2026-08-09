@@ -149,4 +149,3 @@ export function PriceCompare({ data, className }: PriceCompareProps) {
     </section>
   );
 }
-}
