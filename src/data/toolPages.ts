@@ -163,7 +163,7 @@ export interface ToolPageData {
     heading: string;
     subheading: string;
     buttonText: string;
-    posters: { src: string; alt: string; aspect: "3:4" | "4:3" }[];
+    posters: { src: string; alt: string }[];
   };
 }
 
@@ -4358,14 +4358,14 @@ export const toolPages: ToolPageData[] = [
       subheading: "Понимает длинные задачи и отвечает на русском без акцента",
       buttonText: "Попробовать",
       posters: [
-        { src: "/posters/chatgpt-01.webp", alt: "План запуска за 30 дней", aspect: "3:4" },
-        { src: "/posters/chatgpt-02.webp", alt: "УСН или НПД", aspect: "4:3" },
-        { src: "/posters/chatgpt-03.webp", alt: "Письмо, которое не испортит отношения", aspect: "4:3" },
-        { src: "/posters/chatgpt-04.webp", alt: "Разбор договора: 4 риска", aspect: "3:4" },
-        { src: "/posters/chatgpt-05.webp", alt: "Код, который работает", aspect: "3:4" },
-        { src: "/posters/chatgpt-06.webp", alt: "Пост для ВК за 30 секунд", aspect: "4:3" },
-        { src: "/posters/chatgpt-07.webp", alt: "200 страниц → 5 тезисов", aspect: "4:3" },
-        { src: "/posters/chatgpt-08.webp", alt: "Ответ на русском, без акцента", aspect: "3:4" },
+        { src: "/posters/chatgpt-01.webp", alt: "План запуска за 30 дней" },
+        { src: "/posters/chatgpt-02.webp", alt: "Резюме, которое дочитают" },
+        { src: "/posters/chatgpt-03.webp", alt: "Письмо клиенту за две минуты" },
+        { src: "/posters/chatgpt-04.webp", alt: "Разбор договора: 4 риска" },
+        { src: "/posters/chatgpt-05.webp", alt: "Код, который работает" },
+        { src: "/posters/chatgpt-06.webp", alt: "Пост для ВК за 30 секунд" },
+        { src: "/posters/chatgpt-07.webp", alt: "200 страниц → 5 тезисов" },
+        { src: "/posters/chatgpt-08.webp", alt: "Ответ на русском, без акцента" },
       ]
     },
     capabilityCards: {
