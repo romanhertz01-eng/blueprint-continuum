@@ -174,6 +174,21 @@ export interface ToolPageData {
       };
     }[];
   };
+  relatedTextModels?: {
+    heading: string;
+    sub: string;
+    description: string;
+    models: {
+      name: string;
+      desc: string;
+      price: string;
+      href: string;
+      image?: string;
+      tileConfig?: {
+        gradient: string;
+      };
+    }[];
+  };
 }
 
 

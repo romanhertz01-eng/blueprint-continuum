@@ -24,6 +24,7 @@ import { ArticlesGrid } from "@/components/tool/ArticlesGrid";
 import { ModelHeroShowcase } from "@/components/tool/ModelHeroShowcase";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
+import { RelatedTextModels } from "@/components/tool/RelatedTextModels";
 
 
 const toolRouteApi = getRouteApi("/tools/$slug");
@@ -445,7 +446,17 @@ const ToolPage = () => {
               sub={data.articles.sub}
               items={data.articles.items}
               moreHref={data.articles.moreHref}
-              moreLabel={data.articles.moreLabel}
+            moreLabel={data.articles.moreLabel}
+            />
+          ) : null,
+          relatedTextModels: data.relatedTextModels ? (
+            <RelatedTextModels
+              key="relatedTextModels"
+              className="section-relatedTextModels"
+              heading={data.relatedTextModels.heading}
+              sub={data.relatedTextModels.sub}
+              description={data.relatedTextModels.description}
+              models={data.relatedTextModels.models}
             />
           ) : null,
           modelHeroShowcase: data.modelHeroShowcase ? (
