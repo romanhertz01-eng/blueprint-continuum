@@ -91,7 +91,7 @@ export function RelatedTextModels({ heading, sub, description, models, className
           
           <Link 
             to="/ai/text" 
-            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full border border-primary/20 text-primary text-sm font-semibold hover:bg-primary hover:text-primary-foreground transition-all duration-300"
+            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full border border-primary/20 !text-primary text-sm font-semibold hover:bg-primary hover:text-primary-foreground transition-all duration-300"
           >
             Смотреть все модели →
           </Link>
