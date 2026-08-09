@@ -6,6 +6,12 @@ import { useState } from "react";
 interface Poster {
   src: string;
   alt: string;
+  tileConfig?: {
+    text: string;
+    background: string;
+    textColor: string;
+    fontFamily?: string;
+  };
 }
 
 interface ModelHeroShowcaseProps {
@@ -16,16 +22,36 @@ interface ModelHeroShowcaseProps {
   className?: string;
 }
 
+const PosterTile = ({ config, className }: { config: NonNullable<Poster['tileConfig']>; className?: string }) => {
+  return (
+    <div
+      className={cn(
+        "relative rounded-[12px] overflow-hidden flex items-center justify-center p-6 text-center shadow-sm",
+        className
+      )}
+      style={{ background: config.background }}
+    >
+      <span 
+        className={cn(
+          "font-black leading-[1.1] tracking-tight uppercase break-words whitespace-pre-line",
+          config.fontFamily === 'mono' ? "font-mono" : "font-sans"
+        )}
+        style={{ 
+          color: config.textColor,
+          fontSize: 'clamp(1rem, 6cqw, 2.5rem)',
+        }}
+      >
+        {config.text}
+      </span>
+    </div>
+  );
+};
+
 const PosterItem = ({ poster, className }: { poster: Poster; className?: string }) => {
   const [error, setError] = useState(false);
 
   return (
-    <div
-      className={cn(
-        "relative rounded-[12px] overflow-hidden bg-[#EAE2DC] border border-[#CFC2B4] flex flex-col w-full h-full",
-        className
-      )}
-    >
+    <div className={cn("relative rounded-[12px] overflow-hidden w-full h-full container-type-size", className)}>
       {!error ? (
         <img
           src={poster.src}
@@ -34,8 +60,10 @@ const PosterItem = ({ poster, className }: { poster: Poster; className?: string 
           loading="lazy"
           onError={() => setError(true)}
         />
+      ) : poster.tileConfig ? (
+        <PosterTile config={poster.tileConfig} className="absolute inset-0 w-full h-full" />
       ) : (
-        <div className="absolute inset-0 w-full h-full flex items-center justify-center p-4 text-center">
+        <div className="absolute inset-0 w-full h-full bg-[#EAE2DC] border border-[#CFC2B4] flex items-center justify-center p-4 text-center">
           <span className="text-[10px] md:text-xs text-[#8E8277] font-medium leading-tight">
             {poster.alt}
           </span>
