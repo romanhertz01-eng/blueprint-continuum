@@ -142,13 +142,15 @@ interface CapabilityCardsProps {
     desc: string;
     mockupType?: 'tasks' | 'documents' | 'multi' | 'files';
   }[];
+  className?: string;
 }
 
-export function CapabilityCards({ heading, sub, cards }: CapabilityCardsProps) {
+export function CapabilityCards({ heading, sub, cards, className }: CapabilityCardsProps) {
+
   if (!cards?.length) return null;
 
   return (
-    <section className="max-w-[1360px] mx-auto px-4 py-14 md:py-20">
+    <section className={cn("max-w-[1360px] mx-auto px-4 py-14 md:py-20", className)}>
       <div className="grid lg:grid-cols-[28%_72%] gap-12 lg:gap-16 items-start">
         {/* Left Column */}
         <div className="flex flex-col">
