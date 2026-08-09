@@ -301,11 +301,15 @@ const ToolPage = () => {
           ) : null,
           intro: data.intro ? (
             <section key="intro" className="max-w-[1360px] mx-auto px-4 py-14 md:py-20 section-intro">
-              <div className="max-w-[720px]">
-                {data.intro.heading && <h2 className="text-2xl md:text-[32px] font-bold mb-8">{data.intro.heading}</h2>}
-                <div className="text-muted-foreground leading-relaxed space-y-8">
-                  {data.slug === 'chatgpt' ? (
-                    <>
+              {data.slug === 'chatgpt' ? (
+                <div className="flex flex-col md:flex-row gap-10 md:gap-20">
+                  <div className="md:w-[34%]">
+                    <div className="md:sticky md:top-24">
+                      {data.intro.heading && <h2 className="text-2xl md:text-[32px] font-bold leading-tight">{data.intro.heading}</h2>}
+                    </div>
+                  </div>
+                  <div className="md:w-[66%] max-w-[720px]">
+                    <div className="text-muted-foreground leading-relaxed space-y-8">
                       <div className="space-y-3">
                         <h3 className="text-xl font-bold text-foreground">Почему официальный доступ закрыт</h3>
                         <p>Официальный ChatGPT от OpenAI официально не работает в России. Для регистрации требуется зарубежный номер телефона, а для оплаты подписки Plus — иностранная банковская карта. Кроме того, сервис блокирует доступ по IP-адресу, что требует постоянного использования VPN, который замедляет работу.</p>
@@ -318,12 +322,17 @@ const ToolPage = () => {
                         <h3 className="text-xl font-bold text-foreground">Сколько стоит</h3>
                         <p>Доступ к ChatGPT предоставляется в рамках единой подписки ЭРА2. Вам не нужно оплачивать каждый сервис отдельно. Оплата происходит в рублях любым удобным способом. Стоимость одного запроса зависит от выбранной версии (от GPT-5.6 Luna до GPT-5.6 Sol) и начинается от 4 кредитов.</p>
                       </div>
-                    </>
-                  ) : (
-                    <p className="whitespace-pre-line">{data.intro.text}</p>
-                  )}
+                    </div>
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <div className="max-w-[720px]">
+                  {data.intro.heading && <h2 className="text-2xl md:text-[32px] font-bold mb-8">{data.intro.heading}</h2>}
+                  <div className="text-muted-foreground leading-relaxed">
+                    <p className="whitespace-pre-line">{data.intro.text}</p>
+                  </div>
+                </div>
+              )}
             </section>
           ) : null,
           visualCards: data.visualCards ? (
