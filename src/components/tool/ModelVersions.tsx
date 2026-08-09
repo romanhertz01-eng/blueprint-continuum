@@ -46,7 +46,7 @@ export function ModelVersions({ heading, sub, versions, className }: ModelVersio
         </div>
       )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
         {versions.map((v) => {
           const powerLevel = getPowerLevel(v.name);
           
@@ -54,20 +54,20 @@ export function ModelVersions({ heading, sub, versions, className }: ModelVersio
             <div
               key={v.name}
               className={cn(
-                "group relative rounded-2xl border transition-all flex flex-col overflow-hidden bg-card h-full",
+                "group relative rounded-2xl border transition-all flex flex-col bg-card h-full",
                 v.isDefault 
                   ? "border-primary shadow-[0_0_20px_rgba(232,84,32,0.1)]" 
                   : "border-border hover:border-primary/30"
               )}
             >
               {v.isDefault && (
-                <span className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 px-2.5 py-0.5 rounded-full bg-primary text-[10px] font-bold text-white uppercase tracking-wider">
+                <span className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 px-3 py-1 rounded-full bg-primary text-[11px] font-black text-white uppercase tracking-[0.05em] shadow-lg whitespace-nowrap">
                   ОСНОВНАЯ
                 </span>
               )}
-
+...
               {/* Top Visual Zone (55% height) */}
-              <div className="relative h-[200px] bg-[#141110] flex flex-col items-center justify-center overflow-hidden">
+              <div className="relative h-[200px] bg-[#141110] flex flex-col items-center justify-center overflow-hidden rounded-t-[15px]">
                 {/* Visual Label (Main Display) */}
                 <div className="flex flex-col items-center z-10 w-full px-4">
                   <span 
