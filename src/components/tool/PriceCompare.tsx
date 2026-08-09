@@ -45,12 +45,6 @@ export function PriceCompare({ data, className }: PriceCompareProps) {
                   {line}
                 </span>
               ))}
-              {data.heading.main.split('\n').length === 1 && (
-                <>
-                  <span className="block text-white">Зачем платить</span>
-                  <span className="block text-[#8C7F78]">за каждый сервис?</span>
-                </>
-              )}
             </h2>
 
             <div className="w-12 h-0.5 bg-primary mb-6" />
