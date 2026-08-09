@@ -4370,7 +4370,7 @@ export const toolPages: ToolPageData[] = [
       "pricingBlock",
       "modelVersions",
       "promptAnswer",
-      "modelChips",
+      "relatedTextModels",
       "intro",
       "specs",
       "comparisonTable",
@@ -4567,7 +4567,7 @@ export const toolPages: ToolPageData[] = [
         },
         {
           name: "DeepSeek",
-          desc: "Мощный ИИ, который лидирует в написании кода и математике",
+          desc: "Мощный ИИ, который лидирует в коде и математике",
           price: "от 3 кр",
           href: "/tools/deepseek",
           image: "/posters/model-deepseek.webp",
