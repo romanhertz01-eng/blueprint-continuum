@@ -8,7 +8,7 @@ interface MockupProps {
 const Mockup = ({ type }: MockupProps) => {
   if (type === 'tasks') {
     return (
-      <div className="relative w-full h-full flex items-center justify-center p-0 group-hover:scale-[1.02] transition-transform duration-500">
+      <div className="relative w-full h-full flex items-center justify-center p-0 group-hover:scale-[1.05] transition-transform duration-500">
         {/* Answer card (Right/Front) */}
         <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[90%] bg-white rounded-xl shadow-xl border border-black/5 p-4 z-20 rotate-2">
           <div className="flex items-center gap-2 mb-2 border-b border-black/5 pb-2">
@@ -39,7 +39,7 @@ const Mockup = ({ type }: MockupProps) => {
 
   if (type === 'documents') {
     return (
-      <div className="relative w-full h-full flex items-center justify-center p-0 group-hover:scale-[1.02] transition-transform duration-500">
+      <div className="relative w-full h-full flex items-center justify-center p-0 group-hover:scale-[1.05] transition-transform duration-500">
         {/* Answer card (Right/Front) */}
         <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[90%] bg-white rounded-xl shadow-xl border border-black/5 p-4 z-20 rotate-1">
           <div className="flex items-center gap-2 mb-2 border-b border-black/5 pb-2">
@@ -108,7 +108,7 @@ const Mockup = ({ type }: MockupProps) => {
 
   if (type === 'files') {
     return (
-      <div className="relative w-full h-full flex items-center justify-center p-0 group-hover:scale-[1.02] transition-transform duration-500">
+      <div className="relative w-full h-full flex items-center justify-center p-0 group-hover:scale-[1.05] transition-transform duration-500">
         {/* Answer card */}
         <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[90%] bg-white rounded-xl shadow-xl border border-black/5 p-4 z-20 rotate-2">
           <div className="space-y-1.5">
@@ -169,14 +169,14 @@ export function CapabilityCards({ heading, sub, cards, className }: CapabilityCa
           {cards.map((card, i) => (
             <article 
               key={i}
-              className="bg-[#F7F3EF] rounded-[20px] p-[28px] flex flex-col items-center text-center group aspect-square overflow-hidden"
+              className="bg-[#F7F3EF] rounded-[20px] p-[24px] flex flex-col items-center text-center group overflow-hidden"
             >
-              <h3 className="text-xl font-bold mb-4">{card.title}</h3>
-              <p className="text-[15px] text-muted-foreground leading-snug mb-4 min-h-[2.5rem]">
+              <h3 className="text-xl font-bold mb-[14px]">{card.title}</h3>
+              <p className="text-[15px] text-muted-foreground leading-snug mb-[14px]">
                 {card.desc}
               </p>
               
-              <div className="w-full aspect-[4/3] mb-4 relative overflow-hidden flex items-center justify-center">
+              <div className="w-full h-[170px] md:h-[200px] mb-[14px] relative overflow-hidden flex items-center justify-center">
                 {card.mockupType && <Mockup type={card.mockupType} />}
               </div>
 
