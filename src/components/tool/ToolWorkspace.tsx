@@ -595,7 +595,7 @@ function RowWorkspace({ data, onVideo = false }: { data: ToolPageData; onVideo?:
           className={cn(
             "rounded-3xl border p-5 md:p-6 flex flex-col gap-4 shadow-lg shadow-black/5",
             onVideo
-              ? "ws-on-video bg-black/35 backdrop-blur-md border-white/15 text-white"
+              ? "ws-on-video bg-black/45 backdrop-blur-xl border-white/10 text-white"
               : "border-border bg-card text-card-foreground",
           )}
         >

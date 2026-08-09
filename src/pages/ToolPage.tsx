@@ -50,8 +50,9 @@ function useHeaderOffset(ref: React.RefObject<HTMLDivElement | null>, enabled: b
   }, [ref, enabled]);
 }
 
-function HeroVideoBackground({ src, poster, overlay = 0.6 }: { src: string; poster?: string; overlay?: number }) {
+function HeroVideoBackground({ src, poster, overlay = 0.6 }: { src?: string; poster?: string; overlay?: number }) {
   const [reduceMotion, setReduceMotion] = useState(false);
+  const [imgError, setImgError] = useState(false);
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -61,18 +62,12 @@ function HeroVideoBackground({ src, poster, overlay = 0.6 }: { src: string; post
     return () => mq.removeEventListener("change", onChange);
   }, []);
 
+  const showVideo = !reduceMotion && src;
+  const showPoster = poster && !imgError;
+
   return (
     <>
-      {reduceMotion ? (
-        poster ? (
-          <img
-            src={poster}
-            alt=""
-            aria-hidden="true"
-            className="absolute inset-0 w-full h-full object-cover object-center"
-          />
-        ) : null
-      ) : (
+      {showVideo ? (
         <video
           src={src}
           poster={poster}
@@ -84,8 +79,26 @@ function HeroVideoBackground({ src, poster, overlay = 0.6 }: { src: string; post
           aria-hidden="true"
           className="absolute inset-0 w-full h-full object-cover object-center"
         />
+      ) : showPoster ? (
+        <img
+          src={poster}
+          onError={() => setImgError(true)}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 w-full h-full object-cover object-center"
+        />
+      ) : (
+        <img
+          src="/community/03.jpg"
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 w-full h-full object-cover object-center"
+        />
       )}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/45 to-black/95" />
+      <div 
+        className="absolute inset-0 pointer-events-none" 
+        style={{ backgroundColor: `rgba(0,0,0,${overlay})` }} 
+      />
     </>
   );
 }
@@ -227,10 +240,10 @@ const ToolPage = () => {
             overlay={data.heroVideo.overlay}
           />
         )}
-        <div className={cn("relative z-10", data.heroVideo && "pb-32")}>
-      <section className="relative overflow-hidden section-hero" style={data.heroVideo ? undefined : { background: "linear-gradient(to bottom, hsl(var(--background)), hsl(var(--card)))" }}>
+        <div className={cn("relative z-10 flex flex-col", data.heroVideo && "pb-32")}>
+      <section className="relative overflow-hidden section-hero flex-1 flex flex-col justify-center" style={data.heroVideo ? undefined : { background: "linear-gradient(to bottom, hsl(var(--background)), hsl(var(--card)))" }}>
         {!data.heroVideo && (
-          <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 80% 100% at 50% 0%, rgba(232,84,32,0.15) 0%, rgba(255,122,61,0.05) 40%, transparent 70%)" }} />
+          <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 80% 100% at 50% 0%, rgba(232,84,32,0.15) 0%, rgba(255,122,61,0.05) 40%, transparent 70%)" }} />
         )}
         <div className={cn("relative max-w-4xl mx-auto px-4", data.tool ? "pt-8 pb-5 md:pt-10 md:pb-6" : "pt-16 pb-14 md:pt-20 md:pb-16")}>
           <nav className={cn("items-center gap-1.5 text-[13px]", data.heroVideo ? "inline-flex px-4 py-2 rounded-full bg-black/40 backdrop-blur-sm text-white/80" : "flex text-muted-foreground", data.tool ? "mb-0" : "mb-8")}>

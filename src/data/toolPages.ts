@@ -15,7 +15,7 @@ export interface ToolPageData {
   category: "image" | "video" | "audio" | "text";
   heroFacts?: string[];
   heroVideo?: {
-    src: string;
+    src?: string;
     poster?: string;
     overlay?: number;
   };
