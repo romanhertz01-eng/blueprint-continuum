@@ -300,9 +300,29 @@ const ToolPage = () => {
             />
           ) : null,
           intro: data.intro ? (
-            <section key="intro" className="max-w-3xl mx-auto px-4 py-14 md:py-20 text-center section-intro">
-              {data.intro.heading && <h2 className="text-2xl md:text-[32px] font-bold mb-4">{data.intro.heading}</h2>}
-              <p className="text-muted-foreground leading-relaxed">{data.intro.text}</p>
+            <section key="intro" className="max-w-[1360px] mx-auto px-4 py-14 md:py-20 section-intro">
+              <div className="max-w-[720px]">
+                {data.intro.heading && <h2 className="text-2xl md:text-[32px] font-bold mb-8">{data.intro.heading}</h2>}
+                <div className="text-muted-foreground leading-relaxed space-y-8">
+                  {data.slug === 'chatgpt' ? (
+                    <>
+                      <div className="space-y-3">
+                        <h3 className="text-xl font-bold text-foreground">Почему официальный доступ закрыт</h3>
+                        <p>Официальный ChatGPT от OpenAI официально не работает в России. Для регистрации требуется зарубежный номер телефона, а для оплаты подписки Plus — иностранная банковская карта. Кроме того, сервис блокирует доступ по IP-адресу, что требует постоянного использования VPN, который замедляет работу.</p>
+                      </div>
+                      <div className="space-y-3">
+                        <h3 className="text-xl font-bold text-foreground">Как это работает в ЭРА2</h3>
+                        <p>В ЭРА2 мы подключили оригинальные модели ChatGPT напрямую через API. Это значит, что вы получаете те же самые ответы и возможности, но без барьеров: не нужен VPN, не нужен зарубежный номер. Вы просто пишете запрос по-русски и получаете результат в удобном интерфейсе, который работает быстро.</p>
+                      </div>
+                      <div className="space-y-3">
+                        <h3 className="text-xl font-bold text-foreground">Сколько стоит</h3>
+                        <p>Доступ к ChatGPT предоставляется в рамках единой подписки ЭРА2. Вам не нужно оплачивать каждый сервис отдельно. Оплата происходит в рублях любым удобным способом. Стоимость одного запроса зависит от выбранной версии (от GPT-5.6 Luna до GPT-5.6 Sol) и начинается от 4 кредитов.</p>
+                      </>
+                    ) : (
+                      <p className="whitespace-pre-line">{data.intro.text}</p>
+                    )}
+                </div>
+              </div>
             </section>
           ) : null,
           visualCards: data.visualCards ? (
@@ -478,28 +498,44 @@ const ToolPage = () => {
             const renderValue = (label: string, value: string) => {
               if (data.kind === 'tool' && modelPage && label === 'Модель') {
                 return (
-                  <Link to="/tools/$slug" params={{ slug: modelPage.slug }} className="font-medium text-right underline decoration-dotted underline-offset-4 hover:text-primary transition-colors">
+                  <Link to="/tools/$slug" params={{ slug: modelPage.slug }} className="font-medium underline decoration-dotted underline-offset-4 hover:text-primary transition-colors">
                     {value}
                   </Link>
                 );
               }
-              return <span className="font-medium text-right">{value}</span>;
+              return <span className="font-medium">{value}</span>;
             };
+
+            const isChatGPT = data.slug === 'chatgpt';
+
             return (
-              <section key="specs" className="max-w-3xl mx-auto px-4 py-14 md:py-20 section-specs">
+              <section key="specs" className={cn("mx-auto px-4 py-14 md:py-20 section-specs", isChatGPT ? "max-w-[1100px]" : "max-w-3xl")}>
                 {data.specs.heading && (
                   <div className="mb-8 md:mb-12">
-                    <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">{data.specs.heading}</h2>
+                    <h2 className={cn("text-2xl md:text-[32px] font-bold", !isChatGPT && "text-center md:text-left")}>{data.specs.heading}</h2>
                   </div>
                 )}
-                <div className="flex flex-col">
-                  {items.map((it, i) => (
-                    <div key={i} className="flex justify-between py-3 border-b border-border/60 gap-4">
-                      <span className="text-muted-foreground">{it.label}</span>
-                      {renderValue(it.label, it.value)}
-                    </div>
-                  ))}
-                </div>
+                
+                {isChatGPT ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {items.map((it, i) => (
+                      <div key={i} className="bg-muted/30 border border-border/40 rounded-xl p-4 flex flex-col gap-1">
+                        <span className="text-[11px] uppercase tracking-wider text-muted-foreground font-semibold">{it.label}</span>
+                        {renderValue(it.label, it.value)}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="flex flex-col">
+                    {items.map((it, i) => (
+                      <div key={i} className="flex justify-between py-3 border-b border-border/60 gap-4">
+                        <span className="text-muted-foreground">{it.label}</span>
+                        {renderValue(it.label, it.value)}
+                      </div>
+                    ))}
+                  </div>
+                )}
+                
                 {data.technologyDescription && (
                   <div className="mt-10">
                     <h3 className="text-lg md:text-xl font-semibold mb-3">Под капотом</h3>
@@ -524,7 +560,7 @@ const ToolPage = () => {
             </section>
           ) : null,
           comparisonTable: data.comparisonTable ? (
-            <section key="comparisonTable" className="max-w-5xl mx-auto px-4 py-14 md:py-20 section-comparisonTable">
+            <section key="comparisonTable" className={cn("mx-auto px-4 py-14 md:py-20 section-comparisonTable", data.slug === 'chatgpt' ? "max-w-[1100px]" : "max-w-5xl")}>
               {data.comparisonTable.heading && (
                 <div className="mb-8 md:mb-12">
                   <h2 className="text-2xl md:text-[32px] font-bold text-center md:text-left">{data.comparisonTable.heading}</h2>
