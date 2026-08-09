@@ -503,6 +503,7 @@ const ToolPage = () => {
             <PriceCompare
               key="priceCompare"
               data={data.priceCompare}
+              className="section-priceCompare"
             />
           ) : null,
 
@@ -950,7 +951,7 @@ const ToolPage = () => {
           "nano-banana", "seedream", "flux", "gpt-image", "grok-imagine", "qwen-image",
           "chatgpt", "claude", "gemini", "grok", "deepseek", "perplexity",
         ];
-        const isWidePilot = data.kind === "model" && wideSlugs.includes(data.slug);
+        const isWidePilot = wideSlugs.includes(data.slug);
         const videoOrder = [
           "capabilityCards",
           "showreel",
@@ -986,6 +987,7 @@ const ToolPage = () => {
           "capabilityCards",
           "featureBlocks",
           "pricingBlock",
+          "priceCompare",
           "modelVersions",
           "promptAnswer",
           "relatedTextModels",
@@ -1011,20 +1013,27 @@ const ToolPage = () => {
         // Optional per-page full override of section order (only affects pages that set it).
         const order: string[] = data.sectionOrder ?? defaultOrder;
         if (isWidePilot) {
-          const rendered = order.filter((k) => sections[k]);
+          const renderedKeys = order.filter((k) => !!sections[k]);
+          console.log('Rendering wide layout for slug:', data.slug, 'keys:', renderedKeys);
+          
           return (
             <div className="tool-wide">
-              {rendered.map((k, i) => (
-                <div key={k} className={cn(
-                  "w-full", 
-                  i % 2 === 0 ? "bg-background" : "bg-muted/30",
-                  i === 0 && "[&_.section-" + k + "]:pt-0"
-                )}>
-                  {sections[k]}
-                </div>
-              ))}
-              {!rendered.includes("modelChips") && sections["modelChips"] && data.category !== "text" && (
-                <div className={cn("w-full", rendered.length % 2 === 0 ? "bg-background" : "bg-muted/30")}>
+              {renderedKeys.map((k, i) => {
+                const isFullWidthSection = ["comparisonTable", "priceCompare"].includes(k);
+                const section = sections[k];
+                
+                return (
+                  <div key={k} className={cn(
+                    "w-full", 
+                    !isFullWidthSection && (i % 2 === 0 ? "bg-background" : "bg-muted/30"),
+                    i === 0 && "[&_.section-" + k + "]:pt-0"
+                  )}>
+                    {section}
+                  </div>
+                );
+              })}
+              {!renderedKeys.includes("modelChips") && sections["modelChips"] && data.category !== "text" && (
+                <div className={cn("w-full", renderedKeys.length % 2 === 0 ? "bg-background" : "bg-muted/30")}>
                   <div className="max-w-5xl mx-auto">
                     {sections["modelChips"]}
                   </div>

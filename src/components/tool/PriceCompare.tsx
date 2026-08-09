@@ -29,7 +29,7 @@ interface PriceCompareProps {
 
 export function PriceCompare({ data, className }: PriceCompareProps) {
   return (
-    <section className={cn("w-full bg-[#141110] py-20 text-[#F7EEE8]", className)}>
+    <section className={cn("w-full bg-[#141110] py-20 text-[#F7EEE8] section-priceCompare", className)}>
       <div className="max-w-[1200px] mx-auto px-4">
         <div className="flex flex-col md:flex-row items-center gap-12 md:gap-20">
           {/* Left Column */}
@@ -41,12 +41,11 @@ export function PriceCompare({ data, className }: PriceCompareProps) {
             
             <h2 className="text-3xl md:text-[40px] font-bold leading-[1.1] mb-6">
               {data.heading.main.split('\n').map((line, i) => (
-                <span key={i} className="block first:text-white last:text-[#8C7F78]">
+                <span key={i} className={cn("block", i === 0 ? "text-white" : "text-[#8C7F78]")}>
                   {line}
-                  {i === 0 && data.heading.main.includes('?') && ""}
                 </span>
               ))}
-              {!data.heading.main.includes('\n') && (
+              {data.heading.main.split('\n').length === 1 && (
                 <>
                   <span className="block text-white">Зачем платить</span>
                   <span className="block text-[#8C7F78]">за каждый сервис?</span>
@@ -62,7 +61,7 @@ export function PriceCompare({ data, className }: PriceCompareProps) {
           </div>
 
           {/* Right Column */}
-          <div className="w-full md:w-[58%] flex flex-col gap-4">
+          <div className="w-full md:w-[58%] flex flex-col gap-4 relative">
             {/* Upper Card: Separate Subscriptions */}
             <div className="bg-[#1A1817] border border-[#2D2420] rounded-2xl p-6">
               <div className="flex justify-between items-center mb-6">
@@ -99,7 +98,7 @@ export function PriceCompare({ data, className }: PriceCompareProps) {
             </div>
 
             {/* Savings Badge */}
-            <div className="flex items-center justify-center gap-2 text-primary font-bold text-[11px] uppercase tracking-widest">
+            <div className="flex items-center justify-center gap-2 text-primary font-bold text-[11px] uppercase tracking-widest py-2">
               ДЕШЕВЛЕ В 8 РАЗ
               <ArrowDown size={14} />
             </div>
