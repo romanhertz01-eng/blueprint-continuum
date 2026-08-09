@@ -992,7 +992,6 @@ const ToolPage = () => {
           "promptAnswer",
           "relatedTextModels",
           "intro",
-          "specs",
           "comparisonTable",
           "tips",
           "articles",
