@@ -51,9 +51,15 @@ export function PriceCompare({ data, className }: PriceCompareProps) {
 
               <div className="w-12 h-0.5 bg-primary/60 mb-6" />
               
-              <p className="text-muted-foreground leading-relaxed max-w-sm text-[15px]">
+              <p className="text-muted-foreground leading-relaxed max-w-sm text-[15px] mb-6">
                 {data.description}
               </p>
+              
+              <div className="flex flex-col gap-1 mt-auto">
+                <p className="text-[13px] text-[#8C7F78]">
+                  Остались вопросы? <Link to="/auth" className="text-primary hover:underline">{data.footerLabel || "Напишите нам"}</Link>
+                </p>
+              </div>
             </div>
 
             {/* Right Column */}
@@ -87,8 +93,9 @@ export function PriceCompare({ data, className }: PriceCompareProps) {
                   <span className="text-[18px] font-bold text-[#F7EEE8] uppercase tracking-wider">
                     {data.separateSubscriptions.totalLabel}
                   </span>
-                  <span className="text-[18px] font-bold text-[#F7EEE8] line-through decoration-[#F5463D] decoration-2">
+                  <span className="text-[18px] font-bold text-[#F7EEE8] relative inline-block">
                     {data.separateSubscriptions.totalPrice}
+                    <span className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-[2px] bg-[#F5463D]" />
                   </span>
                 </div>
               </div>
