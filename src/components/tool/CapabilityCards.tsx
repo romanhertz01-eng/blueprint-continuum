@@ -158,39 +158,41 @@ export function CapabilityCards({ heading, sub, cards, className }: CapabilityCa
   if (!cards?.length) return null;
 
   return (
-    <section className={cn("max-w-[1360px] mx-auto px-4 py-14 md:py-20", className)}>
-      <div className="grid lg:grid-cols-[28%_72%] gap-12 lg:gap-16 items-start">
+    <section className={cn("max-w-[1360px] mx-auto px-4 py-12 md:py-16", className)}>
+      <div className="grid lg:grid-cols-[28%_72%] gap-12 lg:gap-14 items-center">
         {/* Left Column */}
         <div className="flex flex-col">
-          <h2 className="text-3xl md:text-[40px] font-bold leading-[1.1] mb-6 whitespace-pre-line">
+          <h2 className="text-3xl md:text-[38px] font-bold leading-[1.1] mb-6 whitespace-pre-line">
             {heading}
           </h2>
           {sub && (
-            <p className="text-lg text-muted-foreground leading-relaxed">
+            <p className="text-[17px] text-muted-foreground leading-relaxed">
               {sub}
             </p>
           )}
         </div>
 
         {/* Right Column */}
-        <div className="grid md:grid-cols-2 gap-4">
+        <div className="grid md:grid-cols-2 gap-[14px]">
           {cards.map((card, i) => (
             <article 
               key={i}
-              className="bg-[#F7F3EF] rounded-[20px] p-[24px] flex flex-col items-center text-center group overflow-hidden"
+              className="bg-card border border-border rounded-[20px] p-5 flex flex-col items-center text-center group overflow-hidden min-h-[320px] justify-between"
             >
-              <h3 className="text-xl font-bold mb-[14px]">{card.title}</h3>
-              <p className="text-[15px] text-muted-foreground leading-snug mb-[14px]">
-                {card.desc}
-              </p>
+              <div className="w-full flex flex-col items-center">
+                <h3 className="text-[18px] font-bold mb-3 leading-tight">{card.title}</h3>
+                <p className="text-[14px] text-muted-foreground leading-snug mb-3">
+                  {card.desc}
+                </p>
+              </div>
               
-              <div className="w-full h-[170px] md:h-[200px] mb-[14px] relative overflow-hidden flex items-center justify-center">
+              <div className="w-full h-[140px] md:h-[160px] mb-3 relative overflow-hidden flex items-center justify-center">
                 {card.mockupType && <Mockup type={card.mockupType} />}
               </div>
 
               <button 
                 onClick={() => document.getElementById('prompt-bar')?.scrollIntoView({ behavior: 'smooth' })}
-                className="mt-0 px-8 py-2.5 bg-white border border-black/5 rounded-full text-sm font-semibold shadow-sm hover:shadow-md transition-all active:scale-95"
+                className="mt-0 w-full md:w-auto px-6 h-10 bg-white dark:bg-white border border-black/5 rounded-full text-[14px] font-semibold text-black shadow-sm hover:shadow-md transition-all active:scale-95"
               >
                 Попробовать
               </button>
