@@ -111,6 +111,7 @@ export interface ToolPageData {
       buttonText: string;
     };
     footerNote: string;
+    footerLabel?: string;
   };
   ctaBanner?: {
     title: string;
@@ -4429,7 +4430,8 @@ export const toolPages: ToolPageData[] = [
         footer: "Оплата в рублях · Кредиты не сгорают",
         buttonText: "Начать бесплатно →"
       },
-      footerNote: "Цены сервисов указаны на август 2026 года"
+      footerNote: "Цены сервисов указаны на август 2026 года",
+      footerLabel: "Напишите нам"
     },
     intro: {
       heading: "ChatGPT в России: полный доступ в одном окне",
