@@ -23,6 +23,7 @@ interface PriceCompareProps {
       buttonText: string;
     };
     footerNote: string;
+    footerLabel?: string;
   };
   className?: string;
 }
