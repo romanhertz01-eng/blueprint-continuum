@@ -145,9 +145,5 @@ export function PriceCompare({ data, className }: PriceCompareProps) {
         </div>
       </div>
     </section>
-          </div>
-        </div>
-      </div>
-    </section>
   );
 }
