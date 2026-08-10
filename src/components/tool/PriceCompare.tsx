@@ -61,40 +61,40 @@ export function PriceCompare({ data, className }: PriceCompareProps) {
               {/* Upper Card: Separate Subscriptions */}
               <div className="bg-[#141110] border border-border rounded-2xl p-6">
                 <div className="flex justify-between items-center mb-6">
-                  <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
+                  <span className="text-[11px] font-bold text-[#8C7F78] uppercase tracking-wider">
                     {data.separateSubscriptions.title}
                   </span>
-                  <span className="text-[11px] text-muted-foreground">
+                  <span className="text-[11px] text-[#8C7F78]">
                     {data.separateSubscriptions.unit}
                   </span>
                 </div>
 
                 <div className="grid grid-cols-2 gap-x-10 gap-y-[14px] mb-6">
                   {data.separateSubscriptions.items.map((item, i) => (
-                    <div key={i} className="flex justify-between items-center border-b border-border/50 pb-2">
+                    <div key={i} className="flex justify-between items-center border-b border-[#2D2420] pb-2">
                       <div className="flex items-center gap-2">
                         <X size={14} className="text-[#F5463D] stroke-[1.5]" />
-                        <span className="text-[15px] text-muted-foreground">{item.name}</span>
+                        <span className="text-[15px] text-[#F7EEE8]">{item.name}</span>
                       </div>
-                      <span className="text-[15px] text-muted-foreground line-through decoration-[#F5463D] decoration-1">
+                      <span className="text-[15px] text-[#8C7F78] line-through decoration-[#F5463D] decoration-1">
                         {item.price}
                       </span>
                     </div>
                   ))}
                 </div>
 
-                <div className="pt-4 border-t border-border flex justify-between items-center">
-                  <span className="text-[18px] font-bold text-foreground uppercase tracking-wider">
+                <div className="pt-4 mt-4 border-t border-[#2D2420] flex justify-between items-center">
+                  <span className="text-[18px] font-bold text-[#F7EEE8] uppercase tracking-wider">
                     {data.separateSubscriptions.totalLabel}
                   </span>
-                  <span className="text-[18px] font-bold text-white line-through decoration-[#F5463D] decoration-2">
+                  <span className="text-[18px] font-bold text-[#F7EEE8] line-through decoration-[#F5463D] decoration-2">
                     {data.separateSubscriptions.totalPrice}
                   </span>
                 </div>
               </div>
 
               {/* Savings Badge */}
-              <div className="flex items-center justify-center gap-2 text-primary font-bold text-[11px] uppercase tracking-widest py-1">
+              <div className="flex items-center justify-center gap-2 text-[#FFB27A] font-bold text-[11px] uppercase tracking-widest py-1">
                 ДЕШЕВЛЕ В 8 РАЗ
                 <ArrowDown size={14} />
               </div>
@@ -107,25 +107,25 @@ export function PriceCompare({ data, className }: PriceCompareProps) {
                     {data.eraEconomics.title}
                   </div>
                   <div className="flex items-baseline gap-1">
-                    <span className="text-xs text-muted-foreground">{data.eraEconomics.priceFrom}</span>
-                    <span className="text-[40px] font-bold text-primary leading-none tracking-tight">{data.eraEconomics.price}</span>
+                    <span className="text-xs text-[#8C7F78]">{data.eraEconomics.priceFrom}</span>
+                    <span className="text-[40px] font-bold text-[#FFB27A] leading-none tracking-tight">{data.eraEconomics.price}</span>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-y-[14px] gap-x-8 mb-6">
                   {data.eraEconomics.items.map((item, i) => (
                     <div key={i} className="flex items-center gap-2">
-                      <Check size={14} className="text-primary" />
-                      <span className="text-[15px] font-medium text-foreground">{item}</span>
+                      <Check size={14} className="text-[#FFB27A]" />
+                      <span className="text-[15px] font-medium text-[#F7EEE8]">{item}</span>
                     </div>
                   ))}
                   <div className="col-span-2 flex items-center gap-2">
-                    <Check size={14} className="text-primary" />
-                    <span className="text-[15px] font-medium text-foreground">{data.eraEconomics.extra}</span>
+                    <Check size={14} className="text-[#FFB27A]" />
+                    <span className="text-[15px] font-medium text-[#F7EEE8]">{data.eraEconomics.extra}</span>
                   </div>
                 </div>
 
-                <div className="text-[11px] text-muted-foreground mb-8">
+                <div className="text-[11px] text-[#8C7F78] mb-8 leading-relaxed">
                   {data.eraEconomics.footer}
                 </div>
 
@@ -137,7 +137,7 @@ export function PriceCompare({ data, className }: PriceCompareProps) {
                 </Link>
               </div>
 
-              <div className="text-[11px] text-muted-foreground text-right mt-2">
+              <div className="text-[11px] text-[#8C7F78] text-right mt-2">
                 {data.footerNote}
               </div>
             </div>
