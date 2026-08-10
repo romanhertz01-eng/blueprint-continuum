@@ -57,7 +57,7 @@ export function PriceCompare({ data, className }: PriceCompareProps) {
               </p>
               
               <div className="flex flex-col gap-1 mt-auto">
-                <p className="text-[13px] text-[#8C7F78]">
+                <p className="text-[13px] text-muted-foreground">
                   Остались вопросы? <Link to="/auth" className="text-primary hover:underline">{data.footerLabel || "Напишите нам"}</Link>
                 </p>
               </div>
@@ -66,35 +66,35 @@ export function PriceCompare({ data, className }: PriceCompareProps) {
             {/* Right Column */}
             <div className="w-full md:w-[56%] flex flex-col gap-4 relative">
               {/* Upper Card: Separate Subscriptions */}
-              <div className="bg-[#141110] border border-border rounded-2xl p-6">
+              <div className="bg-[#FBFAF8] border-[#CFC2B4] dark:bg-[#141110] dark:border-border border rounded-2xl p-6 transition-colors">
                 <div className="flex justify-between items-center mb-6">
-                  <span className="text-[11px] font-bold text-[#8C7F78] uppercase tracking-wider">
+                  <span className="text-[11px] font-bold text-[#605752] dark:text-[#8C7F78] uppercase tracking-wider">
                     {data.separateSubscriptions.title}
                   </span>
-                  <span className="text-[11px] text-[#8C7F78]">
+                  <span className="text-[11px] text-[#605752] dark:text-[#8C7F78]">
                     {data.separateSubscriptions.unit}
                   </span>
                 </div>
 
                 <div className="grid grid-cols-2 gap-x-10 gap-y-[14px] mb-6">
                   {data.separateSubscriptions.items.map((item, i) => (
-                    <div key={i} className="flex justify-between items-center border-b border-[#2D2420] pb-2">
+                    <div key={i} className="flex justify-between items-center border-b border-[#CFC2B4]/30 dark:border-[#2D2420] pb-2">
                       <div className="flex items-center gap-2">
                         <X size={14} className="text-[#F5463D] stroke-[1.5]" />
-                        <span className="text-[15px] text-[#F7EEE8]">{item.name}</span>
+                        <span className="text-[15px] text-[#16100E] dark:text-[#F7EEE8]">{item.name}</span>
                       </div>
-                      <span className="text-[15px] text-[#8C7F78] line-through decoration-[#F5463D] decoration-1">
+                      <span className="text-[15px] text-[#605752] dark:text-[#8C7F78] line-through decoration-[#F5463D] decoration-1">
                         {item.price}
                       </span>
                     </div>
                   ))}
                 </div>
 
-                <div className="pt-4 mt-4 border-t border-[#2D2420] flex justify-between items-center">
-                  <span className="text-[18px] font-bold text-[#F7EEE8] uppercase tracking-wider">
+                <div className="pt-4 mt-4 border-t border-[#CFC2B4]/30 dark:border-[#2D2420] flex justify-between items-center">
+                  <span className="text-[18px] font-bold text-[#16100E] dark:text-[#F7EEE8] uppercase tracking-wider">
                     {data.separateSubscriptions.totalLabel}
                   </span>
-                  <span className="text-[18px] font-bold text-[#F7EEE8] relative inline-block">
+                  <span className="text-[18px] font-bold text-[#605752] dark:text-[#F7EEE8] relative inline-block">
                     {data.separateSubscriptions.totalPrice}
                     <span className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-[2px] bg-[#F5463D]" />
                   </span>
@@ -102,50 +102,50 @@ export function PriceCompare({ data, className }: PriceCompareProps) {
               </div>
 
               {/* Savings Badge */}
-              <div className="flex items-center justify-center gap-2 text-[#FFB27A] font-bold text-[11px] uppercase tracking-widest py-1">
+              <div className="flex items-center justify-center gap-2 text-[#E85420] dark:text-[#FFB27A] font-bold text-[11px] uppercase tracking-widest py-1">
                 ДЕШЕВЛЕ В 8 РАЗ
                 <ArrowDown size={14} />
               </div>
 
               {/* Lower Card: ERA2 */}
-              <div className="bg-[#141110] border border-primary/30 rounded-2xl p-6 relative overflow-hidden">
+              <div className="bg-[#FBFAF8] border-[#E85420] dark:bg-[#141110] dark:border-primary/30 border rounded-2xl p-6 relative overflow-hidden transition-all shadow-[0_0_20px_-5px_rgba(232,84,32,0.1)] dark:shadow-none">
                 <div className="flex justify-between items-start mb-6">
-                  <div className="inline-flex items-center gap-1.5 px-3 h-8 rounded-full border border-primary bg-transparent text-primary text-[11px] font-bold uppercase tracking-wider">
+                  <div className="inline-flex items-center gap-1.5 px-3 h-8 rounded-full border border-[#E85420] dark:border-primary bg-transparent text-[#E85420] dark:text-primary text-[11px] font-bold uppercase tracking-wider">
                     <Sparkles size={12} />
                     {data.eraEconomics.title}
                   </div>
                   <div className="flex items-baseline gap-1">
-                    <span className="text-xs text-[#8C7F78]">{data.eraEconomics.priceFrom}</span>
-                    <span className="text-[40px] font-bold text-[#FFB27A] leading-none tracking-tight">{data.eraEconomics.price}</span>
+                    <span className="text-xs text-[#605752] dark:text-[#8C7F78]">{data.eraEconomics.priceFrom}</span>
+                    <span className="text-[40px] font-bold text-[#E85420] dark:text-[#FFB27A] leading-none tracking-tight">{data.eraEconomics.price}</span>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-y-[14px] gap-x-8 mb-6">
                   {data.eraEconomics.items.map((item, i) => (
                     <div key={i} className="flex items-center gap-2">
-                      <Check size={14} className="text-[#FFB27A]" />
-                      <span className="text-[15px] font-medium text-[#F7EEE8]">{item}</span>
+                      <Check size={14} className="text-[#E85420] dark:text-[#FFB27A]" />
+                      <span className="text-[15px] font-medium text-[#16100E] dark:text-[#F7EEE8]">{item}</span>
                     </div>
                   ))}
                   <div className="col-span-2 flex items-center gap-2">
-                    <Check size={14} className="text-[#FFB27A]" />
-                    <span className="text-[15px] font-medium text-[#F7EEE8]">{data.eraEconomics.extra}</span>
+                    <Check size={14} className="text-[#E85420] dark:text-[#FFB27A]" />
+                    <span className="text-[15px] font-medium text-[#16100E] dark:text-[#F7EEE8]">{data.eraEconomics.extra}</span>
                   </div>
                 </div>
 
-                <div className="text-[11px] text-[#8C7F78] mb-8 leading-relaxed">
+                <div className="text-[11px] text-[#605752] dark:text-[#8C7F78] mb-8 leading-relaxed">
                   {data.eraEconomics.footer}
                 </div>
 
                 <Link 
                   to="/auth" 
-                  className="flex items-center justify-center w-full h-[52px] rounded-[12px] bg-primary text-primary-foreground font-bold text-center hover:opacity-90 transition-all shadow-[0_8px_20px_-8px_rgba(232,84,32,0.4)]"
+                  className="flex items-center justify-center w-full h-[52px] rounded-[12px] bg-[#E85420] dark:bg-primary text-white dark:text-primary-foreground font-bold text-center hover:opacity-90 transition-all shadow-[0_8px_20px_-8px_rgba(232,84,32,0.4)]"
                 >
                   {data.eraEconomics.buttonText}
                 </Link>
               </div>
 
-              <div className="text-[11px] text-[#8C7F78] text-right mt-2">
+              <div className="text-[11px] text-[#605752] dark:text-[#8C7F78] text-right mt-2">
                 {data.footerNote}
               </div>
             </div>
