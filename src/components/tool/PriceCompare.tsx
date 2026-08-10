@@ -140,6 +140,7 @@ export function PriceCompare({ data, className }: PriceCompareProps) {
               <div className="text-[11px] text-muted-foreground text-right mt-2">
                 {data.footerNote}
               </div>
+            </div>
           </div>
         </div>
       </div>
