@@ -3,13 +3,13 @@ import { promptTopics } from './topics';
 import { promptItems } from './items';
 import { promptCategories } from './categories';
 
-
 export * from './types';
 export { promptTopics } from './topics';
 export { promptItems } from './items';
 export { promptCategories } from './categories';
 
 export const RESERVED_PROMPT_SLUGS: readonly string[] = ['image', 'video', 'audio', 'text', 'agents', 'model'];
+export const MIN_ITEMS_FOR_INDEX = 8;
 
 export function isReservedPromptSlug(slug: string): boolean {
   return RESERVED_PROMPT_SLUGS.includes(slug);
@@ -20,14 +20,14 @@ function validateTopicSlugs() {
   if (typeof promptTopics === 'undefined') return;
   promptTopics.forEach(topic => {
     if (isReservedPromptSlug(topic.slug)) {
-      console.error(`CRITICAL: Prompt topic slug "${topic.slug}" is reserved and cannot be used.`);
-      if (typeof process !== 'undefined') process.exit(1);
-      throw new Error(`CRITICAL: Prompt topic slug "${topic.slug}" is reserved and cannot be used.`);
+      const msg = `CRITICAL: Prompt topic slug "${topic.slug}" is reserved and cannot be used.`;
+      console.error(msg);
+      // Бросаем ошибку, которая точно прервет выполнение в Node/Vite
+      throw new Error(msg);
     }
   });
 }
 
-// Выполняем проверку немедленно при инициализации модуля
 validateTopicSlugs();
 
 
