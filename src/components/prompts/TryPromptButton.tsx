@@ -56,8 +56,12 @@ export function TryPromptButton({ item, label = "Попробовать", classN
         className
       )}
     >
-      {label}
-      <Zap className="w-3.5 h-3.5 ml-1.5 fill-current" />
+      {children ? children : (
+        <>
+          {label}
+          <Zap className="w-3.5 h-3.5 ml-1.5 fill-current" />
+        </>
+      )}
     </Button>
   );
 }
