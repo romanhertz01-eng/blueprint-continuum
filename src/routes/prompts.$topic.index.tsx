@@ -151,7 +151,7 @@ function CategoryPage({ data }: { data: Extract<ReturnType<typeof Route.useLoade
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-16">
-            {items.map((item) => (
+            {items.map((item: PromptItem) => (
               <PromptCard key={item.slug} item={item} topics={allTopics} />
             ))}
           </div>
@@ -160,7 +160,7 @@ function CategoryPage({ data }: { data: Extract<ReturnType<typeof Route.useLoade
             <section>
               <h2 className="text-2xl font-bold mb-6">Темы в этой категории</h2>
               <div className="flex flex-wrap gap-2">
-                {topics.map(topic => (
+                {topics.map((topic: any) => (
                   <Link 
                     key={topic.slug}
                     to="/prompts/$topic"
@@ -226,7 +226,7 @@ function TopicPage({ data }: { data: Extract<ReturnType<typeof Route.useLoaderDa
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-20">
-            {items.map((item) => (
+            {items.map((item: PromptItem) => (
               <PromptCard key={item.slug} item={item} topics={allTopics} />
             ))}
           </div>
@@ -235,7 +235,7 @@ function TopicPage({ data }: { data: Extract<ReturnType<typeof Route.useLoaderDa
             <section className="mb-20">
               <h2 className="text-2xl font-bold mb-8">Инструменты по теме</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {relatedTools.map(tool => (
+                {relatedTools.map((tool: any) => (
                   <Link 
                     key={tool.slug}
                     to="/tools/$slug"
@@ -264,7 +264,7 @@ function TopicPage({ data }: { data: Extract<ReturnType<typeof Route.useLoaderDa
             <section>
               <h2 className="text-2xl font-bold mb-6">Похожие темы</h2>
               <div className="flex flex-wrap gap-2">
-                {relatedTopics.map(t => (
+                {relatedTopics.map((t: any) => (
                   <Link 
                     key={t.slug}
                     to="/prompts/$topic"
