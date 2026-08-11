@@ -22,6 +22,10 @@ export const promptItems: PromptItem[] = [
     status: 'published',
     source: 'editorial',
     publishedAt: '2026-08-11',
+    views: 412,
+    likes: 31,
+    saves: 18,
+    shares: 7,
     updatedAt: '2026-08-11'
   },
   {
@@ -45,6 +49,10 @@ export const promptItems: PromptItem[] = [
     status: 'published',
     source: 'editorial',
     publishedAt: '2026-08-11',
+    views: 567,
+    likes: 28,
+    saves: 12,
+    shares: 5,
     updatedAt: '2026-08-11'
   },
   {
@@ -68,6 +76,10 @@ export const promptItems: PromptItem[] = [
     status: 'published',
     source: 'editorial',
     publishedAt: '2026-08-11',
+    views: 800,
+    likes: 35,
+    saves: 20,
+    shares: 8,
     updatedAt: '2026-08-11'
   },
   {
@@ -91,6 +103,10 @@ export const promptItems: PromptItem[] = [
     status: 'published',
     source: 'editorial',
     publishedAt: '2026-08-11',
+    views: 40,
+    likes: 2,
+    saves: 1,
+    shares: 0,
     updatedAt: '2026-08-11'
   },
   {
@@ -114,6 +130,10 @@ export const promptItems: PromptItem[] = [
     status: 'published',
     source: 'editorial',
     publishedAt: '2026-08-11',
+    views: 123,
+    likes: 10,
+    saves: 5,
+    shares: 2,
     updatedAt: '2026-08-11'
   },
   {
@@ -137,6 +157,10 @@ export const promptItems: PromptItem[] = [
     status: 'published',
     source: 'editorial',
     publishedAt: '2026-08-11',
+    views: 750,
+    likes: 32,
+    saves: 15,
+    shares: 6,
     updatedAt: '2026-08-11'
   },
   {
@@ -160,6 +184,10 @@ export const promptItems: PromptItem[] = [
     status: 'published',
     source: 'editorial',
     publishedAt: '2026-08-11',
+    views: 245,
+    likes: 18,
+    saves: 9,
+    shares: 4,
     updatedAt: '2026-08-11'
   },
   {
@@ -183,6 +211,10 @@ export const promptItems: PromptItem[] = [
     status: 'published',
     source: 'editorial',
     publishedAt: '2026-08-11',
+    views: 333,
+    likes: 25,
+    saves: 14,
+    shares: 7,
     updatedAt: '2026-08-11'
   },
   {
@@ -206,6 +238,10 @@ export const promptItems: PromptItem[] = [
     status: 'published',
     source: 'editorial',
     publishedAt: '2026-08-11',
+    views: 600,
+    likes: 30,
+    saves: 19,
+    shares: 8,
     updatedAt: '2026-08-11'
   },
   {
@@ -229,6 +265,10 @@ export const promptItems: PromptItem[] = [
     status: 'published',
     source: 'editorial',
     publishedAt: '2026-08-11',
+    views: 450,
+    likes: 22,
+    saves: 11,
+    shares: 5,
     updatedAt: '2026-08-11'
   },
   {
@@ -252,6 +292,10 @@ export const promptItems: PromptItem[] = [
     status: 'published',
     source: 'editorial',
     publishedAt: '2026-08-11',
+    views: 180,
+    likes: 12,
+    saves: 6,
+    shares: 3,
     updatedAt: '2026-08-11'
   },
   {
@@ -275,6 +319,10 @@ export const promptItems: PromptItem[] = [
     status: 'published',
     source: 'editorial',
     publishedAt: '2026-08-11',
+    views: 520,
+    likes: 29,
+    saves: 17,
+    shares: 8,
     updatedAt: '2026-08-11'
   },
   {
@@ -298,8 +346,12 @@ export const promptItems: PromptItem[] = [
     },
     status: 'published',
     source: 'editorial',
-    publishedAt: '2026-08-12',
-    updatedAt: '2026-08-12'
+    publishedAt: '2026-08-11',
+    views: 95,
+    likes: 7,
+    saves: 3,
+    shares: 1,
+    updatedAt: '2026-08-11'
   },
   {
     slug: 'reklama-kofe-machine',
@@ -322,8 +374,12 @@ export const promptItems: PromptItem[] = [
     },
     status: 'published',
     source: 'editorial',
-    publishedAt: '2026-08-12',
-    updatedAt: '2026-08-12'
+    publishedAt: '2026-08-11',
+    views: 680,
+    likes: 34,
+    saves: 16,
+    shares: 7,
+    updatedAt: '2026-08-11'
   },
   {
     slug: 'reklama-smartphone-beauty',
@@ -346,8 +402,12 @@ export const promptItems: PromptItem[] = [
     },
     status: 'published',
     source: 'editorial',
-    publishedAt: '2026-08-12',
-    updatedAt: '2026-08-12'
+    publishedAt: '2026-08-11',
+    views: 210,
+    likes: 15,
+    saves: 8,
+    shares: 4,
+    updatedAt: '2026-08-11'
   },
   {
     slug: 'obzor-smartfona-vertical',
@@ -370,8 +430,12 @@ export const promptItems: PromptItem[] = [
     },
     status: 'published',
     source: 'editorial',
-    publishedAt: '2026-08-12',
-    updatedAt: '2026-08-12'
+    publishedAt: '2026-08-11',
+    views: 390,
+    likes: 20,
+    saves: 10,
+    shares: 5,
+    updatedAt: '2026-08-11'
   },
   {
     slug: 'obzor-tovara-kosmetika',
@@ -394,8 +458,12 @@ export const promptItems: PromptItem[] = [
     },
     status: 'published',
     source: 'editorial',
-    publishedAt: '2026-08-12',
-    updatedAt: '2026-08-12'
+    publishedAt: '2026-08-11',
+    views: 550,
+    likes: 27,
+    saves: 13,
+    shares: 6,
+    updatedAt: '2026-08-11'
   },
   {
     slug: 'obzor-gadzheta-na-stole',
@@ -418,8 +486,12 @@ export const promptItems: PromptItem[] = [
     },
     status: 'published',
     source: 'editorial',
-    publishedAt: '2026-08-12',
-    updatedAt: '2026-08-12'
+    publishedAt: '2026-08-11',
+    views: 720,
+    likes: 33,
+    saves: 18,
+    shares: 7,
+    updatedAt: '2026-08-11'
   },
   {
     slug: 'trevel-video-gory',
@@ -442,8 +514,12 @@ export const promptItems: PromptItem[] = [
     },
     status: 'published',
     source: 'editorial',
-    publishedAt: '2026-08-12',
-    updatedAt: '2026-08-12'
+    publishedAt: '2026-08-11',
+    views: 150,
+    likes: 9,
+    saves: 4,
+    shares: 2,
+    updatedAt: '2026-08-11'
   },
   {
     slug: 'trevel-video-okean',
@@ -466,8 +542,12 @@ export const promptItems: PromptItem[] = [
     },
     status: 'published',
     source: 'editorial',
-    publishedAt: '2026-08-12',
-    updatedAt: '2026-08-12'
+    publishedAt: '2026-08-11',
+    views: 480,
+    likes: 23,
+    saves: 12,
+    shares: 5,
+    updatedAt: '2026-08-11'
   },
   {
     slug: 'trevel-video-gorod',
@@ -490,8 +570,12 @@ export const promptItems: PromptItem[] = [
     },
     status: 'published',
     source: 'editorial',
-    publishedAt: '2026-08-12',
-    updatedAt: '2026-08-12'
+    publishedAt: '2026-08-11',
+    views: 630,
+    likes: 31,
+    saves: 15,
+    shares: 6,
+    updatedAt: '2026-08-11'
   },
   {
     slug: 'kino-noir-detective',
@@ -514,8 +598,12 @@ export const promptItems: PromptItem[] = [
     },
     status: 'published',
     source: 'editorial',
-    publishedAt: '2026-08-12',
-    updatedAt: '2026-08-12'
+    publishedAt: '2026-08-11',
+    views: 280,
+    likes: 16,
+    saves: 8,
+    shares: 3,
+    updatedAt: '2026-08-11'
   },
   {
     slug: 'kino-scifi-future',
@@ -538,8 +626,12 @@ export const promptItems: PromptItem[] = [
     },
     status: 'published',
     source: 'editorial',
-    publishedAt: '2026-08-12',
-    updatedAt: '2026-08-12'
+    publishedAt: '2026-08-11',
+    views: 350,
+    likes: 19,
+    saves: 10,
+    shares: 4,
+    updatedAt: '2026-08-11'
   },
   {
     slug: 'kino-drama-autumn',
@@ -559,11 +651,15 @@ export const promptItems: PromptItem[] = [
       breakdown: '"Slow motion" для падающих листьев и "deep emotions" помогают передать настроение меланхолии.',
       howToChange: 'Смените время года на весну, чтобы придать сцене более оптимистичный оттенок.',
       mistakes: 'Отсутствие фокуса на эмоциях персонажа сделает кадр просто красивым пейзажем без драматургии.'
-    },
+  }
+,
     status: 'published',
     source: 'editorial',
-    publishedAt: '2026-08-12',
-    updatedAt: '2026-08-12'
+    publishedAt: '2026-08-11',
+    views: 590,
+    likes: 26,
+    saves: 13,
+    shares: 5,
+    updatedAt: '2026-08-11'
   }
 ];
-

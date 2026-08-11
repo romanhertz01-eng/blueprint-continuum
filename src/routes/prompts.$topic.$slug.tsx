@@ -6,6 +6,7 @@ import { videoProviders } from '@/data/videoModels';
 import { textProviders } from '@/data/textModels';
 import { CopyPromptButton } from '@/components/prompts/CopyPromptButton';
 import { TryPromptButton } from '@/components/prompts/TryPromptButton';
+import { PromptReactions } from '@/components/prompts/PromptReactions';
 import { PromptMasonry } from '@/components/prompts/PromptMasonry';
 import { TopicCloud } from '@/components/prompts/TopicCloud';
 import { Footer } from '@/components/shared/Footer';
@@ -158,6 +159,8 @@ function PromptDetailPage() {
                 <CopyPromptButton text={item.promptRu} />
                 <TryPromptButton item={item} label="Открыть в генераторе" />
               </div>
+
+              <PromptReactions item={item} />
 
               <div className="flex flex-col gap-1">
                 {credits !== null && (
