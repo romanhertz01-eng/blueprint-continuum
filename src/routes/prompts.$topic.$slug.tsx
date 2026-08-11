@@ -265,7 +265,7 @@ function PromptItemPage() {
                 <h3 className="text-lg font-bold mb-4">Темы промпта</h3>
                 <div className="flex flex-wrap gap-2">
                   {[item.topicSlug, ...(item.extraTopicSlugs || [])].map(slug => {
-                    const t = allTopics.find(x => x.slug === slug);
+                    const t = allTopics.find((x: any) => x.slug === slug);
                     if (!t) return null;
                     return (
                       <Link 
@@ -302,7 +302,7 @@ function PromptItemPage() {
             <section className="pt-20 border-t border-border">
               <h2 className="text-2xl font-bold mb-8">Похожие промпты</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                {relatedItems.map(relItem => (
+                {relatedItems.map((relItem: PromptItem) => (
                   <PromptCard key={relItem.slug} item={relItem} topics={allTopics} />
                 ))}
               </div>
