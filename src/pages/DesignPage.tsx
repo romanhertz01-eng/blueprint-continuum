@@ -118,6 +118,8 @@ const welcomeScenarios: WelcomeScenario[] = [
   },
 ];
 
+import { readPromptHandoff, clearPromptHandoff } from "@/lib/promptHandoff";
+
 const DesignPage = () => {
   const [prompt, setPrompt] = useState("");
   const [selectedProviderId, setSelectedProviderId] = useState("nano-banana");
@@ -132,6 +134,30 @@ const DesignPage = () => {
   const inputAreaRef = useRef<HTMLDivElement>(null);
   
   const [capsuleOpen, setCapsuleOpen] = useState(false);
+
+  useEffect(() => {
+    const handoff = readPromptHandoff('image');
+    if (handoff) {
+      if (handoff.prompt) setPrompt(handoff.prompt);
+      
+      if (handoff.providerId) {
+        const prov = imageProviders.find(p => p.id === handoff.providerId);
+        if (prov) {
+          setSelectedProviderId(handoff.providerId);
+          if (handoff.subModelId) {
+            const sub = prov.subModels.find(s => s.id === handoff.subModelId);
+            if (sub) setSelectedSubModelId(handoff.subModelId);
+          }
+        }
+      }
+      
+      if (handoff.params?.aspect) setAspectRatio(handoff.params.aspect);
+      if (handoff.params?.quality) setQuality(handoff.params.quality);
+      if (handoff.params?.quantity) setQuantity(handoff.params.quantity);
+      
+      clearPromptHandoff();
+    }
+  }, []);
 
   useEffect(() => {
     if (!capsuleOpen) return;
