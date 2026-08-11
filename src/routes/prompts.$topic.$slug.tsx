@@ -221,35 +221,41 @@ function PromptDetailPage() {
               </div>
             )}
 
-            {/* Разбор промпта */}
-            <div className="space-y-6">
+          </div>
+        </div>
+
+        {/* Новая секция разбора */}
+        {(item.body.overview || item.body.breakdown || item.body.howToChange || item.body.mistakes) && (
+          <div className="mt-12">
+            <h2 className="text-[24px] font-bold text-foreground mb-6">Разбор промпта</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8">
               {item.body.overview && (
                 <div className="space-y-2">
                   <h3 className="text-[15px] font-semibold text-foreground">Что на результате</h3>
-                  <p className="text-[14px] leading-relaxed text-muted-foreground">{item.body.overview}</p>
+                  <p className="text-[15px] leading-relaxed text-muted-foreground">{item.body.overview}</p>
                 </div>
               )}
               {item.body.breakdown && (
                 <div className="space-y-2">
                   <h3 className="text-[15px] font-semibold text-foreground">Разбор промпта</h3>
-                  <p className="text-[14px] leading-relaxed text-muted-foreground">{item.body.breakdown}</p>
+                  <p className="text-[15px] leading-relaxed text-muted-foreground">{item.body.breakdown}</p>
                 </div>
               )}
               {item.body.howToChange && (
                 <div className="space-y-2">
                   <h3 className="text-[15px] font-semibold text-foreground">Как изменить под себя</h3>
-                  <p className="text-[14px] leading-relaxed text-muted-foreground">{item.body.howToChange}</p>
+                  <p className="text-[15px] leading-relaxed text-muted-foreground">{item.body.howToChange}</p>
                 </div>
               )}
               {item.body.mistakes && (
                 <div className="space-y-2">
                   <h3 className="text-[15px] font-semibold text-foreground">Частые ошибки</h3>
-                  <p className="text-[14px] leading-relaxed text-muted-foreground">{item.body.mistakes}</p>
+                  <p className="text-[15px] leading-relaxed text-muted-foreground">{item.body.mistakes}</p>
                 </div>
               )}
             </div>
           </div>
-        </div>
+        )}
 
         <div className="mt-14 pt-12 border-t border-border">
           <h2 className="mb-8 text-2xl font-bold tracking-tight text-foreground md:text-3xl">
