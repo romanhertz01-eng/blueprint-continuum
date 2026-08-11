@@ -174,10 +174,20 @@ function PromptDetailPage() {
         </div>
 
         <div className="mt-14 pt-12 border-t border-border">
+          <h2 className="mb-8 text-2xl font-bold tracking-tight text-foreground md:text-3xl">
+            Ещё промпты
+          </h2>
+        </div>
+
+        <div className="w-screen relative left-1/2 -translate-x-1/2 overflow-hidden">
           <PromptMasonry 
-            items={getPublishedItems().filter((i: PromptItem) => i.slug !== item.slug && (i.topicSlug === item.topicSlug || item.extraTopicSlugs?.includes(i.topicSlug)))} 
-            heading="Ещё промпты" 
+            items={getPublishedItems()
+              .filter((i: PromptItem) => i.slug !== item.slug)
+              .sort((a, b) => b.publishedAt.localeCompare(a.publishedAt))} 
           />
+        </div>
+
+        <div className="mt-14">
           <TopicCloud topics={topics} />
         </div>
       </div>
