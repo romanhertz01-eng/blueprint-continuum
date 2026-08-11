@@ -176,7 +176,7 @@ function PromptDetailPage() {
               <Link to="/prompts/$topic" params={{ topic: item.topicSlug }} className="underline hover:text-foreground">
                 {mainTopic?.title}
               </Link>
-              {item.extraTopicSlugs?.map(slug => {
+              {item.extraTopicSlugs?.map((slug: string) => {
                 const topic = topics.find(t => t.slug === slug);
                 return topic ? (
                   <span key={slug}>, <Link to="/prompts/$topic" params={{ topic: slug }} className="underline hover:text-foreground">{topic.title}</Link></span>
