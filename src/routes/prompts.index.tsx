@@ -51,6 +51,8 @@ export const Route = createFileRoute('/prompts/')({
 function PromptsHub() {
   const items = getPublishedItems();
   const topics = getPublishedTopics();
+  const categories = getCategories();
+  const categoryCounts = countItemsByCategory();
 
   return (
     <>
