@@ -193,10 +193,6 @@ function PromptsHub() {
               slug: 'model',
               cardTitle: 'По моделям',
               description: 'Промпты, отобранные под конкретную нейросеть: Nano Banana, Seedream, Kling и другие модели ЭРА2',
-              title: 'По моделям',
-              seoTitle: '',
-              seoDescription: '',
-              route: '/prompts/model'
             }}
             count={getProvidersWithPrompts().length}
             imageSrc={categoryImages[categories.length]}
