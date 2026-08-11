@@ -51,7 +51,7 @@ export function PromptCard({ item, topics }: PromptCardProps) {
     if (item.category === 'text' || item.category === 'agents') return null;
 
     return (
-      <div className={cn("relative w-full overflow-hidden bg-muted/30", categoryAspect)}>
+      <div className={cn("relative w-full overflow-hidden rounded-t-[12px] bg-muted/30", categoryAspect)}>
         {item.category === 'video' ? (
           <video ref={videoRef} src={media.src} poster={media.poster} muted loop playsInline className="w-full h-full object-cover" />
         ) : item.category === 'audio' ? (
@@ -66,11 +66,22 @@ export function PromptCard({ item, topics }: PromptCardProps) {
         )}
         
         <div className="absolute top-2 left-2 px-1.5 py-0.5 rounded bg-card text-[11px] font-bold uppercase tracking-wider">{modelName}</div>
-        {item.category === 'video' && <div className="absolute bottom-2 right-2 px-1.5 py-0.5 rounded bg-card/80 text-[10px]">{item.params?.duration}</div>}
+        {item.category === 'video' && <div className="absolute bottom-2 right-2 px-1.5 py-0.5 rounded bg-card/80 text-[10px] z-10">{item.params?.duration}</div>}
         
-        <div className={cn("absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center gap-2 transition-opacity duration-300", isHovered ? "opacity-100" : "opacity-0")}>
-           <CopyPromptButton text={item.promptRu} />
-           <TryPromptButton item={item} />
+        <div className={cn(
+          "absolute inset-x-0 bottom-0 pt-16 pb-3 px-3 flex items-center gap-2 bg-gradient-to-t from-black/70 via-black/40 to-transparent transition-opacity duration-200",
+          "opacity-0 group-hover:opacity-100",
+          "@media (hover: none) { opacity: 100 }"
+        )}>
+          <CopyPromptButton 
+            text={item.promptRu} 
+            className="h-[32px] px-3 text-[12px] rounded-full bg-transparent border border-white/40 text-white hover:bg-white/10" 
+          />
+          <TryPromptButton 
+            item={item} 
+            label="Попробовать"
+            className="h-[32px] px-3 text-[12px] rounded-full bg-[hsl(var(--primary))] text-white hover:opacity-90" 
+          />
         </div>
       </div>
     );
