@@ -1,4 +1,4 @@
-export type PromptCategory = 'image' | 'video' | 'audio' | 'text';
+export type PromptCategory = 'image' | 'video' | 'audio' | 'text' | 'agents';
 
 export interface PromptTopic {
   slug: string;
@@ -25,10 +25,12 @@ export interface PromptItem {
   negativePrompt?: string;
   providerId: string;             // id из src/data/imageModels.ts и аналогов
   subModelId?: string;
+  agentId?: string;               // для category: 'agents'
   params?: {
     aspect?: string; quality?: string; quantity?: number;
     duration?: string; resolution?: string;
   };
+  chain?: { label: string; prompt: string }[];  // каскадные, пока не используется
   media: { type: 'image' | 'video' | 'audio'; src: string; poster?: string; alt: string }[];
   body: {
     overview: string;      // что на результате, 2-3 предложения
@@ -41,3 +43,4 @@ export interface PromptItem {
   publishedAt: string;
   updatedAt: string;
 }
+

@@ -1,10 +1,33 @@
-import { PromptTopic, PromptItem } from './types';
+import { PromptTopic, PromptItem, PromptCategory } from './types';
 import { promptTopics } from './topics';
 import { promptItems } from './items';
+import { promptCategories, PromptCategoryDef } from './categories';
 
 export * from './types';
 export { promptTopics } from './topics';
 export { promptItems } from './items';
+export { promptCategories } from './categories';
+
+export const RESERVED_PROMPT_SLUGS: readonly string[] = ['image', 'video', 'audio', 'text', 'agents', 'model'];
+
+export function isReservedPromptSlug(slug: string): boolean {
+  return RESERVED_PROMPT_SLUGS.includes(slug);
+}
+
+// Защита: ни один слаг темы не должен совпасть с зарезервированным
+promptTopics.forEach(topic => {
+  if (isReservedPromptSlug(topic.slug)) {
+    throw new Error(`CRITICAL: Prompt topic slug "${topic.slug}" is reserved and cannot be used.`);
+  }
+});
+
+export const getCategories = (): PromptCategoryDef[] => {
+  return [...promptCategories];
+};
+
+export const getCategoryBySlug = (slug: string): PromptCategoryDef | undefined => {
+  return promptCategories.find(cat => cat.slug === slug);
+};
 
 export const getPublishedTopics = (): PromptTopic[] => {
   return promptTopics.filter(topic => topic.status === 'published');
@@ -16,6 +39,14 @@ export const getTopicBySlug = (slug: string): PromptTopic | undefined => {
 
 export const getPublishedItems = (): PromptItem[] => {
   return promptItems.filter(item => item.status === 'published');
+};
+
+export const getItemsByCategory = (category: PromptCategory): PromptItem[] => {
+  return promptItems.filter(item => item.status === 'published' && item.category === category);
+};
+
+export const getTopicsByCategory = (category: PromptCategory): PromptTopic[] => {
+  return promptTopics.filter(topic => topic.status === 'published' && topic.category === category);
 };
 
 export const getItemsByTopic = (topicSlug: string): PromptItem[] => {
@@ -40,6 +71,38 @@ export const getItemsByProvider = (providerId: string): PromptItem[] => {
   );
 };
 
+export const getProvidersWithPrompts = (): { providerId: string; count: number }[] => {
+  const publishedItems = getPublishedItems();
+  const counts: Record<string, number> = {};
+  
+  publishedItems.forEach(item => {
+    counts[item.providerId] = (counts[item.providerId] || 0) + 1;
+  });
+  
+  return Object.entries(counts)
+    .map(([providerId, count]) => ({ providerId, count }))
+    .sort((a, b) => b.count - a.count);
+};
+
+export const countItemsByCategory = (): Record<PromptCategory, number> => {
+  const publishedItems = getPublishedItems();
+  const counts: Record<PromptCategory, number> = {
+    image: 0,
+    video: 0,
+    audio: 0,
+    text: 0,
+    agents: 0
+  };
+  
+  publishedItems.forEach(item => {
+    if (counts.hasOwnProperty(item.category)) {
+      counts[item.category]++;
+    }
+  });
+  
+  return counts;
+};
+
 export const getItemsForTool = (toolSlug: string): PromptItem[] => {
   const toolTopics = promptTopics.filter(t => t.relatedToolSlugs?.includes(toolSlug));
   const topicSlugs = toolTopics.map(t => t.slug);
@@ -59,3 +122,4 @@ export const getRelatedItems = (item: PromptItem, limit: number = 4): PromptItem
     )
     .slice(0, limit);
 };
+
