@@ -1,14 +1,5 @@
-import { PromptCategory } from './types';
+import { PromptCategory, PromptCategoryDef } from './types';
 
-export interface PromptCategoryDef {
-  slug: PromptCategory;
-  title: string;        // «Промпты для видео»
-  cardTitle: string;    // «Видео»
-  description: string;  // 200-400 знаков, для карточки категории
-  route: string;        // адрес движка
-  seoTitle: string;
-  seoDescription: string;
-}
 
 export const promptCategories: PromptCategoryDef[] = [
   {
