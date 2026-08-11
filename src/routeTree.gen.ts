@@ -24,6 +24,7 @@ import { Route as AudioRouteImport } from './routes/audio'
 import { Route as AgentsRouteImport } from './routes/agents'
 import { Route as AccountRouteImport } from './routes/account'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PromptsIndexRouteImport } from './routes/prompts.index'
 import { Route as GuidesIndexRouteImport } from './routes/guides.index'
 import { Route as ToolsTextGenerationRouteImport } from './routes/tools.text-generation'
 import { Route as ToolsAudioGenerationRouteImport } from './routes/tools.audio-generation'
@@ -111,6 +112,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PromptsIndexRoute = PromptsIndexRouteImport.update({
+  id: '/prompts/',
+  path: '/prompts/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const GuidesIndexRoute = GuidesIndexRouteImport.update({
   id: '/guides/',
   path: '/guides/',
@@ -194,6 +200,7 @@ export interface FileRoutesByFullPath {
   '/tools/audio-generation': typeof ToolsAudioGenerationRoute
   '/tools/text-generation': typeof ToolsTextGenerationRoute
   '/guides/': typeof GuidesIndexRoute
+  '/prompts/': typeof PromptsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -222,6 +229,7 @@ export interface FileRoutesByTo {
   '/tools/audio-generation': typeof ToolsAudioGenerationRoute
   '/tools/text-generation': typeof ToolsTextGenerationRoute
   '/guides': typeof GuidesIndexRoute
+  '/prompts': typeof PromptsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -251,6 +259,7 @@ export interface FileRoutesById {
   '/tools/audio-generation': typeof ToolsAudioGenerationRoute
   '/tools/text-generation': typeof ToolsTextGenerationRoute
   '/guides/': typeof GuidesIndexRoute
+  '/prompts/': typeof PromptsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -281,6 +290,7 @@ export interface FileRouteTypes {
     | '/tools/audio-generation'
     | '/tools/text-generation'
     | '/guides/'
+    | '/prompts/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -309,6 +319,7 @@ export interface FileRouteTypes {
     | '/tools/audio-generation'
     | '/tools/text-generation'
     | '/guides'
+    | '/prompts'
   id:
     | '__root__'
     | '/'
@@ -337,6 +348,7 @@ export interface FileRouteTypes {
     | '/tools/audio-generation'
     | '/tools/text-generation'
     | '/guides/'
+    | '/prompts/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -366,6 +378,7 @@ export interface RootRouteChildren {
   ToolsAudioGenerationRoute: typeof ToolsAudioGenerationRoute
   ToolsTextGenerationRoute: typeof ToolsTextGenerationRoute
   GuidesIndexRoute: typeof GuidesIndexRoute
+  PromptsIndexRoute: typeof PromptsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -475,6 +488,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/prompts/': {
+      id: '/prompts/'
+      path: '/prompts'
+      fullPath: '/prompts/'
+      preLoaderRoute: typeof PromptsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/guides/': {
       id: '/guides/'
       path: '/guides'
@@ -582,16 +602,8 @@ const rootRouteChildren: RootRouteChildren = {
   ToolsAudioGenerationRoute: ToolsAudioGenerationRoute,
   ToolsTextGenerationRoute: ToolsTextGenerationRoute,
   GuidesIndexRoute: GuidesIndexRoute,
+  PromptsIndexRoute: PromptsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-  }
-}
