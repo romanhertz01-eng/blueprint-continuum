@@ -182,6 +182,8 @@ const DesignPage = () => {
 
   // Restore draft on mount
   useEffect(() => {
+    const handoff = readPromptHandoff('image');
+    if (handoff) return; // Priority for handoff
     const saved = sessionStorage.getItem("era2_draft_design");
     if (saved) setPrompt(saved);
   }, []);

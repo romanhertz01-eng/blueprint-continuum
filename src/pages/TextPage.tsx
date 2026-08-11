@@ -134,6 +134,8 @@ const TextPage = () => {
   }, [messages]);
 
   useEffect(() => {
+    const handoff = readPromptHandoff('text');
+    if (handoff) return; // Priority for handoff
     const saved = sessionStorage.getItem("era2_draft_text");
     if (saved) setInput(saved);
   }, []);

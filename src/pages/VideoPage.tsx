@@ -160,6 +160,8 @@ const VideoPage = () => {
   }, [generations]);
 
   useEffect(() => {
+    const handoff = readPromptHandoff('video');
+    if (handoff) return; // Priority for handoff
     const saved = sessionStorage.getItem("era2_draft_video");
     if (saved) setPrompt(saved);
   }, []);
