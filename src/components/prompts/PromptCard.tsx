@@ -1,16 +1,16 @@
 import { Link } from '@tanstack/react-router';
-import { PromptItem } from '@/data/prompts/types';
+import { PromptItem, PromptTopic } from '@/data/prompts/types';
 import { CopyPromptButton } from './CopyPromptButton';
 import { TryPromptButton } from './TryPromptButton';
 import { textProviders } from '@/data/textModels';
 import { imageProviders } from '@/data/imageModels';
 import { videoProviders } from '@/data/videoModels';
-import { getPublishedTopics } from '@/data/prompts';
 import { cn } from '@/lib/utils';
 import { useState, useRef } from 'react';
 
 interface PromptCardProps {
   item: PromptItem;
+  topics: PromptTopic[];
 }
 
 function getModelName(providerId: string, category: string): string {
@@ -30,13 +30,12 @@ function getModelName(providerId: string, category: string): string {
   return providerId;
 }
 
-export function PromptCard({ item }: PromptCardProps) {
+export function PromptCard({ item, topics }: PromptCardProps) {
   const modelName = getModelName(item.providerId, item.category);
   const media = item.media[0];
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isHovered, setIsHovered] = useState(false);
   
-  const topics = getPublishedTopics();
   const mainTopic = topics.find(t => t.slug === item.topicSlug);
   const otherTopics = topics.filter(t => item.extraTopicSlugs?.includes(t.slug)).slice(0, 2);
   const displayTopics = [mainTopic, ...otherTopics].filter(Boolean).slice(0, 3);

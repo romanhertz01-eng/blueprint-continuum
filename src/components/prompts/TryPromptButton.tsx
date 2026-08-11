@@ -51,7 +51,7 @@ export function TryPromptButton({ item, label = "Попробовать", classN
       size="sm"
       className={cn(
         "h-9 px-4 text-[13px] font-semibold text-white transition-all active:scale-95",
-        "bg-[hsl(var(--primary))] hover:brightness-110 border-none shadow-[0_2px_10px_rgba(232,84,32,0.2)]",
+        "bg-[hsl(var(--primary))] hover:brightness-110 border-none gradient-accent",
         className
       )}
     >
