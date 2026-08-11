@@ -36,7 +36,9 @@ import { Route as AiTextRouteImport } from './routes/ai.text'
 import { Route as AiImageRouteImport } from './routes/ai.image'
 import { Route as AiAudioRouteImport } from './routes/ai.audio'
 import { Route as AiAgentsRouteImport } from './routes/ai.agents'
+import { Route as PromptsModelIndexRouteImport } from './routes/prompts.model.index'
 import { Route as PromptsTopicIndexRouteImport } from './routes/prompts.$topic.index'
+import { Route as PromptsModelProviderIdRouteImport } from './routes/prompts.model.$providerId'
 import { Route as PromptsTopicSlugRouteImport } from './routes/prompts.$topic.$slug'
 
 const VideoRoute = VideoRouteImport.update({
@@ -174,9 +176,19 @@ const AiAgentsRoute = AiAgentsRouteImport.update({
   path: '/ai/agents',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PromptsModelIndexRoute = PromptsModelIndexRouteImport.update({
+  id: '/prompts/model/',
+  path: '/prompts/model/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PromptsTopicIndexRoute = PromptsTopicIndexRouteImport.update({
   id: '/prompts/$topic/',
   path: '/prompts/$topic/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PromptsModelProviderIdRoute = PromptsModelProviderIdRouteImport.update({
+  id: '/prompts/model/$providerId',
+  path: '/prompts/model/$providerId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PromptsTopicSlugRoute = PromptsTopicSlugRouteImport.update({
@@ -214,7 +226,9 @@ export interface FileRoutesByFullPath {
   '/guides/': typeof GuidesIndexRoute
   '/prompts/': typeof PromptsIndexRoute
   '/prompts/$topic/$slug': typeof PromptsTopicSlugRoute
+  '/prompts/model/$providerId': typeof PromptsModelProviderIdRoute
   '/prompts/$topic/': typeof PromptsTopicIndexRoute
+  '/prompts/model/': typeof PromptsModelIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -245,7 +259,9 @@ export interface FileRoutesByTo {
   '/guides': typeof GuidesIndexRoute
   '/prompts': typeof PromptsIndexRoute
   '/prompts/$topic/$slug': typeof PromptsTopicSlugRoute
+  '/prompts/model/$providerId': typeof PromptsModelProviderIdRoute
   '/prompts/$topic': typeof PromptsTopicIndexRoute
+  '/prompts/model': typeof PromptsModelIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -277,7 +293,9 @@ export interface FileRoutesById {
   '/guides/': typeof GuidesIndexRoute
   '/prompts/': typeof PromptsIndexRoute
   '/prompts/$topic/$slug': typeof PromptsTopicSlugRoute
+  '/prompts/model/$providerId': typeof PromptsModelProviderIdRoute
   '/prompts/$topic/': typeof PromptsTopicIndexRoute
+  '/prompts/model/': typeof PromptsModelIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -310,7 +328,9 @@ export interface FileRouteTypes {
     | '/guides/'
     | '/prompts/'
     | '/prompts/$topic/$slug'
+    | '/prompts/model/$providerId'
     | '/prompts/$topic/'
+    | '/prompts/model/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -341,7 +361,9 @@ export interface FileRouteTypes {
     | '/guides'
     | '/prompts'
     | '/prompts/$topic/$slug'
+    | '/prompts/model/$providerId'
     | '/prompts/$topic'
+    | '/prompts/model'
   id:
     | '__root__'
     | '/'
@@ -372,7 +394,9 @@ export interface FileRouteTypes {
     | '/guides/'
     | '/prompts/'
     | '/prompts/$topic/$slug'
+    | '/prompts/model/$providerId'
     | '/prompts/$topic/'
+    | '/prompts/model/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -404,7 +428,9 @@ export interface RootRouteChildren {
   GuidesIndexRoute: typeof GuidesIndexRoute
   PromptsIndexRoute: typeof PromptsIndexRoute
   PromptsTopicSlugRoute: typeof PromptsTopicSlugRoute
+  PromptsModelProviderIdRoute: typeof PromptsModelProviderIdRoute
   PromptsTopicIndexRoute: typeof PromptsTopicIndexRoute
+  PromptsModelIndexRoute: typeof PromptsModelIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -598,11 +624,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AiAgentsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/prompts/model/': {
+      id: '/prompts/model/'
+      path: '/prompts/model'
+      fullPath: '/prompts/model/'
+      preLoaderRoute: typeof PromptsModelIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/prompts/$topic/': {
       id: '/prompts/$topic/'
       path: '/prompts/$topic'
       fullPath: '/prompts/$topic/'
       preLoaderRoute: typeof PromptsTopicIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/prompts/model/$providerId': {
+      id: '/prompts/model/$providerId'
+      path: '/prompts/model/$providerId'
+      fullPath: '/prompts/model/$providerId'
+      preLoaderRoute: typeof PromptsModelProviderIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/prompts/$topic/$slug': {
@@ -644,7 +684,9 @@ const rootRouteChildren: RootRouteChildren = {
   GuidesIndexRoute: GuidesIndexRoute,
   PromptsIndexRoute: PromptsIndexRoute,
   PromptsTopicSlugRoute: PromptsTopicSlugRoute,
+  PromptsModelProviderIdRoute: PromptsModelProviderIdRoute,
   PromptsTopicIndexRoute: PromptsTopicIndexRoute,
+  PromptsModelIndexRoute: PromptsModelIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

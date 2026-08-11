@@ -2,15 +2,16 @@ import { Link } from '@tanstack/react-router';
 import { PromptCategoryDef } from '@/data/prompts/types';
 
 interface CategoryTileProps {
-  category: PromptCategoryDef;
+  category: PromptCategoryDef | { slug: string; cardTitle: string; description: string };
   count: number;
   imageSrc: string | null;
 }
 
 export function CategoryTile({ category, count, imageSrc }: CategoryTileProps) {
   const isAvailable = count > 0;
+  const isModel = category.slug === 'model';
 
-  if (!isAvailable) {
+  if (!isAvailable && !isModel) {
     return (
       <div className="h-[180px] md:h-[240px] rounded-[16px] overflow-hidden bg-muted/40 border border-border p-5 relative flex flex-col justify-end">
         <div className="absolute top-5 right-5 bg-muted text-muted-foreground text-[12px] px-3 py-1 rounded-full font-medium">
@@ -28,10 +29,12 @@ export function CategoryTile({ category, count, imageSrc }: CategoryTileProps) {
     );
   }
 
+  const word = isModel ? getModelWord(count) : getPromptWord(count);
+
   return (
     <Link
-      to="/prompts/$topic"
-      params={{ topic: category.slug }}
+      to={isModel ? "/prompts/model" : "/prompts/$topic"}
+      params={isModel ? {} : { topic: category.slug } as any}
       className="group h-[180px] md:h-[240px] rounded-[16px] overflow-hidden relative flex flex-col justify-end p-5"
     >
       {imageSrc && (
@@ -44,7 +47,7 @@ export function CategoryTile({ category, count, imageSrc }: CategoryTileProps) {
       <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-black/20" />
       
       <div className="absolute top-5 right-5 bg-white text-black text-[13px] px-3 py-1 rounded-full font-bold">
-        {count} {getPromptWord(count)}
+        {count} {word}
       </div>
 
       <div className="relative z-10">
@@ -66,4 +69,13 @@ function getPromptWord(count: number) {
   if (lastDigit === 1) return 'промпт';
   if (lastDigit >= 2 && lastDigit <= 4) return 'промпта';
   return 'промптов';
+}
+
+function getModelWord(count: number) {
+  const lastDigit = count % 10;
+  const lastTwoDigits = count % 100;
+  if (lastTwoDigits >= 11 && lastTwoDigits <= 19) return 'моделей';
+  if (lastDigit === 1) return 'модель';
+  if (lastDigit >= 2 && lastDigit <= 4) return 'модели';
+  return 'моделей';
 }
