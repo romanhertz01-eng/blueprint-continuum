@@ -24,17 +24,19 @@ function getModelName(providerId: string, category: string): string {
 
 export function PromptMosaicTile({ item }: PromptMosaicTileProps) {
   const modelName = getModelName(item.providerId, item.category);
-  const media = item.media[0];
+  const media = item.media?.[0];
   const videoRef = useRef<HTMLVideoElement>(null);
+
+  if (!media?.src) return null;
   
   const handleMouseEnter = () => {
-    if (item.category === 'video' && videoRef.current) {
+    if (media.type === 'video' && media.src && videoRef.current) {
       videoRef.current.play().catch(() => {});
     }
   };
 
   const handleMouseLeave = () => {
-    if (item.category === 'video' && videoRef.current) {
+    if (media.type === 'video' && media.src && videoRef.current) {
       videoRef.current.pause();
       videoRef.current.currentTime = 0;
     }
@@ -52,11 +54,11 @@ export function PromptMosaicTile({ item }: PromptMosaicTileProps) {
       <span className="sr-only">{item.title} — промпт для {modelName}</span>
       
       <div className="relative w-full h-auto overflow-hidden">
-        {item.category === 'video' ? (
+        {media.type === 'video' && media.src ? (
           <video
             ref={videoRef}
-            src={media?.src}
-            poster={media?.poster}
+            src={media.src}
+            poster={media.poster}
             muted
             loop
             playsInline
@@ -64,8 +66,8 @@ export function PromptMosaicTile({ item }: PromptMosaicTileProps) {
           />
         ) : (
           <img
-            src={media?.src}
-            alt={media?.alt || item.title}
+            src={media.src}
+            alt={media.alt || item.title}
             loading="lazy"
             className="w-full h-auto block"
           />
