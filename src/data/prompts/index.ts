@@ -17,13 +17,17 @@ export function isReservedPromptSlug(slug: string): boolean {
 
 // Защита: ни один слаг темы не должен совпасть с зарезервированным
 function validateTopicSlugs() {
+  if (typeof promptTopics === 'undefined') return;
   promptTopics.forEach(topic => {
     if (isReservedPromptSlug(topic.slug)) {
+      console.error(`CRITICAL: Prompt topic slug "${topic.slug}" is reserved and cannot be used.`);
+      if (typeof process !== 'undefined') process.exit(1);
       throw new Error(`CRITICAL: Prompt topic slug "${topic.slug}" is reserved and cannot be used.`);
     }
   });
 }
 
+// Выполняем проверку немедленно при инициализации модуля
 validateTopicSlugs();
 
 
