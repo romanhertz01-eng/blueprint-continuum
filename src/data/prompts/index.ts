@@ -1,7 +1,8 @@
-import { PromptTopic, PromptItem, PromptCategory } from './types';
+import { PromptTopic, PromptItem, PromptCategory, PromptCategoryDef } from './types';
 import { promptTopics } from './topics';
 import { promptItems } from './items';
-import { promptCategories, PromptCategoryDef } from './categories';
+import { promptCategories } from './categories';
+
 
 export * from './types';
 export { promptTopics } from './topics';
@@ -15,11 +16,16 @@ export function isReservedPromptSlug(slug: string): boolean {
 }
 
 // Защита: ни один слаг темы не должен совпасть с зарезервированным
-promptTopics.forEach(topic => {
-  if (isReservedPromptSlug(topic.slug)) {
-    throw new Error(`CRITICAL: Prompt topic slug "${topic.slug}" is reserved and cannot be used.`);
-  }
-});
+function validateTopicSlugs() {
+  promptTopics.forEach(topic => {
+    if (isReservedPromptSlug(topic.slug)) {
+      throw new Error(`CRITICAL: Prompt topic slug "${topic.slug}" is reserved and cannot be used.`);
+    }
+  });
+}
+
+validateTopicSlugs();
+
 
 export const getCategories = (): PromptCategoryDef[] => {
   return [...promptCategories];
