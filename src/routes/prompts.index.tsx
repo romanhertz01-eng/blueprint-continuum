@@ -4,7 +4,7 @@ import { ChevronRight } from 'lucide-react';
 import { Footer } from '@/components/shared/Footer';
 import { getPublishedItems, getPublishedTopics, countItemsByCategory, getCategories, PromptItem } from '@/data/prompts';
 import { CategoryCard } from '@/components/prompts/CategoryCard';
-import { PromptCard } from '@/components/prompts/PromptCard';
+import { PromptMosaicTile } from '@/components/prompts/PromptMosaicTile';
 import { useLoadMore } from '@/components/prompts/useLoadMore';
 import { TopicCloud } from '@/components/prompts/TopicCloud';
 import { useState, useMemo } from 'react';
@@ -77,8 +77,10 @@ function PromptsHub() {
           </select>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-12">
-          {visible.map(item => <PromptCard key={item.slug} item={item} topics={topics} />)}
+        <div className="relative left-1/2 right-1/2 -mx-[50vw] w-screen overflow-hidden mb-12">
+          <div className="columns-2 sm:columns-3 lg:columns-4 xl:columns-5 gap-1 px-1">
+            {visible.map(item => <PromptMosaicTile key={item.slug} item={item} topics={topics} />)}
+          </div>
         </div>
 
         {hasMore && (

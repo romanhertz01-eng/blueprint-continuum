@@ -11,9 +11,10 @@ interface TryPromptButtonProps {
   item: PromptItem;
   label?: string;
   className?: string;
+  children?: React.ReactNode;
 }
 
-export function TryPromptButton({ item, label = "Попробовать", className }: TryPromptButtonProps) {
+export function TryPromptButton({ item, label = "Попробовать", className, children }: TryPromptButtonProps) {
   const navigate = useNavigate();
   const { isAuthed } = useAuth();
 
@@ -55,8 +56,12 @@ export function TryPromptButton({ item, label = "Попробовать", classN
         className
       )}
     >
-      {label}
-      <Zap className="w-3.5 h-3.5 ml-1.5 fill-current" />
+      {children ? children : (
+        <>
+          {label}
+          <Zap className="w-3.5 h-3.5 ml-1.5 fill-current" />
+        </>
+      )}
     </Button>
   );
 }
