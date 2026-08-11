@@ -78,8 +78,8 @@ function PromptsHub() {
         </div>
 
         <div className="relative left-1/2 right-1/2 -mx-[50vw] w-screen overflow-hidden mb-12">
-          <div className="columns-2 sm:columns-3 lg:columns-4 xl:columns-5 gap-1 px-1">
-            {visible.map(item => <PromptMosaicTile key={item.slug} item={item} topics={topics} />)}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-0 [grid-auto-flow:dense]" style={{ gridAutoRows: "10px" }}>
+            {visible.map((item, idx) => <PromptMosaicTile key={item.slug} item={item} topics={topics} index={idx} />)}
           </div>
         </div>
 
