@@ -7,6 +7,7 @@ const productLinks = [
   { label: "Видео", to: "/ai/video" },
   { label: "Аудио", to: "/ai/audio" },
   { label: "Агенты", to: "/ai/agents" },
+  { label: "Промпты", to: "/prompts" },
   { label: "Гайды", to: "/guides" },
   { label: "Тарифы", to: "/pricing" },
 ];
