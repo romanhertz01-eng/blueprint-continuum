@@ -44,3 +44,14 @@ export interface PromptItem {
   updatedAt: string;
 }
 
+export interface PromptCategoryDef {
+  slug: PromptCategory;
+  title: string;        // «Промпты для видео»
+  cardTitle: string;    // «Видео»
+  description: string;  // 200-400 знаков, для карточки категории
+  route: string;        // адрес движка
+  seoTitle: string;
+  seoDescription: string;
+}
+
+
