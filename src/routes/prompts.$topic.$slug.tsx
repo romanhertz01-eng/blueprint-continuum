@@ -160,6 +160,8 @@ function PromptDetailPage() {
                 <TryPromptButton item={item} label="Открыть в генераторе" />
               </div>
 
+              <PromptReactions item={item} />
+
               <div className="flex flex-col gap-1">
                 {credits !== null && (
                   <div className="text-[13px] text-muted-foreground">
