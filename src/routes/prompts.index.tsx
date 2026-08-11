@@ -42,7 +42,7 @@ function PromptsHub() {
   
   const categoryImages = useMemo(() => {
     const usedSrcs = new Set<string>();
-    return categories.map(cat => {
+    const images = categories.map(cat => {
       const items = getItemsByCategory(cat.slug as any);
       let selectedSrc: string | null = null;
       for (const item of items) {
@@ -53,12 +53,30 @@ function PromptsHub() {
           break;
         }
       }
-      // fallback
       if (!selectedSrc && items[0]?.media?.[0]?.src) {
         selectedSrc = items[0].media[0].src;
       }
       return selectedSrc;
     });
+
+    // шестая плитка (По моделям) - берем из самой популярной модели (kling)
+    const providers = getProvidersWithPrompts();
+    const topProviderId = providers[0]?.providerId;
+    const providerItems = topProviderId ? getPublishedItems().filter(i => i.providerId === topProviderId) : [];
+    let modelSrc: string | null = null;
+    for (const item of providerItems) {
+      const src = item.media?.[0]?.src;
+      if (src && !usedSrcs.has(src)) {
+        modelSrc = src;
+        usedSrcs.add(src);
+        break;
+      }
+    }
+    if (!modelSrc && providerItems[0]?.media?.[0]?.src) {
+      modelSrc = providerItems[0].media[0].src;
+    }
+
+    return [...images, modelSrc];
   }, [categories]);
   
   const [searchQuery, setSearchQuery] = useState('');
@@ -170,6 +188,19 @@ function PromptsHub() {
               imageSrc={categoryImages[idx]}
             />
           ))}
+          <CategoryTile 
+            category={{
+              slug: 'model',
+              cardTitle: 'По моделям',
+              description: 'Промпты, отобранные под конкретную нейросеть: Nano Banana, Seedream, Kling и другие модели ЭРА2',
+              title: 'По моделям',
+              seoTitle: '',
+              seoDescription: '',
+              route: '/prompts/model'
+            }}
+            count={getProvidersWithPrompts().length}
+            imageSrc={categoryImages[categories.length]}
+          />
         </div>
       </section>
 

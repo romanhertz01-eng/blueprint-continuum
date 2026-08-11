@@ -67,3 +67,12 @@ function getPromptWord(count: number) {
   if (lastDigit >= 2 && lastDigit <= 4) return 'промпта';
   return 'промптов';
 }
+
+function getModelWord(count: number) {
+  const lastDigit = count % 10;
+  const lastTwoDigits = count % 100;
+  if (lastTwoDigits >= 11 && lastTwoDigits <= 19) return 'моделей';
+  if (lastDigit === 1) return 'модель';
+  if (lastDigit >= 2 && lastDigit <= 4) return 'модели';
+  return 'моделей';
+}
