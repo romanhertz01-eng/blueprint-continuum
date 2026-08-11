@@ -6,6 +6,7 @@ import { videoProviders } from '@/data/videoModels';
 import { textProviders } from '@/data/textModels';
 import { CopyPromptButton } from '@/components/prompts/CopyPromptButton';
 import { TryPromptButton } from '@/components/prompts/TryPromptButton';
+import { PromptReactions } from '@/components/prompts/PromptReactions';
 import { PromptMasonry } from '@/components/prompts/PromptMasonry';
 import { TopicCloud } from '@/components/prompts/TopicCloud';
 import { Footer } from '@/components/shared/Footer';
