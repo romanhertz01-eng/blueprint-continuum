@@ -288,7 +288,8 @@ export const promptItems: PromptItem[] = [
     subModelId: 'kling-3-0',
     params: { aspect: '16:9', duration: '5s', resolution: '1080p' },
     // TODO: снять ролик и постер по этому промпту
-    media: [{ type: 'video', src: '', poster: '/community/0N.jpg', alt: 'Кроссовки в динамичном беге по мокрому асфальту с брызгами' }],
+    // TODO: снять ролик, заменить type на 'video'
+    media: [{ type: 'image', src: '/community/01.jpg', alt: 'Кроссовки в динамичном беге по мокрому асфальту с брызгами' }],
     body: {
       overview: 'Динамичный рекламный ролик спортивной обуви, построенный на макро-деталях и энергичных переходах, подчеркивающих функциональность и современный дизайн товара.',
       breakdown: 'Использование слов "macro shot" и "energetic zoom" задает ритм, а упоминание "water splashes" и "studio lighting" добавляет визуальной привлекательности, необходимой для коммерческого продукта.',
@@ -311,7 +312,8 @@ export const promptItems: PromptItem[] = [
     subModelId: 'kling-3-0',
     params: { aspect: '16:9', duration: '5s', resolution: '1080p' },
     // TODO: снять ролик и постер по этому промпту
-    media: [{ type: 'video', src: '', poster: '/community/0N.jpg', alt: 'Струя кофе наполняет чашку, пар поднимается в золотистом свете' }],
+    // TODO: снять ролик, заменить type на 'video'
+    media: [{ type: 'image', src: '/community/02.jpg', alt: 'Струя кофе наполняет чашку, пар поднимается в золотистом свете' }],
     body: {
       overview: 'Премиальное видео для рекламы кофемашины, сфокусированное на процессе налива, теплоте освещения и эстетике кофейного ритуала.',
       breakdown: 'Слова "slow motion" и "golden lighting" создают атмосферу премиальности, а детализация "ceramic cup" и "steam rising" отвечают за визуальное качество продукта в кадре.',
@@ -334,7 +336,8 @@ export const promptItems: PromptItem[] = [
     subModelId: 'kling-3-0',
     params: { aspect: '16:9', duration: '5s', resolution: '1080p' },
     // TODO: снять ролик и постер по этому промпту
-    media: [{ type: 'video', src: '', poster: '/community/0N.jpg', alt: 'Флакон духов вращается в мягком свете, бликуя на гранях' }],
+    // TODO: снять ролик, заменить type на 'video'
+    media: [{ type: 'image', src: '/community/03.jpg', alt: 'Флакон духов вращается в мягком свете, бликуя на гранях' }],
     body: {
       overview: 'Эстетичное видео для бьюти-бренда, подчеркивающее форму флакона и чистоту стекла через вращение и мягкое освещение.',
       breakdown: 'Ключевые слова "smooth orbit movement" и "highlights on glass" создают ощущение роскоши и внимания к дизайну упаковки.',
@@ -357,7 +360,8 @@ export const promptItems: PromptItem[] = [
     subModelId: 'kling-3-0',
     params: { aspect: '9:16', duration: '5s', resolution: '1080p' },
     // TODO: снять ролик и постер по этому промпту
-    media: [{ type: 'video', src: '', poster: '/community/0N.jpg', alt: 'Смартфон в руке на фоне рабочего стола' }],
+    // TODO: снять ролик, заменить type на 'video'
+    media: [{ type: 'image', src: '/community/04.jpg', alt: 'Смартфон в руке на фоне рабочего стола' }],
     body: {
       overview: 'Вертикальное видео для обзора смартфона, где камера плавно следует за устройством, демонстрируя его тонкий корпус и яркий экран.',
       breakdown: 'Использование "9:16" и "vertical review" задает формат. "Natural hand movement" — критически важное требование для реалистичного обзора.',
@@ -380,7 +384,8 @@ export const promptItems: PromptItem[] = [
     subModelId: 'kling-3-0',
     params: { aspect: '9:16', duration: '5s', resolution: '1080p' },
     // TODO: снять ролик и постер по этому промпту
-    media: [{ type: 'video', src: '', poster: '/community/0N.jpg', alt: 'Текстура крема на пальце, снятая крупным планом' }],
+    // TODO: снять ролик, заменить type на 'video'
+    media: [{ type: 'image', src: '/community/05.jpg', alt: 'Текстура крема на пальце, снятая крупным планом' }],
     body: {
       overview: 'Минималистичный обзор косметического средства, акцентирующий внимание на текстуре и премиальности упаковки через макросъемку.',
       breakdown: 'Ключевые слова "macro review" и "texture of the product" позволяют нейросети детализировать крем, создавая убедительное визуальное описание товара.',
@@ -403,7 +408,8 @@ export const promptItems: PromptItem[] = [
     subModelId: 'kling-3-0',
     params: { aspect: '9:16', duration: '5s', resolution: '1080p' },
     // TODO: снять ролик и постер по этому промпту
-    media: [{ type: 'video', src: '', poster: '/community/0N.jpg', alt: 'Современная настольная лампа в уютном рабочем уголке' }],
+    // TODO: снять ролик, заменить type на 'video'
+    media: [{ type: 'image', src: '/community/06.jpg', alt: 'Современная настольная лампа в уютном рабочем уголке' }],
     body: {
       overview: 'Обзор интерьерного гаджета в естественной среде, демонстрирующий его функциональность и дизайн в контексте рабочего места.',
       breakdown: 'Мы задаем "warm glow" и "modern interior background", чтобы создать уютную атмосферу, а "soft zoom-in" подчеркивает важность объекта.',
@@ -426,7 +432,8 @@ export const promptItems: PromptItem[] = [
     subModelId: 'kling-3-0',
     params: { aspect: '16:9', duration: '5s', resolution: '1080p' },
     // TODO: снять ролик и постер по этому промпту
-    media: [{ type: 'video', src: '', poster: '/community/0N.jpg', alt: 'Заснеженные вершины гор в лучах заходящего солнца' }],
+    // TODO: снять ролик, заменить type на 'video'
+    media: [{ type: 'image', src: '/community/07.jpg', alt: 'Заснеженные вершины гор в лучах заходящего солнца' }],
     body: {
       overview: 'Эпический кадр горных вершин с использованием приема аэросъемки, подчеркивающий масштаб и величие природы в лучах закатного солнца.',
       breakdown: '"Aerial shot" и "drone flyover" задают ракурс, а "golden hour" и "clouds floating below" добавляют глубину и объем композиции.',
@@ -449,7 +456,8 @@ export const promptItems: PromptItem[] = [
     subModelId: 'kling-3-0',
     params: { aspect: '16:9', duration: '5s', resolution: '1080p' },
     // TODO: снять ролик и постер по этому промпту
-    media: [{ type: 'video', src: '', poster: '/community/0N.jpg', alt: 'Бурные волны океана у подножия скал на закате' }],
+    // TODO: снять ролик, заменить type на 'video'
+    media: [{ type: 'image', src: '/community/08.jpg', alt: 'Бурные волны океана у подножия скал на закате' }],
     body: {
       overview: 'Мощный и атмосферный кадр океанского побережья, передающий энергию стихии через динамику волн и насыщенные закатные цвета.',
       breakdown: '"View from a cliff" и "waves crashing" создают композицию, а "dramatic colors" усиливают эмоциональное воздействие кадра.',
@@ -472,7 +480,8 @@ export const promptItems: PromptItem[] = [
     subModelId: 'kling-3-0',
     params: { aspect: '16:9', duration: '5s', resolution: '1080p' },
     // TODO: снять ролик и постер по этому промпту
-    media: [{ type: 'video', src: '', poster: '/community/0N.jpg', alt: 'Уютная мощеная улочка старого города вечером' }],
+    // TODO: снять ролик, заменить type на 'video'
+    media: [{ type: 'image', src: '/community/01.jpg', alt: 'Уютная мощеная улочка старого города вечером' }],
     body: {
       overview: 'Атмосферный кадр прогулки по историческому центру, погружающий зрителя в уютную вечернюю обстановку старого европейского города.',
       breakdown: '"Cinematic walk" и "evening lights" задают настроение, а "blurred people" фокусирует внимание на архитектуре и текстуре брусчатки.',
@@ -495,7 +504,8 @@ export const promptItems: PromptItem[] = [
     subModelId: 'kling-3-0',
     params: { aspect: '16:9', duration: '5s', resolution: '1080p' },
     // TODO: снять ролик и постер по этому промпту
-    media: [{ type: 'video', src: '', poster: '/community/0N.jpg', alt: 'Мужчина в плаще под дождем на темной улице' }],
+    // TODO: снять ролик, заменить type на 'video'
+    media: [{ type: 'image', src: '/community/02.jpg', alt: 'Мужчина в плаще под дождем на темной улице' }],
     body: {
       overview: 'Классический нуарный кадр, воссоздающий атмосферу старого детективного кино через контрастное освещение и использование дыма.',
       breakdown: 'Использование "noir style" и "deep shadows" критично. Описание дыма ("cigarette smoke in the lamp light") придает кадру объем и реалистичность.',
@@ -518,7 +528,8 @@ export const promptItems: PromptItem[] = [
     subModelId: 'kling-3-0',
     params: { aspect: '16:9', duration: '5s', resolution: '1080p' },
     // TODO: снять ролик и постер по этому промпту
-    media: [{ type: 'video', src: '', poster: '/community/0N.jpg', alt: 'Голографические данные в технологичной лаборатории' }],
+    // TODO: снять ролик, заменить type на 'video'
+    media: [{ type: 'image', src: '/community/03.jpg', alt: 'Голографические данные в технологичной лаборатории' }],
     body: {
       overview: 'Технологичный кадр из научно-фантастического фильма, демонстрирующий работу с голограммами в стерильной обстановке лаборатории.',
       breakdown: '"Data holograms" и "cool blue light" — основа эстетики научной фантастики в кино.',
@@ -541,7 +552,8 @@ export const promptItems: PromptItem[] = [
     subModelId: 'kling-3-0',
     params: { aspect: '16:9', duration: '5s', resolution: '1080p' },
     // TODO: снять ролик и постер по этому промпту
-    media: [{ type: 'video', src: '', poster: '/community/0N.jpg', alt: 'Осенний парк, падающие листья и грустный человек на скамейке' }],
+    // TODO: снять ролик, заменить type на 'video'
+    media: [{ type: 'image', src: '/community/04.jpg', alt: 'Осенний парк, падающие листья и грустный человек на скамейке' }],
     body: {
       overview: 'Лиричный и эмоциональный кадр из драмы, использующий смену времен года для усиления драматического эффекта персонажа.',
       breakdown: '"Slow motion" для падающих листьев и "deep emotions" помогают передать настроение меланхолии.',
