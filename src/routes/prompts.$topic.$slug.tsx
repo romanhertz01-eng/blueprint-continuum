@@ -189,7 +189,7 @@ function PromptDetailPage() {
 
         <div className="mt-14 pt-12 border-t border-border">
           <PromptMasonry 
-            items={getPublishedItems().filter(i => i.slug !== item.slug && (i.topicSlug === item.topicSlug || item.extraTopicSlugs?.includes(i.topicSlug)))} 
+            items={getPublishedItems().filter((i: PromptItem) => i.slug !== item.slug && (i.topicSlug === item.topicSlug || item.extraTopicSlugs?.includes(i.topicSlug)))} 
             heading="Ещё промпты" 
           />
           <TopicCloud topics={topics} />
