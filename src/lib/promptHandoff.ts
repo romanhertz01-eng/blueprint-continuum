@@ -10,6 +10,9 @@ export interface PromptHandoff {
   subModelId?: string;
   aspect?: string;
   quality?: string;
+  duration?: string;
+  resolution?: string;
+  quantity?: number;
   sourceSlug?: string;   // слаг промпта, откуда пришли — для аналитики
   ts: number;
 }

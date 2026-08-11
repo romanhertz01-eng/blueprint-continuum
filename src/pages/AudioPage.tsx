@@ -103,6 +103,8 @@ const welcomeScenarios: WelcomeScenario[] = [
   },
 ];
 
+import { readPromptHandoff, clearPromptHandoff } from "@/lib/promptHandoff";
+
 const AudioPage = () => {
   const [prompt, setPrompt] = useState("");
   const [selectedModel, setSelectedModel] = useState<"elevenlabs" | "suno">("elevenlabs");
@@ -128,6 +130,21 @@ const AudioPage = () => {
   const [capsuleOpen, setCapsuleOpen] = useState(false);
 
   useEffect(() => {
+    const handoff = readPromptHandoff('audio');
+    if (handoff) {
+      if (handoff.prompt) setPrompt(handoff.prompt);
+      if (handoff.providerId === "elevenlabs" || handoff.providerId === "suno") {
+        setSelectedModel(handoff.providerId);
+      }
+      clearPromptHandoff();
+      sessionStorage.removeItem("era2_draft_audio");
+    } else {
+      const saved = sessionStorage.getItem("era2_draft_audio");
+      if (saved) setPrompt(saved);
+    }
+  }, []);
+
+  useEffect(() => {
     if (!capsuleOpen) return;
     const handler = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
@@ -144,10 +161,6 @@ const AudioPage = () => {
     }
   }, [generations]);
 
-  useEffect(() => {
-    const saved = sessionStorage.getItem("era2_draft_audio");
-    if (saved) setPrompt(saved);
-  }, []);
   useEffect(() => {
     sessionStorage.setItem("era2_draft_audio", prompt);
   }, [prompt]);

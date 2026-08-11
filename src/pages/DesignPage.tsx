@@ -151,9 +151,9 @@ const DesignPage = () => {
         }
       }
       
-      if (handoff.params?.aspect) setAspectRatio(handoff.params.aspect);
-      if (handoff.params?.quality) setQuality(handoff.params.quality);
-      if (handoff.params?.quantity) setQuantity(handoff.params.quantity);
+      if (handoff.aspect) setAspectRatio(handoff.aspect);
+      if (handoff.quality) setQuality(handoff.quality);
+      if (handoff.quantity) setQuantity(handoff.quantity);
       
       clearPromptHandoff();
     }

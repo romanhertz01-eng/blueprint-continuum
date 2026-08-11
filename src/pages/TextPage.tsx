@@ -83,6 +83,8 @@ function useColors() {
   };
 }
 
+import { readPromptHandoff, clearPromptHandoff } from "@/lib/promptHandoff";
+
 const TextPage = () => {
   const [providerId, setProviderId] = useState("chatgpt");
   const [subModelId, setSubModelId] = useState("gpt-5.2");
@@ -95,6 +97,26 @@ const TextPage = () => {
   const [systemDrawerOpen, setSystemDrawerOpen] = useState(false);
   const [systemPrompt, setSystemPrompt] = useState("");
   const [inputFocused, setInputFocused] = useState(false);
+
+  useEffect(() => {
+    const handoff = readPromptHandoff('text');
+    if (handoff) {
+      if (handoff.prompt) setInput(handoff.prompt);
+      
+      if (handoff.providerId) {
+        const p = textProviders.find(pr => pr.id === handoff.providerId);
+        if (p) {
+          setProviderId(handoff.providerId);
+          if (handoff.subModelId) {
+            const s = p.subModels.find(sm => sm.id === handoff.subModelId);
+            if (s) setSubModelId(handoff.subModelId);
+          }
+        }
+      }
+      
+      clearPromptHandoff();
+    }
+  }, []);
 
   const chatEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
