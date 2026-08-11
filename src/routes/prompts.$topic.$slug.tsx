@@ -120,55 +120,133 @@ function PromptDetailPage() {
         
         <div className="border-t border-border w-full mb-8" />
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
           {/* LEFT COLUMN - Media */}
-          <div>
-            {media?.src && (media.type === 'video' ? (
-              <video src={media.src} poster={media.poster} controls className="max-w-full h-auto rounded-xl border border-border" />
-            ) : (
-              <img src={media.src} alt={item.title} className="max-w-full h-auto rounded-xl border border-border" />
-            ))}
-          </div>
-
-          {/* RIGHT COLUMN - Prompt */}
-          <div>
-            <div className="flex items-center justify-between mb-3">
-              <h2 className="text-[22px] font-semibold text-foreground">Промпт</h2>
-            </div>
-
-            <div className="bg-muted/30 border border-border rounded-xl p-5 text-[15px] leading-relaxed text-foreground whitespace-pre-wrap">
-              {item.promptRu}
+          <div className="space-y-6">
+            <div className="overflow-hidden">
+              {media?.src && (media.type === 'video' ? (
+                <video src={media.src} poster={media.poster} controls className="max-w-full h-auto rounded-xl border border-border" />
+              ) : (
+                <img src={media.src} alt={item.title} className="max-w-full h-auto rounded-xl border border-border" />
+              ))}
             </div>
 
             {item.negativePrompt && (
-              <div className="mt-3 text-[13px] text-muted-foreground">
-                Негативный промпт: <span className="text-foreground/80">{item.negativePrompt}</span>
+              <div className="space-y-2">
+                <span className="text-[12px] font-bold tracking-[0.1em] uppercase text-muted-foreground/80">
+                  Негативный промпт
+                </span>
+                <div className="bg-muted/30 border border-border rounded-lg p-4 text-[14px] text-foreground/90 leading-relaxed italic">
+                  {item.negativePrompt}
+                </div>
               </div>
             )}
+          </div>
 
-            <div className="flex flex-wrap gap-3 mt-4">
-              <CopyPromptButton text={item.promptRu} />
-              <TryPromptButton item={item} label="Открыть в генераторе" />
+          {/* RIGHT COLUMN - Prompt & Details */}
+          <div className="space-y-8">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <h2 className="text-[22px] font-semibold text-foreground">Промпт</h2>
+              </div>
+
+              <div className="bg-muted/30 border border-border rounded-xl p-5 text-[15px] leading-relaxed text-foreground whitespace-pre-wrap">
+                {item.promptRu}
+              </div>
+
+              <div className="flex flex-wrap gap-3">
+                <CopyPromptButton text={item.promptRu} />
+                <TryPromptButton item={item} label="Открыть в генераторе" />
+              </div>
+
+              <div className="flex flex-col gap-1">
+                {credits !== null && (
+                  <div className="text-[13px] text-muted-foreground">
+                    Стоимость: <span className="text-foreground font-medium">{credits} кр</span> за генерацию
+                  </div>
+                )}
+                <div className="text-[13px] text-muted-foreground">
+                  Теги: {' '}
+                  <Link to="/prompts/$topic" params={{ topic: item.topicSlug }} className="underline hover:text-foreground">
+                    {mainTopic?.title}
+                  </Link>
+                  {item.extraTopicSlugs?.map((slug: string) => {
+                    const topic = topics.find(t => t.slug === slug);
+                    return topic ? (
+                      <span key={slug}>, <Link to="/prompts/$topic" params={{ topic: slug }} className="underline hover:text-foreground">{topic.title}</Link></span>
+                    ) : null;
+                  })}
+                </div>
+              </div>
             </div>
 
-            {credits !== null && (
-              <div className="mt-4 text-[13px] text-muted-foreground">
-                Стоимость: {credits} кр
+            {/* Параметры генерации */}
+            {(item.params && Object.values(item.params).some(v => v) || item.subModelId) && (
+              <div className="space-y-3">
+                <h3 className="text-[12px] font-bold tracking-[0.2em] uppercase text-muted-foreground">
+                  Параметры генерации
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {item.subModelId && (
+                    <div className="px-3 py-1.5 bg-muted/40 border border-border rounded-lg text-[13px] text-foreground font-medium">
+                      Модель: {modelName}
+                    </div>
+                  )}
+                  {item.params?.aspect && (
+                    <div className="px-3 py-1.5 bg-muted/40 border border-border rounded-lg text-[13px] text-foreground">
+                      Формат: {item.params.aspect}
+                    </div>
+                  )}
+                  {item.params?.quality && (
+                    <div className="px-3 py-1.5 bg-muted/40 border border-border rounded-lg text-[13px] text-foreground">
+                      Качество: {item.params.quality}
+                    </div>
+                  )}
+                  {item.params?.duration && (
+                    <div className="px-3 py-1.5 bg-muted/40 border border-border rounded-lg text-[13px] text-foreground">
+                      Длительность: {item.params.duration}
+                    </div>
+                  )}
+                  {item.params?.resolution && (
+                    <div className="px-3 py-1.5 bg-muted/40 border border-border rounded-lg text-[13px] text-foreground">
+                      Разрешение: {item.params.resolution}
+                    </div>
+                  )}
+                  {item.params?.quantity && (
+                    <div className="px-3 py-1.5 bg-muted/40 border border-border rounded-lg text-[13px] text-foreground">
+                      Кол-во: {item.params.quantity}
+                    </div>
+                  )}
+                </div>
               </div>
             )}
 
-            <div className="mt-6 text-[14px] text-muted-foreground">
-              Теги: {' '}
-              <Link to="/prompts/$topic" params={{ topic: item.topicSlug }} className="underline hover:text-foreground">
-                {mainTopic?.title}
-              </Link>
-              {item.extraTopicSlugs?.map((slug: string) => {
-                const topic = topics.find(t => t.slug === slug);
-                return topic ? (
-                  <span key={slug}>, <Link to="/prompts/$topic" params={{ topic: slug }} className="underline hover:text-foreground">{topic.title}</Link></span>
-                ) : null;
-              })}
-              , {modelName}, {item.params?.aspect || 'стандарт'}
+            {/* Разбор промпта */}
+            <div className="space-y-6">
+              {item.body.overview && (
+                <div className="space-y-2">
+                  <h3 className="text-[15px] font-semibold text-foreground">Что на результате</h3>
+                  <p className="text-[14px] leading-relaxed text-muted-foreground">{item.body.overview}</p>
+                </div>
+              )}
+              {item.body.breakdown && (
+                <div className="space-y-2">
+                  <h3 className="text-[15px] font-semibold text-foreground">Разбор промпта</h3>
+                  <p className="text-[14px] leading-relaxed text-muted-foreground">{item.body.breakdown}</p>
+                </div>
+              )}
+              {item.body.howToChange && (
+                <div className="space-y-2">
+                  <h3 className="text-[15px] font-semibold text-foreground">Как изменить под себя</h3>
+                  <p className="text-[14px] leading-relaxed text-muted-foreground">{item.body.howToChange}</p>
+                </div>
+              )}
+              {item.body.mistakes && (
+                <div className="space-y-2">
+                  <h3 className="text-[15px] font-semibold text-foreground">Частые ошибки</h3>
+                  <p className="text-[14px] leading-relaxed text-muted-foreground">{item.body.mistakes}</p>
+                </div>
+              )}
             </div>
           </div>
         </div>
