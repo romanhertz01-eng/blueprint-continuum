@@ -14,6 +14,8 @@ import {
   MIN_ITEMS_FOR_INDEX
 } from '@/data/prompts';
 import { PromptCard } from '@/components/prompts/PromptCard';
+import { useLoadMore } from '@/components/prompts/useLoadMore';
+import { TopicCloud } from '@/components/prompts/TopicCloud';
 import { toolPages } from '@/data/toolPages';
 
 export const Route = createFileRoute('/prompts/$topic/')({
@@ -110,6 +112,7 @@ function PromptHandoffPage() {
 
 function CategoryPage({ data }: { data: Extract<ReturnType<typeof Route.useLoaderData>, { type: 'category' }> }) {
   const { category, items, topics, allTopics } = data;
+  const { visible, hasMore, remaining, showMore } = useLoadMore(items);
   
   const jsonLd = {
     "@context": "https://schema.org",
@@ -150,11 +153,22 @@ function CategoryPage({ data }: { data: Extract<ReturnType<typeof Route.useLoade
             {category.description}
           </p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-16">
-            {items.map((item: PromptItem) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-12">
+            {visible.map((item: PromptItem) => (
               <PromptCard key={item.slug} item={item} topics={allTopics} />
             ))}
           </div>
+
+          {hasMore && (
+            <div className="flex justify-center mb-16">
+              <button
+                onClick={showMore}
+                className="inline-flex h-11 items-center justify-center rounded-lg border border-border bg-card px-8 text-sm font-medium text-foreground transition-colors hover:bg-muted/30 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+              >
+                Показать ещё ({remaining})
+              </button>
+            </div>
+          )}
 
           {topics.length > 0 && (
             <section>
@@ -173,6 +187,7 @@ function CategoryPage({ data }: { data: Extract<ReturnType<typeof Route.useLoade
               </div>
             </section>
           )}
+          <TopicCloud topics={allTopics} />
         </div>
       </main>
       <Footer />
@@ -182,6 +197,7 @@ function CategoryPage({ data }: { data: Extract<ReturnType<typeof Route.useLoade
 
 function TopicPage({ data }: { data: Extract<ReturnType<typeof Route.useLoaderData>, { type: 'topic' }> }) {
   const { topic, items, allTopics, relatedTopics, relatedTools } = data;
+  const { visible, hasMore, remaining, showMore } = useLoadMore(items);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -225,11 +241,22 @@ function TopicPage({ data }: { data: Extract<ReturnType<typeof Route.useLoaderDa
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-20">
-            {items.map((item: PromptItem) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-12">
+            {visible.map((item: PromptItem) => (
               <PromptCard key={item.slug} item={item} topics={allTopics} />
             ))}
           </div>
+
+          {hasMore && (
+            <div className="flex justify-center mb-20">
+              <button
+                onClick={showMore}
+                className="inline-flex h-11 items-center justify-center rounded-lg border border-border bg-card px-8 text-sm font-medium text-foreground transition-colors hover:bg-muted/30 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+              >
+                Показать ещё ({remaining})
+              </button>
+            </div>
+          )}
 
           {relatedTools.length > 0 && (
             <section className="mb-20">
@@ -277,6 +304,7 @@ function TopicPage({ data }: { data: Extract<ReturnType<typeof Route.useLoaderDa
               </div>
             </section>
           )}
+          <TopicCloud topics={allTopics} />
         </div>
       </main>
       <Footer />
