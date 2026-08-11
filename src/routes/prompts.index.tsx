@@ -1,13 +1,16 @@
 import { ORIGIN } from "@/lib/origin";
 import { createFileRoute, Link } from '@tanstack/react-router';
-import { ChevronRight } from 'lucide-react';
+import { Search, X } from 'lucide-react';
 import { Footer } from '@/components/shared/Footer';
-import { getPublishedItems, getPublishedTopics, countItemsByCategory, getCategories, PromptItem } from '@/data/prompts';
+import { getPublishedItems, getPublishedTopics, countItemsByCategory, getCategories, PromptItem, getProvidersWithPrompts } from '@/data/prompts';
 import { CategoryCard } from '@/components/prompts/CategoryCard';
 import { PromptMosaicTile } from '@/components/prompts/PromptMosaicTile';
 import { useLoadMore } from '@/components/prompts/useLoadMore';
 import { TopicCloud } from '@/components/prompts/TopicCloud';
 import { useState, useMemo } from 'react';
+import { textProviders } from '@/data/textModels';
+import { imageProviders } from '@/data/imageModels';
+import { videoProviders } from '@/data/videoModels';
 
 const TITLE = 'Библиотека промптов для нейросетей — готовые примеры | ERA2.ai';
 const DESCRIPTION = 'Библиотека лучших промптов для ChatGPT, Midjourney, Claude и других нейросетей. Бесплатные примеры, копирование без регистрации, быстрый старт генерации в ERA2.';
@@ -35,29 +38,107 @@ function PromptsHub() {
   const topics = getPublishedTopics();
   const categories = getCategories();
   const categoryCounts = countItemsByCategory();
+  const providersWithCounts = useMemo(() => getProvidersWithPrompts().slice(0, 5), []);
+  
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedProvider, setSelectedProvider] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<'new' | 'alpha'>('new');
 
-  const sortedItems = useMemo(() => {
-    return [...allItems].sort((a, b) => {
+  const filteredItems = useMemo(() => {
+    let result = allItems;
+
+    if (selectedProvider) {
+      result = result.filter(item => item.providerId === selectedProvider);
+    }
+
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      result = result.filter(item => {
+        const topic = topics.find(t => t.slug === item.topicSlug);
+        return (
+          item.title.toLowerCase().includes(q) ||
+          item.promptRu.toLowerCase().includes(q) ||
+          (topic?.title.toLowerCase().includes(q))
+        );
+      });
+    }
+
+    return [...result].sort((a, b) => {
       if (sortBy === 'new') return new Date(b.publishedAt || 0).getTime() - new Date(a.publishedAt || 0).getTime();
       return a.title.localeCompare(b.title);
     });
-  }, [allItems, sortBy]);
+  }, [allItems, searchQuery, selectedProvider, sortBy, topics]);
 
-  const { visible, hasMore, remaining, showMore } = useLoadMore<PromptItem>(sortedItems);
+  const { visible, hasMore, remaining, showMore } = useLoadMore<PromptItem>(filteredItems);
+
+  const getProviderName = (id: string) => {
+    const p = [...textProviders, ...imageProviders, ...videoProviders].find(provider => provider.id === id);
+    return p?.name || id;
+  };
+
+  const handleReset = () => {
+    setSearchQuery('');
+    setSelectedProvider(null);
+  };
 
   return (
     <>
-      <section className="max-w-7xl mx-auto px-6 pt-12 pb-8">
-        <nav className="flex items-center gap-1.5 text-[13px] text-muted-foreground mb-6">
-          <Link to="/" className="hover:text-foreground transition-colors">Главная</Link>
-          <ChevronRight className="w-3 h-3" />
-          <span className="text-foreground/70">Промпты</span>
-        </nav>
-        <h1 className="text-4xl md:text-[48px] font-bold leading-tight mb-4 text-foreground">Библиотека промптов ЭРА2</h1>
+      <section className="relative w-screen h-[420px] md:h-[520px] flex items-center justify-center overflow-hidden">
+        <img 
+          src="/community/03.jpg" 
+          alt="Background" 
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-black/65" />
+        
+        <div className="relative z-10 w-full max-w-3xl mx-auto px-4 text-center">
+          <h1 className="text-[34px] md:text-[56px] font-bold text-white mb-2 md:mb-4 leading-tight">
+            Библиотека промптов
+          </h1>
+          <p className="text-lg md:text-[22px] text-white mb-4 md:mb-6 font-medium">
+            Готовые промпты для всех нейросетей ЭРА2
+          </p>
+          <p className="text-[15px] text-white/75 max-w-xl mx-auto mb-8 leading-relaxed">
+            копировать без регистрации, открывать в генераторе одной кнопкой, оплата в рублях без VPN.
+          </p>
+
+          <div className="relative max-w-2xl mx-auto mb-8">
+            <input 
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Поиск по промптам и темам"
+              className="w-full h-14 pl-6 pr-32 bg-white rounded-full text-black placeholder:text-muted-foreground outline-none text-lg border-none"
+            />
+            <button className="absolute right-1.5 top-1.5 h-11 px-8 bg-black text-white rounded-full font-medium hover:bg-black/80 transition-colors">
+              Найти
+            </button>
+          </div>
+
+          <div className="flex flex-col items-center gap-3">
+            <span className="text-[12px] text-white/60 font-bold tracking-[0.2em] uppercase">
+              ПОИСК ПО МОДЕЛИ
+            </span>
+            <div className="flex flex-wrap justify-center gap-2">
+              {providersWithCounts.map(({ providerId }) => (
+                <button
+                  key={providerId}
+                  onClick={() => setSelectedProvider(selectedProvider === providerId ? null : providerId)}
+                  className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-all ${
+                    selectedProvider === providerId 
+                      ? 'bg-white text-black border-white' 
+                      : 'bg-white/15 text-white border-white/30 hover:bg-white/25'
+                  }`}
+                >
+                  {getProviderName(providerId)}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
       </section>
 
-      <section className="max-w-7xl mx-auto px-6 mb-12">
+      <section className="max-w-7xl mx-auto px-6 mt-12 mb-12">
         <h2 className="text-2xl font-bold mb-6 text-foreground">Категории</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
           {categories.map(c => <CategoryCard key={c.slug} category={c} count={categoryCounts[c.slug as keyof typeof categoryCounts] || 0} />)}
@@ -67,7 +148,10 @@ function PromptsHub() {
       <section className="w-screen pb-20 overflow-x-hidden">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex items-center justify-between mb-6">
-            <div className="text-sm font-medium">Все промпты <span className="text-muted-foreground ml-1">{allItems.length}</span></div>
+            <div className="text-sm font-medium">
+              {searchQuery || selectedProvider ? 'Найдено промптов' : 'Все промпты'} 
+              <span className="text-muted-foreground ml-1">{filteredItems.length}</span>
+            </div>
             <select 
               value={sortBy} 
               onChange={(e) => setSortBy(e.target.value as any)}
@@ -79,11 +163,24 @@ function PromptsHub() {
           </div>
         </div>
 
-        <div className="w-screen mb-12">
-          <div style={{ columnWidth: '320px', columnGap: '3px', padding: '0 3px' }}>
-            {visible.map((item) => <PromptMosaicTile key={item.slug} item={item} topics={topics} />)}
+        {filteredItems.length > 0 ? (
+          <div className="w-screen mb-12">
+            <div style={{ columnWidth: '320px', columnGap: '3px', padding: '0 3px' }}>
+              {visible.map((item) => <PromptMosaicTile key={item.slug} item={item} topics={topics} />)}
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="max-w-7xl mx-auto px-6 py-20 text-center">
+            <p className="text-xl text-muted-foreground mb-6">Ничего не найдено</p>
+            <button 
+              onClick={handleReset}
+              className="h-11 px-8 rounded-full bg-primary text-primary-foreground font-medium hover:opacity-90 transition-opacity flex items-center gap-2 mx-auto"
+            >
+              <X className="w-4 h-4" />
+              Сбросить
+            </button>
+          </div>
+        )}
 
         <div className="max-w-7xl mx-auto px-6">
           {hasMore && (
