@@ -155,7 +155,7 @@ function PromptItemPage() {
                     )}
                     <div className="flex items-center gap-2">
                       <CopyPromptButton text={displayPrompt} />
-                      <TryPromptButton item={item} showLabel className="h-8 px-3 text-xs" />
+                      <TryPromptButton item={item} label="Открыть в генераторе" className="h-8 px-3 text-xs" />
                     </div>
                   </div>
                 </div>
@@ -209,7 +209,7 @@ function PromptItemPage() {
                   <h4 className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-3">Темы</h4>
                   <div className="flex flex-wrap gap-2">
                     {[item.topicSlug, ...(item.extraTopicSlugs || [])].map(slug => {
-                      const t = allTopics.find(x => x.slug === slug);
+                      const t = allTopics.find((x: { slug: string }) => x.slug === slug);
                       if (!t) return null;
                       return (
                         <Link 
