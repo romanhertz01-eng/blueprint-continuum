@@ -177,9 +177,11 @@ function PromptDetailPage() {
                     ) : null;
                   })}
                 </div>
+              </div>
             </div>
           </div>
         </div>
+
 
         <div className="mt-14 pt-12 border-t border-border">
           <h2 className="mb-8 text-2xl font-bold tracking-tight text-foreground md:text-3xl">
