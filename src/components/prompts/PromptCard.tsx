@@ -66,7 +66,7 @@ export function PromptCard({ item, topics }: PromptCardProps) {
         )}
         
         <div className="absolute top-2 left-2 px-1.5 py-0.5 rounded bg-card text-[11px] font-bold uppercase tracking-wider">{modelName}</div>
-        {item.category === 'video' && <div className="absolute bottom-2 right-2 px-1.5 py-0.5 rounded bg-card/80 text-[10px]">{item.params.duration}</div>}
+        {item.category === 'video' && <div className="absolute bottom-2 right-2 px-1.5 py-0.5 rounded bg-card/80 text-[10px]">{item.params?.duration}</div>}
         
         <div className={cn("absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center gap-2 transition-opacity duration-300", isHovered ? "opacity-100" : "opacity-0")}>
            <CopyPromptButton text={item.promptRu} />
@@ -87,7 +87,7 @@ export function PromptCard({ item, topics }: PromptCardProps) {
         {item.category === 'text' && (
           <div className="text-[11px] font-mono bg-muted/30 p-2 rounded mb-2 line-clamp-5">{item.promptRu}</div>
         )}
-        <div className="text-[11px] text-muted-foreground">{mainTopic?.title} · {item.category === 'text' ? `${item.promptRu.length} знаков` : item.params.aspect || ''}</div>
+        <div className="text-[11px] text-muted-foreground">{mainTopic?.title} · {item.category === 'text' ? `${item.promptRu.length} знаков` : item.params?.aspect || ''}</div>
       </div>
     </Link>
   );
