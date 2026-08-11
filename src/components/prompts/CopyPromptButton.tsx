@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 interface CopyPromptButtonProps {
   text: string;
   className?: string;
+  children?: React.ReactNode;
 }
 
 export function CopyPromptButton({ text, className }: CopyPromptButtonProps) {
