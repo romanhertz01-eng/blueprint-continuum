@@ -21,6 +21,7 @@ export const Route = createFileRoute('/prompts/$topic/$slug')({
     return { item };
   },
   head: ({ loaderData }) => {
+    if (!loaderData?.item) return {};
     const { item } = loaderData;
     const title = `${item.title} — Библиотека промптов ERA2`;
     const description = item.body.overview.slice(0, 160);
