@@ -2,7 +2,8 @@ import { ORIGIN } from "@/lib/origin";
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { ChevronRight } from 'lucide-react';
 import { Footer } from '@/components/shared/Footer';
-import { getPublishedItems, getPublishedTopics } from '@/data/prompts';
+import { getPublishedItems, getPublishedTopics, countItemsByCategory, getCategories } from '@/data/prompts';
+import { CategoryCard } from '@/components/prompts/CategoryCard';
 import { PromptCard } from '@/components/prompts/PromptCard';
 
 const TITLE = 'Библиотека промптов для нейросетей — готовые примеры | ERA2.ai';
