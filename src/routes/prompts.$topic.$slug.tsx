@@ -10,7 +10,7 @@ import { PromptMasonry } from '@/components/prompts/PromptMasonry';
 import { TopicCloud } from '@/components/prompts/TopicCloud';
 import { Footer } from '@/components/shared/Footer';
 import { ORIGIN } from '@/lib/origin';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 
 export const Route = createFileRoute('/prompts/$topic/$slug')({
@@ -74,7 +74,7 @@ function PromptDetailPage() {
   const { item } = Route.useLoaderData();
   const topics = getPublishedTopics();
   const mainTopic = getTopicBySlug(item.topicSlug);
-  const [lang, setLang] = useState<'RU' | 'EN'>('RU');
+  // Removed lang state since we only show RU now
   
   const modelName = getModelName(item.providerId, item.category);
   const credits = getCredits(item.providerId, item.subModelId, item.category);
@@ -123,35 +123,21 @@ function PromptDetailPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
           {/* LEFT COLUMN - Media */}
           <div>
-            <div className="max-h-[820px] w-full overflow-hidden rounded-xl border border-border bg-muted/20">
-              {item.category === 'video' ? (
-                <video src={media?.src} poster={media?.poster} controls className="w-full h-full object-cover" />
-              ) : (
-                <img src={media?.src} alt={item.title} className="w-full h-full object-cover" />
-              )}
-            </div>
+            {media?.src && (media.type === 'video' ? (
+              <video src={media.src} poster={media.poster} controls className="max-w-full h-auto rounded-xl border border-border" />
+            ) : (
+              <img src={media.src} alt={item.title} className="max-w-full h-auto rounded-xl border border-border" />
+            ))}
           </div>
 
           {/* RIGHT COLUMN - Prompt */}
           <div>
             <div className="flex items-center justify-between mb-3">
               <h2 className="text-[22px] font-semibold text-foreground">Промпт</h2>
-              {item.promptEn && (
-                <div className="flex bg-muted/50 rounded-md p-0.5 border border-border">
-                  <button 
-                    onClick={() => setLang('RU')}
-                    className={cn("px-2 py-1 text-[11px] font-bold rounded transition-all", lang === 'RU' ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground")}
-                  >RU</button>
-                  <button 
-                    onClick={() => setLang('EN')}
-                    className={cn("px-2 py-1 text-[11px] font-bold rounded transition-all", lang === 'EN' ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground")}
-                  >EN</button>
-                </div>
-              )}
             </div>
 
             <div className="bg-muted/30 border border-border rounded-xl p-5 text-[15px] leading-relaxed text-foreground whitespace-pre-wrap">
-              {lang === 'RU' ? item.promptRu : item.promptEn}
+              {item.promptRu}
             </div>
 
             {item.negativePrompt && (
@@ -161,7 +147,7 @@ function PromptDetailPage() {
             )}
 
             <div className="flex flex-wrap gap-3 mt-4">
-              <CopyPromptButton text={lang === 'RU' ? item.promptRu : item.promptEn!} />
+              <CopyPromptButton text={item.promptRu} />
               <TryPromptButton item={item} label="Открыть в генераторе" />
             </div>
 
