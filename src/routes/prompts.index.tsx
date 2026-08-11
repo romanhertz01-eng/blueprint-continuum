@@ -64,33 +64,37 @@ function PromptsHub() {
         </div>
       </section>
 
-      <section className="max-w-7xl mx-auto px-6 pb-20">
-        <div className="flex items-center justify-between mb-6">
-          <div className="text-sm font-medium">Все промпты <span className="text-muted-foreground ml-1">{allItems.length}</span></div>
-          <select 
-            value={sortBy} 
-            onChange={(e) => setSortBy(e.target.value as any)}
-            className="bg-card border border-border rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary outline-none"
-          >
-            <option value="new">Сначала новые</option>
-            <option value="alpha">По алфавиту</option>
-          </select>
-        </div>
-
-        <div className="relative left-1/2 right-1/2 -mx-[50vw] w-screen overflow-hidden mb-12">
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-0 [grid-auto-flow:dense]" style={{ gridAutoRows: "10px" }}>
-            {visible.map((item, idx) => <PromptMosaicTile key={item.slug} item={item} topics={topics} index={idx} />)}
+      <section className="w-screen pb-20 overflow-x-hidden">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex items-center justify-between mb-6">
+            <div className="text-sm font-medium">Все промпты <span className="text-muted-foreground ml-1">{allItems.length}</span></div>
+            <select 
+              value={sortBy} 
+              onChange={(e) => setSortBy(e.target.value as any)}
+              className="bg-card border border-border rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary outline-none"
+            >
+              <option value="new">Сначала новые</option>
+              <option value="alpha">По алфавиту</option>
+            </select>
           </div>
         </div>
 
-        {hasMore && (
-          <div className="flex justify-center mb-20">
-            <button onClick={showMore} className="h-11 px-8 rounded-lg border border-border bg-card text-sm font-medium hover:bg-muted/30">
-              Показать ещё ({remaining})
-            </button>
+        <div className="w-screen mb-12">
+          <div style={{ columnWidth: '320px', columnGap: '3px', padding: '0 3px' }}>
+            {visible.map((item) => <PromptMosaicTile key={item.slug} item={item} topics={topics} />)}
           </div>
-        )}
-        <TopicCloud topics={topics} />
+        </div>
+
+        <div className="max-w-7xl mx-auto px-6">
+          {hasMore && (
+            <div className="flex justify-center mb-20">
+              <button onClick={showMore} className="h-11 px-8 rounded-lg border border-border bg-card text-sm font-medium hover:bg-muted/30">
+                Показать ещё ({remaining})
+              </button>
+            </div>
+          )}
+          <TopicCloud topics={topics} />
+        </div>
       </section>
       <Footer />
     </>
