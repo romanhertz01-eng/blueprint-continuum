@@ -118,6 +118,8 @@ const welcomeScenarios: WelcomeScenario[] = [
   },
 ];
 
+import { readPromptHandoff, clearPromptHandoff } from "@/lib/promptHandoff";
+
 const DesignPage = () => {
   const [prompt, setPrompt] = useState("");
   const [selectedProviderId, setSelectedProviderId] = useState("nano-banana");
@@ -132,6 +134,30 @@ const DesignPage = () => {
   const inputAreaRef = useRef<HTMLDivElement>(null);
   
   const [capsuleOpen, setCapsuleOpen] = useState(false);
+
+  useEffect(() => {
+    const handoff = readPromptHandoff('image');
+    if (handoff) {
+      if (handoff.prompt) setPrompt(handoff.prompt);
+      
+      if (handoff.providerId) {
+        const prov = imageProviders.find(p => p.id === handoff.providerId);
+        if (prov) {
+          setSelectedProviderId(handoff.providerId);
+          if (handoff.subModelId) {
+            const sub = prov.subModels.find(s => s.id === handoff.subModelId);
+            if (sub) setSelectedSubModelId(handoff.subModelId);
+          }
+        }
+      }
+      
+      if (handoff.aspect) setAspectRatio(handoff.aspect);
+      if (handoff.quality) setQuality(handoff.quality);
+      if (handoff.quantity) setQuantity(handoff.quantity);
+      
+      clearPromptHandoff();
+    }
+  }, []);
 
   useEffect(() => {
     if (!capsuleOpen) return;
@@ -156,6 +182,8 @@ const DesignPage = () => {
 
   // Restore draft on mount
   useEffect(() => {
+    const handoff = readPromptHandoff('image');
+    if (handoff) return; // Priority for handoff
     const saved = sessionStorage.getItem("era2_draft_design");
     if (saved) setPrompt(saved);
   }, []);

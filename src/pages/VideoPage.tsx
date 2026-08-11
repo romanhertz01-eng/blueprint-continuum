@@ -93,6 +93,8 @@ const welcomeScenarios: WelcomeScenario[] = [
   },
 ];
 
+import { readPromptHandoff, clearPromptHandoff } from "@/lib/promptHandoff";
+
 const VideoPage = () => {
   const [prompt, setPrompt] = useState("");
   const [selectedProviderId, setSelectedProviderId] = useState("kling");
@@ -109,6 +111,31 @@ const VideoPage = () => {
   const inputAreaRef = useRef<HTMLDivElement>(null);
   
   const [capsuleOpen, setCapsuleOpen] = useState(false);
+
+  useEffect(() => {
+    const handoff = readPromptHandoff('video');
+    if (handoff) {
+      if (handoff.prompt) setPrompt(handoff.prompt);
+      
+      if (handoff.providerId) {
+        const prov = videoProviders.find(p => p.id === handoff.providerId);
+        if (prov) {
+          setSelectedProviderId(handoff.providerId);
+          if (handoff.subModelId) {
+            const sub = prov.subModels.find(s => s.id === handoff.subModelId);
+            if (sub) setSelectedSubModelId(handoff.subModelId);
+          }
+        }
+      }
+      
+      if (handoff.aspect) setAspectRatio(handoff.aspect);
+      if (handoff.duration) setDuration(handoff.duration);
+      if (handoff.resolution) setResolution(handoff.resolution);
+      if (handoff.quality) setQuality(handoff.quality);
+      
+      clearPromptHandoff();
+    }
+  }, []);
 
   useEffect(() => {
     if (!capsuleOpen) return;
@@ -133,6 +160,8 @@ const VideoPage = () => {
   }, [generations]);
 
   useEffect(() => {
+    const handoff = readPromptHandoff('video');
+    if (handoff) return; // Priority for handoff
     const saved = sessionStorage.getItem("era2_draft_video");
     if (saved) setPrompt(saved);
   }, []);
