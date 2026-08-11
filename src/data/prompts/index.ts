@@ -1,7 +1,8 @@
-import { PromptTopic, PromptItem, PromptCategory } from './types';
+import { PromptTopic, PromptItem, PromptCategory, PromptCategoryDef } from './types';
 import { promptTopics } from './topics';
 import { promptItems } from './items';
-import { promptCategories, PromptCategoryDef } from './categories';
+import { promptCategories } from './categories';
+
 
 export * from './types';
 export { promptTopics } from './topics';
