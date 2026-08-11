@@ -42,6 +42,10 @@ export interface PromptItem {
   source: 'editorial' | 'user';   // сейчас всегда 'editorial'
   publishedAt: string;
   updatedAt: string;
+  views: number;
+  likes: number;
+  saves: number;
+  shares: number;
 }
 
 export interface PromptCategoryDef {
