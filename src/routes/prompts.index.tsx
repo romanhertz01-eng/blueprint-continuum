@@ -73,6 +73,20 @@ function PromptsHub() {
         </div>
       </section>
 
+      {/* Categories Grid */}
+      <section className="max-w-7xl mx-auto px-6 mb-12">
+        <h2 className="text-2xl font-bold mb-6 text-foreground">Категории</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+          {categories.map(category => (
+            <CategoryCard 
+              key={category.slug} 
+              category={category} 
+              count={categoryCounts[category.slug as keyof typeof categoryCounts] || 0} 
+            />
+          ))}
+        </div>
+      </section>
+
       {/* Topic Chips */}
       <section className="max-w-7xl mx-auto px-6 mb-10 overflow-x-auto pb-2 scrollbar-hide">
         <div className="flex gap-2 min-w-max">
