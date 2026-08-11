@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { ChevronRight } from 'lucide-react';
-import { getPromptBySlug, getPublishedTopics, getTopicBySlug, PromptItem } from '@/data/prompts';
+import { getPublishedItems, getPublishedTopics, getTopicBySlug, getItemBySlug, PromptItem } from '@/data/prompts';
 import { imageProviders } from '@/data/imageModels';
 import { videoProviders } from '@/data/videoModels';
 import { textProviders } from '@/data/textModels';
@@ -16,7 +16,7 @@ import { cn } from '@/lib/utils';
 export const Route = createFileRoute('/prompts/$topic/$slug')({
   component: PromptDetailPage,
   loader: ({ params }) => {
-    const item = getPromptBySlug(params.slug);
+    const item = getItemBySlug(params.topic, params.slug);
     if (!item) throw new Error('Prompt not found');
     return { item };
   },
@@ -53,17 +53,17 @@ function getModelName(providerId: string, category: string): string {
 function getCredits(providerId: string, subModelId?: string, category?: string): number | null {
   if (category === 'image') {
     const provider = imageProviders.find(p => p.id === providerId);
-    const model = provider?.models.find(m => m.id === subModelId);
+    const model = provider?.subModels.find(m => m.id === subModelId);
     return model?.credits || null;
   }
   if (category === 'video') {
     const provider = videoProviders.find(p => p.id === providerId);
-    const model = provider?.models.find(m => m.id === subModelId);
+    const model = provider?.subModels.find(m => m.id === subModelId);
     return model?.credits || null;
   }
   if (category === 'text') {
     const provider = textProviders.find(p => p.id === providerId);
-    const model = provider?.models.find(m => m.id === subModelId);
+    const model = provider?.subModels.find(m => m.id === subModelId);
     return model?.credits || null;
   }
   return null;
@@ -197,10 +197,4 @@ function PromptDetailPage() {
       <Footer />
     </>
   );
-}
-
-function getPublishedItems(): PromptItem[] {
-  // This would normally come from the data layer, but using the existing getter
-  const { getPublishedItems } = require('@/data/prompts');
-  return getPublishedItems();
 }
