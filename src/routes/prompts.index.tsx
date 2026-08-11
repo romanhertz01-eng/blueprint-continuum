@@ -2,8 +2,8 @@ import { ORIGIN } from "@/lib/origin";
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { Search, X } from 'lucide-react';
 import { Footer } from '@/components/shared/Footer';
-import { getPublishedItems, getPublishedTopics, countItemsByCategory, getCategories, PromptItem, getProvidersWithPrompts } from '@/data/prompts';
-import { CategoryCard } from '@/components/prompts/CategoryCard';
+import { getPublishedItems, getPublishedTopics, countItemsByCategory, getCategories, PromptItem, getProvidersWithPrompts, getItemsByCategory } from '@/data/prompts';
+import { CategoryTile } from '@/components/prompts/CategoryTile';
 import { PromptMosaicTile } from '@/components/prompts/PromptMosaicTile';
 import { useLoadMore } from '@/components/prompts/useLoadMore';
 import { TopicCloud } from '@/components/prompts/TopicCloud';
@@ -39,6 +39,27 @@ function PromptsHub() {
   const categories = getCategories();
   const categoryCounts = countItemsByCategory();
   const providersWithCounts = useMemo(() => getProvidersWithPrompts().slice(0, 5), []);
+  
+  const categoryImages = useMemo(() => {
+    const usedSrcs = new Set<string>();
+    return categories.map(cat => {
+      const items = getItemsByCategory(cat.slug as any);
+      let selectedSrc: string | null = null;
+      for (const item of items) {
+        const src = item.media?.[0]?.src;
+        if (src && !usedSrcs.has(src)) {
+          selectedSrc = src;
+          usedSrcs.add(src);
+          break;
+        }
+      }
+      // fallback
+      if (!selectedSrc && items[0]?.media?.[0]?.src) {
+        selectedSrc = items[0].media[0].src;
+      }
+      return selectedSrc;
+    });
+  }, [categories]);
   
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedProvider, setSelectedProvider] = useState<string | null>(null);
@@ -139,9 +160,16 @@ function PromptsHub() {
       </section>
 
       <section className="max-w-7xl mx-auto px-6 mt-12 mb-12">
-        <h2 className="text-2xl font-bold mb-6 text-foreground">Категории</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-          {categories.map(c => <CategoryCard key={c.slug} category={c} count={categoryCounts[c.slug as keyof typeof categoryCounts] || 0} />)}
+        <h2 className="text-2xl font-bold mb-[20px] text-foreground">Категории</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {categories.map((c, idx) => (
+            <CategoryTile 
+              key={c.slug} 
+              category={c} 
+              count={categoryCounts[c.slug as keyof typeof categoryCounts] || 0} 
+              imageSrc={categoryImages[idx]}
+            />
+          ))}
         </div>
       </section>
 
