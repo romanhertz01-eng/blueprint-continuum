@@ -112,7 +112,7 @@ function PromptHandoffPage() {
 
 function CategoryPage({ data }: { data: Extract<ReturnType<typeof Route.useLoaderData>, { type: 'category' }> }) {
   const { category, items, topics, allTopics } = data;
-  const { visible, hasMore, remaining, showMore } = useLoadMore(items);
+  const { visible, hasMore, remaining, showMore } = useLoadMore<PromptItem>(items);
   
   const jsonLd = {
     "@context": "https://schema.org",
@@ -197,7 +197,7 @@ function CategoryPage({ data }: { data: Extract<ReturnType<typeof Route.useLoade
 
 function TopicPage({ data }: { data: Extract<ReturnType<typeof Route.useLoaderData>, { type: 'topic' }> }) {
   const { topic, items, allTopics, relatedTopics, relatedTools } = data;
-  const { visible, hasMore, remaining, showMore } = useLoadMore(items);
+  const { visible, hasMore, remaining, showMore } = useLoadMore<PromptItem>(items);
 
   const jsonLd = {
     "@context": "https://schema.org",

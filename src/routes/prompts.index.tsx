@@ -55,7 +55,7 @@ function PromptsHub() {
   const topics = getPublishedTopics();
   const categories = getCategories();
   const categoryCounts = countItemsByCategory();
-  const { visible, hasMore, remaining, showMore } = useLoadMore(items);
+  const { visible, hasMore, remaining, showMore } = useLoadMore<PromptItem>(items);
 
   return (
     <>
