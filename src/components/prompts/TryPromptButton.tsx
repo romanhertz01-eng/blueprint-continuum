@@ -11,9 +11,10 @@ interface TryPromptButtonProps {
   item: PromptItem;
   label?: string;
   className?: string;
+  children?: React.ReactNode;
 }
 
-export function TryPromptButton({ item, label = "Попробовать", className }: TryPromptButtonProps) {
+export function TryPromptButton({ item, label = "Попробовать", className, children }: TryPromptButtonProps) {
   const navigate = useNavigate();
   const { isAuthed } = useAuth();
 
