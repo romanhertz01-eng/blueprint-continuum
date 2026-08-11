@@ -8,11 +8,14 @@ import {
   getRelatedItems, 
   getPublishedTopics, 
   PromptItem,
-  getPublishedTopics as getAllTopics 
+  getPublishedTopics as getAllTopics,
+  getPublishedItems
 } from '@/data/prompts';
 import { CopyPromptButton } from '@/components/prompts/CopyPromptButton';
 import { TryPromptButton } from '@/components/prompts/TryPromptButton';
 import { PromptCard } from '@/components/prompts/PromptCard';
+import { PromptMasonry } from '@/components/prompts/PromptMasonry';
+import { TopicCloud } from '@/components/prompts/TopicCloud';
 import { useState } from 'react';
 import { imageProviders } from '@/data/imageModels';
 import { videoProviders } from '@/data/videoModels';
@@ -44,8 +47,13 @@ export const Route = createFileRoute('/prompts/$topic/$slug')({
       const subModel = provider?.subModels.find(s => s.id === subModelId);
       if (subModel) credits = subModel.credits;
     }
+    
+    // Получение всех промптов для Masonry (исключая текущий, сортировка по publishedAt)
+    const masonryItems = getPublishedItems()
+      .filter(i => i.slug !== item.slug)
+      .sort((a, b) => new Date(b.publishedAt || '').getTime() - new Date(a.publishedAt || '').getTime());
 
-    return { item, topic, relatedItems, allTopics, credits };
+    return { item, topic, relatedItems, allTopics, credits, masonryItems };
   },
   component: PromptItemPage,
   head: ({ params, loaderData }) => {
@@ -69,7 +77,7 @@ export const Route = createFileRoute('/prompts/$topic/$slug')({
 });
 
 function PromptItemPage() {
-  const { item, topic, relatedItems, allTopics, credits } = Route.useLoaderData();
+  const { item, topic, relatedItems, allTopics, credits, masonryItems } = Route.useLoaderData();
   const [lang, setLang] = useState<'ru' | 'en'>('ru');
   const [copied, setCopied] = useState(false);
 
@@ -308,6 +316,9 @@ function PromptItemPage() {
               </div>
             </section>
           )}
+
+          <PromptMasonry items={masonryItems} heading="Другие промпты" />
+          <TopicCloud topics={allTopics} />
         </div>
       </main>
       <Footer />

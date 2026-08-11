@@ -2,9 +2,11 @@ import { ORIGIN } from "@/lib/origin";
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { ChevronRight } from 'lucide-react';
 import { Footer } from '@/components/shared/Footer';
-import { getPublishedItems, getPublishedTopics, countItemsByCategory, getCategories } from '@/data/prompts';
+import { getPublishedItems, getPublishedTopics, countItemsByCategory, getCategories, PromptItem } from '@/data/prompts';
 import { CategoryCard } from '@/components/prompts/CategoryCard';
 import { PromptCard } from '@/components/prompts/PromptCard';
+import { useLoadMore } from '@/components/prompts/useLoadMore';
+import { TopicCloud } from '@/components/prompts/TopicCloud';
 
 const TITLE = 'Библиотека промптов для нейросетей — готовые примеры | ERA2.ai';
 const DESCRIPTION = 'Библиотека лучших промптов для ChatGPT, Midjourney, Claude и других нейросетей. Бесплатные примеры, копирование без регистрации, быстрый старт генерации в ERA2.';
@@ -53,6 +55,7 @@ function PromptsHub() {
   const topics = getPublishedTopics();
   const categories = getCategories();
   const categoryCounts = countItemsByCategory();
+  const { visible, hasMore, remaining, showMore } = useLoadMore<PromptItem>(items);
 
   return (
     <>
@@ -111,11 +114,24 @@ function PromptsHub() {
 
       {/* Grid */}
       <section className="max-w-7xl mx-auto px-6 pb-20">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {items.map(item => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-12">
+          {visible.map(item => (
             <PromptCard key={item.slug} item={item} topics={topics} />
           ))}
         </div>
+
+        {hasMore && (
+          <div className="flex justify-center mb-20">
+            <button
+              onClick={showMore}
+              className="inline-flex h-11 items-center justify-center rounded-lg border border-border bg-card px-8 text-sm font-medium text-foreground transition-colors hover:bg-muted/30 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+            >
+              Показать ещё ({remaining})
+            </button>
+          </div>
+        )}
+
+        <TopicCloud topics={topics} />
       </section>
 
       {/* SEO Text Block */}
