@@ -2,17 +2,6 @@ import { PromptTopic } from './types';
 
 export const promptTopics: PromptTopic[] = [
   {
-    slug: 'video',
-    title: 'TEST VIDEO',
-    cardTitle: 'Video',
-    category: 'video',
-    status: 'published',
-    updatedAt: '2026-08-11',
-    seoTitle: 'test',
-    seoDescription: 'test',
-    intro: 'test'
-  },
-  {
     slug: 'avatarka',
     title: 'Промпты для аватарки',
     cardTitle: 'Аватарка',
