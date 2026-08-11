@@ -276,5 +276,282 @@ export const promptItems: PromptItem[] = [
     source: 'editorial',
     publishedAt: '2026-08-11',
     updatedAt: '2026-08-11'
+  },
+  {
+    slug: 'reklama-sport-krossovki',
+    topicSlug: 'reklamnyy-rolik',
+    category: 'video',
+    title: 'Рекламный ролик спортивных кроссовок',
+    promptRu: 'Макро-съемка кроссовок в движении, энергичный наезд камеры, текстура подошвы и шнурков, брызги воды при беге по асфальту, динамичная смена кадров, коммерческий студийный свет с яркими бликами, энергичный темп, профессиональная цветокоррекция, кадр заканчивается на логотипе бренда.',
+    promptEn: 'Macro shot of sneakers in motion, energetic camera zoom-in, texture of the sole and laces, water splashes while running on asphalt, dynamic scene transitions, commercial studio lighting with bright highlights, energetic pace, professional color grading, shot ends on the brand logo.',
+    providerId: 'kling',
+    subModelId: 'kling-3-0',
+    params: { aspect: '16:9', duration: '5s', resolution: '1080p' },
+    // TODO: снять ролик и постер по этому промпту
+    media: [{ type: 'video', src: '', poster: '/community/0N.jpg', alt: 'Кроссовки в динамичном беге по мокрому асфальту с брызгами' }],
+    body: {
+      overview: 'Динамичный рекламный ролик спортивной обуви, построенный на макро-деталях и энергичных переходах, подчеркивающих функциональность и современный дизайн товара.',
+      breakdown: 'Использование слов "macro shot" и "energetic zoom" задает ритм, а упоминание "water splashes" и "studio lighting" добавляет визуальной привлекательности, необходимой для коммерческого продукта.',
+      howToChange: 'Смените тип кроссовок (например, на трекинговые ботинки в горах) или цветовую палитру освещения на более теплую для моделей casual-обуви, сохраняя при этом общую динамику движения камеры.',
+      mistakes: 'Слишком быстрый темп для 5 секунд может привести к размытию деталей. Движение камеры должно быть умеренным, чтобы модель успела проработать текстуры, а не превратила всё в неразборчивый поток пикселей.'
+    },
+    status: 'published',
+    source: 'editorial',
+    publishedAt: '2026-08-12',
+    updatedAt: '2026-08-12'
+  },
+  {
+    slug: 'reklama-kofe-machine',
+    topicSlug: 'reklamnyy-rolik',
+    category: 'video',
+    title: 'Реклама кофемашины: поток кофе',
+    promptRu: 'Крупный план потока свежесваренного кофе в чашку, мягкий наезд камеры, slow motion, пар поднимается вверх, золотистый свет студийного освещения, фактура керамической чашки, уютное настроение, кадр заканчивается общим планом на кофемашину.',
+    promptEn: 'Close-up of freshly brewed coffee flowing into a cup, soft camera zoom-in, slow motion, steam rising upwards, golden studio lighting, texture of the ceramic cup, cozy mood, shot ends with a wide shot of the coffee machine.',
+    providerId: 'kling',
+    subModelId: 'kling-3-0',
+    params: { aspect: '16:9', duration: '5s', resolution: '1080p' },
+    // TODO: снять ролик и постер по этому промпту
+    media: [{ type: 'video', src: '', poster: '/community/0N.jpg', alt: 'Струя кофе наполняет чашку, пар поднимается в золотистом свете' }],
+    body: {
+      overview: 'Премиальное видео для рекламы кофемашины, сфокусированное на процессе налива, теплоте освещения и эстетике кофейного ритуала.',
+      breakdown: 'Слова "slow motion" и "golden lighting" создают атмосферу премиальности, а детализация "ceramic cup" и "steam rising" отвечают за визуальное качество продукта в кадре.',
+      howToChange: 'Замените напиток на холодный коктейль, изменив освещение на более прохладное (blue tint) и ускорив темп съемки для передачи освежающего эффекта.',
+      mistakes: 'Недостаточно плавное движение камеры ("soft zoom") при съемке процесса налива может сделать видео дерганым. Плавность — залог того, что процесс будет выглядеть аппетитно.',
+    },
+    status: 'published',
+    source: 'editorial',
+    publishedAt: '2026-08-12',
+    updatedAt: '2026-08-12'
+  },
+  {
+    slug: 'reklama-smartphone-beauty',
+    topicSlug: 'reklamnyy-rolik',
+    category: 'video',
+    title: 'Реклама бьюти-продукта',
+    promptRu: 'Бьюти-видео, вращение флакона духов в лучах света, плавный облёт камеры, искры и блики на стекле, нежный розовый свет, высокая детализация крышки, элегантное движение, кадр заканчивается крупным планом бренда.',
+    promptEn: 'Beauty video, rotating perfume bottle in beams of light, smooth orbit camera movement, sparkles and highlights on glass, soft pink light, high detail of the cap, elegant motion, shot ends with a close-up of the brand.',
+    providerId: 'kling',
+    subModelId: 'kling-3-0',
+    params: { aspect: '16:9', duration: '5s', resolution: '1080p' },
+    // TODO: снять ролик и постер по этому промпту
+    media: [{ type: 'video', src: '', poster: '/community/0N.jpg', alt: 'Флакон духов вращается в мягком свете, бликуя на гранях' }],
+    body: {
+      overview: 'Эстетичное видео для бьюти-бренда, подчеркивающее форму флакона и чистоту стекла через вращение и мягкое освещение.',
+      breakdown: 'Ключевые слова "smooth orbit movement" и "highlights on glass" создают ощущение роскоши и внимания к дизайну упаковки.',
+      howToChange: 'Попробуйте сменить флакон духов на тюбик помады, используя те же движения камеры, но сменив цветовую гамму на красный, чтобы подчеркнуть дерзость продукта.',
+      mistakes: 'Чрезмерное использование "sparkles" может перекрыть сам продукт. Блеск должен лишь подчеркивать грани, а не превращать флакон в светящуюся точку.'
+    },
+    status: 'published',
+    source: 'editorial',
+    publishedAt: '2026-08-12',
+    updatedAt: '2026-08-12'
+  },
+  {
+    slug: 'obzor-smartfona-vertical',
+    topicSlug: 'obzor-tovara',
+    category: 'video',
+    title: 'Обзор нового смартфона',
+    promptRu: 'Вертикальный обзор смартфона в руке, плавное вращение гаджета, акцент на экран и камеру, натуральное освещение, детализированные грани корпуса, естественное движение рук, четкая картинка, 1080p.',
+    promptEn: 'Vertical review of a smartphone in hand, smooth rotation of the gadget, focus on the screen and camera, natural lighting, detailed edges of the body, natural hand movement, sharp image, 1080p.',
+    providerId: 'kling',
+    subModelId: 'kling-3-0',
+    params: { aspect: '9:16', duration: '5s', resolution: '1080p' },
+    // TODO: снять ролик и постер по этому промпту
+    media: [{ type: 'video', src: '', poster: '/community/0N.jpg', alt: 'Смартфон в руке на фоне рабочего стола' }],
+    body: {
+      overview: 'Вертикальное видео для обзора смартфона, где камера плавно следует за устройством, демонстрируя его тонкий корпус и яркий экран.',
+      breakdown: 'Использование "9:16" и "vertical review" задает формат. "Natural hand movement" — критически важное требование для реалистичного обзора.',
+      howToChange: 'Снимите обзор другого гаджета (например, умных часов), добавив кадры с их надеванием на руку.',
+      mistakes: 'Слишком резкие движения рук могут привести к размытию (motion blur), которое нейросети часто интерпретируют как ошибку анимации.'
+    },
+    status: 'published',
+    source: 'editorial',
+    publishedAt: '2026-08-12',
+    updatedAt: '2026-08-12'
+  },
+  {
+    slug: 'obzor-tovara-kosmetika',
+    topicSlug: 'obzor-tovara',
+    category: 'video',
+    title: 'Обзор крема для лица',
+    promptRu: 'Вертикальный макро-обзор косметики, палец набирает небольшое количество крема, текстура средства, мягкий свет студии, белый фон, чистый и минималистичный стиль, высокая детализация текстуры, 1080p.',
+    promptEn: 'Vertical macro review of cosmetics, finger picking up a small amount of cream, texture of the product, soft studio light, white background, clean and minimalist style, high detail of the texture, 1080p.',
+    providerId: 'kling',
+    subModelId: 'kling-3-0',
+    params: { aspect: '9:16', duration: '5s', resolution: '1080p' },
+    // TODO: снять ролик и постер по этому промпту
+    media: [{ type: 'video', src: '', poster: '/community/0N.jpg', alt: 'Текстура крема на пальце, снятая крупным планом' }],
+    body: {
+      overview: 'Минималистичный обзор косметического средства, акцентирующий внимание на текстуре и премиальности упаковки через макросъемку.',
+      breakdown: 'Ключевые слова "macro review" и "texture of the product" позволяют нейросети детализировать крем, создавая убедительное визуальное описание товара.',
+      howToChange: 'Попробуйте заменить крем на губную помаду, добавив кадр с нанесением на кожу.',
+      mistakes: 'Игнорирование "clean background" создаст визуальный шум, который будет отвлекать от текстуры самого крема.'
+    },
+    status: 'published',
+    source: 'editorial',
+    publishedAt: '2026-08-12',
+    updatedAt: '2026-08-12'
+  },
+  {
+    slug: 'obzor-gadzheta-na-stole',
+    topicSlug: 'obzor-tovara',
+    category: 'video',
+    title: 'Обзор настольной лампы',
+    promptRu: 'Вертикальный обзор настольной лампы, лампа включена, теплое свечение, легкий наезд камеры, современный интерьер на фоне, минималистичный дизайн, естественное освещение, 1080p.',
+    promptEn: 'Vertical review of a desk lamp, lamp is on, warm glow, soft camera zoom-in, modern interior background, minimalist design, natural lighting, 1080p.',
+    providerId: 'kling',
+    subModelId: 'kling-3-0',
+    params: { aspect: '9:16', duration: '5s', resolution: '1080p' },
+    // TODO: снять ролик и постер по этому промпту
+    media: [{ type: 'video', src: '', poster: '/community/0N.jpg', alt: 'Современная настольная лампа в уютном рабочем уголке' }],
+    body: {
+      overview: 'Обзор интерьерного гаджета в естественной среде, демонстрирующий его функциональность и дизайн в контексте рабочего места.',
+      breakdown: 'Мы задаем "warm glow" и "modern interior background", чтобы создать уютную атмосферу, а "soft zoom-in" подчеркивает важность объекта.',
+      howToChange: 'Смените лампу на портативную колонку, сохранив рабочее пространство как фон.',
+      mistakes: 'Неправильно настроенный баланс белого из-за теплого света лампы может сделать интерьер на фоне неестественно желтым.'
+    },
+    status: 'published',
+    source: 'editorial',
+    publishedAt: '2026-08-12',
+    updatedAt: '2026-08-12'
+  },
+  {
+    slug: 'trevel-video-gory',
+    topicSlug: 'trevel-video',
+    category: 'video',
+    title: 'Аэросъемка заснеженных гор',
+    promptRu: 'Аэросъемка заснеженных горных вершин, плавный пролет дрона над хребтом, золотой час, яркое солнце, облака плывут внизу, эпический масштаб, кинематографичная стабилизация, 4k разрешение.',
+    promptEn: 'Aerial shot of snowy mountain peaks, smooth drone flyover along the ridge, golden hour, bright sun, clouds floating below, epic scale, cinematic stabilization, 4k resolution.',
+    providerId: 'kling',
+    subModelId: 'kling-3-0',
+    params: { aspect: '16:9', duration: '5s', resolution: '1080p' },
+    // TODO: снять ролик и постер по этому промпту
+    media: [{ type: 'video', src: '', poster: '/community/0N.jpg', alt: 'Заснеженные вершины гор в лучах заходящего солнца' }],
+    body: {
+      overview: 'Эпический кадр горных вершин с использованием приема аэросъемки, подчеркивающий масштаб и величие природы в лучах закатного солнца.',
+      breakdown: '"Aerial shot" и "drone flyover" задают ракурс, а "golden hour" и "clouds floating below" добавляют глубину и объем композиции.',
+      howToChange: 'Снимите ту же сцену во время грозы, сменив освещение на холодное и драматичное, чтобы получить более тревожный, но эффектный результат.',
+      mistakes: 'Слишком быстрое движение камеры ("drone flyover") создаст эффект смазанности, который разрушит ощущение масштаба эпического пейзажа.'
+    },
+    status: 'published',
+    source: 'editorial',
+    publishedAt: '2026-08-12',
+    updatedAt: '2026-08-12'
+  },
+  {
+    slug: 'trevel-video-okean',
+    topicSlug: 'trevel-video',
+    category: 'video',
+    title: 'Побережье океана на закате',
+    promptRu: 'Вид на бушующий океан с утеса, медленный наезд камеры, волны разбиваются о скалы, брызги, закатное небо, драматичные цвета, кинематографичный масштаб, 1080p.',
+    promptEn: 'View of the stormy ocean from a cliff, slow camera zoom-in, waves crashing against rocks, splashes, sunset sky, dramatic colors, cinematic scale, 1080p.',
+    providerId: 'kling',
+    subModelId: 'kling-3-0',
+    params: { aspect: '16:9', duration: '5s', resolution: '1080p' },
+    // TODO: снять ролик и постер по этому промпту
+    media: [{ type: 'video', src: '', poster: '/community/0N.jpg', alt: 'Бурные волны океана у подножия скал на закате' }],
+    body: {
+      overview: 'Мощный и атмосферный кадр океанского побережья, передающий энергию стихии через динамику волн и насыщенные закатные цвета.',
+      breakdown: '"View from a cliff" и "waves crashing" создают композицию, а "dramatic colors" усиливают эмоциональное воздействие кадра.',
+      howToChange: 'Попробуйте сменить закатное время на предгрозовое небо, чтобы кадр стал более суровым и мрачным.',
+      mistakes: 'Модели часто ошибаются с физикой брызг волн — важно чтобы они выглядели как реальная вода, а не как белые пятна на скалах.'
+    },
+    status: 'published',
+    source: 'editorial',
+    publishedAt: '2026-08-12',
+    updatedAt: '2026-08-12'
+  },
+  {
+    slug: 'trevel-video-gorod',
+    topicSlug: 'trevel-video',
+    category: 'video',
+    title: 'Прогулка по старинному городу',
+    promptRu: 'Кинематографичная прогулка по узкой улочке старинного города, плавный проход камеры вдоль зданий, вечерние огни, люди на фоне размыты, детализированная брусчатка, уютная атмосфера, 1080p.',
+    promptEn: 'Cinematic walk through a narrow street of an old city, smooth camera movement along buildings, evening lights, blurred people in the background, detailed cobblestone, cozy atmosphere, 1080p.',
+    providerId: 'kling',
+    subModelId: 'kling-3-0',
+    params: { aspect: '16:9', duration: '5s', resolution: '1080p' },
+    // TODO: снять ролик и постер по этому промпту
+    media: [{ type: 'video', src: '', poster: '/community/0N.jpg', alt: 'Уютная мощеная улочка старого города вечером' }],
+    body: {
+      overview: 'Атмосферный кадр прогулки по историческому центру, погружающий зрителя в уютную вечернюю обстановку старого европейского города.',
+      breakdown: '"Cinematic walk" и "evening lights" задают настроение, а "blurred people" фокусирует внимание на архитектуре и текстуре брусчатки.',
+      howToChange: 'Добавьте детали, такие как летящие листья или снег, чтобы сделать прогулку сезонной.',
+      mistakes: 'Размытие людей на фоне должно выглядеть естественно; слишком резкое размытие сделает кадр похожим на неудачный коллаж.'
+    },
+    status: 'published',
+    source: 'editorial',
+    publishedAt: '2026-08-12',
+    updatedAt: '2026-08-12'
+  },
+  {
+    slug: 'kino-noir-detective',
+    topicSlug: 'kinematografichnyy-kadr',
+    category: 'video',
+    title: 'Детектив в стиле нуар',
+    promptRu: 'Кадр в стиле нуар, мужчина в плаще стоит под тусклым уличным фонарем, сигаретный дым в свете лампы, ночной город за спиной, дождь, кинематографичный контраст, глубокие тени, 24fps, высокое качество.',
+    promptEn: 'Noir style shot, man in a trench coat standing under a dim street lamp, cigarette smoke in the lamp light, night city behind, rain, cinematic contrast, deep shadows, 24fps, high quality.',
+    providerId: 'kling',
+    subModelId: 'kling-3-0',
+    params: { aspect: '16:9', duration: '5s', resolution: '1080p' },
+    // TODO: снять ролик и постер по этому промпту
+    media: [{ type: 'video', src: '', poster: '/community/0N.jpg', alt: 'Мужчина в плаще под дождем на темной улице' }],
+    body: {
+      overview: 'Классический нуарный кадр, воссоздающий атмосферу старого детективного кино через контрастное освещение и использование дыма.',
+      breakdown: 'Использование "noir style" и "deep shadows" критично. Описание дыма ("cigarette smoke in the lamp light") придает кадру объем и реалистичность.',
+      howToChange: 'Смените плащ на строгий деловой костюм, превратив сцену из нуара в современный триллер.',
+      mistakes: 'Слишком яркий свет фонаря "размоет" нуарное настроение, превратив его в обычную ночную съемку.'
+    },
+    status: 'published',
+    source: 'editorial',
+    publishedAt: '2026-08-12',
+    updatedAt: '2026-08-12'
+  },
+  {
+    slug: 'kino-scifi-future',
+    topicSlug: 'kinematografichnyy-kadr',
+    category: 'video',
+    title: 'Футуристичная лаборатория',
+    promptRu: 'Футуристичная лаборатория, голограммы данных над столом, плавное движение камеры вокруг, прохладный синий свет, высокие технологии, высокая детализация, эпический размах, кинематографичная стабилизация, 1080p.',
+    promptEn: 'Futuristic laboratory, data holograms above the table, smooth camera movement around, cool blue light, high technology, high detail, epic scale, cinematic stabilization, 1080p.',
+    providerId: 'kling',
+    subModelId: 'kling-3-0',
+    params: { aspect: '16:9', duration: '5s', resolution: '1080p' },
+    // TODO: снять ролик и постер по этому промпту
+    media: [{ type: 'video', src: '', poster: '/community/0N.jpg', alt: 'Голографические данные в технологичной лаборатории' }],
+    body: {
+      overview: 'Технологичный кадр из научно-фантастического фильма, демонстрирующий работу с голограммами в стерильной обстановке лаборатории.',
+      breakdown: '"Data holograms" и "cool blue light" — основа эстетики научной фантастики в кино.',
+      howToChange: 'Добавьте в кадр персонажа в скафандре, чтобы усилить ощущение присутствия.',
+      mistakes: 'Чрезмерно хаотичное движение голограмм создаст визуальный шум, мешающий восприятию композиции.'
+    },
+    status: 'published',
+    source: 'editorial',
+    publishedAt: '2026-08-12',
+    updatedAt: '2026-08-12'
+  },
+  {
+    slug: 'kino-drama-autumn',
+    topicSlug: 'kinematografichnyy-kadr',
+    category: 'video',
+    title: 'Драматичный кадр: осенний парк',
+    promptRu: 'Осенний парк, падающие желтые листья в замедленной съемке, печальный главный герой сидит на скамье, мягкий вечерний свет, кинематографичный масштаб, глубокие эмоции, высокое разрешение, 1080p.',
+    promptEn: 'Autumn park, falling yellow leaves in slow motion, sad main character sitting on a bench, soft evening light, cinematic scale, deep emotions, high resolution, 1080p.',
+    providerId: 'kling',
+    subModelId: 'kling-3-0',
+    params: { aspect: '16:9', duration: '5s', resolution: '1080p' },
+    // TODO: снять ролик и постер по этому промпту
+    media: [{ type: 'video', src: '', poster: '/community/0N.jpg', alt: 'Осенний парк, падающие листья и грустный человек на скамейке' }],
+    body: {
+      overview: 'Лиричный и эмоциональный кадр из драмы, использующий смену времен года для усиления драматического эффекта персонажа.',
+      breakdown: '"Slow motion" для падающих листьев и "deep emotions" помогают передать настроение меланхолии.',
+      howToChange: 'Смените время года на весну, чтобы придать сцене более оптимистичный оттенок.',
+      mistakes: 'Отсутствие фокуса на эмоциях персонажа сделает кадр просто красивым пейзажем без драматургии.'
+    },
+    status: 'published',
+    source: 'editorial',
+    publishedAt: '2026-08-12',
+    updatedAt: '2026-08-12'
   }
 ];
+
