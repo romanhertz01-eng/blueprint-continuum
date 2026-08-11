@@ -45,7 +45,7 @@ function ModelDetailPage() {
 
         <div className="w-screen relative left-1/2 -translate-x-1/2 mb-12">
           <div style={{ columnWidth: '320px', columnGap: '3px', padding: '0 3px' }}>
-            {items.map((item) => <PromptMosaicTile key={item.slug} item={item} topics={topics} />)}
+            {items.map((item: any) => <PromptMosaicTile key={item.slug} item={item} topics={topics} />)}
           </div>
         </div>
       </div>
