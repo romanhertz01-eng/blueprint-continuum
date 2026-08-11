@@ -4,7 +4,7 @@ import { ChevronRight } from 'lucide-react';
 import { Footer } from '@/components/shared/Footer';
 import { getPublishedItems, getPublishedTopics, countItemsByCategory, getCategories, PromptItem } from '@/data/prompts';
 import { CategoryCard } from '@/components/prompts/CategoryCard';
-import { PromptCard } from '@/components/prompts/PromptCard';
+import { PromptMosaicTile } from '@/components/prompts/PromptMosaicTile';
 import { useLoadMore } from '@/components/prompts/useLoadMore';
 import { TopicCloud } from '@/components/prompts/TopicCloud';
 import { useState, useMemo } from 'react';
