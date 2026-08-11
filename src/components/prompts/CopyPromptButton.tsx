@@ -52,16 +52,18 @@ export function CopyPromptButton({ text, className, children }: CopyPromptButton
       )}
       aria-label={copied ? "Скопировано" : "Скопировать промпт"}
     >
-      {copied ? (
-        <>
-          <Check className="w-3.5 h-3.5 mr-1.5 text-[hsl(var(--primary))]" />
-          Скопировано
-        </>
-      ) : (
-        <>
-          <Copy className="w-3.5 h-3.5 mr-1.5 text-muted-foreground" />
-          Копировать
-        </>
+      {children ? children : (
+        copied ? (
+          <>
+            <Check className="w-3.5 h-3.5 mr-1.5 text-[hsl(var(--primary))]" />
+            Скопировано
+          </>
+        ) : (
+          <>
+            <Copy className="w-3.5 h-3.5 mr-1.5 text-muted-foreground" />
+            Копировать
+          </>
+        )
       )}
     </Button>
   );
