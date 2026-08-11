@@ -9,7 +9,7 @@ interface CopyPromptButtonProps {
   children?: React.ReactNode;
 }
 
-export function CopyPromptButton({ text, className }: CopyPromptButtonProps) {
+export function CopyPromptButton({ text, className, children }: CopyPromptButtonProps) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async (e: React.MouseEvent) => {
