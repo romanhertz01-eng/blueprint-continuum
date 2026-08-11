@@ -2,7 +2,8 @@ import { ORIGIN } from "@/lib/origin";
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { ChevronRight } from 'lucide-react';
 import { Footer } from '@/components/shared/Footer';
-import { getPublishedItems, getPublishedTopics } from '@/data/prompts';
+import { getPublishedItems, getPublishedTopics, countItemsByCategory, getCategories } from '@/data/prompts';
+import { CategoryCard } from '@/components/prompts/CategoryCard';
 import { PromptCard } from '@/components/prompts/PromptCard';
 
 const TITLE = 'Библиотека промптов для нейросетей — готовые примеры | ERA2.ai';
@@ -50,6 +51,8 @@ export const Route = createFileRoute('/prompts/')({
 function PromptsHub() {
   const items = getPublishedItems();
   const topics = getPublishedTopics();
+  const categories = getCategories();
+  const categoryCounts = countItemsByCategory();
 
   return (
     <>
@@ -67,6 +70,20 @@ function PromptsHub() {
           <p className="text-lg text-muted-foreground leading-relaxed">
             Пользуйтесь бесплатно: копируйте готовые промпты без регистрации или переходите в генератор одной кнопкой для мгновенного результата.
           </p>
+        </div>
+      </section>
+
+      {/* Categories Grid */}
+      <section className="max-w-7xl mx-auto px-6 mb-12">
+        <h2 className="text-2xl font-bold mb-6 text-foreground">Категории</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+          {categories.map(category => (
+            <CategoryCard 
+              key={category.slug} 
+              category={category} 
+              count={categoryCounts[category.slug as keyof typeof categoryCounts] || 0} 
+            />
+          ))}
         </div>
       </section>
 
