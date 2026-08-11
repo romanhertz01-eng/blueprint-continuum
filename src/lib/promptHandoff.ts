@@ -8,6 +8,7 @@ export interface PromptHandoff {
   category: PromptCategory;
   providerId?: string;
   subModelId?: string;
+  agentId?: string;
   aspect?: string;
   quality?: string;
   quantity?: number;
@@ -22,7 +23,9 @@ export const CATEGORY_ROUTE: Record<PromptCategory, string> = {
   image: '/design',
   video: '/video',
   audio: '/audio',
+  agents: '/agents',
 };
+
 
 export function writePromptHandoff(data: Omit<PromptHandoff, 'ts'>): void {
   if (typeof window === 'undefined') return;
