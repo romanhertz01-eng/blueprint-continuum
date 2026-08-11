@@ -2,14 +2,14 @@ import { ORIGIN } from "@/lib/origin";
 import { createFileRoute, Link, notFound } from '@tanstack/react-router';
 import { ChevronRight } from 'lucide-react';
 import { Footer } from '@/components/shared/Footer';
-import { getTopicBySlug, getItemsByTopicSlug, getPublishedTopics } from '@/data/prompts';
+import { getTopicBySlug, getItemsByTopic, getPublishedTopics, PromptItem } from '@/data/prompts';
 import { PromptCard } from '@/components/prompts/PromptCard';
 
 export const Route = createFileRoute('/prompts/$topic/')({
   loader: ({ params }) => {
     const topic = getTopicBySlug(params.topic);
     if (!topic) throw notFound();
-    const items = getItemsByTopicSlug(params.topic);
+    const items = getItemsByTopic(params.topic);
     const allTopics = getPublishedTopics();
     return { topic, items, allTopics };
   },
@@ -18,7 +18,7 @@ export const Route = createFileRoute('/prompts/$topic/')({
     const topic = getTopicBySlug(params.topic);
     if (!topic) return {};
     const title = `${topic.title} — Промпты для нейросетей | ERA2.ai`;
-    const description = topic.description || `Библиотека промптов по теме ${topic.title}.`;
+    const description = topic.seoDescription || `Библиотека промптов по теме ${topic.title}.`;
     const canonical = `${ORIGIN}/prompts/${params.topic}`;
     return {
       meta: [
@@ -51,14 +51,14 @@ function TopicPage() {
           <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
             {topic.title}
           </h1>
-          {topic.description && (
+          {topic.seoDescription && (
             <p className="text-muted-foreground max-w-2xl mb-12">
-              {topic.description}
+              {topic.seoDescription}
             </p>
           )}
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {items.map(item => (
+            {items.map((item: PromptItem) => (
               <PromptCard key={item.slug} item={item} topics={allTopics} />
             ))}
           </div>

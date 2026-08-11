@@ -8,15 +8,15 @@ import { TryPromptButton } from '@/components/prompts/TryPromptButton';
 
 export const Route = createFileRoute('/prompts/$topic/$slug')({
   loader: ({ params }) => {
-    const item = getItemBySlug(params.slug);
-    if (!item || item.topicSlug !== params.topic) throw notFound();
+    const item = getItemBySlug(params.topic, params.slug);
+    if (!item) throw notFound();
     const topic = getTopicBySlug(params.topic);
     if (!topic) throw notFound();
     return { item, topic };
   },
   component: PromptItemPage,
   head: ({ params }) => {
-    const item = getItemBySlug(params.slug);
+    const item = getItemBySlug(params.topic, params.slug);
     if (!item) return {};
     const title = `${item.title} — Промпт для нейросети | ERA2.ai`;
     const description = item.promptRu.slice(0, 160);
