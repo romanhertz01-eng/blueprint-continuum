@@ -110,8 +110,9 @@ function PromptDetailPage() {
                   <CopyPromptButton 
                     text={item.promptRu} 
                     className="absolute top-3 right-3 h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transition-opacity bg-background/50 hover:bg-background border-none"
-                    showText={false}
-                  />
+                  >
+                    <Copy className="w-3.5 h-3.5 text-muted-foreground" />
+                  </CopyPromptButton>
                   <p className="text-[15px] leading-relaxed text-foreground/90 whitespace-pre-wrap pr-8">
                     {item.promptRu}
                   </p>
