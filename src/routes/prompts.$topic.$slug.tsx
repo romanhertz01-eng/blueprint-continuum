@@ -80,7 +80,7 @@ function PromptDetailPage() {
   
   const modelName = getModelName(item.providerId, item.category);
   const credits = getCredits(item.providerId, item.subModelId, item.category);
-  const media = item.media[0];
+  
   const itemsByProvider = useMemo(() => getItemsByProvider(item.providerId).filter(i => i.slug !== item.slug), [item.providerId, item.slug]);
 
   // Reactions Logic
