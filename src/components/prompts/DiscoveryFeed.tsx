@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { Link } from '@tanstack/react-router';
-import { Bookmark, Heart, Share2 } from 'lucide-react';
+import { Bookmark } from 'lucide-react';
 import { PromptItem } from '@/data/prompts/types';
 import { cn } from '@/lib/utils';
 import { imageProviders } from '@/data/imageModels';
@@ -15,9 +15,13 @@ interface DiscoveryFeedProps {
 
 type FilterType = 'for-you' | 'model' | 'topic' | 'popular';
 
+const PAGE_SIZE = 24;
+
 export function DiscoveryFeed({ currentItem }: DiscoveryFeedProps) {
   const [activeFilter, setActiveFilter] = useState<FilterType>('for-you');
-  const [displayCount, setDisplayCount] = useState(20);
+  const [visibleItems, setVisibleItems] = useState<PromptItem[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const feedRef = useRef<HTMLDivElement>(null);
 
   const getModelName = (providerId: string) => {
     const allProviders = [...imageProviders, ...videoProviders, ...textProviders];
@@ -27,15 +31,15 @@ export function DiscoveryFeed({ currentItem }: DiscoveryFeedProps) {
 
   const modelName = getModelName(currentItem.providerId);
 
-  const items = useMemo(() => {
+  const allItemsForFilter = useMemo(() => {
     let result: PromptItem[] = [];
     
     if (activeFilter === 'for-you') {
-      const related = getRelatedItems(currentItem, 20);
-      const byModel = getRelatedByModel(currentItem, 20);
+      const related = getRelatedItems(currentItem, 100);
+      const byModel = getRelatedByModel(currentItem, 100);
       result = [...related, ...byModel].sort(() => Math.random() - 0.5);
     } else if (activeFilter === 'model') {
-      result = getRelatedByModel(currentItem, 40);
+      result = getRelatedByModel(currentItem, 200);
     } else if (activeFilter === 'topic') {
       result = getItemsByTopic(currentItem.topicSlug).filter(i => i.slug !== currentItem.slug);
     } else if (activeFilter === 'popular') {
@@ -44,12 +48,39 @@ export function DiscoveryFeed({ currentItem }: DiscoveryFeedProps) {
         .sort((a, b) => (b.likes || 0) - (a.likes || 0));
     }
 
-    const unique = Array.from(new Map(result.map(item => [item.slug, item])).values());
-    return unique;
+    // Ensure uniqueness
+    return Array.from(new Map(result.map(item => [item.slug, item])).values());
   }, [activeFilter, currentItem]);
 
-  const visibleItems = items.slice(0, displayCount);
-  const hasMore = items.length > displayCount;
+  // Handle filter change
+  useEffect(() => {
+    setVisibleItems(allItemsForFilter.slice(0, PAGE_SIZE));
+    
+    // Smooth scroll to top of feed when filter changes
+    if (feedRef.current) {
+      feedRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [allItemsForFilter]);
+
+  const hasMore = allItemsForFilter.length > visibleItems.length;
+
+  const loadMore = () => {
+    if (isLoading || !hasMore) return;
+    
+    setIsLoading(true);
+    
+    // BACKEND: Replace this with real server-side fetching
+    // Using setTimeout 300ms to simulate loading as requested
+    setTimeout(() => {
+      const nextBatch = allItemsForFilter.slice(
+        visibleItems.length,
+        visibleItems.length + PAGE_SIZE
+      );
+      
+      setVisibleItems(prev => [...prev, ...nextBatch]);
+      setIsLoading(false);
+    }, 300);
+  };
 
   const filters: { id: FilterType; label: string }[] = [
     { id: 'for-you', label: 'Для вас' },
@@ -59,23 +90,23 @@ export function DiscoveryFeed({ currentItem }: DiscoveryFeedProps) {
   ];
 
   return (
-    <section className="mt-[64px] border-t border-border pt-[64px] pb-20 overflow-hidden">
-      <div className="max-w-[1480px] mx-auto px-6">
+    <section 
+      ref={feedRef}
+      className="mt-[64px] border-t border-border pt-[64px] pb-20 overflow-hidden scroll-mt-20"
+    >
+      <div className="max-w-[1440px] mx-auto px-6">
         <div className="mb-8">
           <h2 className="text-[26px] font-bold text-foreground mb-1">Больше идей для вас</h2>
           <p className="text-[14px] text-muted-foreground">Похожие по теме, стилю и модели</p>
         </div>
 
-        <div className="flex flex-wrap gap-2 mb-10">
+        <div className="flex overflow-x-auto pb-2 scrollbar-hide gap-2 mb-10 -mx-6 px-6 sm:mx-0 sm:px-0">
           {filters.map((filter) => (
             <button
               key={filter.id}
-              onClick={() => {
-                setActiveFilter(filter.id);
-                setDisplayCount(20);
-              }}
+              onClick={() => setActiveFilter(filter.id)}
               className={cn(
-                "px-5 py-2 rounded-full text-[14px] font-medium border transition-all",
+                "px-5 py-2 rounded-full text-[14px] font-medium border transition-all whitespace-nowrap",
                 activeFilter === filter.id
                   ? "bg-primary/10 border-primary text-primary"
                   : "bg-muted/40 border-border text-foreground/70 hover:bg-muted/60"
@@ -100,10 +131,14 @@ export function DiscoveryFeed({ currentItem }: DiscoveryFeedProps) {
         {hasMore && (
           <div className="mt-12 flex justify-center">
             <button 
-              onClick={() => setDisplayCount(prev => prev + 10)}
-              className="px-10 py-3.5 rounded-xl border border-border bg-muted/30 hover:bg-muted/50 text-[15px] font-medium transition-colors"
+              onClick={loadMore}
+              disabled={isLoading}
+              className={cn(
+                "px-10 py-3.5 rounded-xl border border-border bg-muted/30 hover:bg-muted/50 text-[15px] font-medium transition-all min-w-[200px]",
+                isLoading && "opacity-70 cursor-not-allowed"
+              )}
             >
-              Показать ещё
+              {isLoading ? "Загружаем..." : "Показать ещё"}
             </button>
           </div>
         )}
@@ -142,14 +177,14 @@ function DiscoveryCard({ item, modelName }: { item: PromptItem, modelName: strin
   };
 
   return (
-    <div className="break-inside-avoid mb-[20px] group/card">
+    <div className="break-inside-avoid mb-[20px] group/card animate-in fade-in duration-500">
       <Link
         to="/prompts/$topic/$slug"
         params={{ topic: item.topicSlug, slug: item.slug }}
         className="block"
       >
         <div 
-          className="relative rounded-[18px] overflow-hidden bg-muted transition-all duration-300 md:hover:-translate-y-[2px]"
+          className="relative rounded-[18px] overflow-hidden bg-muted transition-all duration-300"
           style={aspectStyle}
         >
           {media.type === 'video' ? (
