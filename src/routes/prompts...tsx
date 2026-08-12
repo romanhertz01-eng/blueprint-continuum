@@ -1,31 +1,31 @@
 import { createFileRoute, notFound, Link } from '@tanstack/react-router';
-import { ChevronRight, Eye, Heart, Bookmark, Share2, Copy } from 'lucide-react';
-import { getPromptBySlug, getTopicBySlug } from '@/data/prompts';
+import { ChevronRight, Eye, Heart, Bookmark, Share2 } from 'lucide-react';
+import { getItemBySlug, getTopicBySlug } from '@/data/prompts';
 import { PromptGallery } from '@/components/prompts/PromptGallery';
 import { DiscoveryFeed } from '@/components/prompts/DiscoveryFeed';
 import { TryPromptButton } from '@/components/prompts/TryPromptButton';
 import { CopyPromptButton } from '@/components/prompts/CopyPromptButton';
 import { Footer } from '@/components/shared/Footer';
 import { ORIGIN } from '@/lib/origin';
-import { cn } from '@/lib/utils';
 import { imageProviders } from '@/data/imageModels';
 import { videoProviders } from '@/data/videoModels';
 import { textProviders } from '@/data/textModels';
 
 export const Route = createFileRoute('/prompts/')({
-  loader: ({ params }) => {
-    const item = getPromptBySlug(params.slug);
-    if (!item || item.topicSlug !== params.topic) throw notFound();
+  loader: ({ params }: { params: { topic: string; slug: string } }) => {
+    const item = getItemBySlug(params.topic, params.slug);
+    if (!item) throw notFound();
     const topic = getTopicBySlug(item.topicSlug);
     return { item, topic };
   },
   head: ({ loaderData }) => {
     if (!loaderData) return {};
+    const { item, topic } = loaderData as { item: any, topic: any };
     return {
-      title: `${loaderData.item.title} — Промпт для нейросетей | ERA2.ai`,
+      title: `${item.title} — Промпт для нейросетей | ERA2.ai`,
       meta: [
-        { name: 'description', content: loaderData.item.promptRu.slice(0, 160) },
-        { property: 'og:url', content: `${ORIGIN}/prompts/${loaderData.topic?.slug}/${loaderData.item.slug}` },
+        { name: 'description', content: item.promptRu.slice(0, 160) },
+        { property: 'og:url', content: `${ORIGIN}/prompts/${topic?.slug}/${item.slug}` },
       ],
     };
   },
@@ -63,12 +63,10 @@ function PromptDetailPage() {
           </nav>
 
           <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-12 items-start mb-20">
-            {/* Left: Gallery */}
             <div className="w-full">
               <PromptGallery media={item.media} title={item.title} />
             </div>
 
-            {/* Right: Info & Actions */}
             <div className="space-y-8">
               <div>
                 <h1 className="text-2xl md:text-3xl font-bold mb-4 leading-tight">{item.title}</h1>
@@ -80,7 +78,6 @@ function PromptDetailPage() {
                 </div>
               </div>
 
-              {/* Stats & Social */}
               <div className="flex items-center justify-between py-4 border-y border-border">
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <Eye className="w-4 h-4" />
@@ -101,7 +98,6 @@ function PromptDetailPage() {
                 </div>
               </div>
 
-              {/* Prompt Box */}
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Промпт</h3>
@@ -117,17 +113,15 @@ function PromptDetailPage() {
                 </div>
               </div>
 
-              {/* Main CTA */}
               <TryPromptButton 
                 item={item}
                 label="Создать с этим промптом"
                 className="w-full h-14 text-base font-semibold rounded-xl shadow-lg shadow-primary/20"
               />
 
-              {/* Tags */}
               {item.tags && item.tags.length > 0 && (
                 <div className="flex flex-wrap gap-2 pt-4">
-                  {item.tags.map(tag => (
+                  {item.tags.map((tag: string) => (
                     <span key={tag} className="px-3 py-1.5 rounded-full bg-muted/50 border border-border text-[13px] hover:bg-muted transition-colors cursor-default">
                       #{tag}
                     </span>
@@ -138,7 +132,6 @@ function PromptDetailPage() {
           </div>
         </div>
 
-        {/* Discovery Zone */}
         <DiscoveryFeed currentItem={item} />
       </main>
       <Footer />
