@@ -199,68 +199,94 @@ function PromptDetailPage() {
             <div className="space-y-4">
               <h2 className="text-[18px] font-bold text-foreground">Промпт</h2>
               
-              <div className="bg-muted/30 border border-border rounded-xl p-5 text-[15px] leading-relaxed text-foreground whitespace-pre-wrap">
+              <div className="relative bg-muted/30 border border-border rounded-xl p-5 text-[15px] leading-relaxed text-foreground whitespace-pre-wrap group">
                 {item.promptRu}
+                <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <CopyPromptButton text={item.promptRu} className="h-8 w-8 p-0" variant="secondary" />
+                </div>
               </div>
 
               <div className="flex flex-wrap gap-3 mt-4">
                 <CopyPromptButton text={item.promptRu} />
-                <TryPromptButton item={item} label="Открыть в генераторе" />
+                <TryPromptButton item={item} label="Создать с этим промптом" />
               </div>
 
-              <div className="flex items-center gap-4 text-[13px] text-muted-foreground pt-2">
-                <button 
-                  onClick={toggleLike}
-                  className="flex items-center gap-1.5 transition-colors hover:text-foreground group"
-                >
-                  <Heart className={cn("w-4 h-4 transition-colors", isLiked ? "text-primary fill-primary" : "text-muted-foreground group-hover:text-foreground")} />
-                  <span>{item.likes + (isLiked ? 1 : 0)}</span>
-                </button>
-                
-                <div className="flex items-center gap-1.5">
-                  <Eye className="w-4 h-4" />
-                  <span>{item.views + localViews}</span>
+              <div className="flex items-center justify-between text-[13px] text-muted-foreground pt-4 border-t border-border/50">
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-1.5 opacity-70">
+                    <Eye className="w-4 h-4" />
+                    <span>{item.views + localViews}</span>
+                  </div>
                 </div>
-                
-                <button 
-                  onClick={toggleSave}
-                  className="flex items-center gap-1.5 transition-colors hover:text-foreground group"
-                >
-                  <Bookmark className={cn("w-4 h-4 transition-colors", isSaved ? "text-primary fill-primary" : "text-muted-foreground group-hover:text-foreground")} />
-                  <span>{item.saves + (isSaved ? 1 : 0)}</span>
-                </button>
-                
-                <button 
-                  onClick={handleShare}
-                  className="flex items-center gap-1.5 transition-colors hover:text-foreground group"
-                >
-                  <Share2 className={cn("w-4 h-4 transition-colors", isShared ? "text-primary fill-primary" : "text-muted-foreground group-hover:text-foreground")} />
-                  <span>{isShared ? 'Скопировано' : item.shares}</span>
-                </button>
-                {/* BACKEND: Лайки, сохранения, просмотры, шеринг */}
-              </div>
 
-              <div className="pt-2 space-y-1">
-                <div className="text-[13px] text-muted-foreground">
-                  {[
-                    modelName,
-                    item.params?.aspect,
-                    item.subModelId
-                  ].filter(Boolean).join(' · ')}
+                <div className="flex items-center gap-2">
+                  <button 
+                    onClick={toggleLike}
+                    className={cn(
+                      "flex items-center justify-center w-9 h-9 rounded-lg border border-border transition-all hover:bg-muted/50 active:scale-90",
+                      isLiked && "bg-primary/10 border-primary/20"
+                    )}
+                    title={isLiked ? "Убрать лайк" : "Поставить лайк"}
+                  >
+                    <Heart className={cn("w-4.5 h-4.5 transition-colors", isLiked ? "text-primary fill-primary" : "text-muted-foreground")} />
+                  </button>
+                  
+                  <button 
+                    onClick={toggleSave}
+                    className={cn(
+                      "flex items-center justify-center w-9 h-9 rounded-lg border border-border transition-all hover:bg-muted/50 active:scale-90",
+                      isSaved && "bg-primary/10 border-primary/20"
+                    )}
+                    title={isSaved ? "Удалить из сохраненных" : "Сохранить"}
+                  >
+                    <Bookmark className={cn("w-4.5 h-4.5 transition-colors", isSaved ? "text-primary fill-primary" : "text-muted-foreground")} />
+                  </button>
+                  
+                  <button 
+                    onClick={handleShare}
+                    className={cn(
+                      "flex items-center justify-center w-9 h-9 rounded-lg border border-border transition-all hover:bg-muted/50 active:scale-90",
+                      isShared && "bg-primary/10 border-primary/20"
+                    )}
+                    title="Поделиться"
+                  >
+                    {isShared ? <Check className="w-4.5 h-4.5 text-primary" /> : <Share2 className="w-4.5 h-4.5 text-muted-foreground" />}
+                  </button>
                 </div>
-                <div className="text-[13px] text-muted-foreground">
-                  Теги: {' '}
-                  <Link to="/prompts/$topic" params={{ topic: item.topicSlug }} className="underline hover:text-foreground">
-                    {mainTopic?.title}
+              </div>
+            </div>
+
+            <div className="p-4 rounded-xl border border-border bg-muted/20 space-y-3">
+              <div className="flex items-center justify-between text-[13px]">
+                <span className="text-muted-foreground">Модель</span>
+                <span className="font-medium text-foreground">
+                  {modelName} {item.params?.quality && `· ${item.params.quality}`}
+                </span>
+              </div>
+              
+              {item.params?.aspect && (
+                <div className="flex items-center justify-between text-[13px]">
+                  <span className="text-muted-foreground">Формат</span>
+                  <span className="font-medium text-foreground">{item.params.aspect}</span>
+                </div>
+              )}
+            </div>
+
+            <div className="space-y-3">
+              <h3 className="text-[14px] font-semibold text-foreground">Теги</h3>
+              <div className="flex flex-wrap gap-2">
+                {item.tags.map(tag => (
+                  <Link
+                    key={tag}
+                    to="/prompts/$topic"
+                    params={{ topic: item.topicSlug }}
+                    className="px-3 py-1 rounded-full text-[12px] bg-muted/40 border border-border text-foreground/80 hover:bg-muted/60 transition-colors"
+                  >
+                    {tag}
                   </Link>
-                  {item.extraTopicSlugs?.map((slug: string) => {
-                    const topic = topics.find(t => t.slug === slug);
-                    return topic ? (
-                      <span key={slug}>, <Link to="/prompts/$topic" params={{ topic: slug }} className="underline hover:text-foreground">{topic.title}</Link></span>
-                    ) : null;
-                  })}
-                </div>
+                ))}
               </div>
+            </div>
 
               {item.extraTopicSlugs && item.extraTopicSlugs.length > 0 && (
                 <div className="pt-4 space-y-3">
