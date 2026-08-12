@@ -46,7 +46,7 @@ export function PromptComments({ slug }: PromptCommentsProps) {
   const [hoverRating, setHoverRating] = useState(0);
 
   useEffect(() => {
-    // // BACKEND: GET /api/prompts/{slug}/comments
+    // BACKEND: GET /api/prompts/{slug}/comments
     setComments(getMockComments(slug));
   }, [slug]);
 
@@ -62,7 +62,7 @@ export function PromptComments({ slug }: PromptCommentsProps) {
       date: new Date().toLocaleDateString('ru-RU')
     };
 
-    // // BACKEND: POST /api/prompts/{slug}/comments
+    // BACKEND: POST /api/prompts/{slug}/comments
     setComments([comment, ...comments]);
     setNewComment('');
   };
