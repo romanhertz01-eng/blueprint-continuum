@@ -191,40 +191,12 @@ function PromptDetailPage() {
           </div>
 
           {/* RIGHT COLUMN - Prompt & Details */}
-          <div className="space-y-8">
+          <div className="space-y-6">
             <div className="space-y-4">
-              <div className="flex border-b border-border mb-4">
-                {tabs.map((tab, idx) => (
-                  <button
-                    key={tab.id}
-                    onClick={() => setActiveTabIndex(idx)}
-                    className={cn(
-                      "px-4 py-2 text-[14px] font-medium transition-all relative",
-                      activeTabIndex === idx 
-                        ? "text-primary" 
-                        : "text-muted-foreground hover:text-foreground"
-                    )}
-                  >
-                    {tab.label}
-                    {activeTabIndex === idx && (
-                      <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary" />
-                    )}
-                  </button>
-                ))}
-              </div>
-
-              <div className="relative">
-                {tabs.map((tab, idx) => (
-                  <div 
-                    key={tab.id}
-                    className={cn(
-                      "bg-muted/30 border border-border rounded-xl p-5 text-[15px] leading-relaxed text-foreground whitespace-pre-wrap",
-                      activeTabIndex !== idx && "hidden"
-                    )}
-                  >
-                    {tab.content}
-                  </div>
-                ))}
+              <h2 className="text-[18px] font-bold text-foreground">Промпт</h2>
+              
+              <div className="bg-muted/30 border border-border rounded-xl p-5 text-[15px] leading-relaxed text-foreground whitespace-pre-wrap">
+                {item.promptRu}
               </div>
 
               <div className="flex flex-wrap gap-3 mt-4">
@@ -232,63 +204,46 @@ function PromptDetailPage() {
                 <TryPromptButton item={item} label="Открыть в генераторе" />
               </div>
 
-              <div className="grid grid-cols-3 gap-2 mt-5">
-                {[
-                  { icon: Heart, count: item.likes + (isLiked ? 1 : 0), label: 'Лайки', active: isLiked, onClick: toggleLike },
-                  { icon: Eye, count: item.views + localViews, label: 'Просмотры' },
-                  { icon: Share2, count: isShared ? 'Copy' : item.shares, label: 'Поделились', active: isShared, onClick: handleShare },
-                  { icon: Bookmark, count: item.saves + (isSaved ? 1 : 0), label: 'Сохранения', active: isSaved, onClick: toggleSave },
-                  { icon: MessageSquare, count: item.reviewsCount ?? 0, label: 'Комментарии' },
-                  { icon: Star, count: item.rating ? item.rating.toFixed(1) : '—', label: 'Рейтинг' },
-                ].map((stat, i) => (
-                  <div 
-                    key={i} 
-                    onClick={stat.onClick}
-                    className={cn(
-                      "bg-card border border-border rounded-xl p-3 flex flex-col items-center justify-center gap-1 transition-all",
-                      stat.onClick && "cursor-pointer hover:bg-muted/50",
-                      stat.active && "border-primary/50 bg-primary/5"
-                    )}
-                  >
-                    <stat.icon className={cn("w-4 h-4 mb-0.5", stat.active ? "text-primary fill-primary" : "text-muted-foreground")} />
-                    <span className={cn("text-[18px] font-bold leading-none", stat.active && "text-primary")}>{stat.count}</span>
-                    <span className="text-[12px] text-muted-foreground">{stat.label}</span>
-                  </div>
-                ))}
-              </div>
-
-              <div className="pt-2">
-                <span className="text-[12px] font-bold tracking-[0.1em] uppercase text-muted-foreground/80 mb-3 block">
-                  Параметры
-                </span>
-                <div className="flex flex-wrap gap-2">
-                  <div className="bg-muted/40 border border-border rounded-lg px-3 py-1.5 text-[13px] text-foreground">
-                    {modelName}
-                  </div>
-                  {item.subModelId && (
-                    <div className="bg-muted/40 border border-border rounded-lg px-3 py-1.5 text-[13px] text-foreground">
-                      {item.subModelId}
-                    </div>
-                  )}
-                  {item.params?.aspect && (
-                    <div className="bg-muted/40 border border-border rounded-lg px-3 py-1.5 text-[13px] text-foreground">
-                      {item.params.aspect}
-                    </div>
-                  )}
-                  {item.params?.quality && (
-                    <div className="bg-muted/40 border border-border rounded-lg px-3 py-1.5 text-[13px] text-foreground">
-                      {item.params.quality}
-                    </div>
-                  )}
-                  {item.params?.resolution && (
-                    <div className="bg-muted/40 border border-border rounded-lg px-3 py-1.5 text-[13px] text-foreground">
-                      {item.params.resolution}
-                    </div>
-                  )}
+              <div className="flex items-center gap-4 text-[13px] text-muted-foreground pt-2">
+                <button 
+                  onClick={toggleLike}
+                  className="flex items-center gap-1.5 transition-colors hover:text-foreground group"
+                >
+                  <Heart className={cn("w-4 h-4 transition-colors", isLiked ? "text-primary fill-primary" : "text-muted-foreground group-hover:text-foreground")} />
+                  <span>{item.likes + (isLiked ? 1 : 0)}</span>
+                </button>
+                
+                <div className="flex items-center gap-1.5">
+                  <Eye className="w-4 h-4" />
+                  <span>{item.views + localViews}</span>
                 </div>
+                
+                <button 
+                  onClick={toggleSave}
+                  className="flex items-center gap-1.5 transition-colors hover:text-foreground group"
+                >
+                  <Bookmark className={cn("w-4 h-4 transition-colors", isSaved ? "text-primary fill-primary" : "text-muted-foreground group-hover:text-foreground")} />
+                  <span>{item.saves + (isSaved ? 1 : 0)}</span>
+                </button>
+                
+                <button 
+                  onClick={handleShare}
+                  className="flex items-center gap-1.5 transition-colors hover:text-foreground group"
+                >
+                  <Share2 className={cn("w-4 h-4 transition-colors", isShared ? "text-primary fill-primary" : "text-muted-foreground group-hover:text-foreground")} />
+                  <span>{isShared ? 'Скопировано' : item.shares}</span>
+                </button>
+                {/* BACKEND: Лайки, сохранения, просмотры, шеринг */}
               </div>
 
-              <div className="flex flex-col gap-3 pt-2">
+              <div className="pt-2 space-y-1">
+                <div className="text-[13px] text-muted-foreground">
+                  {[
+                    modelName,
+                    item.params?.aspect,
+                    item.subModelId
+                  ].filter(Boolean).join(' · ')}
+                </div>
                 <div className="text-[13px] text-muted-foreground">
                   Теги: {' '}
                   <Link to="/prompts/$topic" params={{ topic: item.topicSlug }} className="underline hover:text-foreground">
@@ -301,8 +256,10 @@ function PromptDetailPage() {
                     ) : null;
                   })}
                 </div>
-                
-                <div className="space-y-2">
+              </div>
+
+              {item.extraTopicSlugs && item.extraTopicSlugs.length > 0 && (
+                <div className="pt-4 space-y-3">
                   <span className="text-[12px] font-bold tracking-[0.1em] uppercase text-muted-foreground/80 block">
                     Смотрите также
                   </span>
@@ -322,12 +279,12 @@ function PromptDetailPage() {
                     })}
                   </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </div>
 
-        <PromptComments slug={item.slug} />
+
 
         <div className="mt-14 pt-12 border-t border-border">
           <h2 className="mb-8 text-2xl font-bold tracking-tight text-foreground md:text-3xl">
