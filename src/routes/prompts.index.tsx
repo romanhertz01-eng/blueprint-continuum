@@ -221,7 +221,11 @@ function PromptsHub() {
         {filteredItems.length > 0 ? (
           <div className="w-screen mb-12">
             <div style={{ columnWidth: '320px', columnGap: '3px', padding: '0 3px' }}>
-              {visible.map((item) => <PromptMosaicTile key={item.slug} item={item} topics={topics} />)}
+              {visible.map((item) => 
+                item.category === 'text' 
+                  ? <TextPromptCard key={item.slug} item={item} />
+                  : <PromptMosaicTile key={item.slug} item={item} topics={topics} />
+              )}
             </div>
           </div>
         ) : (
