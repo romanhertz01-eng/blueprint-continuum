@@ -36,7 +36,7 @@ function PromptsHub() {
   const topics = getPublishedTopics();
   const promptCategories = getCategories();
   const categoryCounts = countItemsByCategory();
-
+  
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<'new' | 'popular' | 'used' | 'saved'>('new');
@@ -44,10 +44,24 @@ function PromptsHub() {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
 
   const displayItems = useMemo(() => {
-    if (sortBy === 'new') {
-      //Interleave logic - handled by sorting and getCardType mapping in the view
+    if (sortBy !== 'new') return allItems;
+
+    // Interleave text and images to ensure mixed visual content
+    const textItems = allItems.filter(i => i.category === 'text');
+    const imageItems = allItems.filter(i => i.category === 'image');
+    const otherItems = allItems.filter(i => i.category !== 'text' && i.category !== 'image');
+
+    const result: PromptItem[] = [];
+    let tIdx = 0, iIdx = 0, oIdx = 0;
+
+    while (tIdx < textItems.length || iIdx < imageItems.length || oIdx < otherItems.length) {
+      // 1 text, 2 images, 1 other (approximate ratio)
+      if (tIdx < textItems.length) result.push(textItems[tIdx++]);
+      if (iIdx < imageItems.length) result.push(imageItems[iIdx++]);
+      if (iIdx < imageItems.length) result.push(imageItems[iIdx++]);
+      if (oIdx < otherItems.length) result.push(otherItems[oIdx++]);
     }
-    return allItems;
+    return result;
   }, [allItems, sortBy]);
 
   // Категории (chips) для ленты
