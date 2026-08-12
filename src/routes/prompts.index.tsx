@@ -54,10 +54,11 @@ function PromptsHub() {
     const result: PromptItem[] = [];
     let tIdx = 0, iIdx = 0, oIdx = 0;
 
+    // To ensure variety, we mix them in a specific pattern
+    // pattern: [image, text, image, other, image, text...]
     while (tIdx < textItems.length || iIdx < imageItems.length || oIdx < otherItems.length) {
-      // 1 text, 2 images, 1 other (approximate ratio)
-      if (tIdx < textItems.length) result.push(textItems[tIdx++]);
       if (iIdx < imageItems.length) result.push(imageItems[iIdx++]);
+      if (tIdx < textItems.length) result.push(textItems[tIdx++]);
       if (iIdx < imageItems.length) result.push(imageItems[iIdx++]);
       if (oIdx < otherItems.length) result.push(otherItems[oIdx++]);
     }
@@ -129,16 +130,19 @@ function PromptsHub() {
     const hasMedia = !!item.media?.[0]?.src && item.category !== 'text';
     const cycle = index % 15;
     
-    if (cycle === 4) return 'D'; // Большая подборка
-    if (cycle === 9) return 'E'; // Мини-курс
+    // Подборки и курсы — фиксированные позиции
+    if (cycle === 4) return 'D';
+    if (cycle === 9) return 'E';
     
-    // Если есть медиа, пробуем дать тип B (image-first)
-    if (hasMedia && (cycle === 2 || cycle === 7 || cycle === 12)) return 'B';
+    // Если есть медиа, даем тип A (с картинкой) или B (картинка на весь фон)
+    if (hasMedia) {
+      // Тип B (Image-first) встречается реже для акцента
+      if (cycle === 2 || cycle === 12) return 'B';
+      return 'A';
+    }
     
-    // Если нет медиа (или тип C по циклу), даем тип C (текстовый)
-    if (!hasMedia || cycle === 5 || cycle === 10) return 'C';
-    
-    return 'A'; // Обычный
+    // Если нет медиа (текстовый промпт), всегда тип C
+    return 'C';
   };
 
   const getCardSpan = (type: 'A' | 'B' | 'C' | 'D' | 'E'): string => {
