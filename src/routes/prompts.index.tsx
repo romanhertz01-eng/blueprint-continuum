@@ -6,6 +6,7 @@ import { getPublishedItems, getPublishedTopics, countItemsByCategory, getCategor
 import { CategoryTile } from '@/components/prompts/CategoryTile';
 import { PromptMosaicTile } from '@/components/prompts/PromptMosaicTile';
 import { useLoadMore } from '@/components/prompts/useLoadMore';
+import { TextPromptCard } from '@/components/prompts/TextPromptCard';
 import { TopicCloud } from '@/components/prompts/TopicCloud';
 import { useState, useMemo } from 'react';
 import { textProviders } from '@/data/textModels';
