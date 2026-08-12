@@ -6,6 +6,7 @@ import { textProviders } from '@/data/textModels';
 import { imageProviders } from '@/data/imageModels';
 import { videoProviders } from '@/data/videoModels';
 import { PromptMosaicTile } from '@/components/prompts/PromptMosaicTile';
+import { TextPromptCard } from '@/components/prompts/TextPromptCard';
 
 export const Route = createFileRoute('/prompts/model/$providerId')({
   component: ModelDetailPage,
