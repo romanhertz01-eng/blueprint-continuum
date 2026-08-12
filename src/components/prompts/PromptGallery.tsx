@@ -58,7 +58,7 @@ export function PromptGallery({ media, title }: PromptGalleryProps) {
           src={item.src}
           poster={item.poster}
           controls={isVideoControllable}
-          className={cn("w-full h-full object-contain", className)}
+          className={cn("w-full h-full object-contain bg-black", className)}
         />
       );
     }
@@ -74,27 +74,29 @@ export function PromptGallery({ media, title }: PromptGalleryProps) {
   return (
     <div className="space-y-4">
       {/* Main Container */}
-      <div className="relative group aspect-square sm:aspect-video lg:aspect-square bg-muted rounded-xl border border-border overflow-hidden">
-        {renderMedia(activeMedia)}
+      <div className="relative group bg-muted rounded-xl border border-border overflow-hidden">
+        <div className="relative aspect-[3/4] sm:aspect-[4/5] lg:aspect-[3/4]">
+          {renderMedia(activeMedia)}
+        </div>
 
         {/* Navigation Arrows */}
         {hasMultiple && (
           <>
             <button
               onClick={handlePrev}
-              className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/70"
+              className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/50 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/70 z-10"
             >
-              <ChevronLeft className="w-6 h-6" />
+              <ChevronLeft className="w-5 h-5" />
             </button>
             <button
               onClick={handleNext}
-              className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/70"
+              className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/50 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/70 z-10"
             >
-              <ChevronRight className="w-6 h-6" />
+              <ChevronRight className="w-5 h-5" />
             </button>
             
             {/* Counter */}
-            <div className="absolute top-4 right-4 bg-black/60 text-white text-[13px] px-2 py-1 rounded-md font-medium">
+            <div className="absolute top-3 right-3 bg-black/60 text-white text-[11px] px-2 py-0.5 rounded font-medium z-10">
               {activeIdx + 1} / {media.length}
             </div>
           </>
@@ -103,10 +105,10 @@ export function PromptGallery({ media, title }: PromptGalleryProps) {
         {/* Fullscreen Button */}
         <button
           onClick={() => setIsLightboxOpen(true)}
-          className="absolute bottom-4 right-4 bg-black/60 text-white px-3 py-1.5 rounded-lg flex items-center gap-2 text-[13px] font-medium hover:bg-black/80 transition-colors"
+          className="absolute bottom-3 right-3 w-8 h-8 bg-black/50 text-white rounded-full flex items-center justify-center hover:bg-black/70 transition-colors z-10"
+          title="На весь экран"
         >
           <Maximize2 className="w-4 h-4" />
-          <span>На весь экран</span>
         </button>
       </div>
 

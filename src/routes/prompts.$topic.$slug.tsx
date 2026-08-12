@@ -171,7 +171,9 @@ function PromptDetailPage() {
             {mainTopic?.title}
           </Link>
           <ChevronRight className="w-3.5 h-3.5" />
-          <span className="text-foreground/70 line-clamp-1">{item.title}</span>
+          <span className="text-foreground/70 truncate max-w-[200px] sm:max-w-[300px]" title={item.title}>
+            {item.title}
+          </span>
         </nav>
 
         <div className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[12px] font-medium bg-primary/10 text-primary mb-3">
@@ -184,10 +186,12 @@ function PromptDetailPage() {
         
         <div className="border-t border-border w-full mb-8" />
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-10 items-start">
           {/* LEFT COLUMN - Media */}
-          <div className="space-y-6">
-            <PromptGallery media={item.media} title={item.title} />
+          <div className="flex justify-center lg:justify-start">
+            <div className="w-full max-w-[520px]">
+              <PromptGallery media={item.media} title={item.title} />
+            </div>
           </div>
 
           {/* RIGHT COLUMN - Prompt & Details */}
