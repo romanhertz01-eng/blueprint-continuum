@@ -87,6 +87,17 @@ function PromptDetailPage() {
   const [isSaved, setIsSaved] = useState(false);
   const [isShared, setIsShared] = useState(false);
   const [localViews, setLocalViews] = useState(0);
+  const [activeTabIndex, setActiveTabIndex] = useState(0);
+
+  const tabs = useMemo(() => {
+    const t = [
+      { id: 'prompt', label: 'Промпт', content: item.promptRu },
+      { id: 'overview', label: 'Описание', content: item.body.overview },
+      { id: 'instruction', label: 'Инструкция', content: item.body.howToChange },
+      { id: 'negative', label: 'Негативный промпт', content: item.negativePrompt },
+    ];
+    return t.filter(tab => !!tab.content);
+  }, [item]);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -193,31 +204,46 @@ function PromptDetailPage() {
                 <img src={media.src} alt={item.title} className="max-w-full h-auto rounded-xl border border-border" />
               ))}
             </div>
-
-            {item.negativePrompt && (
-              <div className="space-y-2">
-                <span className="text-[12px] font-bold tracking-[0.1em] uppercase text-muted-foreground/80">
-                  Негативный промпт
-                </span>
-                <div className="bg-muted/30 border border-border rounded-lg p-4 text-[14px] text-foreground/90 leading-relaxed italic">
-                  {item.negativePrompt}
-                </div>
-              </div>
-            )}
           </div>
 
           {/* RIGHT COLUMN - Prompt & Details */}
           <div className="space-y-8">
             <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <h2 className="text-[22px] font-semibold text-foreground">Промпт</h2>
+              <div className="flex border-b border-border mb-4">
+                {tabs.map((tab, idx) => (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTabIndex(idx)}
+                    className={cn(
+                      "px-4 py-2 text-[14px] font-medium transition-all relative",
+                      activeTabIndex === idx 
+                        ? "text-primary" 
+                        : "text-muted-foreground hover:text-foreground"
+                    )}
+                  >
+                    {tab.label}
+                    {activeTabIndex === idx && (
+                      <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary" />
+                    )}
+                  </button>
+                ))}
               </div>
 
-              <div className="bg-muted/30 border border-border rounded-xl p-5 text-[15px] leading-relaxed text-foreground whitespace-pre-wrap">
-                {item.promptRu}
+              <div className="relative">
+                {tabs.map((tab, idx) => (
+                  <div 
+                    key={tab.id}
+                    className={cn(
+                      "bg-muted/30 border border-border rounded-xl p-5 text-[15px] leading-relaxed text-foreground whitespace-pre-wrap",
+                      activeTabIndex !== idx && "hidden"
+                    )}
+                  >
+                    {tab.content}
+                  </div>
+                ))}
               </div>
 
-              <div className="flex flex-wrap gap-3">
+              <div className="flex flex-wrap gap-3 mt-4">
                 <CopyPromptButton text={item.promptRu} />
                 <TryPromptButton item={item} label="Открыть в генераторе" />
               </div>
@@ -228,8 +254,8 @@ function PromptDetailPage() {
                   { icon: Eye, count: item.views + localViews, label: 'Просмотры' },
                   { icon: Share2, count: isShared ? 'Copy' : item.shares, label: 'Поделились', active: isShared, onClick: handleShare },
                   { icon: Bookmark, count: item.saves + (isSaved ? 1 : 0), label: 'Сохранения', active: isSaved, onClick: toggleSave },
-                  { icon: MessageSquare, count: 0, label: 'Комментарии' },
-                  { icon: Star, count: '5.0', label: 'Рейтинг' },
+                  { icon: MessageSquare, count: item.reviewsCount ?? 0, label: 'Комментарии' },
+                  { icon: Star, count: item.rating ? item.rating.toFixed(1) : '—', label: 'Рейтинг' },
                 ].map((stat, i) => (
                   <div 
                     key={i} 
