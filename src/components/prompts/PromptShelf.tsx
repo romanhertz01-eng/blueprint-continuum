@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from '@tanstack/react-router';
-import { ChevronRight, Bookmark, Check } from 'lucide-react';
+import { ChevronRight, Bookmark } from 'lucide-react';
 import { PromptItem } from '@/data/prompts/types';
 import { cn } from '@/lib/utils';
 import { imageProviders } from '@/data/imageModels';
@@ -25,6 +25,7 @@ export function PromptShelf({ title, subtitle, ctaLabel, ctaHref, items }: Promp
     return provider ? provider.name : providerId;
   };
 
+  // Regular shelf: horizontal row of 5
   return (
     <section className="w-full max-w-[1360px] mx-auto px-4 md:px-8">
       <div className="flex items-end justify-between mb-4 md:mb-5">
@@ -45,29 +46,21 @@ export function PromptShelf({ title, subtitle, ctaLabel, ctaHref, items }: Promp
         </Link>
       </div>
 
-      <div className="columns-2 md:columns-3 lg:columns-5 xl:columns-6 gap-3">
-        {items.map((item) => (
-          <PromptMasonryCard key={item.slug} item={item} modelName={getModelName(item.providerId)} />
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-[16px]">
+        {items.slice(0, 5).map((item) => (
+          <PromptShelfCard key={item.slug} item={item} modelName={getModelName(item.providerId)} />
         ))}
       </div>
     </section>
   );
 }
 
-function PromptMasonryCard({ item, modelName }: { item: PromptItem, modelName: string }) {
+function PromptShelfCard({ item, modelName }: { item: PromptItem, modelName: string }) {
   const [isSaved, setIsSaved] = useState(false);
   const media = item.media[0];
   
-  // Pinterest pattern: hover only on desktop
-  const aspectClass = React.useMemo(() => {
-    const aspect = item.params?.aspect;
-    if (aspect === '1:1') return 'aspect-square';
-    if (aspect === '3:4') return 'aspect-[3/4]';
-    if (aspect === '4:3') return 'aspect-[4/3]';
-    if (aspect === '9:16') return 'aspect-[9/16]';
-    if (aspect === '2:3') return 'aspect-[2/3]';
-    return 'aspect-[3/4]';
-  }, [item.params?.aspect]);
+  // Single fixed aspect for shelf
+  const aspectClass = "aspect-[3/4]";
 
   useEffect(() => {
     try {
@@ -88,14 +81,14 @@ function PromptMasonryCard({ item, modelName }: { item: PromptItem, modelName: s
   };
 
   return (
-    <div className="break-inside-avoid mb-3 group/card">
+    <div className="group/card">
       <Link
         to="/prompts/$topic/$slug"
         params={{ topic: item.topicSlug, slug: item.slug }}
         className="block"
       >
         <div className={cn(
-          "relative rounded-[16px] overflow-hidden bg-muted transition-all duration-300 md:group-hover/card:-translate-y-0.5",
+          "relative rounded-[16px] overflow-hidden bg-muted transition-all duration-300 md:hover:hover:-translate-y-[2px]",
           aspectClass
         )}>
           {media.type === 'video' ? (
@@ -110,30 +103,20 @@ function PromptMasonryCard({ item, modelName }: { item: PromptItem, modelName: s
             <img 
               src={media.src} 
               alt={media.alt} 
-              className="w-full h-full object-cover transition-transform duration-700 md:group-hover/card:scale-105" 
+              className="w-full h-full object-cover" 
             />
           )}
           
-          {/* Default Model Chip */}
+          {/* Model Badge */}
           <div className="absolute top-2.5 left-2.5 z-10">
-            <div className="bg-black/60 backdrop-blur-md text-white text-[10px] px-1.5 py-0.5 rounded-md font-medium opacity-80 group-hover/card:opacity-100 transition-opacity">
+            <div className="bg-black/40 backdrop-blur-sm text-white text-[10px] px-2 py-0.5 rounded-md font-medium transition-opacity">
               {modelName}
             </div>
           </div>
-
-          {/* Status Badge (if exists) */}
-          {(item as any).status_badge && (
-            <div className="absolute top-2.5 right-2.5 z-10">
-              <div className="bg-primary text-white text-[10px] px-1.5 py-0.5 rounded-md font-bold uppercase tracking-wider">
-                {(item as any).status_badge}
-              </div>
-            </div>
-          )}
           
           {/* Hover Overlay - Desktop Only */}
-          <div className="absolute inset-0 bg-black/0 md:group-hover/card:bg-black/20 transition-colors pointer-events-none md:pointer-events-auto">
-            <div className="absolute inset-0 opacity-0 md:group-hover/card:opacity-100 transition-opacity flex flex-col justify-between p-3">
-              {/* Top Right Actions */}
+          <div className="absolute inset-0 bg-black/0 md:hover:hover:bg-black/20 transition-colors pointer-events-none md:hover:hover:pointer-events-auto">
+            <div className="absolute inset-0 opacity-0 md:hover:hover:opacity-100 transition-opacity flex flex-col justify-between p-3">
               <div className="flex justify-end">
                 <button
                   onClick={toggleSave}
@@ -146,11 +129,10 @@ function PromptMasonryCard({ item, modelName }: { item: PromptItem, modelName: s
                 </button>
               </div>
 
-              {/* Bottom Actions */}
               <div className="w-full">
                 <TryPromptButton 
                   item={item} 
-                  label="Создать" 
+                  label="Создать с этим промптом" 
                   className="w-full py-1.5 h-auto text-[12px] bg-primary hover:bg-primary/90 text-white border-none shadow-lg"
                 />
               </div>
@@ -158,11 +140,11 @@ function PromptMasonryCard({ item, modelName }: { item: PromptItem, modelName: s
           </div>
         </div>
 
-        <div className="mt-2.5 px-1 space-y-0.5">
-          <h3 className="text-[14px] font-semibold text-foreground line-clamp-2 leading-tight group-hover/card:text-primary transition-colors">
+        <div className="mt-[8px] px-1">
+          <h3 className="text-[14px] font-medium text-foreground line-clamp-2 leading-tight">
             {item.title}
           </h3>
-          <div className="text-[12px] text-muted-foreground flex items-center gap-1.5">
+          <div className="mt-[4px] text-[12px] text-muted-foreground flex items-center gap-1.5">
             <span>{modelName}</span>
             <span className="opacity-40">·</span>
             <span>{item.params?.aspect || '3:4'}</span>
@@ -172,4 +154,3 @@ function PromptMasonryCard({ item, modelName }: { item: PromptItem, modelName: s
     </div>
   );
 }
-
