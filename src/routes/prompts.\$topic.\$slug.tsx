@@ -1,14 +1,12 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
-import { ChevronRight, Heart, Bookmark, Share2, Eye, MessageSquare, Star, Check } from 'lucide-react';
-import { getPublishedItems, getPublishedTopics, getTopicBySlug, getItemBySlug, getItemsByProvider, PromptItem, getRelatedItems, getRelatedByModel, promptTopics } from '@/data/prompts';
+import { ChevronRight, Heart, Bookmark, Share2, Eye, Check } from 'lucide-react';
+import { getPublishedTopics, getTopicBySlug, getItemBySlug, getItemsByProvider, getRelatedItems, getRelatedByModel } from '@/data/prompts';
 import { imageProviders } from '@/data/imageModels';
 import { videoProviders } from '@/data/videoModels';
 import { textProviders } from '@/data/textModels';
 import { CopyPromptButton } from '@/components/prompts/CopyPromptButton';
 import { TryPromptButton } from '@/components/prompts/TryPromptButton';
-import { PromptMasonry } from '@/components/prompts/PromptMasonry';
-import { TopicCloud } from '@/components/prompts/TopicCloud';
-import { DiscoveryFeed } from "@/components/prompts/DiscoveryFeed";
+import { DiscoveryFeed } from '@/components/prompts/DiscoveryFeed';
 import { PromptGallery } from '@/components/prompts/PromptGallery';
 
 import { Footer } from '@/components/shared/Footer';
@@ -60,7 +58,6 @@ function PromptDetailPage() {
   const mainTopic = getTopicBySlug(item.topicSlug);
   
   const modelName = getModelName(item.providerId, item.category);
-  const itemsByProvider = useMemo(() => getItemsByProvider(item.providerId).filter(i => i.slug !== item.slug), [item.providerId, item.slug]);
 
   // Reactions Logic
   const [isLiked, setIsLiked] = useState(false);
@@ -208,78 +205,46 @@ function PromptDetailPage() {
               </div>
             </div>
 
-            <div className="p-4 rounded-xl border border-border bg-muted/20 space-y-3">
-              <div className="flex items-center justify-between text-[13px]">
-                <span className="text-muted-foreground">Модель</span>
-                <span className="font-medium text-foreground">
-                  {modelName} {item.params?.quality && `· ${item.params.quality}`}
-                </span>
-              </div>
-              
-              {item.params?.aspect && (
-                <div className="flex items-center justify-between text-[13px]">
-                  <span className="text-muted-foreground">Формат</span>
-                  <span className="font-medium text-foreground">{item.params.aspect}</span>
+            <div className="pt-6 border-t border-border/50 space-y-5">
+              <div className="grid grid-cols-2 gap-x-8 gap-y-4">
+                <div>
+                  <div className="text-[12px] text-muted-foreground uppercase tracking-wider mb-1">Модель</div>
+                  <div className="text-[15px] font-medium text-foreground">{modelName}</div>
                 </div>
-              )}
-            </div>
-
-            <div className="space-y-3">
-              <h3 className="text-[14px] font-semibold text-foreground">Тема</h3>
-              <div className="flex flex-wrap gap-2">
-                <Link
-                  to="/prompts/$topic"
-                  params={{ topic: item.topicSlug }}
-                  className="px-3 py-1 rounded-full text-[12px] bg-muted/40 border border-border text-foreground/80 hover:bg-muted/60 transition-colors"
-                >
-                  {mainTopic?.title}
-                </Link>
-                {item.extraTopicSlugs?.map((slug: string) => {
-                  const topic = topics.find(t => t.slug === slug);
-                  return topic ? (
-                    <Link
-                      key={slug}
-                      to="/prompts/$topic"
-                      params={{ topic: slug }}
-                      className="px-3 py-1 rounded-full text-[12px] bg-muted/40 border border-border text-foreground/80 hover:bg-muted/60 transition-colors"
-                    >
-                      {topic.title}
-                    </Link>
-                  ) : null;
-                })}
+                <div>
+                  <div className="text-[12px] text-muted-foreground uppercase tracking-wider mb-1">Формат</div>
+                  <div className="text-[15px] font-medium text-foreground">{item.params?.aspect || '3:4'}</div>
+                </div>
+                <div>
+                  <div className="text-[12px] text-muted-foreground uppercase tracking-wider mb-1">Качество</div>
+                  <div className="text-[15px] font-medium text-foreground">1K</div>
+                </div>
+                <div>
+                  <div className="text-[12px] text-muted-foreground uppercase tracking-wider mb-1">Доступ</div>
+                  <div className="text-[15px] font-medium text-foreground">Открытый</div>
+                </div>
               </div>
-            </div>
 
-            {item.extraTopicSlugs && item.extraTopicSlugs.length > 0 && (
-              <div className="pt-4 space-y-3">
-                <span className="text-[12px] font-bold tracking-[0.1em] uppercase text-muted-foreground/80 block">
-                  Смотрите также
-                </span>
+              <div>
+                <div className="text-[12px] text-muted-foreground uppercase tracking-wider mb-2">Теги</div>
                 <div className="flex flex-wrap gap-2">
-                  {item.extraTopicSlugs?.map((slug: string) => {
-                    const topic = promptTopics.find(t => t.slug === slug);
-
-                    return topic ? (
-                      <Link 
-                        key={slug} 
-                        to="/prompts/$topic" 
-                        params={{ topic: slug }}
-                        className="bg-muted/40 border border-border rounded-full px-4 py-1.5 text-[13px] text-foreground hover:bg-muted/60 transition-colors"
-                      >
-                        {topic.title}
-                      </Link>
-                    ) : null;
-                  })}
+                  {item.tags.map(tag => (
+                    <span 
+                      key={tag} 
+                      className="px-3 py-1 bg-muted/50 text-muted-foreground text-[12px] rounded-full border border-border/40 hover:bg-muted hover:text-foreground cursor-default transition-colors"
+                    >
+                      #{tag}
+                    </span>
+                  ))}
                 </div>
               </div>
-            )}
+            </div>
           </div>
         </div>
+      </div>
 
       <div className="w-full">
         <DiscoveryFeed currentItem={item} />
-      </div>
-
       </div>
 
       <Footer />
