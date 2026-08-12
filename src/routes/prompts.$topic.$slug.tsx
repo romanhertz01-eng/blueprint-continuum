@@ -1,17 +1,17 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
-import { ChevronRight } from 'lucide-react';
-import { getPublishedItems, getPublishedTopics, getTopicBySlug, getItemBySlug, PromptItem } from '@/data/prompts';
+import { ChevronRight, Heart, Bookmark, Share2, Eye, MessageSquare, Star, Check } from 'lucide-react';
+import { getPublishedItems, getPublishedTopics, getTopicBySlug, getItemBySlug, getItemsByProvider, PromptItem } from '@/data/prompts';
 import { imageProviders } from '@/data/imageModels';
 import { videoProviders } from '@/data/videoModels';
 import { textProviders } from '@/data/textModels';
 import { CopyPromptButton } from '@/components/prompts/CopyPromptButton';
 import { TryPromptButton } from '@/components/prompts/TryPromptButton';
-import { PromptReactions } from '@/components/prompts/PromptReactions';
-import { PromptMasonry } from '@/components/prompts/PromptMasonry';
+import { PromptMasonry } from '@/components/prompts/PromptMason masonry';
 import { TopicCloud } from '@/components/prompts/TopicCloud';
+import { PromptComments } from '@/components/prompts/PromptComments';
 import { Footer } from '@/components/shared/Footer';
 import { ORIGIN } from '@/lib/origin';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 
 export const Route = createFileRoute('/prompts/$topic/$slug')({
