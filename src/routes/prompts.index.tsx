@@ -103,10 +103,33 @@ function PromptsHub() {
       });
     }
 
-    return [...result].sort((a, b) => {
+    const sorted = [...result].sort((a, b) => {
       if (sortBy === 'new') return new Date(b.publishedAt || 0).getTime() - new Date(a.publishedAt || 0).getTime();
       return a.title.localeCompare(b.title);
     });
+
+    // Если нет поиска и фильтра по провайдеру, перемешиваем типы контента для "витрины"
+    if (!searchQuery && !selectedProvider && sortBy === 'new') {
+      const images = sorted.filter(i => i.category !== 'text');
+      const texts = sorted.filter(i => i.category === 'text');
+      const interleaved: PromptItem[] = [];
+      const maxLength = Math.max(images.length, texts.length);
+      
+      for (let i = 0; i < maxLength; i++) {
+        // Чередуем: 2 картинки, 1 текст (или 1 к 1, если текстов мало)
+        if (i < images.length) interleaved.push(images[i]);
+        if (i % 2 === 0 && Math.floor(i / 2) < texts.length) {
+          interleaved.push(texts[Math.floor(i / 2)]);
+        } else if (i >= images.length && i < texts.length) {
+          // Если картинки кончились, докидываем оставшиеся тексты
+          interleaved.push(texts[i]);
+        }
+      }
+      // Убираем возможные дубликаты (хотя их быть не должно) и фильтруем undefined
+      return interleaved.filter(Boolean);
+    }
+
+    return sorted;
   }, [allItems, searchQuery, selectedProvider, sortBy, topics]);
 
   const { visible, hasMore, remaining, showMore } = useLoadMore<PromptItem>(filteredItems);

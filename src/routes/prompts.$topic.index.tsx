@@ -14,6 +14,7 @@ import {
   MIN_ITEMS_FOR_INDEX
 } from '@/data/prompts';
 import { PromptCard } from '@/components/prompts/PromptCard';
+import { TextPromptCard } from '@/components/prompts/TextPromptCard';
 import { useLoadMore } from '@/components/prompts/useLoadMore';
 import { TopicCloud } from '@/components/prompts/TopicCloud';
 import { useState, useMemo } from 'react';
@@ -86,8 +87,12 @@ function PromptHandoffPage() {
             </select>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-12">
-            {visible.map(item => <PromptCard key={item.slug} item={item} topics={topics} />)}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-12">
+            {visible.map(item => (
+              item.category === 'text' 
+                ? <TextPromptCard key={item.slug} item={item} />
+                : <PromptCard key={item.slug} item={item} topics={topics} />
+            ))}
           </div>
 
           {hasMore && (
