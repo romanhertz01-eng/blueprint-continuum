@@ -88,17 +88,6 @@ function PromptDetailPage() {
   const [isSaved, setIsSaved] = useState(false);
   const [isShared, setIsShared] = useState(false);
   const [localViews, setLocalViews] = useState(0);
-  const [activeTabIndex, setActiveTabIndex] = useState(0);
-
-  const tabs = useMemo(() => {
-    const t = [
-      { id: 'prompt', label: 'Промпт', content: item.promptRu },
-      { id: 'overview', label: 'Описание', content: item.body.overview },
-      { id: 'instruction', label: 'Инструкция', content: item.body.howToChange },
-      { id: 'negative', label: 'Негативный промпт', content: item.negativePrompt },
-    ];
-    return t.filter(tab => !!tab.content);
-  }, [item]);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
