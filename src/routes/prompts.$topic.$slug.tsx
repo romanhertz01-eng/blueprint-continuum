@@ -9,6 +9,7 @@ import { TryPromptButton } from '@/components/prompts/TryPromptButton';
 import { PromptMasonry } from '@/components/prompts/PromptMasonry';
 import { TopicCloud } from '@/components/prompts/TopicCloud';
 import { PromptShelf } from '@/components/prompts/PromptShelf';
+import { PromptMasonryFeed } from '@/components/prompts/PromptMasonryFeed';
 import { PromptGallery } from '@/components/prompts/PromptGallery';
 
 import { Footer } from '@/components/shared/Footer';
@@ -279,29 +280,18 @@ function PromptDetailPage() {
         <div className="mt-20 space-y-16">
           <PromptShelf
             title={`Ещё на ${modelName}`}
-            subtitle="Другие промпты в этом же стиле"
+            subtitle="Другие промпты для этой модели"
             ctaLabel="Все промпты модели →"
             ctaHref={`/prompts/model/${item.providerId}`}
-            items={getRelatedByModel(item, 10)}
+            items={getRelatedByModel(item, 5)}
           />
 
-          <PromptShelf
+          <PromptMasonryFeed
             title="Похожие промпты"
             subtitle="Подобрано по теме, стилю и формату"
-            ctaLabel="Смотреть все →"
+            ctaLabel="Смотреть все похожие →"
             ctaHref={`/prompts/${item.topicSlug}`}
-            items={getRelatedItems(item, 10)}
-          />
-
-          <PromptShelf
-            title="Популярное в категории"
-            subtitle="Часто используемые промпты этой категории"
-            ctaLabel="Открыть подборку →"
-            ctaHref={`/prompts/${item.category}`}
-            items={getPublishedItems()
-              .filter(i => i.category === item.category && i.slug !== item.slug)
-              .sort((a, b) => (b.likes || 0) - (a.likes || 0))
-              .slice(0, 10)}
+            items={getRelatedItems(item, 20)}
           />
         </div>
 

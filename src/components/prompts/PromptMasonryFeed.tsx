@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from '@tanstack/react-router';
-import { ChevronRight, Bookmark } from 'lucide-react';
+import { Bookmark, ChevronRight } from 'lucide-react';
 import { PromptItem } from '@/data/prompts/types';
 import { cn } from '@/lib/utils';
 import { imageProviders } from '@/data/imageModels';
@@ -8,7 +8,7 @@ import { videoProviders } from '@/data/videoModels';
 import { textProviders } from '@/data/textModels';
 import { TryPromptButton } from './TryPromptButton';
 
-interface PromptShelfProps {
+interface PromptMasonryFeedProps {
   title: string;
   subtitle: string;
   ctaLabel: string;
@@ -16,7 +16,9 @@ interface PromptShelfProps {
   items: PromptItem[];
 }
 
-export function PromptShelf({ title, subtitle, ctaLabel, ctaHref, items }: PromptShelfProps) {
+export function PromptMasonryFeed({ title, subtitle, ctaLabel, ctaHref, items }: PromptMasonryFeedProps) {
+  const [displayCount, setDisplayCount] = useState(10);
+  
   if (!items || items.length === 0) return null;
 
   const getModelName = (providerId: string) => {
@@ -25,10 +27,12 @@ export function PromptShelf({ title, subtitle, ctaLabel, ctaHref, items }: Promp
     return provider ? provider.name : providerId;
   };
 
-  // Regular shelf: horizontal row of 5
+  const visibleItems = items.slice(0, displayCount);
+  const hasMore = items.length > displayCount;
+
   return (
     <section className="w-full max-w-[1360px] mx-auto px-4 md:px-8">
-      <div className="flex items-end justify-between mb-4 md:mb-5">
+      <div className="flex items-end justify-between mb-6 md:mb-8">
         <div className="space-y-1">
           <h2 className="text-[24px] md:text-[26px] font-bold tracking-tight text-foreground">
             {title}
@@ -46,21 +50,40 @@ export function PromptShelf({ title, subtitle, ctaLabel, ctaHref, items }: Promp
         </Link>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-[16px]">
-        {items.slice(0, 5).map((item) => (
-          <PromptShelfCard key={item.slug} item={item} modelName={getModelName(item.providerId)} />
+      <div className="columns-2 md:columns-3 lg:columns-5 gap-4 md:gap-[16px]">
+        {visibleItems.map((item) => (
+          <PromptDiscoveryCard key={item.slug} item={item} modelName={getModelName(item.providerId)} />
         ))}
       </div>
+
+      {hasMore && (
+        <div className="mt-12 flex justify-center">
+          <button 
+            onClick={() => setDisplayCount(prev => prev + 10)}
+            className="px-8 py-3 rounded-xl border border-border bg-muted/30 hover:bg-muted/50 text-[15px] font-medium transition-colors"
+          >
+            Показать ещё
+          </button>
+        </div>
+      )}
     </section>
   );
 }
 
-function PromptShelfCard({ item, modelName }: { item: PromptItem, modelName: string }) {
+function PromptDiscoveryCard({ item, modelName }: { item: PromptItem, modelName: string }) {
   const [isSaved, setIsSaved] = useState(false);
   const media = item.media[0];
   
-  // Single fixed aspect for shelf
-  const aspectClass = "aspect-[3/4]";
+  const aspectClass = React.useMemo(() => {
+    const aspect = item.params?.aspect;
+    if (aspect === '1:1') return 'aspect-square';
+    if (aspect === '3:4') return 'aspect-[3/4]';
+    if (aspect === '4:3') return 'aspect-[4/3]';
+    if (aspect === '16:9') return 'aspect-video';
+    if (aspect === '9:16') return 'aspect-[9/16]';
+    if (aspect === '2:3') return 'aspect-[2/3]';
+    return 'aspect-[3/4]';
+  }, [item.params?.aspect]);
 
   useEffect(() => {
     try {
@@ -81,7 +104,7 @@ function PromptShelfCard({ item, modelName }: { item: PromptItem, modelName: str
   };
 
   return (
-    <div className="group/card">
+    <div className="break-inside-avoid mb-[20px] group/card">
       <Link
         to="/prompts/$topic/$slug"
         params={{ topic: item.topicSlug, slug: item.slug }}
