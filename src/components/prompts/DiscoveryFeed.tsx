@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { Link } from '@tanstack/react-router';
-import { Bookmark } from 'lucide-react';
+import { Link, useNavigate } from '@tanstack/react-router';
+import { Bookmark, Heart, Zap } from 'lucide-react';
 import { PromptItem } from '@/data/prompts/types';
 import { cn } from '@/lib/utils';
 import { imageProviders } from '@/data/imageModels';
@@ -8,6 +8,7 @@ import { videoProviders } from '@/data/videoModels';
 import { textProviders } from '@/data/textModels';
 import { TryPromptButton } from './TryPromptButton';
 import { getRelatedItems, getRelatedByModel, getItemsByTopic, getPublishedItems } from '@/data/prompts';
+import { TextPromptCard } from './TextPromptCard';
 
 interface DiscoveryFeedProps {
   currentItem: PromptItem;
