@@ -278,30 +278,30 @@ function PromptDetailPage() {
 
         <div className="mt-20 space-y-16">
           <PromptShelf
-            title={`Ещё от ${modelName}`}
+            title={`Ещё на ${modelName}`}
             subtitle="Другие промпты в этом же стиле"
-            ctaLabel="Все промпты модели"
+            ctaLabel="Все промпты модели →"
             ctaHref={`/prompts/model/${item.providerId}`}
-            items={getRelatedByModel(item, 8)}
+            items={getRelatedByModel(item, 10)}
           />
 
           <PromptShelf
             title="Похожие промпты"
             subtitle="Подобрано по теме, стилю и формату"
-            ctaLabel="Смотреть все"
+            ctaLabel="Смотреть все →"
             ctaHref={`/prompts/${item.topicSlug}`}
-            items={getRelatedItems(item, 8)}
+            items={getRelatedItems(item, 10)}
           />
 
           <PromptShelf
             title="Популярное в категории"
             subtitle="Часто используемые промпты этой категории"
-            ctaLabel="Открыть подборку"
+            ctaLabel="Открыть подборку →"
             ctaHref={`/prompts/${item.category}`}
             items={getPublishedItems()
               .filter(i => i.category === item.category && i.slug !== item.slug)
               .sort((a, b) => (b.likes || 0) - (a.likes || 0))
-              .slice(0, 8)}
+              .slice(0, 10)}
           />
         </div>
 

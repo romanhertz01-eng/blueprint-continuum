@@ -152,10 +152,6 @@ function PromptMasonryCard({ item, modelName }: { item: PromptItem, modelName: s
                   item={item} 
                   label="Создать" 
                   className="w-full py-1.5 h-auto text-[12px] bg-primary hover:bg-primary/90 text-white border-none shadow-lg"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                  }}
                 />
               </div>
             </div>
