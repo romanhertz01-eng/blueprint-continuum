@@ -1,17 +1,12 @@
 import { ORIGIN } from "@/lib/origin";
 import { createFileRoute, Link } from '@tanstack/react-router';
-import { Search, X } from 'lucide-react';
+import { Search, X, Sparkles, Star, PlusCircle, ArrowRight, Filter } from 'lucide-react';
 import { Footer } from '@/components/shared/Footer';
-import { getPublishedItems, getPublishedTopics, countItemsByCategory, getCategories, PromptItem, getProvidersWithPrompts, getItemsByCategory } from '@/data/prompts';
-import { CategoryTile } from '@/components/prompts/CategoryTile';
-import { PromptMosaicTile } from '@/components/prompts/PromptMosaicTile';
-import { useLoadMore } from '@/components/prompts/useLoadMore';
-import { TextPromptCard } from '@/components/prompts/TextPromptCard';
+import { getPublishedItems, getPublishedTopics, countItemsByCategory, getCategories, PromptItem, getProvidersWithPrompts } from '@/data/prompts';
+import { EditorialPromptCard } from '@/components/prompts/EditorialPromptCard';
 import { TopicCloud } from '@/components/prompts/TopicCloud';
-import { useState, useMemo } from 'react';
-import { textProviders } from '@/data/textModels';
-import { imageProviders } from '@/data/imageModels';
-import { videoProviders } from '@/data/videoModels';
+import { useState, useMemo, useEffect } from 'react';
+import { cn } from '@/lib/utils';
 
 const TITLE = 'Библиотека промптов для нейросетей — готовые примеры | ERA2.ai';
 const DESCRIPTION = 'Библиотека лучших промптов для ChatGPT, Midjourney, Claude и других нейросетей. Бесплатные примеры, копирование без регистрации, быстрый старт генерации в ERA2.';
@@ -34,249 +29,281 @@ export const Route = createFileRoute('/prompts/')({
   }),
 });
 
+const PAGE_SIZE = 30;
+
 function PromptsHub() {
   const allItems = getPublishedItems();
   const topics = getPublishedTopics();
   const categories = getCategories();
-  const categoryCounts = countItemsByCategory();
-  const providersWithCounts = useMemo(() => getProvidersWithPrompts().slice(0, 5), []);
-  
-  const categoryImages = useMemo(() => {
-    const usedSrcs = new Set<string>();
-    const images = categories.map(cat => {
-      const items = getItemsByCategory(cat.slug as any);
-      let selectedSrc: string | null = null;
-      for (const item of items) {
-        const src = item.media?.[0]?.src;
-        if (src && !usedSrcs.has(src)) {
-          selectedSrc = src;
-          usedSrcs.add(src);
-          break;
-        }
-      }
-      if (!selectedSrc && items[0]?.media?.[0]?.src) {
-        selectedSrc = items[0].media[0].src;
-      }
-      return selectedSrc;
-    });
-
-    // шестая плитка (По моделям) - берем из самой популярной модели (kling)
-    const providers = getProvidersWithPrompts();
-    const topProviderId = providers[0]?.providerId;
-    const providerItems = topProviderId ? getPublishedItems().filter(i => i.providerId === topProviderId) : [];
-    let modelSrc: string | null = null;
-    for (const item of providerItems) {
-      const src = item.media?.[0]?.src;
-      if (src && !usedSrcs.has(src)) {
-        modelSrc = src;
-        usedSrcs.add(src);
-        break;
-      }
-    }
-    if (!modelSrc && providerItems[0]?.media?.[0]?.src) {
-      modelSrc = providerItems[0].media[0].src;
-    }
-
-    return [...images, modelSrc];
-  }, [categories]);
   
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedProvider, setSelectedProvider] = useState<string | null>(null);
-  const [sortBy, setSortBy] = useState<'new' | 'alpha'>('new');
+  const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
+  const [sortBy, setSortBy] = useState<'new' | 'popular' | 'used' | 'saved'>('new');
+  const [page, setPage] = useState(1);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+
+  // Категории (chips) для ленты
+  const pillCategories = [
+    { label: 'Все темы', slug: null },
+    { label: 'Популярное', slug: 'popular' },
+    { label: 'Для работы', slug: 'rabota' },
+    { label: 'Маркетинг', slug: 'marketing' },
+    { label: 'Образование', slug: 'obrazovanie' },
+    { label: 'Саморазвитие', slug: 'samorazvitie' },
+    { label: 'Креатив', slug: 'kreativ' },
+    { label: 'Нейросети', slug: 'neyroseti' },
+    { label: 'Код', slug: 'kod' },
+    { label: 'Бизнес', slug: 'biznes' },
+    { label: 'Дизайн', slug: 'dizayn' },
+    { label: 'Аналитика', slug: 'analitika' },
+  ];
 
   const filteredItems = useMemo(() => {
-    let result = allItems;
+    let result = [...allItems];
 
-    if (selectedProvider) {
-      result = result.filter(item => item.providerId === selectedProvider);
+    if (selectedTopic && selectedTopic !== 'popular') {
+       // В моках пока нет точной привязки к этим слагам, но логика фильтрации заложена
+       // Для демонстрации будем просто фильтровать по topicSlug если совпадает
+       result = result.filter(item => item.topicSlug === selectedTopic || item.category === selectedTopic);
     }
 
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
-      result = result.filter(item => {
-        const topic = topics.find(t => t.slug === item.topicSlug);
-        return (
-          item.title.toLowerCase().includes(q) ||
-          item.promptRu.toLowerCase().includes(q) ||
-          (topic?.title.toLowerCase().includes(q))
-        );
-      });
+      result = result.filter(item => 
+        item.title.toLowerCase().includes(q) || 
+        item.promptRu.toLowerCase().includes(q)
+      );
     }
 
-    const sorted = [...result].sort((a, b) => {
-      if (sortBy === 'new') return new Date(b.publishedAt || 0).getTime() - new Date(a.publishedAt || 0).getTime();
-      return a.title.localeCompare(b.title);
-    });
-
-    // Если нет поиска и фильтра по провайдеру, перемешиваем типы контента для "витрины"
-    if (!searchQuery && !selectedProvider && sortBy === 'new') {
-      const images = sorted.filter(i => i.category !== 'text');
-      const texts = sorted.filter(i => i.category === 'text');
-      const interleaved: PromptItem[] = [];
-      const maxLength = Math.max(images.length, texts.length);
-      
-      for (let i = 0; i < maxLength; i++) {
-        // Чередуем: 2 картинки, 1 текст (или 1 к 1, если текстов мало)
-        if (i < images.length) interleaved.push(images[i]);
-        if (i % 2 === 0 && Math.floor(i / 2) < texts.length) {
-          interleaved.push(texts[Math.floor(i / 2)]);
-        } else if (i >= images.length && i < texts.length) {
-          // Если картинки кончились, докидываем оставшиеся тексты
-          interleaved.push(texts[i]);
-        }
-      }
-      // Убираем возможные дубликаты (хотя их быть не должно) и фильтруем undefined
-      return interleaved.filter(Boolean);
+    // Сортировка
+    if (sortBy === 'new') {
+      result.sort((a, b) => new Date(b.publishedAt || 0).getTime() - new Date(a.publishedAt || 0).getTime());
+    } else if (sortBy === 'popular') {
+      result.sort((a, b) => (b.views || 0) - (a.views || 0));
     }
 
-    return sorted;
-  }, [allItems, searchQuery, selectedProvider, sortBy, topics]);
+    return result;
+  }, [allItems, searchQuery, selectedTopic, sortBy]);
 
-  const { visible, hasMore, remaining, showMore } = useLoadMore<PromptItem>(filteredItems);
+  const visibleItems = useMemo(() => {
+    return filteredItems.slice(0, page * PAGE_SIZE);
+  }, [filteredItems, page]);
 
-  const getProviderName = (id: string) => {
-    const p = [...textProviders, ...imageProviders, ...videoProviders].find(provider => provider.id === id);
-    return p?.name || id;
+  const hasMore = visibleItems.length < filteredItems.length;
+
+  const handleShowMore = () => {
+    setIsLoadingMore(true);
+    setTimeout(() => {
+      setPage(prev => prev + 1);
+      setIsLoadingMore(false);
+    }, 600);
   };
 
-  const handleReset = () => {
-    setSearchQuery('');
-    setSelectedProvider(null);
+  const handleTopicClick = (slug: string | null) => {
+    setSelectedTopic(slug);
+    setPage(1);
+  };
+
+  // Определение типа карточки на основе индекса для mixed-grid
+  const getCardType = (index: number): 'A' | 'B' | 'C' | 'D' | 'E' => {
+    const cycle = index % 15;
+    if (cycle === 4) return 'D'; // Большая подборка
+    if (cycle === 9) return 'E'; // Мини-курс
+    if (cycle === 2 || cycle === 7 || cycle === 12) return 'B'; // Image-first
+    if (cycle === 5 || cycle === 10) return 'C'; // Текстовый
+    return 'A'; // Обычный
+  };
+
+  const getCardSpan = (type: 'A' | 'B' | 'C' | 'D' | 'E'): string => {
+    switch (type) {
+      case 'A': return 'col-span-12 sm:col-span-6 lg:col-span-3';
+      case 'B': return 'col-span-12 sm:col-span-6 lg:col-span-3';
+      case 'C': return 'col-span-12 sm:col-span-6 lg:col-span-3';
+      case 'D': return 'col-span-12 lg:col-span-6';
+      case 'E': return 'col-span-12 lg:col-span-6';
+      default: return 'col-span-12';
+    }
   };
 
   return (
-    <>
-      <section className="relative w-screen h-[420px] md:h-[520px] flex items-center justify-center overflow-hidden">
-        <img 
-          src="/community/03.jpg" 
-          alt="Background" 
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-black/65" />
-        
-        <div className="relative z-10 w-full max-w-3xl mx-auto px-4 text-center">
-          <h1 className="text-[34px] md:text-[56px] font-bold text-white mb-2 md:mb-4 leading-tight">
-            Библиотека промптов
-          </h1>
-          <p className="text-lg md:text-[22px] text-white mb-4 md:mb-6 font-medium">
-            Готовые промпты для всех нейросетей ЭРА2
-          </p>
-          <p className="text-[15px] text-white/75 max-w-xl mx-auto mb-8 leading-relaxed">
-            копировать без регистрации, открывать в генераторе одной кнопкой, оплата в рублях без VPN.
-          </p>
-
-          <div className="relative max-w-2xl mx-auto mb-8">
-            <input 
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Поиск по промптам и темам"
-              className="w-full h-14 pl-6 pr-32 bg-white rounded-full text-black placeholder:text-muted-foreground outline-none text-lg border-none"
-            />
-            <button className="absolute right-1.5 top-1.5 h-11 px-8 bg-black text-white rounded-full font-medium hover:bg-black/80 transition-colors">
-              Найти
-            </button>
+    <div className="min-h-screen bg-background text-foreground flex flex-col">
+      {/* 1. INTRO-ЗОНА */}
+      <section className="pt-8 pb-6 px-6 max-w-7xl mx-auto w-full">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
+          <div className="flex-grow">
+            <div className="flex items-center gap-2 mb-2">
+              <h1 className="text-[32px] md:text-[40px] font-bold tracking-tight">Каталог промптов</h1>
+              <Sparkles className="w-5 h-5 text-primary animate-pulse" />
+            </div>
+            <p className="text-[14px] md:text-[15px] text-muted-foreground mb-5 max-w-md leading-relaxed">
+              Идеи и рабочие сценарии для любых задач с ERA2. Оптимизируйте работу и творчество.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-muted/40 text-[12px] font-medium text-muted-foreground border border-border/50">
+                <Star className="w-3.5 h-3.5 fill-primary text-primary" /> 12 540 использований
+              </div>
+              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-muted/40 text-[12px] font-medium text-muted-foreground border border-border/50">
+                <PlusCircle className="w-3.5 h-3.5" /> 8 632 промпта
+              </div>
+              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-muted/40 text-[12px] font-medium text-muted-foreground border border-border/50">
+                <ArrowRight className="w-3.5 h-3.5" /> Обновления каждый день
+              </div>
+            </div>
           </div>
 
-          <div className="flex flex-col items-center gap-3">
-            <span className="text-[12px] text-white/60 font-bold tracking-[0.2em] uppercase">
-              ПОИСК ПО МОДЕЛИ
-            </span>
-            <div className="flex flex-wrap justify-center gap-2">
-              {providersWithCounts.map(({ providerId }) => (
+          <div className="flex flex-wrap sm:flex-nowrap gap-4 shrink-0">
+            {/* Featured A */}
+            <div className="flex-1 sm:w-64 p-4 rounded-2xl bg-muted/30 border border-border/50 flex flex-col justify-between group cursor-pointer hover:bg-muted/50 transition-colors">
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                    <Star className="w-4 h-4 text-primary fill-current" />
+                  </div>
+                  <span className="text-[13px] font-bold">Подборка дня</span>
+                </div>
+                <p className="text-[12px] text-muted-foreground mb-3 leading-snug">
+                  10 лучших промптов, отобранных командой ERA2
+                </p>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex -space-x-2">
+                  {[1, 2, 3].map(i => (
+                    <div key={i} className="w-6 h-6 rounded-full border-2 border-background bg-muted overflow-hidden">
+                       <img src={`/community/0${i}.jpg`} alt="avatar" className="w-full h-full object-cover" />
+                    </div>
+                  ))}
+                  <div className="w-6 h-6 rounded-full border-2 border-background bg-muted-foreground/10 flex items-center justify-center text-[10px] font-bold">+7</div>
+                </div>
+                <span className="text-[12px] font-bold text-primary group-hover:translate-x-1 transition-transform">Смотреть →</span>
+              </div>
+            </div>
+
+            {/* Featured B */}
+            <div className="flex-1 sm:w-64 p-4 rounded-2xl bg-muted/30 border border-border/50 flex flex-col justify-between group cursor-pointer hover:bg-muted/50 transition-colors">
+               <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-8 h-8 rounded-full bg-orange-500/10 flex items-center justify-center">
+                    <PlusCircle className="w-4 h-4 text-orange-500" />
+                  </div>
+                  <span className="text-[13px] font-bold">Ваш помощник</span>
+                </div>
+                <p className="text-[12px] text-muted-foreground mb-3 leading-snug">
+                  Создайте свой промпт под любые задачи
+                </p>
+              </div>
+              <div className="flex items-center justify-between">
+                 <span className="text-[12px] font-bold text-orange-500 group-hover:translate-x-1 transition-transform">Создать промпт</span>
+                 <div className="text-orange-500 font-bold text-xl leading-none">⚡️</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 2. ЛЕНТА КАТЕГОРИЙ */}
+      <section className="sticky top-0 z-40 bg-background/80 backdrop-blur-md border-b border-border mb-6">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center gap-3">
+          <div className="flex-grow overflow-x-auto no-scrollbar">
+            <div className="flex gap-2">
+              {pillCategories.map(cat => (
                 <button
-                  key={providerId}
-                  onClick={() => setSelectedProvider(selectedProvider === providerId ? null : providerId)}
-                  className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-all ${
-                    selectedProvider === providerId 
-                      ? 'bg-white text-black border-white' 
-                      : 'bg-white/15 text-white border-white/30 hover:bg-white/25'
-                  }`}
+                  key={cat.label}
+                  onClick={() => handleTopicClick(cat.slug)}
+                  className={cn(
+                    "px-5 py-2.5 rounded-full text-[13px] font-medium whitespace-nowrap transition-all border",
+                    selectedTopic === cat.slug
+                      ? "bg-primary text-white border-primary shadow-md shadow-primary/20"
+                      : "bg-muted/30 border-border/50 hover:bg-muted/60 text-muted-foreground"
+                  )}
                 >
-                  {getProviderName(providerId)}
+                  {cat.label}
                 </button>
               ))}
             </div>
           </div>
+          <button className="shrink-0 w-10 h-10 rounded-full border border-border flex items-center justify-center hover:bg-muted/50 transition-colors">
+            <ArrowRight className="w-4 h-4" />
+          </button>
         </div>
       </section>
 
-      <section className="max-w-7xl mx-auto px-6 mt-12 mb-12">
-        <h2 className="text-2xl font-bold mb-[20px] text-foreground">Категории</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {categories.map((c, idx) => (
-            <CategoryTile 
-              key={c.slug} 
-              category={c} 
-              count={categoryCounts[c.slug as keyof typeof categoryCounts] || 0} 
-              imageSrc={categoryImages[idx]}
-            />
-          ))}
-          <CategoryTile 
-            category={{
-              slug: 'model',
-              cardTitle: 'По моделям',
-              description: 'Промпты, отобранные под конкретную нейросеть: Nano Banana, Seedream, Kling и другие модели ЭРА2',
-            }}
-            count={getProvidersWithPrompts().length}
-            imageSrc={categoryImages[categories.length]}
-          />
+      {/* 3. СТРОКА СОРТИРОВКИ */}
+      <section className="max-w-7xl mx-auto px-6 w-full flex items-center justify-between mb-4">
+        <div className="text-[13px] font-medium text-muted-foreground">
+          Все промпты <span className="text-foreground font-bold ml-1">{filteredItems.length}</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-[11px] text-muted-foreground font-bold uppercase tracking-wider">Сортировка:</span>
+          <select 
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value as any)}
+            className="bg-transparent border-none text-[13px] font-bold text-foreground focus:ring-0 cursor-pointer outline-none"
+          >
+            <option value="new">Сначала новые</option>
+            <option value="popular">Популярные</option>
+            <option value="used">Используемые</option>
+            <option value="saved">Сохранённые</option>
+          </select>
         </div>
       </section>
 
-      <section className="w-screen pb-20 overflow-x-hidden">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex items-center justify-between mb-6">
-            <div className="text-sm font-medium">
-              {searchQuery || selectedProvider ? 'Найдено промптов' : 'Все промпты'} 
-              <span className="text-muted-foreground ml-1">{filteredItems.length}</span>
-            </div>
-            <select 
-              value={sortBy} 
-              onChange={(e) => setSortBy(e.target.value as any)}
-              className="bg-card border border-border rounded-lg px-3 py-1.5 text-xs focus:ring-1 focus:ring-primary outline-none"
-            >
-              <option value="new">Сначала новые</option>
-              <option value="alpha">По алфавиту</option>
-            </select>
-          </div>
-        </div>
-
-        {filteredItems.length > 0 ? (
-          <div className="w-screen mb-12">
-            <div style={{ columnWidth: '320px', columnGap: '3px', padding: '0 3px' }}>
-              {visible.map((item) => 
-                item.category === 'text' 
-                  ? <TextPromptCard key={item.slug} item={item} />
-                  : <PromptMosaicTile key={item.slug} item={item} topics={topics} />
-              )}
-            </div>
+      {/* 4. MIXED-GRID */}
+      <section className="max-w-7xl mx-auto px-6 w-full mb-12">
+        {visibleItems.length > 0 ? (
+          <div className="grid grid-cols-12 gap-4 md:gap-5">
+            {visibleItems.map((item, idx) => {
+              const type = getCardType(idx);
+              const span = getCardSpan(type);
+              return (
+                <div key={`${item.slug}-${idx}`} className={span}>
+                  <EditorialPromptCard item={item} type={type} />
+                </div>
+              );
+            })}
           </div>
         ) : (
-          <div className="max-w-7xl mx-auto px-6 py-20 text-center">
-            <p className="text-xl text-muted-foreground mb-6">Ничего не найдено</p>
+          <div className="py-20 text-center">
+            <X className="w-12 h-12 text-muted-foreground/30 mx-auto mb-4" />
+            <h3 className="text-xl font-bold mb-2">Ничего не найдено</h3>
+            <p className="text-muted-foreground mb-6">Попробуйте изменить параметры поиска или фильтры</p>
             <button 
-              onClick={handleReset}
-              className="h-11 px-8 rounded-full bg-primary text-primary-foreground font-medium hover:opacity-90 transition-opacity flex items-center gap-2 mx-auto"
+              onClick={() => {setSearchQuery(''); setSelectedTopic(null);}}
+              className="h-10 px-6 rounded-xl bg-primary text-white font-bold"
             >
-              <X className="w-4 h-4" />
-              Сбросить
+              Сбросить всё
             </button>
           </div>
         )}
 
-        <div className="max-w-7xl mx-auto px-6">
-          {hasMore && (
-            <div className="flex justify-center mb-20">
-              <button onClick={showMore} className="h-11 px-8 rounded-lg border border-border bg-card text-sm font-medium hover:bg-muted/30">
-                Показать ещё ({remaining})
-              </button>
-            </div>
-          )}
-          <TopicCloud topics={topics} />
-        </div>
+        {/* 8. ДЛИННАЯ ЛЕНТА + ПОКАЗАТЬ ЕЩЁ */}
+        {hasMore && (
+          <div className="mt-12 flex flex-col items-center">
+             <button 
+              onClick={handleShowMore} 
+              disabled={isLoadingMore}
+              className={cn(
+                "h-12 w-full max-w-[420px] rounded-xl border border-border bg-card text-[14px] font-bold transition-all flex items-center justify-center gap-2 hover:bg-muted/30",
+                isLoadingMore && "opacity-70 cursor-not-allowed"
+              )}
+            >
+              {isLoadingMore ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                  Загружаем...
+                </>
+              ) : (
+                <>Показать ещё ({filteredItems.length - visibleItems.length}) ↓</>
+              )}
+            </button>
+          </div>
+        )}
       </section>
+
+      <section className="max-w-7xl mx-auto px-6 w-full mb-20">
+        <TopicCloud topics={topics} />
+      </section>
+
       <Footer />
-    </>
+    </div>
   );
 }
