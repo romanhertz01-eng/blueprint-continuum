@@ -133,3 +133,14 @@ export const getRelatedItems = (item: PromptItem, limit: number = 4): PromptItem
     .slice(0, limit);
 };
 
+export const getRelatedByModel = (item: PromptItem, limit: number = 8): PromptItem[] => {
+  return promptItems
+    .filter(i => 
+      i.status === 'published' && 
+      i.slug !== item.slug && 
+      i.providerId === item.providerId
+    )
+    .slice(0, limit);
+};
+
+

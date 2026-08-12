@@ -6,7 +6,8 @@ import { cn } from '@/lib/utils';
 import { imageProviders } from '@/data/imageModels';
 import { videoProviders } from '@/data/videoModels';
 import { textProviders } from '@/data/textModels';
-import { topics } from '@/data/topics';
+import { promptTopics } from '@/data/prompts/topics';
+
 
 interface PromptShelfProps {
   title: string;
@@ -49,7 +50,7 @@ export function PromptShelf({ title, subtitle, ctaLabel, ctaHref, items }: Promp
         <div className="flex gap-5 overflow-x-auto pb-4 snap-x no-scrollbar">
           {items.map((item) => {
             const modelName = getModelName(item.providerId);
-            const mainTopic = topics.find(t => t.slug === item.topicSlug);
+            const mainTopic = promptTopics.find((t) => t.slug === item.topicSlug);
             const media = item.media[0];
             
             return (
