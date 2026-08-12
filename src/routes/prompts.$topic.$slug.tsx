@@ -280,9 +280,6 @@ function PromptDetailPage() {
         <DiscoveryFeed currentItem={item} />
       </div>
 
-        <div className="mt-16">
-          <TopicCloud topics={promptTopics} />
-        </div>
       </div>
 
       <Footer />
