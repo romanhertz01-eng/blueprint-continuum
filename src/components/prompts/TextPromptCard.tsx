@@ -14,7 +14,7 @@ export function TextPromptCard({ item }: TextPromptCardProps) {
   const navigate = useNavigate();
   const { isAuthed } = useAuth();
 
-  // Детерминированный градиент на основе слага
+  // Детерминированный градиент на основе слага (только токены темы)
   const getGradient = (slug: string) => {
     const gradients = [
       'from-blue-500/10 to-indigo-500/10',
@@ -43,14 +43,14 @@ export function TextPromptCard({ item }: TextPromptCardProps) {
     if (isAuthed) {
       navigate({ to: target });
     } else {
-      navigate({ to: buildAuthHref(target) });
+      window.location.href = buildAuthHref(target);
     }
   };
 
   return (
     <div 
       onClick={handleAction}
-      className="group relative w-full h-[240px] rounded-2xl border border-border overflow-hidden cursor-pointer transition-all hover:shadow-lg hover:border-primary/30 flex flex-col bg-card break-inside-avoid mb-[3px]"
+      className="group relative w-full h-[240px] rounded-2xl border border-border overflow-hidden cursor-pointer transition-all hover:shadow-lg hover:border-primary/30 flex flex-col bg-card break-inside-avoid mb-[12px]"
     >
       {/* Плашка с градиентом */}
       <div className={cn(
@@ -78,7 +78,7 @@ export function TextPromptCard({ item }: TextPromptCardProps) {
         {/* Кнопка внизу */}
         <div className="mt-auto flex justify-center">
           <button 
-            className="h-10 px-6 rounded-full bg-primary text-white text-[13px] font-semibold flex items-center gap-2 shadow-sm transition-transform active:scale-95 group-hover:brightness-110"
+            className="w-full h-10 rounded-xl bg-primary text-white text-[13px] font-semibold flex items-center justify-center gap-2 shadow-sm transition-transform active:scale-95 group-hover:brightness-110"
           >
             Попробовать
             <Zap className="w-3.5 h-3.5 fill-current" />
@@ -88,3 +88,4 @@ export function TextPromptCard({ item }: TextPromptCardProps) {
     </div>
   );
 }
+
