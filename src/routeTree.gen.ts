@@ -39,7 +39,6 @@ import { Route as AiAgentsRouteImport } from './routes/ai.agents'
 import { Route as PromptsModelIndexRouteImport } from './routes/prompts.model.index'
 import { Route as PromptsTopicIndexRouteImport } from './routes/prompts.$topic.index'
 import { Route as PromptsModelProviderIdRouteImport } from './routes/prompts.model.$providerId'
-import { Route as PromptsTopicSlugRouteImport } from './routes/prompts.$topic.$slug'
 
 const VideoRoute = VideoRouteImport.update({
   id: '/video',
@@ -191,11 +190,6 @@ const PromptsModelProviderIdRoute = PromptsModelProviderIdRouteImport.update({
   path: '/prompts/model/$providerId',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PromptsTopicSlugRoute = PromptsTopicSlugRouteImport.update({
-  id: '/prompts/$topic/$slug',
-  path: '/prompts/$topic/$slug',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -225,7 +219,6 @@ export interface FileRoutesByFullPath {
   '/tools/text-generation': typeof ToolsTextGenerationRoute
   '/guides/': typeof GuidesIndexRoute
   '/prompts/': typeof PromptsIndexRoute
-  '/prompts/$topic/$slug': typeof PromptsTopicSlugRoute
   '/prompts/model/$providerId': typeof PromptsModelProviderIdRoute
   '/prompts/$topic/': typeof PromptsTopicIndexRoute
   '/prompts/model/': typeof PromptsModelIndexRoute
@@ -258,7 +251,6 @@ export interface FileRoutesByTo {
   '/tools/text-generation': typeof ToolsTextGenerationRoute
   '/guides': typeof GuidesIndexRoute
   '/prompts': typeof PromptsIndexRoute
-  '/prompts/$topic/$slug': typeof PromptsTopicSlugRoute
   '/prompts/model/$providerId': typeof PromptsModelProviderIdRoute
   '/prompts/$topic': typeof PromptsTopicIndexRoute
   '/prompts/model': typeof PromptsModelIndexRoute
@@ -292,7 +284,6 @@ export interface FileRoutesById {
   '/tools/text-generation': typeof ToolsTextGenerationRoute
   '/guides/': typeof GuidesIndexRoute
   '/prompts/': typeof PromptsIndexRoute
-  '/prompts/$topic/$slug': typeof PromptsTopicSlugRoute
   '/prompts/model/$providerId': typeof PromptsModelProviderIdRoute
   '/prompts/$topic/': typeof PromptsTopicIndexRoute
   '/prompts/model/': typeof PromptsModelIndexRoute
@@ -327,7 +318,6 @@ export interface FileRouteTypes {
     | '/tools/text-generation'
     | '/guides/'
     | '/prompts/'
-    | '/prompts/$topic/$slug'
     | '/prompts/model/$providerId'
     | '/prompts/$topic/'
     | '/prompts/model/'
@@ -360,7 +350,6 @@ export interface FileRouteTypes {
     | '/tools/text-generation'
     | '/guides'
     | '/prompts'
-    | '/prompts/$topic/$slug'
     | '/prompts/model/$providerId'
     | '/prompts/$topic'
     | '/prompts/model'
@@ -393,7 +382,6 @@ export interface FileRouteTypes {
     | '/tools/text-generation'
     | '/guides/'
     | '/prompts/'
-    | '/prompts/$topic/$slug'
     | '/prompts/model/$providerId'
     | '/prompts/$topic/'
     | '/prompts/model/'
@@ -427,7 +415,6 @@ export interface RootRouteChildren {
   ToolsTextGenerationRoute: typeof ToolsTextGenerationRoute
   GuidesIndexRoute: typeof GuidesIndexRoute
   PromptsIndexRoute: typeof PromptsIndexRoute
-  PromptsTopicSlugRoute: typeof PromptsTopicSlugRoute
   PromptsModelProviderIdRoute: typeof PromptsModelProviderIdRoute
   PromptsTopicIndexRoute: typeof PromptsTopicIndexRoute
   PromptsModelIndexRoute: typeof PromptsModelIndexRoute
@@ -645,13 +632,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PromptsModelProviderIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/prompts/$topic/$slug': {
-      id: '/prompts/$topic/$slug'
-      path: '/prompts/$topic/$slug'
-      fullPath: '/prompts/$topic/$slug'
-      preLoaderRoute: typeof PromptsTopicSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
@@ -683,7 +663,6 @@ const rootRouteChildren: RootRouteChildren = {
   ToolsTextGenerationRoute: ToolsTextGenerationRoute,
   GuidesIndexRoute: GuidesIndexRoute,
   PromptsIndexRoute: PromptsIndexRoute,
-  PromptsTopicSlugRoute: PromptsTopicSlugRoute,
   PromptsModelProviderIdRoute: PromptsModelProviderIdRoute,
   PromptsTopicIndexRoute: PromptsTopicIndexRoute,
   PromptsModelIndexRoute: PromptsModelIndexRoute,
