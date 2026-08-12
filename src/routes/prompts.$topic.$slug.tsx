@@ -53,34 +53,12 @@ function getModelName(providerId: string, category: string): string {
   return providerId;
 }
 
-function getCredits(providerId: string, subModelId?: string, category?: string): number | null {
-  if (category === 'image') {
-    const provider = imageProviders.find(p => p.id === providerId);
-    const model = provider?.subModels.find(m => m.id === subModelId);
-    return model?.credits || null;
-  }
-  if (category === 'video') {
-    const provider = videoProviders.find(p => p.id === providerId);
-    const model = provider?.subModels.find(m => m.id === subModelId);
-    return model?.credits || null;
-  }
-  if (category === 'text') {
-    const provider = textProviders.find(p => p.id === providerId);
-    const model = provider?.subModels.find(m => m.id === subModelId);
-    return model?.credits || null;
-  }
-  return null;
-}
-
 function PromptDetailPage() {
   const { item } = Route.useLoaderData();
   const topics = getPublishedTopics();
   const mainTopic = getTopicBySlug(item.topicSlug);
-  // Removed lang state since we only show RU now
   
   const modelName = getModelName(item.providerId, item.category);
-  const credits = getCredits(item.providerId, item.subModelId, item.category);
-  
   const itemsByProvider = useMemo(() => getItemsByProvider(item.providerId).filter(i => i.slug !== item.slug), [item.providerId, item.slug]);
 
   // Reactions Logic
@@ -100,7 +78,6 @@ function PromptDetailPage() {
       if (!viewsMap[item.slug]) {
         viewsMap[item.slug] = 1;
         localStorage.setItem('era2_prompt_views', JSON.stringify(viewsMap));
-        // BACKEND: Инкремент просмотров на сервере
       }
       setLocalViews(viewsMap[item.slug] || 0);
     } catch (e) {}
@@ -113,7 +90,6 @@ function PromptDetailPage() {
       const newLikes = isLiked ? likes.filter((s: string) => s !== item.slug) : [...likes, item.slug];
       localStorage.setItem('era2_prompt_likes', JSON.stringify(newLikes));
       setIsLiked(!isLiked);
-      // BACKEND: POST /api/prompts/{slug}/like
     } catch (e) {}
   };
 
@@ -124,7 +100,6 @@ function PromptDetailPage() {
       const newSaves = isSaved ? saves.filter((s: string) => s !== item.slug) : [...saves, item.slug];
       localStorage.setItem('era2_prompt_saves', JSON.stringify(newSaves));
       setIsSaved(!isSaved);
-      // BACKEND: POST /api/prompts/{slug}/save
     } catch (e) {}
   };
 
@@ -134,35 +109,11 @@ function PromptDetailPage() {
       navigator.clipboard.writeText(window.location.href);
       setIsShared(true);
       setTimeout(() => setIsShared(false), 2000);
-      // BACKEND: POST /api/prompts/{slug}/share
     } catch (e) {}
-  };
-
-  const breadcrumbSchema = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      { "@type": "ListItem", "position": 1, "name": "Промпты", "item": `${ORIGIN}/prompts` },
-      { "@type": "ListItem", "position": 2, "name": mainTopic?.title, "item": `${ORIGIN}/prompts/${item.topicSlug}` },
-      { "@type": "ListItem", "position": 3, "name": item.title, "item": `${ORIGIN}/prompts/${item.topicSlug}/${item.slug}` }
-    ]
-  };
-
-  const articleSchema = {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    "headline": item.title,
-    "description": item.body.overview,
-    "image": item.media[0]?.src,
-    "author": { "@type": "Organization", "name": "ERA2" },
-    "publisher": { "@type": "Organization", "name": "ERA2" }
   };
 
   return (
     <>
-      <script type="application/ld+json">{JSON.stringify(breadcrumbSchema)}</script>
-      <script type="application/ld+json">{JSON.stringify(articleSchema)}</script>
-
       <div className="max-w-[1200px] mx-auto px-4 py-10">
         <nav className="flex items-center gap-1 text-[13px] text-muted-foreground mb-4">
           <Link to="/prompts" className="hover:text-foreground">Промпты</Link>
@@ -288,39 +239,35 @@ function PromptDetailPage() {
               </div>
             </div>
 
-              {item.extraTopicSlugs && item.extraTopicSlugs.length > 0 && (
-                <div className="pt-4 space-y-3">
-                  <span className="text-[12px] font-bold tracking-[0.1em] uppercase text-muted-foreground/80 block">
-                    Смотрите также
-                  </span>
-                  <div className="flex flex-wrap gap-2">
-                    {item.extraTopicSlugs?.map((slug: string) => {
-                      const topic = topics.find(t => t.slug === slug);
-                      return topic ? (
-                        <Link 
-                          key={slug} 
-                          to="/prompts/$topic" 
-                          params={{ topic: slug }}
-                          className="bg-muted/40 border border-border rounded-full px-4 py-1.5 text-[13px] text-foreground hover:bg-muted/60 transition-colors"
-                        >
-                          {topic.title}
-                        </Link>
-                      ) : null;
-                    })}
-                  </div>
+            {item.extraTopicSlugs && item.extraTopicSlugs.length > 0 && (
+              <div className="pt-4 space-y-3">
+                <span className="text-[12px] font-bold tracking-[0.1em] uppercase text-muted-foreground/80 block">
+                  Смотрите также
+                </span>
+                <div className="flex flex-wrap gap-2">
+                  {item.extraTopicSlugs?.map((slug: string) => {
+                    const topic = topics.find(t => t.slug === slug);
+                    return topic ? (
+                      <Link 
+                        key={slug} 
+                        to="/prompts/$topic" 
+                        params={{ topic: slug }}
+                        className="bg-muted/40 border border-border rounded-full px-4 py-1.5 text-[13px] text-foreground hover:bg-muted/60 transition-colors"
+                      >
+                        {topic.title}
+                      </Link>
+                    ) : null;
+                  })}
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </div>
-
-
 
         <div className="mt-14 pt-12 border-t border-border">
           <h2 className="mb-8 text-2xl font-bold tracking-tight text-foreground md:text-3xl">
             Ещё промпты
           </h2>
-          
           <PromptMasonry 
             items={getPublishedItems()
               .filter((i: PromptItem) => i.slug !== item.slug)
@@ -333,7 +280,6 @@ function PromptDetailPage() {
             <h2 className="mb-8 text-2xl font-bold tracking-tight text-foreground md:text-3xl">
               Ещё от {modelName}
             </h2>
-            
             <PromptMasonry items={itemsByProvider} />
           </div>
         )}
