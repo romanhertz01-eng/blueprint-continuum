@@ -8,8 +8,9 @@ import { CopyPromptButton } from '@/components/prompts/CopyPromptButton';
 import { TryPromptButton } from '@/components/prompts/TryPromptButton';
 import { PromptMasonry } from '@/components/prompts/PromptMasonry';
 import { TopicCloud } from '@/components/prompts/TopicCloud';
-
+import { PromptShelf } from '@/components/prompts/PromptShelf';
 import { PromptGallery } from '@/components/prompts/PromptGallery';
+
 import { Footer } from '@/components/shared/Footer';
 import { ORIGIN } from '@/lib/origin';
 import { useState, useMemo, useEffect } from 'react';
@@ -256,7 +257,8 @@ function PromptDetailPage() {
                 </span>
                 <div className="flex flex-wrap gap-2">
                   {item.extraTopicSlugs?.map((slug: string) => {
-                    const topic = topics.find(t => t.slug === slug);
+                    const topic = promptTopics.find(t => t.slug === slug);
+
                     return topic ? (
                       <Link 
                         key={slug} 
@@ -274,30 +276,40 @@ function PromptDetailPage() {
           </div>
         </div>
 
-        <div className="mt-14 pt-12 border-t border-border">
-          <h2 className="mb-8 text-2xl font-bold tracking-tight text-foreground md:text-3xl">
-            Ещё промпты
-          </h2>
-          <PromptMasonry 
+        <div className="mt-20 space-y-16">
+          <PromptShelf
+            title={`Ещё от ${modelName}`}
+            subtitle="Другие промпты в этом же стиле"
+            ctaLabel="Все промпты модели"
+            ctaHref={`/prompts/model/${item.providerId}`}
+            items={getRelatedByModel(item, 8)}
+          />
+
+          <PromptShelf
+            title="Похожие промпты"
+            subtitle="Подобрано по теме, стилю и формату"
+            ctaLabel="Смотреть все"
+            ctaHref={`/prompts/${item.topicSlug}`}
+            items={getRelatedItems(item, 8)}
+          />
+
+          <PromptShelf
+            title="Популярное в категории"
+            subtitle="Часто используемые промпты этой категории"
+            ctaLabel="Открыть подборку"
+            ctaHref={`/prompts/${item.category}`}
             items={getPublishedItems()
-              .filter((i: PromptItem) => i.slug !== item.slug)
-              .sort((a, b) => b.publishedAt.localeCompare(a.publishedAt))} 
+              .filter(i => i.category === item.category && i.slug !== item.slug)
+              .sort((a, b) => (b.likes || 0) - (a.likes || 0))
+              .slice(0, 8)}
           />
         </div>
 
-        {itemsByProvider.length > 0 && (
-          <div className="mt-14 pt-12 border-t border-border">
-            <h2 className="mb-8 text-2xl font-bold tracking-tight text-foreground md:text-3xl">
-              Ещё от {modelName}
-            </h2>
-            <PromptMasonry items={itemsByProvider} />
-          </div>
-        )}
-
-        <div className="mt-14">
-          <TopicCloud topics={topics} />
+        <div className="mt-16">
+          <TopicCloud topics={promptTopics} />
         </div>
       </div>
+
       <Footer />
     </>
   );
