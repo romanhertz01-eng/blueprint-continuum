@@ -63,10 +63,12 @@ function PromptDetailPage() {
           </nav>
 
           <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-12 items-start mb-20">
+            {/* Left: Gallery */}
             <div className="w-full">
               <PromptGallery media={item.media} title={item.title} />
             </div>
 
+            {/* Right: Info & Actions */}
             <div className="space-y-8">
               <div>
                 <h1 className="text-2xl md:text-3xl font-bold mb-4 leading-tight">{item.title}</h1>
@@ -78,6 +80,7 @@ function PromptDetailPage() {
                 </div>
               </div>
 
+              {/* Stats & Social */}
               <div className="flex items-center justify-between py-4 border-y border-border">
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <Eye className="w-4 h-4" />
@@ -98,6 +101,7 @@ function PromptDetailPage() {
                 </div>
               </div>
 
+              {/* Prompt Box */}
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Промпт</h3>
@@ -113,25 +117,17 @@ function PromptDetailPage() {
                 </div>
               </div>
 
+              {/* Main CTA */}
               <TryPromptButton 
                 item={item}
                 label="Создать с этим промптом"
                 className="w-full h-14 text-base font-semibold rounded-xl shadow-lg shadow-primary/20"
               />
-
-              {item.tags && item.tags.length > 0 && (
-                <div className="flex flex-wrap gap-2 pt-4">
-                  {item.tags.map((tag: string) => (
-                    <span key={tag} className="px-3 py-1.5 rounded-full bg-muted/50 border border-border text-[13px] hover:bg-muted transition-colors cursor-default">
-                      #{tag}
-                    </span>
-                  ))}
-                </div>
-              )}
             </div>
           </div>
         </div>
 
+        {/* Discovery Zone */}
         <DiscoveryFeed currentItem={item} />
       </main>
       <Footer />
