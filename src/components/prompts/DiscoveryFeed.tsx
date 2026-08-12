@@ -33,7 +33,6 @@ export function DiscoveryFeed({ currentItem }: DiscoveryFeedProps) {
     if (activeFilter === 'for-you') {
       const related = getRelatedItems(currentItem, 20);
       const byModel = getRelatedByModel(currentItem, 20);
-      // Перемешиваем для разнообразия
       result = [...related, ...byModel].sort(() => Math.random() - 0.5);
     } else if (activeFilter === 'model') {
       result = getRelatedByModel(currentItem, 40);
@@ -45,7 +44,6 @@ export function DiscoveryFeed({ currentItem }: DiscoveryFeedProps) {
         .sort((a, b) => (b.likes || 0) - (a.likes || 0));
     }
 
-    // Уникализируем по слагу на всякий случай
     const unique = Array.from(new Map(result.map(item => [item.slug, item])).values());
     return unique;
   }, [activeFilter, currentItem]);
@@ -61,8 +59,8 @@ export function DiscoveryFeed({ currentItem }: DiscoveryFeedProps) {
   ];
 
   return (
-    <section className="mt-[64px] border-t border-border pt-[64px] pb-20">
-      <div className="max-w-[1480px] mx-auto px-5 md:px-6">
+    <section className="mt-[64px] border-t border-border pt-[64px] pb-20 overflow-hidden">
+      <div className="max-w-[1480px] mx-auto px-6">
         <div className="mb-8">
           <h2 className="text-[26px] font-bold text-foreground mb-1">Больше идей для вас</h2>
           <p className="text-[14px] text-muted-foreground">Похожие по теме, стилю и модели</p>
@@ -89,7 +87,7 @@ export function DiscoveryFeed({ currentItem }: DiscoveryFeedProps) {
         </div>
 
         {/* MASONRY: CSS columns */}
-        <div className="columns-2 md:columns-3 lg:columns-5 gap-[16px]">
+        <div className="columns-2 sm:columns-3 lg:columns-5 gap-[16px] [column-fill:balance]">
           {visibleItems.map((item, index) => (
             <DiscoveryCard 
               key={`${item.slug}-${activeFilter}-${index}`} 
@@ -118,18 +116,11 @@ function DiscoveryCard({ item, modelName }: { item: PromptItem, modelName: strin
   const [isSaved, setIsSaved] = useState(false);
   const media = item.media[0];
   
-  // TODO: заменить демо-превью на реальные генерации (нужно 20-30 разных)
-  // На текущем датасете используем доступные 8 файлов вперемешку
-  
-  const aspectClass = React.useMemo(() => {
-    const aspect = item.params?.aspect;
-    if (aspect === '1:1') return 'aspect-square';
-    if (aspect === '3:4') return 'aspect-[3/4]';
-    if (aspect === '4:3') return 'aspect-[4/3]';
-    if (aspect === '16:9') return 'aspect-video';
-    if (aspect === '9:16') return 'aspect-[9/16]';
-    if (aspect === '2:3') return 'aspect-[2/3]';
-    return 'aspect-[3/4]';
+  const aspectStyle = React.useMemo(() => {
+    const aspect = item.params?.aspect || '3:4';
+    const [w, h] = aspect.split(':').map(Number);
+    if (!w || !h) return { aspectRatio: '3/4' };
+    return { aspectRatio: `${w}/${h}` };
   }, [item.params?.aspect]);
 
   useEffect(() => {
@@ -151,16 +142,16 @@ function DiscoveryCard({ item, modelName }: { item: PromptItem, modelName: strin
   };
 
   return (
-    <div className="break-inside-avoid mb-[18px] group/card">
+    <div className="break-inside-avoid mb-[20px] group/card">
       <Link
         to="/prompts/$topic/$slug"
         params={{ topic: item.topicSlug, slug: item.slug }}
         className="block"
       >
-        <div className={cn(
-          "relative rounded-[20px] overflow-hidden bg-muted transition-all duration-300 md:hover:-translate-y-[2px]",
-          aspectClass
-        )}>
+        <div 
+          className="relative rounded-[18px] overflow-hidden bg-muted transition-all duration-300 md:hover:-translate-y-[2px]"
+          style={aspectStyle}
+        >
           {media.type === 'video' ? (
             <video 
               src={media.src} 
@@ -204,11 +195,11 @@ function DiscoveryCard({ item, modelName }: { item: PromptItem, modelName: strin
           </div>
         </div>
 
-        <div className="mt-[8px] px-0.5">
-          <h3 className="text-[14px] font-medium text-foreground line-clamp-2 leading-[1.3] mb-1">
+        <div className="mt-[8px] px-1">
+          <h3 className="text-[15px] font-semibold text-foreground line-clamp-2 leading-[1.3] mb-1">
             {item.title}
           </h3>
-          <div className="text-[12px] text-muted-foreground flex items-center gap-1.5 font-normal">
+          <div className="text-[13px] text-muted-foreground flex items-center gap-1.5 font-normal">
             <span>{modelName}</span>
             <span className="opacity-30">·</span>
             <span>{item.params?.aspect || '3:4'}</span>
