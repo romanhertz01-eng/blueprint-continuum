@@ -224,18 +224,28 @@ function PromptDetailPage() {
             </div>
 
             <div className="space-y-3">
-              <h3 className="text-[14px] font-semibold text-foreground">Теги</h3>
+              <h3 className="text-[14px] font-semibold text-foreground">Тема</h3>
               <div className="flex flex-wrap gap-2">
-                {item.tags.map(tag => (
-                  <Link
-                    key={tag}
-                    to="/prompts/$topic"
-                    params={{ topic: item.topicSlug }}
-                    className="px-3 py-1 rounded-full text-[12px] bg-muted/40 border border-border text-foreground/80 hover:bg-muted/60 transition-colors"
-                  >
-                    {tag}
-                  </Link>
-                ))}
+                <Link
+                  to="/prompts/$topic"
+                  params={{ topic: item.topicSlug }}
+                  className="px-3 py-1 rounded-full text-[12px] bg-muted/40 border border-border text-foreground/80 hover:bg-muted/60 transition-colors"
+                >
+                  {mainTopic?.title}
+                </Link>
+                {item.extraTopicSlugs?.map((slug: string) => {
+                  const topic = topics.find(t => t.slug === slug);
+                  return topic ? (
+                    <Link
+                      key={slug}
+                      to="/prompts/$topic"
+                      params={{ topic: slug }}
+                      className="px-3 py-1 rounded-full text-[12px] bg-muted/40 border border-border text-foreground/80 hover:bg-muted/60 transition-colors"
+                    >
+                      {topic.title}
+                    </Link>
+                  ) : null;
+                })}
               </div>
             </div>
 
