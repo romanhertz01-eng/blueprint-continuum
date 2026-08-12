@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { ChevronRight, Heart, Bookmark, Share2, Eye, MessageSquare, Star, Check } from 'lucide-react';
-import { getPublishedItems, getPublishedTopics, getTopicBySlug, getItemBySlug, getItemsByProvider, PromptItem } from '@/data/prompts';
+import { getPublishedItems, getPublishedTopics, getTopicBySlug, getItemBySlug, getItemsByProvider, PromptItem, getRelatedItems, getRelatedByModel, promptTopics } from '@/data/prompts';
 import { imageProviders } from '@/data/imageModels';
 import { videoProviders } from '@/data/videoModels';
 import { textProviders } from '@/data/textModels';
