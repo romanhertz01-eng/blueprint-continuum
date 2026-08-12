@@ -96,9 +96,10 @@ function PromptsHub() {
       );
     }
 
-    // Сортировка
+    // Сортировка - disable standard sorting when using displayItems (interleaved)
     if (sortBy === 'new') {
-      result.sort((a, b) => new Date(b.publishedAt || 0).getTime() - new Date(a.publishedAt || 0).getTime());
+      // displayItems are already interleaved, we preserve that order
+      return result;
     } else if (sortBy === 'popular') {
       result.sort((a, b) => (b.views || 0) - (a.views || 0));
     }
