@@ -6,10 +6,11 @@ import { Button } from '@/components/ui/button';
 interface CopyPromptButtonProps {
   text: string;
   className?: string;
+  variant?: "ghost" | "secondary" | "outline";
   children?: React.ReactNode;
 }
 
-export function CopyPromptButton({ text, className, children }: CopyPromptButtonProps) {
+export function CopyPromptButton({ text, className, variant = "ghost", children }: CopyPromptButtonProps) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async (e: React.MouseEvent) => {
@@ -42,20 +43,21 @@ export function CopyPromptButton({ text, className, children }: CopyPromptButton
 
   return (
     <Button
-      variant="ghost"
+      variant={variant}
       size="sm"
       onClick={handleCopy}
       className={cn(
         "h-9 px-3 text-[13px] font-medium transition-all active:scale-95",
-        "bg-muted/30 hover:bg-muted/50 border border-border text-foreground",
+        variant === "ghost" && "bg-muted/30 hover:bg-muted/50 border border-border text-foreground",
         className
       )}
       aria-label={copied ? "Скопировано" : "Скопировать промпт"}
+      title={copied ? "Скопировано" : "Скопировать"}
     >
       {children ? children : (
         copied ? (
           <>
-            <Check className="w-3.5 h-3.5 mr-1.5 text-[hsl(var(--primary))]" />
+            <Check className="w-3.5 h-3.5 mr-1.5 text-primary" />
             Скопировано
           </>
         ) : (
