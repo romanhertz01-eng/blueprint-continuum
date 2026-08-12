@@ -77,32 +77,36 @@ export function PromptGallery({ media, title }: PromptGalleryProps) {
 
         {/* Overlay controls */}
         {hasMultiple && (
-          <>
-            <button
-              onClick={(e) => { e.stopPropagation(); prevSlide(); }}
-              className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors opacity-0 group-hover:opacity-100"
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-            <button
-              onClick={(e) => { e.stopPropagation(); nextSlide(); }}
-              className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors opacity-0 group-hover:opacity-100"
-            >
-              <ChevronRight className="w-5 h-5" />
-            </button>
-            <div className="absolute top-3 right-3 px-2 py-1 rounded bg-black/60 text-white text-[13px] font-medium pointer-events-none">
-              {activeIdx + 1} / {media.length}
-            </div>
-          </>
+          <div className="absolute top-3 right-3 px-2 py-1 rounded bg-black/60 text-white text-[13px] font-medium pointer-events-none z-10">
+            {activeIdx + 1} / {media.length}
+          </div>
         )}
 
         <button
           onClick={() => setIsLightboxOpen(true)}
           title="На весь экран"
-          className="absolute bottom-3 right-3 w-8 h-8 flex items-center justify-center rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors opacity-0 group-hover:opacity-100"
+          className="absolute bottom-3 right-3 w-8 h-8 flex items-center justify-center rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors opacity-0 group-hover:opacity-100 z-10"
         >
           <Maximize2 className="w-4 h-4" />
         </button>
+
+        {/* Big Navigation arrows on main image */}
+        {hasMultiple && (
+          <>
+            <button
+              onClick={(e) => { e.stopPropagation(); prevSlide(); }}
+              className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center rounded-full bg-black/40 text-white hover:bg-black/60 transition-all opacity-0 group-hover:opacity-100 backdrop-blur-sm"
+            >
+              <ChevronLeft className="w-6 h-6" />
+            </button>
+            <button
+              onClick={(e) => { e.stopPropagation(); nextSlide(); }}
+              className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center rounded-full bg-black/40 text-white hover:bg-black/60 transition-all opacity-0 group-hover:opacity-100 backdrop-blur-sm"
+            >
+              <ChevronRight className="w-6 h-6" />
+            </button>
+          </>
+        )}
       </div>
 
       {/* Thumbnails row */}
