@@ -15,7 +15,8 @@ interface DiscoveryFeedProps {
 
 type FilterType = 'for-you' | 'model' | 'topic' | 'popular';
 
-const PAGE_SIZE = 24;
+const PAGE_SIZE = 30;
+const LOAD_MORE_SIZE = 20;
 
 export function DiscoveryFeed({ currentItem }: DiscoveryFeedProps) {
   const [activeFilter, setActiveFilter] = useState<FilterType>('for-you');
@@ -49,7 +50,18 @@ export function DiscoveryFeed({ currentItem }: DiscoveryFeedProps) {
     }
 
     // Ensure uniqueness
-    return Array.from(new Map(result.map(item => [item.slug, item])).values());
+    const unique = Array.from(new Map(result.map(item => [item.slug, item])).values());
+    
+    // Cycle/Repeat to ensure we have enough for prototype (Step 1)
+    if (unique.length > 0 && unique.length < 100) {
+      let repeated = [...unique];
+      while (repeated.length < 100) {
+        repeated = [...repeated, ...unique];
+      }
+      return repeated;
+    }
+    
+    return unique;
   }, [activeFilter, currentItem]);
 
   // Handle filter change
@@ -74,7 +86,7 @@ export function DiscoveryFeed({ currentItem }: DiscoveryFeedProps) {
     setTimeout(() => {
       const nextBatch = allItemsForFilter.slice(
         visibleItems.length,
-        visibleItems.length + PAGE_SIZE
+        visibleItems.length + LOAD_MORE_SIZE
       );
       
       setVisibleItems(prev => [...prev, ...nextBatch]);
@@ -95,12 +107,12 @@ export function DiscoveryFeed({ currentItem }: DiscoveryFeedProps) {
       className="mt-[64px] border-t border-border pt-[64px] pb-20 overflow-hidden scroll-mt-20"
     >
       <div className="max-w-[1440px] mx-auto px-6">
-        <div className="mb-8">
-          <h2 className="text-[26px] font-bold text-foreground mb-1">Больше идей для вас</h2>
+        <div className="mb-[24px]">
+          <h2 className="text-[26px] font-bold text-foreground mb-[4px]">Больше идей для вас</h2>
           <p className="text-[14px] text-muted-foreground">Похожие по теме, стилю и модели</p>
         </div>
 
-        <div className="flex overflow-x-auto pb-2 scrollbar-hide gap-2 mb-10 -mx-6 px-6 sm:mx-0 sm:px-0">
+        <div className="flex overflow-x-auto pb-2 scrollbar-hide gap-2 mb-[24px] -mx-6 px-6 sm:mx-0 sm:px-0">
           {filters.map((filter) => (
             <button
               key={filter.id}
@@ -118,7 +130,7 @@ export function DiscoveryFeed({ currentItem }: DiscoveryFeedProps) {
         </div>
 
         {/* MASONRY: CSS columns */}
-        <div className="columns-2 sm:columns-3 lg:columns-5 gap-[16px] [column-fill:balance]">
+        <div className="columns-2 sm:columns-3 lg:columns-5 gap-[12px] [column-fill:balance]">
           {visibleItems.map((item, index) => (
             <DiscoveryCard 
               key={`${item.slug}-${activeFilter}-${index}`} 
@@ -129,7 +141,7 @@ export function DiscoveryFeed({ currentItem }: DiscoveryFeedProps) {
         </div>
 
         {hasMore && (
-          <div className="mt-12 flex justify-center">
+          <div className="mt-[32px] flex justify-center">
             <button 
               onClick={loadMore}
               disabled={isLoading}
@@ -177,14 +189,14 @@ function DiscoveryCard({ item, modelName }: { item: PromptItem, modelName: strin
   };
 
   return (
-    <div className="break-inside-avoid mb-[20px] group/card animate-in fade-in duration-500">
+    <div className="break-inside-avoid mb-[12px] group/card animate-in fade-in duration-500">
       <Link
         to="/prompts/$topic/$slug"
         params={{ topic: item.topicSlug, slug: item.slug }}
         className="block"
       >
         <div 
-          className="relative rounded-[18px] overflow-hidden bg-muted transition-all duration-300"
+          className="relative rounded-[14px] overflow-hidden bg-muted transition-all duration-300"
           style={aspectStyle}
         >
           {media.type === 'video' ? (
@@ -204,9 +216,9 @@ function DiscoveryCard({ item, modelName }: { item: PromptItem, modelName: strin
             />
           )}
           
-          {/* Hover Overlay - Desktop Only */}
-          <div className="absolute inset-0 bg-black/0 md:group-hover/card:bg-black/20 transition-all duration-300 pointer-events-none md:group-hover/card:pointer-events-auto">
-            <div className="absolute inset-0 opacity-0 md:group-hover/card:opacity-100 transition-opacity duration-300 flex flex-col justify-between p-4">
+          {/* Hover Overlay - Desktop Only (@media hover:hover) */}
+          <div className="absolute inset-0 bg-black/0 transition-all duration-300 pointer-events-none @media(hover:hover):group-hover/card:bg-black/30 @media(hover:hover):group-hover/card:pointer-events-auto">
+            <div className="absolute inset-0 opacity-0 @media(hover:hover):group-hover/card:opacity-100 transition-opacity duration-300 flex flex-col justify-between p-3">
               <div className="flex justify-end">
                 <button
                   onClick={toggleSave}
@@ -219,7 +231,7 @@ function DiscoveryCard({ item, modelName }: { item: PromptItem, modelName: strin
                 </button>
               </div>
 
-              <div className="w-full transform translate-y-2 group-hover/card:translate-y-0 transition-transform duration-300">
+              <div className="w-full transform translate-y-2 @media(hover:hover):group-hover/card:translate-y-0 transition-transform duration-300">
                 <TryPromptButton 
                   item={item} 
                   label="Создать" 
@@ -230,11 +242,11 @@ function DiscoveryCard({ item, modelName }: { item: PromptItem, modelName: strin
           </div>
         </div>
 
-        <div className="mt-[8px] px-1">
-          <h3 className="text-[15px] font-semibold text-foreground line-clamp-2 leading-[1.3] mb-1">
+        <div className="mt-[6px] px-1">
+          <h3 className="text-[14px] font-semibold text-foreground truncate leading-[18px] mb-[2px]">
             {item.title}
           </h3>
-          <div className="text-[13px] text-muted-foreground flex items-center gap-1.5 font-normal">
+          <div className="text-[12px] text-muted-foreground flex items-center gap-1.5 font-normal leading-[16px]">
             <span>{modelName}</span>
             <span className="opacity-30">·</span>
             <span>{item.params?.aspect || '3:4'}</span>
