@@ -105,7 +105,7 @@ export function DiscoveryFeed({ currentItem }: DiscoveryFeedProps) {
   return (
     <section 
       ref={feedRef}
-      className="mt-[64px] border-t border-border pt-[64px] pb-20 overflow-hidden scroll-mt-20"
+      className="mt-[0px] border-t border-border pt-[48px] pb-20 overflow-hidden scroll-mt-20"
     >
       <div className="max-w-[1440px] mx-auto px-6">
         <div className="mb-[24px]">

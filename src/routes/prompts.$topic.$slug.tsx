@@ -51,7 +51,7 @@ function PromptDetailPage() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <main className="flex-grow pt-16">
-        <div className="max-w-[1280px] mx-auto px-4 pb-20">
+        <div className="max-w-[1280px] mx-auto px-4 pb-0">
           <nav className="flex items-center gap-1.5 text-[13px] text-muted-foreground mb-6">
             <Link to="/prompts" className="hover:text-foreground transition-colors">Промпты</Link>
             <ChevronRight className="w-3 h-3" />
@@ -62,7 +62,7 @@ function PromptDetailPage() {
             <span className="text-foreground/70 truncate">{item.title}</span>
           </nav>
 
-          <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-12 items-start mb-20">
+          <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-12 items-start mb-12">
             {/* Left: Gallery */}
             <div className="w-full">
               <PromptGallery media={item.media} title={item.title} />
