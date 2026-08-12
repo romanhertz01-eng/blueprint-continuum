@@ -208,7 +208,9 @@ function PromptsHub() {
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4">
           {[...promptCategories, { slug: 'model', cardTitle: 'По моделям', title: 'По моделям' }].map((cat) => {
-            const count = cat.slug === 'model' ? 0 : countItemsByCategory(cat.slug);
+            const count = cat.slug === 'model' ? 0 : countItemsByCategory(); // counts all items, but we need per-category
+            // Correct logic to count per category if the function supports it, or use manual filter
+            const categoryCount = cat.slug === 'model' ? 0 : allItems.filter(i => i.category === cat.slug).length;
             const isSoon = count === 0 && cat.slug !== 'model';
             const firstItem = allItems.find(i => i.category === cat.slug);
             const image = firstItem?.media?.[0]?.src || `/community/0${Math.floor(Math.random() * 8) + 1}.jpg`;
