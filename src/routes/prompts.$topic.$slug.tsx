@@ -8,8 +8,7 @@ import { CopyPromptButton } from '@/components/prompts/CopyPromptButton';
 import { TryPromptButton } from '@/components/prompts/TryPromptButton';
 import { PromptMasonry } from '@/components/prompts/PromptMasonry';
 import { TopicCloud } from '@/components/prompts/TopicCloud';
-import { PromptShelf } from '@/components/prompts/PromptShelf';
-import { PromptMasonryFeed } from '@/components/prompts/PromptMasonryFeed';
+import { DiscoveryFeed } from "@/components/prompts/DiscoveryFeed";
 import { PromptGallery } from '@/components/prompts/PromptGallery';
 
 import { Footer } from '@/components/shared/Footer';
@@ -277,23 +276,9 @@ function PromptDetailPage() {
           </div>
         </div>
 
-        <div className="mt-20 space-y-16">
-          <PromptShelf
-            title={`Ещё на ${modelName}`}
-            subtitle="Другие промпты для этой модели"
-            ctaLabel="Все промпты модели →"
-            ctaHref={`/prompts/model/${item.providerId}`}
-            items={getRelatedByModel(item, 5)}
-          />
-
-          <PromptMasonryFeed
-            title="Похожие промпты"
-            subtitle="Подобрано по теме, стилю и формату"
-            ctaLabel="Смотреть все похожие →"
-            ctaHref={`/prompts/${item.topicSlug}`}
-            items={getRelatedItems(item, 20)}
-          />
-        </div>
+      <div className="w-full">
+        <DiscoveryFeed currentItem={item} />
+      </div>
 
         <div className="mt-16">
           <TopicCloud topics={promptTopics} />
