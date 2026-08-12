@@ -34,7 +34,7 @@ const PAGE_SIZE = 30;
 function PromptsHub() {
   const allItems = getPublishedItems();
   const topics = getPublishedTopics();
-  const categories = getCategories();
+  const promptCategories = getCategories();
   
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
@@ -197,6 +197,57 @@ function PromptsHub() {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* ЗАДАЧА 1: 6 БЛОКОВ КАТЕГОРИЙ */}
+      <section className="max-w-7xl mx-auto px-6 w-full mb-10">
+        <h2 className="text-[20px] font-bold mb-5 flex items-center gap-2">
+          Категории
+          <span className="w-1.5 h-1.5 rounded-full bg-primary" />
+        </h2>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4">
+          {[...promptCategories, { slug: 'model', cardTitle: 'По моделям', title: 'По моделям' }].map((cat) => {
+            const count = cat.slug === 'model' ? 0 : countItemsByCategory(cat.slug);
+            const isSoon = count === 0 && cat.slug !== 'model';
+            const firstItem = allItems.find(i => i.category === cat.slug);
+            const image = firstItem?.media?.[0]?.src || `/community/0${Math.floor(Math.random() * 8) + 1}.jpg`;
+            const href = cat.slug === 'model' ? '/prompts/model' : `/prompts/${cat.slug}`;
+
+            if (isSoon) {
+              return (
+                <div 
+                  key={cat.slug} 
+                  className="relative h-[140px] rounded-[18px] overflow-hidden bg-muted/20 border border-border/50 opacity-60 grayscale cursor-not-allowed group"
+                >
+                  <div className="absolute inset-0 bg-black/40" />
+                  <div className="absolute inset-0 flex flex-col justify-center items-center text-center p-4">
+                    <span className="text-white font-bold text-[14px] mb-1">{cat.cardTitle || cat.title}</span>
+                    <span className="px-2 py-0.5 rounded-md bg-white/20 backdrop-blur-md text-white text-[9px] font-black uppercase tracking-wider">Скоро</span>
+                  </div>
+                </div>
+              );
+            }
+
+            return (
+              <Link
+                key={cat.slug}
+                to={href}
+                className="relative h-[140px] rounded-[18px] overflow-hidden group border border-border/20 shadow-sm"
+              >
+                <img 
+                  src={image} 
+                  alt={cat.title} 
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
+                />
+                <div className="absolute inset-0 bg-black/50 group-hover:bg-black/40 transition-colors" />
+                <div className="absolute inset-0 p-4 flex flex-col justify-end">
+                  <span className="text-white font-bold text-[15px] mb-0.5 leading-tight">{cat.cardTitle || cat.title}</span>
+                  <span className="text-white/60 text-[11px] font-medium">{cat.slug === 'model' ? 'Модели' : `${count} промптов`}</span>
+                </div>
+              </Link>
+            );
+          })}
         </div>
       </section>
 
