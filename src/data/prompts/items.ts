@@ -698,5 +698,119 @@ export const promptItems: PromptItem[] = [
     saves: 13,
     shares: 5,
     updatedAt: '2026-08-11'
+  },
+  {
+    slug: 'python-30-days',
+    topicSlug: 'ucheba',
+    category: 'text',
+    title: 'Python за 30 дней: пошаговый план обучения',
+    promptRu: 'Ты — опытный Python-разработчик и ментор. Составь для меня персональный план изучения Python с нуля до уровня Junior за 30 дней. Разбей план по неделям. Для каждой недели укажи: ключевые темы, практические задания и список ресурсов. В конце каждой недели добавь мини-тест для самопроверки. Тон дружелюбный, объясняй сложные моменты на метафорах.',
+    providerId: 'chatgpt',
+    subModelId: 'gpt-5-6-sol',
+    media: [],
+    body: {
+      overview: 'Комплексный образовательный промпт для структурированного изучения программирования с нуля.',
+      breakdown: '', howToChange: '', mistakes: ''
+    },
+    status: 'published',
+    source: 'editorial',
+    publishedAt: '2026-08-12',
+    updatedAt: '2026-08-12',
+    views: 0, likes: 12, saves: 0, shares: 0
+  },
+  {
+    slug: 'language-speaking-practice',
+    topicSlug: 'ucheba',
+    category: 'text',
+    title: 'Разговорная практика с носителем языка',
+    promptRu: 'Действуй как дружелюбный носитель английского языка. Я хочу попрактиковать разговорную речь на тему "Путешествия и приключения". Начни диалог с вопроса, используй лексику уровня B2. Исправляй мои ошибки в конце каждой твоей реплики, объясняя правило. Если я использую слишком простые слова, предлагай более продвинутые синонимы.',
+    providerId: 'claude',
+    subModelId: 'claude-fable-5',
+    media: [],
+    body: {
+      overview: 'Интерактивный лингвистический тренажер для преодоления языкового барьера и расширения словарного запаса.',
+      breakdown: '', howToChange: '', mistakes: ''
+    },
+    status: 'published',
+    source: 'editorial',
+    publishedAt: '2026-08-12',
+    updatedAt: '2026-08-12',
+    views: 0, likes: 24, saves: 0, shares: 0
+  },
+  {
+    slug: 'anxiety-reducer',
+    topicSlug: 'zdorovie',
+    category: 'text',
+    title: 'Техники снижения тревожности в моменте',
+    promptRu: 'Ты — коуч по осознанности и ментальному здоровью. Я чувствую сильную тревогу прямо сейчас. Пожалуйста, предложи 3 быстрые техники заземления, которые я могу выполнить за 5 минут. Опиши их пошагово. Говори спокойным, поддерживающим тоном. В конце добавь короткую аффирмацию для успокоения.',
+    providerId: 'chatgpt',
+    subModelId: 'gpt-5-6-sol',
+    media: [],
+    body: {
+      overview: 'Психологический помощник для экстренной самопомощи при стрессовых ситуациях и панических атаках.',
+      breakdown: '', howToChange: '', mistakes: ''
+    },
+    status: 'published',
+    source: 'editorial',
+    publishedAt: '2026-08-12',
+    updatedAt: '2026-08-12',
+    views: 0, likes: 45, saves: 0, shares: 0
+  },
+  {
+    slug: 'budget-planner-50-30-20',
+    topicSlug: 'byt',
+    category: 'text',
+    title: 'Финансовый план по методу 50/30/20',
+    promptRu: 'Ты — эксперт по личным финансам. Помоги мне распределить мой ежемесячный доход в 100 000 рублей по правилу 50/30/20. Рассчитай точные суммы для каждой категории (нужды, желания, сбережения). Предложи конкретные примеры трат для каждой группы и дай 3 совета, как начать откладывать деньги, если раньше этого не получалось.',
+    providerId: 'gemini',
+    subModelId: 'gemini-3-1-pro',
+    media: [],
+    body: {
+      overview: 'Инструмент для быстрого финансового планирования и оптимизации личных расходов.',
+      breakdown: '', howToChange: '', mistakes: ''
+    },
+    status: 'published',
+    source: 'editorial',
+    publishedAt: '2026-08-12',
+    updatedAt: '2026-08-12',
+    views: 0, likes: 18, saves: 0, shares: 0
+  },
+  {
+    slug: 'blog-post-ideas',
+    topicSlug: 'tvorchestvo',
+    category: 'text',
+    title: '30 идей для постов в блог на месяц',
+    promptRu: 'Я веду блог про здоровый образ жизни и продуктивность. Придумай 30 креативных заголовков и кратких концепций для постов (по одному на каждый день месяца). Используй разные форматы: экспертные советы, личные истории, провокационные вопросы, подборки инструментов. Тон должен быть вдохновляющим и вовлекающим.',
+    providerId: 'claude',
+    subModelId: 'claude-fable-5',
+    media: [],
+    body: {
+      overview: 'Генератор контент-плана для авторов, помогающий победить страх чистого листа и структурировать публикации.',
+      breakdown: '', howToChange: '', mistakes: ''
+    },
+    status: 'published',
+    source: 'editorial',
+    publishedAt: '2026-08-12',
+    updatedAt: '2026-08-12',
+    views: 0, likes: 56, saves: 0, shares: 0
+  },
+  {
+    slug: 'historical-mentor-da-vinci',
+    topicSlug: 'personazhi',
+    category: 'text',
+    title: 'Диалог с Леонардо да Винчи о творчестве',
+    promptRu: 'Действуй как Леонардо да Винчи. Ты находишься в своей мастерской во Флоренции. Я — молодой изобретатель, который ищет вдохновения. Расскажи мне о своем подходе к наблюдению за природой и о том, как ты соединяешь науку и искусство. Отвечай на старинный манер, используй метафоры о свете, тени и механике.',
+    providerId: 'chatgpt',
+    subModelId: 'gpt-5-6-sol',
+    media: [],
+    body: {
+      overview: 'Иммерсивный ролевой опыт для глубокого погружения в философию великого мастера Возрождения.',
+      breakdown: '', howToChange: '', mistakes: ''
+    },
+    status: 'published',
+    source: 'editorial',
+    publishedAt: '2026-08-12',
+    updatedAt: '2026-08-12',
+    views: 0, likes: 32, saves: 0, shares: 0
   }
 ];
