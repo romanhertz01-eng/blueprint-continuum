@@ -34,13 +34,36 @@ const PAGE_SIZE = 30;
 function PromptsHub() {
   const allItems = getPublishedItems();
   const topics = getPublishedTopics();
-  const categories = getCategories();
+  const promptCategories = getCategories();
+  const categoryCounts = countItemsByCategory();
   
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<'new' | 'popular' | 'used' | 'saved'>('new');
   const [page, setPage] = useState(1);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+
+  const displayItems = useMemo(() => {
+    if (sortBy !== 'new') return allItems;
+
+    // Interleave text and images to ensure mixed visual content
+    const textItems = allItems.filter(i => i.category === 'text');
+    const imageItems = allItems.filter(i => i.category === 'image');
+    const otherItems = allItems.filter(i => i.category !== 'text' && i.category !== 'image');
+
+    const result: PromptItem[] = [];
+    let tIdx = 0, iIdx = 0, oIdx = 0;
+
+    // To ensure variety, we mix them in a specific pattern
+    // pattern: [image, text, image, other, image, text...]
+    while (tIdx < textItems.length || iIdx < imageItems.length || oIdx < otherItems.length) {
+      if (iIdx < imageItems.length) result.push(imageItems[iIdx++]);
+      if (tIdx < textItems.length) result.push(textItems[tIdx++]);
+      if (iIdx < imageItems.length) result.push(imageItems[iIdx++]);
+      if (oIdx < otherItems.length) result.push(otherItems[oIdx++]);
+    }
+    return result;
+  }, [allItems, sortBy]);
 
   // Категории (chips) для ленты
   const pillCategories = [
@@ -59,11 +82,9 @@ function PromptsHub() {
   ];
 
   const filteredItems = useMemo(() => {
-    let result = [...allItems];
+    let result = [...displayItems];
 
     if (selectedTopic && selectedTopic !== 'popular') {
-       // В моках пока нет точной привязки к этим слагам, но логика фильтрации заложена
-       // Для демонстрации будем просто фильтровать по topicSlug если совпадает
        result = result.filter(item => item.topicSlug === selectedTopic || item.category === selectedTopic);
     }
 
@@ -75,9 +96,10 @@ function PromptsHub() {
       );
     }
 
-    // Сортировка
+    // Сортировка - disable standard sorting when using displayItems (interleaved)
     if (sortBy === 'new') {
-      result.sort((a, b) => new Date(b.publishedAt || 0).getTime() - new Date(a.publishedAt || 0).getTime());
+      // displayItems are already interleaved, we preserve that order
+      return result;
     } else if (sortBy === 'popular') {
       result.sort((a, b) => (b.views || 0) - (a.views || 0));
     }
@@ -105,13 +127,23 @@ function PromptsHub() {
   };
 
   // Определение типа карточки на основе индекса для mixed-grid
-  const getCardType = (index: number): 'A' | 'B' | 'C' | 'D' | 'E' => {
+  const getCardType = (index: number, item: PromptItem): 'A' | 'B' | 'C' | 'D' | 'E' => {
+    const hasMedia = !!item.media?.[0]?.src && item.category !== 'text';
     const cycle = index % 15;
-    if (cycle === 4) return 'D'; // Большая подборка
-    if (cycle === 9) return 'E'; // Мини-курс
-    if (cycle === 2 || cycle === 7 || cycle === 12) return 'B'; // Image-first
-    if (cycle === 5 || cycle === 10) return 'C'; // Текстовый
-    return 'A'; // Обычный
+    
+    // Подборки и курсы — фиксированные позиции
+    if (cycle === 4) return 'D';
+    if (cycle === 9) return 'E';
+    
+    // Если есть медиа, даем тип A (с картинкой) или B (картинка на весь фон)
+    if (hasMedia) {
+      // Тип B (Image-first) встречается реже для акцента
+      if (cycle === 2 || cycle === 12) return 'B';
+      return 'A';
+    }
+    
+    // Если нет медиа (текстовый промпт), всегда тип C
+    return 'C';
   };
 
   const getCardSpan = (type: 'A' | 'B' | 'C' | 'D' | 'E'): string => {
@@ -200,6 +232,57 @@ function PromptsHub() {
         </div>
       </section>
 
+      {/* ЗАДАЧА 1: 6 БЛОКОВ КАТЕГОРИЙ */}
+      <section className="max-w-7xl mx-auto px-6 w-full mb-10">
+        <h2 className="text-[20px] font-bold mb-5 flex items-center gap-2">
+          Категории
+          <span className="w-1.5 h-1.5 rounded-full bg-primary" />
+        </h2>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4">
+          {[...promptCategories, { slug: 'model', cardTitle: 'По моделям', title: 'По моделям' } as any].map((cat) => {
+            const count = cat.slug === 'model' ? 1 : (categoryCounts[cat.slug as keyof typeof categoryCounts] || 0);
+            const isSoon = count === 0;
+            const firstItem = allItems.find(i => i.category === cat.slug);
+            const image = firstItem?.media?.[0]?.src || `/community/0${Math.floor(Math.random() * 8) + 1}.jpg`;
+            const href = cat.slug === 'model' ? '/prompts/model' : `/prompts/${cat.slug}`;
+
+            if (isSoon) {
+              return (
+                <div 
+                  key={cat.slug} 
+                  className="relative h-[140px] rounded-[18px] overflow-hidden bg-muted/20 border border-border/50 opacity-60 grayscale cursor-not-allowed group"
+                >
+                  <div className="absolute inset-0 bg-black/40" />
+                  <div className="absolute inset-0 flex flex-col justify-center items-center text-center p-4">
+                    <span className="text-white font-bold text-[14px] mb-1">{cat.cardTitle || cat.title}</span>
+                    <span className="px-2 py-0.5 rounded-md bg-white/20 backdrop-blur-md text-white text-[9px] font-black uppercase tracking-wider">Скоро</span>
+                  </div>
+                </div>
+              );
+            }
+
+            return (
+              <Link
+                key={cat.slug}
+                to={href}
+                className="relative h-[140px] rounded-[18px] overflow-hidden group border border-border/20 shadow-sm"
+              >
+                <img 
+                  src={image} 
+                  alt={cat.title} 
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
+                />
+                <div className="absolute inset-0 bg-black/50 group-hover:bg-black/40 transition-colors" />
+                <div className="absolute inset-0 p-4 flex flex-col justify-end">
+                  <span className="text-white font-bold text-[15px] mb-0.5 leading-tight">{cat.cardTitle || cat.title}</span>
+                  <span className="text-white/60 text-[11px] font-medium">{cat.slug === 'model' ? 'Модели' : `${count} промптов`}</span>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      </section>
+
       {/* 2. ЛЕНТА КАТЕГОРИЙ */}
       <section className="sticky top-0 z-40 bg-background/80 backdrop-blur-md border-b border-border mb-6">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center gap-3">
@@ -251,8 +334,8 @@ function PromptsHub() {
       <section className="max-w-7xl mx-auto px-6 w-full mb-12">
         {visibleItems.length > 0 ? (
           <div className="grid grid-cols-12 gap-4 md:gap-5">
-            {visibleItems.map((item, idx) => {
-              const type = getCardType(idx);
+              {visibleItems.map((item, idx) => {
+                const type = getCardType(idx, item);
               const span = getCardSpan(type);
               return (
                 <div key={`${item.slug}-${idx}`} className={span}>
