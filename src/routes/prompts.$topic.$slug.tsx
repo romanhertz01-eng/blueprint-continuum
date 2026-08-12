@@ -8,7 +8,7 @@ import { CopyPromptButton } from '@/components/prompts/CopyPromptButton';
 import { TryPromptButton } from '@/components/prompts/TryPromptButton';
 import { PromptMasonry } from '@/components/prompts/PromptMasonry';
 import { TopicCloud } from '@/components/prompts/TopicCloud';
-import { PromptComments } from '@/components/prompts/PromptComments';
+
 import { PromptGallery } from '@/components/prompts/PromptGallery';
 import { Footer } from '@/components/shared/Footer';
 import { ORIGIN } from '@/lib/origin';
