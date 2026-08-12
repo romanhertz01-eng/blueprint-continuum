@@ -36,12 +36,19 @@ function PromptsHub() {
   const topics = getPublishedTopics();
   const promptCategories = getCategories();
   const categoryCounts = countItemsByCategory();
-  
+
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<'new' | 'popular' | 'used' | 'saved'>('new');
   const [page, setPage] = useState(1);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+
+  const displayItems = useMemo(() => {
+    if (sortBy === 'new') {
+      //Interleave logic - handled by sorting and getCardType mapping in the view
+    }
+    return allItems;
+  }, [allItems, sortBy]);
 
   // Категории (chips) для ленты
   const pillCategories = [
@@ -60,7 +67,7 @@ function PromptsHub() {
   ];
 
   const filteredItems = useMemo(() => {
-    let result = [...allItems];
+    let result = [...displayItems];
 
     if (selectedTopic && selectedTopic !== 'popular') {
        result = result.filter(item => item.topicSlug === selectedTopic || item.category === selectedTopic);
@@ -104,12 +111,19 @@ function PromptsHub() {
   };
 
   // Определение типа карточки на основе индекса для mixed-grid
-  const getCardType = (index: number): 'A' | 'B' | 'C' | 'D' | 'E' => {
+  const getCardType = (index: number, item: PromptItem): 'A' | 'B' | 'C' | 'D' | 'E' => {
+    const hasMedia = !!item.media?.[0]?.src && item.category !== 'text';
     const cycle = index % 15;
+    
     if (cycle === 4) return 'D'; // Большая подборка
     if (cycle === 9) return 'E'; // Мини-курс
-    if (cycle === 2 || cycle === 7 || cycle === 12) return 'B'; // Image-first
-    if (cycle === 5 || cycle === 10) return 'C'; // Текстовый
+    
+    // Если есть медиа, пробуем дать тип B (image-first)
+    if (hasMedia && (cycle === 2 || cycle === 7 || cycle === 12)) return 'B';
+    
+    // Если нет медиа (или тип C по циклу), даем тип C (текстовый)
+    if (!hasMedia || cycle === 5 || cycle === 10) return 'C';
+    
     return 'A'; // Обычный
   };
 
@@ -301,8 +315,8 @@ function PromptsHub() {
       <section className="max-w-7xl mx-auto px-6 w-full mb-12">
         {visibleItems.length > 0 ? (
           <div className="grid grid-cols-12 gap-4 md:gap-5">
-            {visibleItems.map((item, idx) => {
-              const type = getCardType(idx);
+              {visibleItems.map((item, idx) => {
+                const type = getCardType(idx, item);
               const span = getCardSpan(type);
               return (
                 <div key={`${item.slug}-${idx}`} className={span}>
