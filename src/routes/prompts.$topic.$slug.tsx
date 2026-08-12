@@ -11,8 +11,8 @@ import { imageProviders } from '@/data/imageModels';
 import { videoProviders } from '@/data/videoModels';
 import { textProviders } from '@/data/textModels';
 
-export const Route = createFileRoute('/prompts/')({
-  loader: ({ params }: { params: { topic: string; slug: string } }) => {
+export const Route = createFileRoute('/prompts/$topic/$slug')({
+  loader: ({ params }) => {
     const item = getItemBySlug(params.topic, params.slug);
     if (!item) throw notFound();
     const topic = getTopicBySlug(item.topicSlug);
