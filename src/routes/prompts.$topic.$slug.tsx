@@ -1,17 +1,17 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
-import { ChevronRight } from 'lucide-react';
-import { getPublishedItems, getPublishedTopics, getTopicBySlug, getItemBySlug, PromptItem } from '@/data/prompts';
+import { ChevronRight, Heart, Bookmark, Share2, Eye, MessageSquare, Star, Check } from 'lucide-react';
+import { getPublishedItems, getPublishedTopics, getTopicBySlug, getItemBySlug, getItemsByProvider, PromptItem } from '@/data/prompts';
 import { imageProviders } from '@/data/imageModels';
 import { videoProviders } from '@/data/videoModels';
 import { textProviders } from '@/data/textModels';
 import { CopyPromptButton } from '@/components/prompts/CopyPromptButton';
 import { TryPromptButton } from '@/components/prompts/TryPromptButton';
-import { PromptReactions } from '@/components/prompts/PromptReactions';
 import { PromptMasonry } from '@/components/prompts/PromptMasonry';
 import { TopicCloud } from '@/components/prompts/TopicCloud';
+import { PromptComments } from '@/components/prompts/PromptComments';
 import { Footer } from '@/components/shared/Footer';
 import { ORIGIN } from '@/lib/origin';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 
 export const Route = createFileRoute('/prompts/$topic/$slug')({
@@ -80,6 +80,62 @@ function PromptDetailPage() {
   const modelName = getModelName(item.providerId, item.category);
   const credits = getCredits(item.providerId, item.subModelId, item.category);
   const media = item.media[0];
+  const itemsByProvider = useMemo(() => getItemsByProvider(item.providerId).filter(i => i.slug !== item.slug), [item.providerId, item.slug]);
+
+  // Reactions Logic
+  const [isLiked, setIsLiked] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
+  const [isShared, setIsShared] = useState(false);
+  const [localViews, setLocalViews] = useState(0);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    try {
+      const likes = JSON.parse(localStorage.getItem('era2_prompt_likes') || '[]');
+      setIsLiked(likes.includes(item.slug));
+      const saves = JSON.parse(localStorage.getItem('era2_prompt_saves') || '[]');
+      setIsSaved(saves.includes(item.slug));
+      const viewsMap = JSON.parse(localStorage.getItem('era2_prompt_views') || '{}');
+      if (!viewsMap[item.slug]) {
+        viewsMap[item.slug] = 1;
+        localStorage.setItem('era2_prompt_views', JSON.stringify(viewsMap));
+        // // BACKEND: Инкремент просмотров на сервере
+      }
+      setLocalViews(viewsMap[item.slug] || 0);
+    } catch (e) {}
+  }, [item.slug]);
+
+  const toggleLike = () => {
+    if (typeof window === 'undefined') return;
+    try {
+      const likes = JSON.parse(localStorage.getItem('era2_prompt_likes') || '[]');
+      const newLikes = isLiked ? likes.filter((s: string) => s !== item.slug) : [...likes, item.slug];
+      localStorage.setItem('era2_prompt_likes', JSON.stringify(newLikes));
+      setIsLiked(!isLiked);
+      // // BACKEND: POST /api/prompts/{slug}/like
+    } catch (e) {}
+  };
+
+  const toggleSave = () => {
+    if (typeof window === 'undefined') return;
+    try {
+      const saves = JSON.parse(localStorage.getItem('era2_prompt_saves') || '[]');
+      const newSaves = isSaved ? saves.filter((s: string) => s !== item.slug) : [...saves, item.slug];
+      localStorage.setItem('era2_prompt_saves', JSON.stringify(newSaves));
+      setIsSaved(!isSaved);
+      // // BACKEND: POST /api/prompts/{slug}/save
+    } catch (e) {}
+  };
+
+  const handleShare = () => {
+    if (typeof window === 'undefined') return;
+    try {
+      navigator.clipboard.writeText(window.location.href);
+      setIsShared(true);
+      setTimeout(() => setIsShared(false), 2000);
+      // // BACKEND: POST /api/prompts/{slug}/share
+    } catch (e) {}
+  };
 
   const breadcrumbSchema = {
     "@context": "https://schema.org",
@@ -116,6 +172,12 @@ function PromptDetailPage() {
           <ChevronRight className="w-3.5 h-3.5" />
           <span className="text-foreground/70 line-clamp-1">{item.title}</span>
         </nav>
+
+        <div className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[12px] font-medium bg-primary/10 text-primary mb-3">
+          {item.category === 'image' ? 'Промпт для изображения' : 
+           item.category === 'video' ? 'Промпт для видео' : 
+           item.category === 'text' ? 'Текстовый промпт' : 'Промпт'}
+        </div>
 
         <h1 className="text-[36px] font-bold leading-tight mb-5 text-foreground">{item.title}</h1>
         
@@ -160,14 +222,63 @@ function PromptDetailPage() {
                 <TryPromptButton item={item} label="Открыть в генераторе" />
               </div>
 
-              <PromptReactions item={item} />
-
-              <div className="flex flex-col gap-1">
-                {credits !== null && (
-                  <div className="text-[13px] text-muted-foreground">
-                    Стоимость: <span className="text-foreground font-medium">{credits} кр</span> за генерацию
+              <div className="grid grid-cols-3 gap-2 mt-5">
+                {[
+                  { icon: Heart, count: item.likes + (isLiked ? 1 : 0), label: 'Лайки', active: isLiked, onClick: toggleLike },
+                  { icon: Eye, count: item.views + localViews, label: 'Просмотры' },
+                  { icon: Share2, count: isShared ? 'Copy' : item.shares, label: 'Поделились', active: isShared, onClick: handleShare },
+                  { icon: Bookmark, count: item.saves + (isSaved ? 1 : 0), label: 'Сохранения', active: isSaved, onClick: toggleSave },
+                  { icon: MessageSquare, count: 0, label: 'Комментарии' },
+                  { icon: Star, count: '5.0', label: 'Рейтинг' },
+                ].map((stat, i) => (
+                  <div 
+                    key={i} 
+                    onClick={stat.onClick}
+                    className={cn(
+                      "bg-card border border-border rounded-xl p-3 flex flex-col items-center justify-center gap-1 transition-all",
+                      stat.onClick && "cursor-pointer hover:bg-muted/50",
+                      stat.active && "border-primary/50 bg-primary/5"
+                    )}
+                  >
+                    <stat.icon className={cn("w-4 h-4 mb-0.5", stat.active ? "text-primary fill-primary" : "text-muted-foreground")} />
+                    <span className={cn("text-[18px] font-bold leading-none", stat.active && "text-primary")}>{stat.count}</span>
+                    <span className="text-[12px] text-muted-foreground">{stat.label}</span>
                   </div>
-                )}
+                ))}
+              </div>
+
+              <div className="pt-2">
+                <span className="text-[12px] font-bold tracking-[0.1em] uppercase text-muted-foreground/80 mb-3 block">
+                  Параметры
+                </span>
+                <div className="flex flex-wrap gap-2">
+                  <div className="bg-muted/40 border border-border rounded-lg px-3 py-1.5 text-[13px] text-foreground">
+                    {modelName}
+                  </div>
+                  {item.subModelId && (
+                    <div className="bg-muted/40 border border-border rounded-lg px-3 py-1.5 text-[13px] text-foreground">
+                      {item.subModelId}
+                    </div>
+                  )}
+                  {item.params?.aspect && (
+                    <div className="bg-muted/40 border border-border rounded-lg px-3 py-1.5 text-[13px] text-foreground">
+                      {item.params.aspect}
+                    </div>
+                  )}
+                  {item.params?.quality && (
+                    <div className="bg-muted/40 border border-border rounded-lg px-3 py-1.5 text-[13px] text-foreground">
+                      {item.params.quality}
+                    </div>
+                  )}
+                  {item.params?.resolution && (
+                    <div className="bg-muted/40 border border-border rounded-lg px-3 py-1.5 text-[13px] text-foreground">
+                      {item.params.resolution}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-3 pt-2">
                 <div className="text-[13px] text-muted-foreground">
                   Теги: {' '}
                   <Link to="/prompts/$topic" params={{ topic: item.topicSlug }} className="underline hover:text-foreground">
@@ -180,11 +291,33 @@ function PromptDetailPage() {
                     ) : null;
                   })}
                 </div>
+                
+                <div className="space-y-2">
+                  <span className="text-[12px] font-bold tracking-[0.1em] uppercase text-muted-foreground/80 block">
+                    Смотрите также
+                  </span>
+                  <div className="flex flex-wrap gap-2">
+                    {item.extraTopicSlugs?.map((slug: string) => {
+                      const topic = topics.find(t => t.slug === slug);
+                      return topic ? (
+                        <Link 
+                          key={slug} 
+                          to="/prompts/$topic" 
+                          params={{ topic: slug }}
+                          className="bg-muted/40 border border-border rounded-full px-4 py-1.5 text-[13px] text-foreground hover:bg-muted/60 transition-colors"
+                        >
+                          {topic.title}
+                        </Link>
+                      ) : null;
+                    })}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
+        <PromptComments slug={item.slug} />
 
         <div className="mt-14 pt-12 border-t border-border">
           <h2 className="mb-8 text-2xl font-bold tracking-tight text-foreground md:text-3xl">
@@ -197,6 +330,16 @@ function PromptDetailPage() {
               .sort((a, b) => b.publishedAt.localeCompare(a.publishedAt))} 
           />
         </div>
+
+        {itemsByProvider.length > 0 && (
+          <div className="mt-14 pt-12 border-t border-border">
+            <h2 className="mb-8 text-2xl font-bold tracking-tight text-foreground md:text-3xl">
+              Ещё от {modelName}
+            </h2>
+            
+            <PromptMasonry items={itemsByProvider} />
+          </div>
+        )}
 
         <div className="mt-14">
           <TopicCloud topics={topics} />
