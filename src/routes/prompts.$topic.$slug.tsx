@@ -197,13 +197,7 @@ function PromptDetailPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
           {/* LEFT COLUMN - Media */}
           <div className="space-y-6">
-            <div className="overflow-hidden">
-              {media?.src && (media.type === 'video' ? (
-                <video src={media.src} poster={media.poster} controls className="max-w-full h-auto rounded-xl border border-border" />
-              ) : (
-                <img src={media.src} alt={item.title} className="max-w-full h-auto rounded-xl border border-border" />
-              ))}
-            </div>
+            <PromptGallery media={item.media} title={item.title} />
           </div>
 
           {/* RIGHT COLUMN - Prompt & Details */}
