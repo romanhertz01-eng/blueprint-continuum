@@ -164,7 +164,7 @@ function PromptDetailPage() {
     "@type": "Article",
     "headline": item.title,
     "description": item.body.overview,
-    "image": media?.src,
+    "image": item.media[0]?.src,
     "author": { "@type": "Organization", "name": "ERA2" },
     "publisher": { "@type": "Organization", "name": "ERA2" }
   };
