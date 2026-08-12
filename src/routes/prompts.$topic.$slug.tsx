@@ -1,288 +1,136 @@
-import { createFileRoute, Link } from '@tanstack/react-router';
-import { ChevronRight, Heart, Bookmark, Share2, Eye, MessageSquare, Star, Check } from 'lucide-react';
-import { getPublishedItems, getPublishedTopics, getTopicBySlug, getItemBySlug, getItemsByProvider, PromptItem, getRelatedItems, getRelatedByModel, promptTopics } from '@/data/prompts';
+import { createFileRoute, notFound, Link } from '@tanstack/react-router';
+import { ChevronRight, Eye, Heart, Bookmark, Share2 } from 'lucide-react';
+import { getItemBySlug, getTopicBySlug } from '@/data/prompts';
+import { PromptGallery } from '@/components/prompts/PromptGallery';
+import { DiscoveryFeed } from '@/components/prompts/DiscoveryFeed';
+import { TryPromptButton } from '@/components/prompts/TryPromptButton';
+import { CopyPromptButton } from '@/components/prompts/CopyPromptButton';
+import { Footer } from '@/components/shared/Footer';
+import { ORIGIN } from '@/lib/origin';
 import { imageProviders } from '@/data/imageModels';
 import { videoProviders } from '@/data/videoModels';
 import { textProviders } from '@/data/textModels';
-import { CopyPromptButton } from '@/components/prompts/CopyPromptButton';
-import { TryPromptButton } from '@/components/prompts/TryPromptButton';
-import { PromptMasonry } from '@/components/prompts/PromptMasonry';
-import { TopicCloud } from '@/components/prompts/TopicCloud';
-import { DiscoveryFeed } from "@/components/prompts/DiscoveryFeed";
-import { PromptGallery } from '@/components/prompts/PromptGallery';
-
-import { Footer } from '@/components/shared/Footer';
-import { ORIGIN } from '@/lib/origin';
-import { useState, useMemo, useEffect } from 'react';
-import { cn } from '@/lib/utils';
 
 export const Route = createFileRoute('/prompts/$topic/$slug')({
-  component: PromptDetailPage,
   loader: ({ params }) => {
     const item = getItemBySlug(params.topic, params.slug);
-    if (!item) throw new Error('Prompt not found');
-    return { item };
+    if (!item) throw notFound();
+    const topic = getTopicBySlug(item.topicSlug);
+    return { item, topic };
   },
   head: ({ loaderData }) => {
-    if (!loaderData?.item) return {};
-    const { item } = loaderData;
-    const title = `${item.title} — Библиотека промптов ERA2`;
-    const description = item.body.overview.slice(0, 160);
-    const canonical = `${ORIGIN}/prompts/${item.topicSlug}/${item.slug}`;
-
+    if (!loaderData) return {};
+    const { item, topic } = loaderData as { item: any, topic: any };
     return {
+      title: `${item.title} — Промпт для нейросетей | ERA2.ai`,
       meta: [
-        { title },
-        { name: 'description', content: description },
-        { name: 'robots', content: 'index,follow' },
-        { property: 'og:title', content: title },
-        { property: 'og:description', content: description },
-        { property: 'og:url', content: canonical },
-        { property: 'og:type', content: 'article' },
-        { name: 'twitter:card', content: 'summary_large_image' },
+        { name: 'description', content: item.promptRu.slice(0, 160) },
+        { property: 'og:url', content: `${ORIGIN}/prompts/${topic?.slug}/${item.slug}` },
       ],
-      links: [{ rel: 'canonical', href: canonical }],
     };
   },
+  component: PromptDetailPage,
 });
 
-function getModelName(providerId: string, category: string): string {
-  if (category === 'text') return textProviders.find(p => p.id === providerId)?.name || providerId;
-  if (category === 'image') return imageProviders.find(p => p.id === providerId)?.name || providerId;
-  if (category === 'video') return videoProviders.find(p => p.id === providerId)?.name || providerId;
-  if (category === 'audio') return providerId === 'elevenlabs' ? 'ElevenLabs' : 'Suno';
-  return providerId;
-}
-
 function PromptDetailPage() {
-  const { item } = Route.useLoaderData();
-  const topics = getPublishedTopics();
-  const mainTopic = getTopicBySlug(item.topicSlug);
-  
-  const modelName = getModelName(item.providerId, item.category);
-  const itemsByProvider = useMemo(() => getItemsByProvider(item.providerId).filter(i => i.slug !== item.slug), [item.providerId, item.slug]);
+  const { item, topic } = Route.useLoaderData();
 
-  // Reactions Logic
-  const [isLiked, setIsLiked] = useState(false);
-  const [isSaved, setIsSaved] = useState(false);
-  const [isShared, setIsShared] = useState(false);
-  const [localViews, setLocalViews] = useState(0);
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    try {
-      const likes = JSON.parse(localStorage.getItem('era2_prompt_likes') || '[]');
-      setIsLiked(likes.includes(item.slug));
-      const saves = JSON.parse(localStorage.getItem('era2_prompt_saves') || '[]');
-      setIsSaved(saves.includes(item.slug));
-      const viewsMap = JSON.parse(localStorage.getItem('era2_prompt_views') || '{}');
-      if (!viewsMap[item.slug]) {
-        viewsMap[item.slug] = 1;
-        localStorage.setItem('era2_prompt_views', JSON.stringify(viewsMap));
-      }
-      setLocalViews(viewsMap[item.slug] || 0);
-    } catch (e) {}
-  }, [item.slug]);
-
-  const toggleLike = () => {
-    if (typeof window === 'undefined') return;
-    try {
-      const likes = JSON.parse(localStorage.getItem('era2_prompt_likes') || '[]');
-      const newLikes = isLiked ? likes.filter((s: string) => s !== item.slug) : [...likes, item.slug];
-      localStorage.setItem('era2_prompt_likes', JSON.stringify(newLikes));
-      setIsLiked(!isLiked);
-    } catch (e) {}
+  const getModelName = (providerId: string) => {
+    const allProviders = [...imageProviders, ...videoProviders, ...textProviders];
+    const provider = allProviders.find(p => p.id === providerId);
+    return provider ? provider.name : providerId;
   };
 
-  const toggleSave = () => {
-    if (typeof window === 'undefined') return;
-    try {
-      const saves = JSON.parse(localStorage.getItem('era2_prompt_saves') || '[]');
-      const newSaves = isSaved ? saves.filter((s: string) => s !== item.slug) : [...saves, item.slug];
-      localStorage.setItem('era2_prompt_saves', JSON.stringify(newSaves));
-      setIsSaved(!isSaved);
-    } catch (e) {}
-  };
-
-  const handleShare = () => {
-    if (typeof window === 'undefined') return;
-    try {
-      navigator.clipboard.writeText(window.location.href);
-      setIsShared(true);
-      setTimeout(() => setIsShared(false), 2000);
-    } catch (e) {}
-  };
+  const modelName = getModelName(item.providerId);
+  const metadata = [
+    modelName,
+    item.params?.aspect,
+    item.params?.quality || '1K'
+  ].filter(Boolean).join(' · ');
 
   return (
-    <>
-      <div className="max-w-[1200px] mx-auto px-4 py-10">
-        <nav className="flex items-center gap-1 text-[13px] text-muted-foreground mb-4">
-          <Link to="/prompts" className="hover:text-foreground">Промпты</Link>
-          <ChevronRight className="w-3.5 h-3.5" />
-          <Link to="/prompts/$topic" params={{ topic: item.topicSlug }} className="hover:text-foreground">
-            {mainTopic?.title}
-          </Link>
-          <ChevronRight className="w-3.5 h-3.5" />
-          <span className="text-foreground/70 truncate max-w-[200px] sm:max-w-[300px]" title={item.title}>
-            {item.title}
-          </span>
-        </nav>
+    <div className="min-h-screen bg-background flex flex-col">
+      <main className="flex-grow pt-16">
+        <div className="max-w-[1280px] mx-auto px-4 pb-20">
+          <nav className="flex items-center gap-1.5 text-[13px] text-muted-foreground mb-8">
+            <Link to="/prompts" className="hover:text-foreground transition-colors">Промпты</Link>
+            <ChevronRight className="w-3 h-3" />
+            <Link to="/prompts/$topic" params={{ topic: item.topicSlug }} className="hover:text-foreground transition-colors">
+              {topic?.title || item.topicSlug}
+            </Link>
+            <ChevronRight className="w-3 h-3" />
+            <span className="text-foreground/70 truncate">{item.title}</span>
+          </nav>
 
-        <div className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[12px] font-medium bg-primary/10 text-primary mb-3">
-          {item.category === 'image' ? 'Промпт для изображения' : 
-           item.category === 'video' ? 'Промпт для видео' : 
-           item.category === 'text' ? 'Текстовый промпт' : 'Промпт'}
-        </div>
-
-        <h1 className="text-[36px] font-bold leading-tight mb-5 text-foreground">{item.title}</h1>
-        
-        <div className="border-t border-border w-full mb-8" />
-
-        <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-10 items-start">
-          {/* LEFT COLUMN - Media */}
-          <div className="flex justify-center lg:justify-start">
-            <div className="w-full max-w-[520px]">
+          <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-12 items-start mb-20">
+            {/* Left: Gallery */}
+            <div className="w-full">
               <PromptGallery media={item.media} title={item.title} />
             </div>
-          </div>
 
-          {/* RIGHT COLUMN - Prompt & Details */}
-          <div className="space-y-6">
-            <div className="space-y-4">
-              <h2 className="text-[18px] font-bold text-foreground">Промпт</h2>
-              
-              <div className="relative bg-muted/30 border border-border rounded-xl p-5 text-[15px] leading-relaxed text-foreground whitespace-pre-wrap group">
-                {item.promptRu}
-                <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <CopyPromptButton text={item.promptRu} className="h-8 w-8 p-0" variant="secondary" />
+            {/* Right: Info & Actions */}
+            <div className="space-y-8">
+              <div>
+                <h1 className="text-2xl md:text-3xl font-bold mb-4 leading-tight">{item.title}</h1>
+                <div className="flex items-center gap-3 text-[13px] text-muted-foreground">
+                  <span className="px-2 py-0.5 rounded bg-muted text-foreground font-medium uppercase tracking-wider text-[11px]">
+                    {item.category}
+                  </span>
+                  <span>{metadata}</span>
                 </div>
               </div>
 
-              <div className="flex flex-wrap gap-3 mt-4">
-                <CopyPromptButton text={item.promptRu} />
-                <TryPromptButton item={item} label="Создать с этим промптом" />
-              </div>
-
-              <div className="flex items-center justify-between text-[13px] text-muted-foreground pt-4 border-t border-border/50">
+              {/* Stats & Social */}
+              <div className="flex items-center justify-between py-4 border-y border-border">
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <Eye className="w-4 h-4" />
+                  <span className="text-sm font-medium">{item.views || 0}</span>
+                </div>
                 <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-1.5 opacity-70">
-                    <Eye className="w-4 h-4" />
-                    <span>{item.views + localViews}</span>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <button 
-                    onClick={toggleLike}
-                    className={cn(
-                      "flex items-center justify-center w-9 h-9 rounded-lg border border-border transition-all hover:bg-muted/50 active:scale-90",
-                      isLiked && "bg-primary/10 border-primary/20"
-                    )}
-                    title={isLiked ? "Убрать лайк" : "Поставить лайк"}
-                  >
-                    <Heart className={cn("w-4.5 h-4.5 transition-colors", isLiked ? "text-primary fill-primary" : "text-muted-foreground")} />
+                  <button className="flex items-center gap-1.5 hover:text-foreground transition-colors group">
+                    <Heart className="w-5 h-5 group-hover:fill-current" />
+                    <span className="text-sm font-medium">{item.likes || 0}</span>
                   </button>
-                  
-                  <button 
-                    onClick={toggleSave}
-                    className={cn(
-                      "flex items-center justify-center w-9 h-9 rounded-lg border border-border transition-all hover:bg-muted/50 active:scale-90",
-                      isSaved && "bg-primary/10 border-primary/20"
-                    )}
-                    title={isSaved ? "Удалить из сохраненных" : "Сохранить"}
-                  >
-                    <Bookmark className={cn("w-4.5 h-4.5 transition-colors", isSaved ? "text-primary fill-primary" : "text-muted-foreground")} />
+                  <button className="flex items-center gap-1.5 hover:text-foreground transition-colors group">
+                    <Bookmark className="w-5 h-5 group-hover:fill-current" />
+                    <span className="text-sm font-medium">{item.saves || 0}</span>
                   </button>
-                  
-                  <button 
-                    onClick={handleShare}
-                    className={cn(
-                      "flex items-center justify-center w-9 h-9 rounded-lg border border-border transition-all hover:bg-muted/50 active:scale-90",
-                      isShared && "bg-primary/10 border-primary/20"
-                    )}
-                    title="Поделиться"
-                  >
-                    {isShared ? <Check className="w-4.5 h-4.5 text-primary" /> : <Share2 className="w-4.5 h-4.5 text-muted-foreground" />}
+                  <button className="flex items-center gap-1.5 hover:text-foreground transition-colors group">
+                    <Share2 className="w-5 h-5" />
                   </button>
                 </div>
               </div>
-            </div>
 
-            <div className="p-4 rounded-xl border border-border bg-muted/20 space-y-3">
-              <div className="flex items-center justify-between text-[13px]">
-                <span className="text-muted-foreground">Модель</span>
-                <span className="font-medium text-foreground">
-                  {modelName} {item.params?.quality && `· ${item.params.quality}`}
-                </span>
-              </div>
-              
-              {item.params?.aspect && (
-                <div className="flex items-center justify-between text-[13px]">
-                  <span className="text-muted-foreground">Формат</span>
-                  <span className="font-medium text-foreground">{item.params.aspect}</span>
+              {/* Prompt Box */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Промпт</h3>
+                  <CopyPromptButton 
+                    text={item.promptRu} 
+                    className="h-8 px-3 text-xs bg-muted/50 hover:bg-muted border-none" 
+                  />
                 </div>
-              )}
-            </div>
-
-            <div className="space-y-3">
-              <h3 className="text-[14px] font-semibold text-foreground">Тема</h3>
-              <div className="flex flex-wrap gap-2">
-                <Link
-                  to="/prompts/$topic"
-                  params={{ topic: item.topicSlug }}
-                  className="px-3 py-1 rounded-full text-[12px] bg-muted/40 border border-border text-foreground/80 hover:bg-muted/60 transition-colors"
-                >
-                  {mainTopic?.title}
-                </Link>
-                {item.extraTopicSlugs?.map((slug: string) => {
-                  const topic = topics.find(t => t.slug === slug);
-                  return topic ? (
-                    <Link
-                      key={slug}
-                      to="/prompts/$topic"
-                      params={{ topic: slug }}
-                      className="px-3 py-1 rounded-full text-[12px] bg-muted/40 border border-border text-foreground/80 hover:bg-muted/60 transition-colors"
-                    >
-                      {topic.title}
-                    </Link>
-                  ) : null;
-                })}
-              </div>
-            </div>
-
-            {item.extraTopicSlugs && item.extraTopicSlugs.length > 0 && (
-              <div className="pt-4 space-y-3">
-                <span className="text-[12px] font-bold tracking-[0.1em] uppercase text-muted-foreground/80 block">
-                  Смотрите также
-                </span>
-                <div className="flex flex-wrap gap-2">
-                  {item.extraTopicSlugs?.map((slug: string) => {
-                    const topic = promptTopics.find(t => t.slug === slug);
-
-                    return topic ? (
-                      <Link 
-                        key={slug} 
-                        to="/prompts/$topic" 
-                        params={{ topic: slug }}
-                        className="bg-muted/40 border border-border rounded-full px-4 py-1.5 text-[13px] text-foreground hover:bg-muted/60 transition-colors"
-                      >
-                        {topic.title}
-                      </Link>
-                    ) : null;
-                  })}
+                <div className="p-5 rounded-xl bg-muted/30 border border-border relative group">
+                  <p className="text-[15px] leading-relaxed text-foreground/90 whitespace-pre-wrap">
+                    {item.promptRu}
+                  </p>
                 </div>
               </div>
-            )}
+
+              {/* Main CTA */}
+              <TryPromptButton 
+                item={item}
+                label="Создать с этим промптом"
+                className="w-full h-14 text-base font-semibold rounded-xl shadow-lg shadow-primary/20"
+              />
+            </div>
           </div>
         </div>
 
-      <div className="w-full">
+        {/* Discovery Zone */}
         <DiscoveryFeed currentItem={item} />
-      </div>
-
-      </div>
-
+      </main>
       <Footer />
-    </>
+    </div>
   );
 }
