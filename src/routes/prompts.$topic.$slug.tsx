@@ -99,7 +99,7 @@ function PromptDetailPage() {
       if (!viewsMap[item.slug]) {
         viewsMap[item.slug] = 1;
         localStorage.setItem('era2_prompt_views', JSON.stringify(viewsMap));
-        // // BACKEND: Инкремент просмотров на сервере
+        // BACKEND: Инкремент просмотров на сервере
       }
       setLocalViews(viewsMap[item.slug] || 0);
     } catch (e) {}
@@ -112,7 +112,7 @@ function PromptDetailPage() {
       const newLikes = isLiked ? likes.filter((s: string) => s !== item.slug) : [...likes, item.slug];
       localStorage.setItem('era2_prompt_likes', JSON.stringify(newLikes));
       setIsLiked(!isLiked);
-      // // BACKEND: POST /api/prompts/{slug}/like
+      // BACKEND: POST /api/prompts/{slug}/like
     } catch (e) {}
   };
 
@@ -123,7 +123,7 @@ function PromptDetailPage() {
       const newSaves = isSaved ? saves.filter((s: string) => s !== item.slug) : [...saves, item.slug];
       localStorage.setItem('era2_prompt_saves', JSON.stringify(newSaves));
       setIsSaved(!isSaved);
-      // // BACKEND: POST /api/prompts/{slug}/save
+      // BACKEND: POST /api/prompts/{slug}/save
     } catch (e) {}
   };
 
@@ -133,7 +133,7 @@ function PromptDetailPage() {
       navigator.clipboard.writeText(window.location.href);
       setIsShared(true);
       setTimeout(() => setIsShared(false), 2000);
-      // // BACKEND: POST /api/prompts/{slug}/share
+      // BACKEND: POST /api/prompts/{slug}/share
     } catch (e) {}
   };
 

@@ -26,6 +26,8 @@ export const promptItems: PromptItem[] = [
     likes: 31,
     saves: 18,
     shares: 7,
+    rating: 4.8,
+    reviewsCount: 24,
     updatedAt: '2026-08-11'
   },
   {
@@ -53,6 +55,8 @@ export const promptItems: PromptItem[] = [
     likes: 28,
     saves: 12,
     shares: 5,
+    rating: 5.0,
+    reviewsCount: 15,
     updatedAt: '2026-08-11'
   },
   {
@@ -80,6 +84,8 @@ export const promptItems: PromptItem[] = [
     likes: 35,
     saves: 20,
     shares: 8,
+    rating: 4.5,
+    reviewsCount: 8,
     updatedAt: '2026-08-11'
   },
   {
@@ -107,6 +113,8 @@ export const promptItems: PromptItem[] = [
     likes: 2,
     saves: 1,
     shares: 0,
+    rating: 3.8,
+    reviewsCount: 3,
     updatedAt: '2026-08-11'
   },
   {
@@ -134,6 +142,8 @@ export const promptItems: PromptItem[] = [
     likes: 10,
     saves: 5,
     shares: 2,
+    rating: 4.9,
+    reviewsCount: 38,
     updatedAt: '2026-08-11'
   },
   {
@@ -161,6 +171,8 @@ export const promptItems: PromptItem[] = [
     likes: 32,
     saves: 15,
     shares: 6,
+    rating: 4.2,
+    reviewsCount: 12,
     updatedAt: '2026-08-11'
   },
   {
@@ -188,6 +200,8 @@ export const promptItems: PromptItem[] = [
     likes: 18,
     saves: 9,
     shares: 4,
+    rating: 4.7,
+    reviewsCount: 21,
     updatedAt: '2026-08-11'
   },
   {
@@ -215,6 +229,8 @@ export const promptItems: PromptItem[] = [
     likes: 25,
     saves: 14,
     shares: 7,
+    rating: 3.9,
+    reviewsCount: 5,
     updatedAt: '2026-08-11'
   },
   {
@@ -242,6 +258,8 @@ export const promptItems: PromptItem[] = [
     likes: 30,
     saves: 19,
     shares: 8,
+    rating: 5.0,
+    reviewsCount: 40,
     updatedAt: '2026-08-11'
   },
   {
@@ -269,6 +287,8 @@ export const promptItems: PromptItem[] = [
     likes: 22,
     saves: 11,
     shares: 5,
+    rating: 4.6,
+    reviewsCount: 18,
     updatedAt: '2026-08-11'
   },
   {
@@ -296,6 +316,8 @@ export const promptItems: PromptItem[] = [
     likes: 12,
     saves: 6,
     shares: 3,
+    rating: 4.3,
+    reviewsCount: 9,
     updatedAt: '2026-08-11'
   },
   {
@@ -323,6 +345,8 @@ export const promptItems: PromptItem[] = [
     likes: 29,
     saves: 17,
     shares: 8,
+    rating: 4.8,
+    reviewsCount: 32,
     updatedAt: '2026-08-11'
   },
   {

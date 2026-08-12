@@ -46,6 +46,8 @@ export interface PromptItem {
   likes: number;
   saves: number;
   shares: number;
+  rating?: number;
+  reviewsCount?: number;
 }
 
 export interface PromptCategoryDef {
