@@ -9,6 +9,7 @@ import { TryPromptButton } from '@/components/prompts/TryPromptButton';
 import { PromptMasonry } from '@/components/prompts/PromptMasonry';
 import { TopicCloud } from '@/components/prompts/TopicCloud';
 import { PromptComments } from '@/components/prompts/PromptComments';
+import { PromptGallery } from '@/components/prompts/PromptGallery';
 import { Footer } from '@/components/shared/Footer';
 import { ORIGIN } from '@/lib/origin';
 import { useState, useMemo, useEffect } from 'react';
@@ -79,7 +80,7 @@ function PromptDetailPage() {
   
   const modelName = getModelName(item.providerId, item.category);
   const credits = getCredits(item.providerId, item.subModelId, item.category);
-  const media = item.media[0];
+  
   const itemsByProvider = useMemo(() => getItemsByProvider(item.providerId).filter(i => i.slug !== item.slug), [item.providerId, item.slug]);
 
   // Reactions Logic
@@ -163,7 +164,7 @@ function PromptDetailPage() {
     "@type": "Article",
     "headline": item.title,
     "description": item.body.overview,
-    "image": media?.src,
+    "image": item.media[0]?.src,
     "author": { "@type": "Organization", "name": "ERA2" },
     "publisher": { "@type": "Organization", "name": "ERA2" }
   };
@@ -197,13 +198,7 @@ function PromptDetailPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
           {/* LEFT COLUMN - Media */}
           <div className="space-y-6">
-            <div className="overflow-hidden">
-              {media?.src && (media.type === 'video' ? (
-                <video src={media.src} poster={media.poster} controls className="max-w-full h-auto rounded-xl border border-border" />
-              ) : (
-                <img src={media.src} alt={item.title} className="max-w-full h-auto rounded-xl border border-border" />
-              ))}
-            </div>
+            <PromptGallery media={item.media} title={item.title} />
           </div>
 
           {/* RIGHT COLUMN - Prompt & Details */}
