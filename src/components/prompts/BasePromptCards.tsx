@@ -181,14 +181,17 @@ export function SoftPromptCard({ item }: BaseCardProps) {
 
   return (
     <div 
-      className="group relative flex flex-col h-[400px] p-5 rounded-2xl border border-border hover:shadow-xl hover:shadow-black/5 hover:-translate-y-1 transition-all cursor-pointer"
+      className="group relative flex flex-col h-[400px] p-5 rounded-2xl border border-border/20 hover:shadow-xl hover:shadow-black/5 hover:-translate-y-1 transition-all cursor-pointer"
       style={{ background: getGradient(item.slug) }}
     >
       <div className="flex items-center justify-between mb-6">
-        <div className="w-7 h-7 rounded-lg bg-white/50 flex items-center justify-center text-muted-foreground">
+        <div className="w-7 h-7 rounded-lg bg-white/50 flex items-center justify-center text-slate-600">
           <CategoryIcon category={item.category} />
         </div>
-        <LikeButton likes={item.likes} />
+        <div className="flex items-center gap-1 text-slate-600">
+          <Heart className="w-3.5 h-3.5" />
+          <span className="text-[11px] font-bold">{item.likes || 0}</span>
+        </div>
       </div>
 
       <div className="flex-grow flex flex-col items-center justify-center text-center px-2">
