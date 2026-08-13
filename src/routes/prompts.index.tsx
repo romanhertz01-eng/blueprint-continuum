@@ -3,10 +3,9 @@ import { createFileRoute, Link } from '@tanstack/react-router';
 import { Search, X, Sparkles, Star, PlusCircle, ArrowRight, Filter } from 'lucide-react';
 import { Footer } from '@/components/shared/Footer';
 import { getPublishedItems, getPublishedTopics, countItemsByCategory, getCategories, PromptItem, getProvidersWithPrompts } from '@/data/prompts';
-import { CatalogCard } from '@/components/prompts/CatalogCard';
-import { CollectionShelf } from '@/components/prompts/CollectionShelf';
-import { EditorialBanner } from '@/components/prompts/EditorialBanner';
-
+import { EditorialPromptCard } from '@/components/prompts/EditorialPromptCard';
+import { TextPromptCard } from '@/components/prompts/TextPromptCard';
+import { AudioPromptCard } from '@/components/prompts/AudioPromptCard';
 import { TopicCloud } from '@/components/prompts/TopicCloud';
 import { useState, useMemo, useEffect } from 'react';
 import { cn } from '@/lib/utils';
@@ -49,22 +48,19 @@ function PromptsHub() {
   const displayItems = useMemo(() => {
     if (sortBy !== 'new') return allItems;
 
-    // Interleave text, images and audio to ensure mixed visual content
+    // Interleave text and images to ensure mixed visual content
     const textItems = allItems.filter(i => i.category === 'text');
     const imageItems = allItems.filter(i => i.category === 'image');
-    const audioItems = allItems.filter(i => i.category === 'audio');
-    const otherItems = allItems.filter(i => i.category !== 'text' && i.category !== 'image' && i.category !== 'audio');
+    const otherItems = allItems.filter(i => i.category !== 'text' && i.category !== 'image');
 
     const result: PromptItem[] = [];
-    let tIdx = 0, iIdx = 0, aIdx = 0, oIdx = 0;
+    let tIdx = 0, iIdx = 0, oIdx = 0;
 
     // To ensure variety, we mix them in a specific pattern
-    // pattern: [image, text, image, audio, image, other...]
-    while (tIdx < textItems.length || iIdx < imageItems.length || aIdx < audioItems.length || oIdx < otherItems.length) {
+    // pattern: [image, text, image, other, image, text...]
+    while (tIdx < textItems.length || iIdx < imageItems.length || oIdx < otherItems.length) {
       if (iIdx < imageItems.length) result.push(imageItems[iIdx++]);
       if (tIdx < textItems.length) result.push(textItems[tIdx++]);
-      if (iIdx < imageItems.length) result.push(imageItems[iIdx++]);
-      if (aIdx < audioItems.length) result.push(audioItems[aIdx++]);
       if (iIdx < imageItems.length) result.push(imageItems[iIdx++]);
       if (oIdx < otherItems.length) result.push(otherItems[oIdx++]);
     }
@@ -117,89 +113,6 @@ function PromptsHub() {
     return filteredItems.slice(0, page * PAGE_SIZE);
   }, [filteredItems, page]);
 
-  // Rhythm logic for long feed
-  const feedElements = useMemo(() => {
-    const elements: React.ReactNode[] = [];
-    const itemsPerRow = 5;
-    
-    // Split items into chunks of 5 (one row)
-    const rows: PromptItem[][] = [];
-    for (let i = 0; i < visibleItems.length; i += itemsPerRow) {
-      rows.push(visibleItems.slice(i, i + itemsPerRow));
-    }
-
-    // Logic for inserting shelf/banner between rows
-    rows.forEach((row, rowIndex) => {
-      // Add the row of cards
-      elements.push(
-        <div key={`row-${rowIndex}`} className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-x-[20px] gap-y-[24px] mb-[24px]">
-          {row.map((item, idx) => (
-            <CatalogCard key={`${item.slug}-${rowIndex}-${idx}`} item={item} index={idx} />
-          ))}
-        </div>
-      );
-
-      // Rhythm: shelf after row 2, 5, 8... banner after row 4, 9...
-      // Real row index starts at 0. Row index 1 is the 2nd row.
-      
-      // Shelf approx every 3 rows (2, 5, 8, 11...)
-      if ((rowIndex + 1) % 3 === 2) {
-        // Selection of items for the shelf
-        const shelfItems = [...allItems].sort(() => 0.5 - Math.random()).slice(0, 8);
-        const titles = ["Популярное в маркетинге", "Лучшие для работы", "Топ в дизайне", "Креативные идеи"];
-        const title = titles[Math.floor((rowIndex / 3) % titles.length)];
-        
-        elements.push(
-          <CollectionShelf 
-            key={`shelf-${rowIndex}`}
-            title={title}
-            subtitle="Подборка промптов, которые экономят время"
-            items={shelfItems}
-            ctaHref="/prompts"
-          />
-        );
-      }
-
-      // Banner approx every 5 rows (4, 9, 14...)
-      if ((rowIndex + 1) % 5 === 4) {
-        const banners = [
-          {
-            label: "КУРС",
-            title: "Как писать промпты на уровне Pro",
-            subtitle: "Бесплатный мини-курс по архитектуре запросов от команды ERA2",
-            ctaLabel: "Пройти курс",
-            bgSrc: "/community/05.jpg"
-          },
-          {
-            label: "НОВОЕ",
-            title: "Генерация видео теперь в ERA2",
-            subtitle: "Лучшие видео-модели доступны для ваших творческих экспериментов",
-            ctaLabel: "Смотреть примеры",
-            bgSrc: "/community/06.jpg"
-          },
-          {
-            label: "ПОДБОРКА",
-            title: "ERA2 Featured: Выбор редакции",
-            subtitle: "Каждую неделю мы отбираем лучшие работы нашего сообщества",
-            ctaLabel: "Смотреть подборку",
-            bgSrc: "/community/08.jpg"
-          }
-        ];
-        const banner = banners[Math.floor((rowIndex / 5) % banners.length)];
-
-        elements.push(
-          <EditorialBanner 
-            key={`banner-${rowIndex}`}
-            {...banner}
-            ctaHref="/prompts"
-          />
-        );
-      }
-    });
-
-    return elements;
-  }, [visibleItems, allItems]);
-
   const hasMore = visibleItems.length < filteredItems.length;
 
   const handleShowMore = () => {
@@ -215,13 +128,41 @@ function PromptsHub() {
     setPage(1);
   };
 
-  // 5-column grid system is handled by Tailwind classes in the render.
-  // Card type selection logic is now inside CatalogCard.
+  // Определение типа карточки на основе индекса для mixed-grid
+  const getCardType = (index: number, item: PromptItem): 'A' | 'B' | 'C' | 'D' | 'E' => {
+    const hasMedia = !!item.media?.[0]?.src && item.category !== 'text';
+    const cycle = index % 15;
+    
+    // Подборки и курсы — фиксированные позиции
+    if (cycle === 4) return 'D';
+    if (cycle === 9) return 'E';
+    
+    // Если есть медиа, даем тип A (с картинкой) или B (картинка на весь фон)
+    if (hasMedia) {
+      // Тип B (Image-first) встречается реже для акцента
+      if (cycle === 2 || cycle === 12) return 'B';
+      return 'A';
+    }
+    
+    // Если нет медиа (текстовый промпт), всегда тип C
+    return 'C';
+  };
+
+  const getCardSpan = (type: 'A' | 'B' | 'C' | 'D' | 'E', item?: PromptItem): string => {
+    switch (type) {
+      case 'A': return 'col-span-12 sm:col-span-6 lg:col-span-3';
+      case 'B': return 'col-span-12 sm:col-span-6 lg:col-span-3';
+      case 'C': return 'col-span-12 sm:col-span-6 lg:col-span-3';
+      case 'D': return 'col-span-12 lg:col-span-6';
+      case 'E': return 'col-span-12 lg:col-span-6';
+      default: return 'col-span-12';
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       {/* 1. INTRO-ЗОНА */}
-      <section className="pt-8 pb-6 px-6 max-w-[1520px] mx-auto w-full">
+      <section className="pt-8 pb-6 px-6 max-w-7xl mx-auto w-full">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
           <div className="flex-grow">
             <div className="flex items-center gap-2 mb-2">
@@ -294,7 +235,7 @@ function PromptsHub() {
       </section>
 
       {/* ЗАДАЧА 1: 6 БЛОКОВ КАТЕГОРИЙ */}
-      <section className="max-w-[1520px] mx-auto px-6 w-full mb-10">
+      <section className="max-w-7xl mx-auto px-6 w-full mb-10">
         <h2 className="text-[20px] font-bold mb-5 flex items-center gap-2">
           Категории
           <span className="w-1.5 h-1.5 rounded-full bg-primary" />
@@ -344,20 +285,20 @@ function PromptsHub() {
         </div>
       </section>
 
-      {/* 2. ЛЕНТА КАТЕГОРИЙ (STICKY) */}
-      <section className="sticky top-0 z-40 bg-background/90 backdrop-blur-md border-b border-border shadow-sm">
-        <div className="max-w-[1520px] mx-auto px-6 py-2.5 flex items-center gap-3">
+      {/* 2. ЛЕНТА КАТЕГОРИЙ */}
+      <section className="sticky top-0 z-40 bg-background/80 backdrop-blur-md border-b border-border mb-6">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center gap-3">
           <div className="flex-grow overflow-x-auto no-scrollbar">
-            <div className="flex gap-2.5">
+            <div className="flex gap-2">
               {pillCategories.map(cat => (
                 <button
                   key={cat.label}
                   onClick={() => handleTopicClick(cat.slug)}
                   className={cn(
-                    "px-5 py-2 rounded-full text-[13px] font-semibold whitespace-nowrap transition-all border",
+                    "px-5 py-2.5 rounded-full text-[13px] font-medium whitespace-nowrap transition-all border",
                     selectedTopic === cat.slug
-                      ? "bg-primary text-white border-primary shadow-sm shadow-primary/20"
-                      : "bg-muted/40 border-border/40 hover:bg-muted/70 text-muted-foreground/80"
+                      ? "bg-primary text-white border-primary shadow-md shadow-primary/20"
+                      : "bg-muted/30 border-border/50 hover:bg-muted/60 text-muted-foreground"
                   )}
                 >
                   {cat.label}
@@ -365,11 +306,14 @@ function PromptsHub() {
               ))}
             </div>
           </div>
+          <button className="shrink-0 w-10 h-10 rounded-full border border-border flex items-center justify-center hover:bg-muted/50 transition-colors">
+            <ArrowRight className="w-4 h-4" />
+          </button>
         </div>
       </section>
 
       {/* 3. СТРОКА СОРТИРОВКИ */}
-      <section className="max-w-[1520px] mx-auto px-6 w-full flex items-center justify-between mb-4">
+      <section className="max-w-7xl mx-auto px-6 w-full flex items-center justify-between mb-4">
         <div className="text-[13px] font-medium text-muted-foreground">
           Все промпты <span className="text-foreground font-bold ml-1">{filteredItems.length}</span>
         </div>
@@ -388,11 +332,33 @@ function PromptsHub() {
         </div>
       </section>
 
-      {/* 4. 5-COLUMN GRID WITH RHYTHM */}
-      <section className="max-w-[1520px] mx-auto px-6 w-full mb-12">
-        {feedElements.length > 0 ? (
-          <div className="flex flex-col">
-            {feedElements}
+      {/* 4. MIXED-GRID */}
+      <section className="max-w-7xl mx-auto px-6 w-full mb-12">
+        {visibleItems.length > 0 ? (
+          <div className="grid grid-cols-12 gap-4 md:gap-5">
+              {visibleItems.map((item, idx) => {
+                if (item.category === 'text') {
+                  return (
+                    <div key={`${item.slug}-${idx}`} className="col-span-12 sm:col-span-6 lg:col-span-3">
+                      <TextPromptCard item={item} />
+                    </div>
+                  );
+                }
+                if (item.category === 'audio') {
+                  return (
+                    <div key={`${item.slug}-${idx}`} className="col-span-12 sm:col-span-6 lg:col-span-3">
+                      <AudioPromptCard item={item} />
+                    </div>
+                  );
+                }
+                const type = getCardType(idx, item);
+                const span = getCardSpan(type, item);
+                return (
+                  <div key={`${item.slug}-${idx}`} className={span}>
+                    <EditorialPromptCard item={item} type={type} />
+                  </div>
+                );
+              })}
           </div>
         ) : (
           <div className="py-20 text-center">
@@ -432,7 +398,7 @@ function PromptsHub() {
         )}
       </section>
 
-      <section className="max-w-[1520px] mx-auto px-6 w-full mb-20">
+      <section className="max-w-7xl mx-auto px-6 w-full mb-20">
         <TopicCloud topics={topics} />
       </section>
 

@@ -2,8 +2,9 @@ import { createFileRoute, Link } from '@tanstack/react-router';
 import { Search, X, Sparkles, Star, PlusCircle, ArrowRight, Home, ChevronRight } from 'lucide-react';
 import { Footer } from '@/components/shared/Footer';
 import { getPublishedItems, getCategories, PromptItem, getItemsByCategory } from '@/data/prompts';
-import { CatalogCard } from '@/components/prompts/CatalogCard';
-
+import { EditorialPromptCard } from '@/components/prompts/EditorialPromptCard';
+import { TextPromptCard } from '@/components/prompts/TextPromptCard';
+import { AudioPromptCard } from '@/components/prompts/AudioPromptCard';
 import { useState, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { ORIGIN } from '@/lib/origin';
@@ -187,7 +188,7 @@ function CategoryPage() {
       </section>
 
       {/* 2. ЛЕНТА КАТЕГОРИЙ (PILLS) */}
-      <section className="sticky top-0 z-40 bg-background/80 backdrop-blur-md border-b border-border/40 mb-6">
+      <section className="sticky top-0 z-40 bg-background/80 backdrop-blur-md border-b border-border mb-6">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
             <Link
@@ -271,10 +272,30 @@ function CategoryPage() {
       {/* 4. MIXED-GRID */}
       <section className="max-w-7xl mx-auto px-6 w-full mb-20 flex-grow">
         {visibleItems.length > 0 ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-x-[20px] gap-y-[24px] mb-[24px]">
-            {visibleItems.map((item, idx) => (
-              <CatalogCard key={`${item.slug}-${idx}`} item={item} index={idx} />
-            ))}
+          <div className="grid grid-cols-12 gap-4 md:gap-6">
+            {visibleItems.map((item, idx) => {
+              if (params.topic === 'text') {
+                return (
+                  <div key={`${item.slug}-${idx}`} className="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3">
+                    <TextPromptCard item={item} />
+                  </div>
+                );
+              }
+              if (item.category === 'audio') {
+                return (
+                  <div key={`${item.slug}-${idx}`} className="col-span-12 sm:col-span-6 lg:col-span-3">
+                    <AudioPromptCard item={item} />
+                  </div>
+                );
+              }
+              const type = getCardType(idx, item);
+              const span = getCardSpan(type, item);
+              return (
+                <div key={`${item.slug}-${idx}`} className={span}>
+                  <EditorialPromptCard item={item} type={type} />
+                </div>
+              );
+            })}
           </div>
         ) : (
           <div className="py-32 text-center bg-muted/10 rounded-[32px] border border-dashed border-border/50">
