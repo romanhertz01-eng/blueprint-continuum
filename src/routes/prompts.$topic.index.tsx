@@ -443,7 +443,7 @@ function CategoryPage() {
       );
     }
 
-    // Фильтр по темам (множественный выбор)
+    // Фильтр по темам (множественный выбор из панели "Категории")
     if (selectedTopics.length > 0) {
       result = result.filter(item => 
         selectedTopics.includes(item.topicSlug) || 
@@ -451,15 +451,18 @@ function CategoryPage() {
       );
     }
 
-    // Фильтр по типу видео
-    if (isVideo && videoFilter !== 'Все') {
-      result = result.filter(item => {
-        if (videoFilter === 'Вертикальные') return item.params?.aspect === '9:16';
-        // Для остальных — поиск по совпадению в темах/описании (имитация)
-        return item.topicSlug === videoFilter.toLowerCase() || 
-               item.title.toLowerCase().includes(videoFilter.toLowerCase());
-      });
+    // Фильтр по чипам тем (второй ряд фильтров)
+    if (topicFilter !== 'Все') {
+      if (isVideo && topicFilter === 'Вертикальные') {
+        result = result.filter(item => item.params?.aspect === '9:16');
+      } else {
+        result = result.filter(item => 
+          item.topicSlug === topicFilter.toLowerCase() || 
+          item.title.toLowerCase().includes(topicFilter.toLowerCase())
+        );
+      }
     }
+
 
     // Сортировка
     if (sortBy === 'new') {
