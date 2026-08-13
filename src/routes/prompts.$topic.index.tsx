@@ -240,6 +240,88 @@ function AudioCategoryCard({ item }: { item: PromptItem }) {
 }
 
 
+function VideoCategoryCard({ item }: { item: PromptItem }) {
+  const navigate = useNavigate();
+  const { isAuthed } = useAuth();
+  const isVertical = item.params?.aspect === '9:16';
+
+  const handleAction = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    writePromptHandoff({
+      prompt: item.promptRu,
+      category: 'video',
+      providerId: item.providerId,
+      subModelId: item.subModelId,
+      sourceSlug: item.slug,
+    });
+    const targetRoute = '/video';
+    if (isAuthed) navigate({ to: targetRoute });
+    else window.location.href = buildAuthHref(targetRoute);
+  };
+
+  const handleCardClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    navigate({ to: '/prompts/$topic/$slug', params: { topic: item.topicSlug, slug: item.slug } });
+  };
+
+  return (
+    <div 
+      onClick={handleCardClick}
+      className={cn(
+        "group relative flex flex-col rounded-2xl overflow-hidden bg-card border border-border/50 transition-all duration-200 cursor-pointer h-full",
+        isVertical ? "row-span-2" : ""
+      )}
+    >
+      <div className={cn(
+        "relative overflow-hidden shrink-0",
+        isVertical ? "aspect-[9/16]" : "aspect-video"
+      )}>
+        {item.media?.[0]?.src && (
+          <img 
+            src={item.media[0].src} 
+            alt={item.title}
+            className="w-full h-full object-cover transition-transform duration-400 group-hover:scale-[1.04]"
+          />
+        )}
+        
+        {/* Likes badge */}
+        <div className="absolute top-3 right-3 flex items-center gap-1 px-2 py-0.5 rounded-full bg-black/40 backdrop-blur-sm z-10">
+          <Heart className="w-3 h-3 text-white fill-white" />
+          <span className="text-[12px] font-bold text-white leading-none">{item.likes}</span>
+        </div>
+
+        {/* Vertical badge */}
+        {isVertical && (
+          <div className="absolute top-3 left-3 px-2 py-0.5 rounded-full bg-black/40 backdrop-blur-sm z-10">
+            <span className="text-[10px] font-bold text-white uppercase tracking-wider">Вертикальное</span>
+          </div>
+        )}
+
+        {/* Hover Action Button */}
+        <div className="absolute inset-0 flex items-center justify-center bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-20">
+          <button 
+            onClick={handleAction}
+            className="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center shadow-lg transition-transform hover:scale-110"
+          >
+            <Play className="w-5 h-5 fill-current ml-0.5" />
+          </button>
+        </div>
+      </div>
+
+      <div className="px-3 py-2.5 flex flex-col justify-center min-h-[54px]">
+        <h3 className="text-[14px] font-semibold line-clamp-1 leading-tight mb-0.5">
+          {item.title}
+        </h3>
+        <div className="text-[11px] font-bold text-muted-foreground uppercase tracking-tight">
+          {item.providerId}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
 function CategoryPage() {
   const data = Route.useLoaderData();
   const params = Route.useParams();
