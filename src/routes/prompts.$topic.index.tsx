@@ -269,10 +269,11 @@ function VideoCategoryCard({ item }: { item: PromptItem }) {
     <div 
       onClick={handleCardClick}
       className={cn(
-        "group relative flex flex-col rounded-2xl overflow-hidden bg-card border border-border/50 transition-all duration-200 cursor-pointer h-full",
-        isVertical ? "row-span-2" : ""
+        "group relative flex flex-col rounded-2xl overflow-hidden bg-card border border-border/50 transition-all duration-200 cursor-pointer",
+        isVertical ? "row-span-2 h-full" : "h-auto"
       )}
     >
+
       <div className={cn(
         "relative overflow-hidden shrink-0",
         isVertical ? "aspect-[9/16]" : "aspect-video"
@@ -309,14 +310,15 @@ function VideoCategoryCard({ item }: { item: PromptItem }) {
         </div>
       </div>
 
-      <div className="px-3 py-2.5 flex flex-col justify-center min-h-[54px]">
-        <h3 className="text-[14px] font-semibold line-clamp-1 leading-tight mb-0.5">
+      <div className="px-3 py-2.5 flex flex-col justify-center">
+        <h3 className="text-[14px] font-semibold line-clamp-1 leading-tight">
           {item.title}
         </h3>
-        <div className="text-[11px] font-bold text-muted-foreground uppercase tracking-tight">
+        <div className="mt-[2px] text-[11px] font-bold text-muted-foreground uppercase tracking-tight leading-none">
           {item.providerId}
         </div>
       </div>
+
     </div>
   );
 }
@@ -832,7 +834,8 @@ function CategoryPage() {
               : params.topic === 'audio'
                 ? "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-[18px]"
                 : params.topic === 'video'
-                  ? "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 grid-flow-dense"
+                  ? "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 grid-flow-dense items-start"
+
                   : "grid-cols-12 gap-4 md:gap-6"
           )}>
             {visibleItems.map((item, idx) => {
