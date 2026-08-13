@@ -21,6 +21,8 @@ import { buildAuthHref } from '@/lib/authRedirect';
 import { TopicCloud } from '@/components/prompts/TopicCloud';
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
+import { writePromptHandoff } from '@/lib/promptHandoff';
+
 
 const TITLE = 'Библиотека промптов для нейросетей — готовые примеры | ERA2.ai';
 const DESCRIPTION = 'Библиотека лучших промптов для ChatGPT, Midjourney, Claude и других нейросетей. Бесплатные примеры, копирование без регистрации, быстрый старт генерации в ERA2.';
@@ -423,7 +425,11 @@ function PromptsHub() {
       {/* ГАЗ S — ПОЛКА МЕЛКИХ КАРТОЧЕК */}
       <SmallCardsShelf allItems={allItems} searchQuery={searchQuery} />
 
+      {/* ГАЗ AUDIO — ПОПУЛЯРНОЕ В АУДИО */}
+      <PopularAudioShelf allItems={allItems} searchQuery={searchQuery} />
+
       {/* 3. СТРОКА СОРТИРОВКИ */}
+
       <section className="max-w-[1520px] mx-auto px-6 w-full flex items-center justify-between mb-4">
         <div className="text-[13px] font-medium text-muted-foreground">
           Все промпты <span className="text-foreground font-bold ml-1">{filteredItems.length}</span>
@@ -743,3 +749,127 @@ function SmallCardsShelf({ allItems, searchQuery }: { allItems: PromptItem[], se
     </section>
   );
 }
+
+function PopularAudioShelf({ allItems, searchQuery }: { allItems: PromptItem[], searchQuery: string }) {
+  const { isAuthed } = useAuth();
+  const navigate = useNavigate();
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const audioItems = useMemo(() => {
+    if (searchQuery.trim()) return [];
+    return allItems
+      .filter(item => item.category === 'audio' && item.status === 'published')
+      .sort((a, b) => (b.likes || 0) - (a.likes || 0))
+      .slice(0, 7);
+  }, [allItems, searchQuery]);
+
+  if (audioItems.length < 5 || searchQuery.trim()) return null;
+
+  const scrollRight = () => {
+    if (scrollRef.current) {
+      const scrollAmount = (150 + 14) * 3;
+      scrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+  };
+
+  const labelColors = [
+    '#EF4444', // Red
+    '#F59E0B', // Amber
+    '#10B981', // Emerald
+    '#3B82F6', // Blue
+    '#8B5CF6', // Violet
+    '#EC4899', // Pink
+  ];
+
+  const getLabelColor = (slug: string) => {
+    let hash = 0;
+    for (let i = 0; i < slug.length; i++) {
+      hash = slug.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return labelColors[Math.abs(hash) % labelColors.length];
+  };
+
+  const handleCardClick = (item: PromptItem) => {
+    writePromptHandoff({
+      prompt: item.promptRu,
+      category: 'audio',
+      providerId: item.providerId,
+      sourceSlug: item.slug
+    });
+
+    if (isAuthed) {
+      navigate({ to: '/audio' });
+    } else {
+      window.location.href = buildAuthHref('/audio');
+    }
+  };
+
+  return (
+    <section className="max-w-[1520px] mx-auto px-6 w-full mb-10">
+      <div className="rounded-3xl bg-muted/30 border border-border px-8 py-6">
+        <div className="flex items-end justify-between mb-6">
+          <div className="min-w-0">
+            <h2 className="text-[20px] font-bold leading-tight">Популярное в аудио</h2>
+            <p className="text-[13px] text-muted-foreground mt-1 line-clamp-1">
+              Музыкальные треки, саунд-дизайн, озвучка и атмосферы
+            </p>
+          </div>
+          <Link 
+            to="/prompts/$topic"
+            params={{ topic: 'audio' }}
+            className="shrink-0 text-[13px] font-bold text-primary hover:opacity-80 transition-opacity whitespace-nowrap"
+          >
+            Перейти к подборке →
+          </Link>
+        </div>
+
+        <div className="relative group/shelf">
+          <div 
+            ref={scrollRef}
+            className="flex gap-[14px] overflow-x-auto no-scrollbar snap-x snap-mandatory pb-2 pr-[40px]"
+          >
+            {audioItems.map((item) => (
+              <div
+                key={item.slug}
+                onClick={() => handleCardClick(item)}
+                className="w-[150px] shrink-0 rounded-2xl bg-card border border-border/50 p-3 flex flex-col items-center cursor-pointer snap-start transition-all duration-300 hover:-translate-y-0.5 group/vinyl"
+              >
+                {/* SVG Vinyl */}
+                <div className="mb-3 relative w-[100px] h-[100px] transition-transform duration-300 group-hover/vinyl:rotate-[6deg]">
+                  <svg width="100" height="100" viewBox="0 0 100 100" className="drop-shadow-sm">
+                    {/* Main Disc */}
+                    <circle cx="50" cy="50" r="48" fill="#1F2937" />
+                    {/* Grooves */}
+                    <circle cx="50" cy="50" r="40" fill="none" stroke="white" strokeWidth="1" strokeOpacity="0.07" />
+                    <circle cx="50" cy="50" r="32" fill="none" stroke="white" strokeWidth="1" strokeOpacity="0.07" />
+                    <circle cx="50" cy="50" r="24" fill="none" stroke="white" strokeWidth="1" strokeOpacity="0.07" />
+                    <circle cx="50" cy="50" r="16" fill="none" stroke="white" strokeWidth="1" strokeOpacity="0.07" />
+                    {/* Label */}
+                    <circle cx="50" cy="50" r="15" fill={getLabelColor(item.slug)} />
+                    {/* Center Point */}
+                    <circle cx="50" cy="50" r="1.5" fill="currentColor" className="text-card" />
+                  </svg>
+                </div>
+                
+                <h3 className="text-[12px] font-semibold text-center line-clamp-2 leading-tight mb-1 h-8 flex items-center justify-center">
+                  {item.title}
+                </h3>
+                <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider">
+                  {item.providerId}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          <button
+            onClick={scrollRight}
+            className="absolute -right-4 top-1/2 -translate-y-1/2 w-[36px] h-[36px] rounded-full bg-background/80 backdrop-blur-sm border border-border flex items-center justify-center z-30 opacity-0 group-hover/shelf:opacity-100 transition-opacity hover:bg-background"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
