@@ -330,6 +330,8 @@ function CategoryPage() {
   const isVideo = params.topic === 'video';
   const isAudio = params.topic === 'audio';
   const isText = params.topic === 'text';
+  const navigate = useNavigate();
+  const { isAuthed } = useAuth();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<'new' | 'popular' | 'alpha'>('new');
