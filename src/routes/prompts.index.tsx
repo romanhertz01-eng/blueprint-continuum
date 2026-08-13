@@ -1,6 +1,6 @@
 import { ORIGIN } from "@/lib/origin";
 import { createFileRoute, Link } from '@tanstack/react-router';
-import { Search, X, Sparkles, Star, PlusCircle, ArrowRight, Filter } from 'lucide-react';
+import { Search, X, Sparkles, Star, PlusCircle, ArrowRight, Filter, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Footer } from '@/components/shared/Footer';
 import { getPublishedItems, getPublishedTopics, countItemsByCategory, getCategories, PromptItem, getProvidersWithPrompts, promptTopics } from '@/data/prompts';
 import { CatalogCard } from '@/components/prompts/CatalogCard';
@@ -8,7 +8,7 @@ import { CollectionShelf } from '@/components/prompts/CollectionShelf';
 import { EditorialBanner } from '@/components/prompts/EditorialBanner';
 
 import { TopicCloud } from '@/components/prompts/TopicCloud';
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
 
 const TITLE = 'Библиотека промптов для нейросетей — готовые примеры | ERA2.ai';
@@ -221,7 +221,10 @@ function PromptsHub() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col">
+    <div className="min-h-screen bg-background text-foreground flex flex-col overflow-x-hidden">
+      {/* 0. HERO CAROUSEL */}
+      <HeroCarousel allItems={allItems} />
+
       {/* 1. INTRO-ЗОНА */}
       <section className="pt-8 pb-6 px-6 max-w-[1520px] mx-auto w-full">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
