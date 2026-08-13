@@ -387,8 +387,6 @@ function PromptsHub() {
           >
             <option value="new">Сначала новые</option>
             <option value="popular">Популярные</option>
-            <option value="used">Используемые</option>
-            <option value="saved">Сохранённые</option>
           </select>
         </div>
       </section>
