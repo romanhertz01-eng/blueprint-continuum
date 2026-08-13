@@ -664,7 +664,7 @@ function SmallCardsShelf({ allItems, searchQuery }: { allItems: PromptItem[], se
           
           <button
             onClick={scrollRight}
-            className="absolute right-[-20px] top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-background border border-border shadow-lg flex items-center justify-center z-10 opacity-0 group-hover/shelf:opacity-100 transition-opacity hover:bg-muted"
+            className="absolute right-0 md:right-[-20px] top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-background border border-border shadow-lg flex items-center justify-center z-10 opacity-0 group-hover/shelf:opacity-100 transition-opacity hover:bg-muted"
           >
             <ChevronRight className="w-5 h-5" />
           </button>
