@@ -376,7 +376,8 @@ function PromptsHub() {
             return (
               <Link
                 key={cat.slug}
-                to={href as any}
+                to={cat.slug === 'model' ? '/prompts/model' : '/prompts/$topic'}
+                params={cat.slug === 'model' ? {} : { topic: cat.slug }}
                 className="relative h-[140px] rounded-[18px] overflow-hidden group border border-border/20 shadow-sm"
               >
                 <img 
@@ -691,7 +692,8 @@ function SmallCardsShelf({ allItems, searchQuery }: { allItems: PromptItem[], se
               return (
                 <Link
                   key={item.slug}
-                  to={`/prompts/${item.topicSlug}/${item.slug}` as any}
+                  to={item.category === 'agents' ? "/prompts/agents/$slug" : "/prompts/$topic/$slug"}
+                  params={item.category === 'agents' ? { slug: item.slug } : { topic: item.topicSlug, slug: item.slug }}
                   className="w-[175px] aspect-[3/4] shrink-0 rounded-2xl overflow-hidden relative group/card snap-start"
                 >
                   {/* Background Gradient */}
