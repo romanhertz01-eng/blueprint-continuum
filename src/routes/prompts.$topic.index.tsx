@@ -497,9 +497,9 @@ function CategoryPage() {
       if (hIdx < horizontals.length) {
         blocks.push({ 
           type: 'horizontal', 
-          items: horizontals.slice(hIdx, hIdx + 4) 
+          items: horizontals.slice(hIdx, hIdx + 8) 
         });
-        hIdx += 4;
+        hIdx += 8;
       }
       if (vIdx < verticals.length) {
         blocks.push({ 
