@@ -5,6 +5,8 @@ import { getPublishedItems, getCategories, PromptItem, getItemsByCategory } from
 import { EditorialPromptCard } from '@/components/prompts/EditorialPromptCard';
 import { TextPromptCard } from '@/components/prompts/TextPromptCard';
 import { AudioPromptCard } from '@/components/prompts/AudioPromptCard';
+import { AgentPromptCard } from '@/components/prompts/AgentPromptCard';
+
 import { useState, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { ORIGIN } from '@/lib/origin';
@@ -288,6 +290,14 @@ function CategoryPage() {
                   </div>
                 );
               }
+              if (item.category === 'agents') {
+                return (
+                  <div key={`${item.slug}-${idx}`} className="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3">
+                    <AgentPromptCard item={item} />
+                  </div>
+                );
+              }
+
               const type = getCardType(idx, item);
               const span = getCardSpan(type, item);
               return (
