@@ -395,6 +395,7 @@ function CategoryPage() {
   const isVideo = params.topic === 'video';
   const isAudio = params.topic === 'audio';
   const isText = params.topic === 'text';
+  const isAgentTopic = data.isAgentTopic;
   const navigate = useNavigate();
   const { isAuthed } = useAuth();
 
@@ -408,7 +409,6 @@ function CategoryPage() {
   const [topicFilter, setTopicFilter] = useState('Все');
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
-
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -430,12 +430,20 @@ function CategoryPage() {
   }, [isPanelOpen]);
 
   const categoryTopics = useMemo(() => {
-    const topics = getTopicsByCategory(params.topic as any);
-    // Фильтруем темы, у которых есть хотя бы один промпт в этой категории
+    const categorySlug = data.category?.category || params.topic;
+    const topics = [
+      ...getTopicsByCategory(categorySlug as any), 
+      ...agentTopics.filter(t => t.category === categorySlug)
+    ];
+    
+    // Если мы на странице конкретной темы, список items уже отфильтрован в лоадере.
+    // Для корректной работы панели "Категории", нам нужно знать, есть ли промпты в этих темах ВООБЩЕ в базе.
+    const allPublished = [...getPublishedItems(), ...agentItems];
+    
     return topics.filter(topic => 
-      data.items.some(item => item.topicSlug === topic.slug || item.extraTopicSlugs?.includes(topic.slug))
+      allPublished.some(item => item.topicSlug === topic.slug || item.extraTopicSlugs?.includes(topic.slug))
     );
-  }, [params.topic, data.items]);
+  }, [params.topic, data.category]);
 
   // Сброс фильтров при смене категории
   useEffect(() => {
@@ -443,6 +451,20 @@ function CategoryPage() {
     setTopicFilter('Все');
     setIsPanelOpen(false);
   }, [params.topic]);
+
+  if (!data.category) {
+    return (
+      <div className="min-h-screen bg-background text-foreground flex flex-col items-center justify-center p-6 text-center">
+        <AlertCircle className="w-16 h-16 text-muted-foreground mb-4 opacity-20" />
+        <h1 className="text-2xl font-bold mb-2">Страница не найдена</h1>
+        <p className="text-muted-foreground mb-8">Тема или категория «{params.topic}» не существует.</p>
+        <Link to="/prompts" className="h-11 px-6 rounded-xl bg-primary text-white font-bold flex items-center gap-2 transition-transform active:scale-95">
+           <Home className="w-4 h-4" /> На главную каталога
+        </Link>
+        <Footer className="w-full mt-auto" />
+      </div>
+    );
+  }
 
 
   const audioShelvesData = useMemo(() => {
