@@ -108,6 +108,7 @@ function CategoryPage() {
   const data = Route.useLoaderData();
   const params = Route.useParams();
   const isVideo = params.topic === 'video';
+  const isAudio = params.topic === 'audio';
   const isText = params.topic === 'text';
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -142,9 +143,24 @@ function CategoryPage() {
   const textTopics = useMemo(() => {
     if (!isText) return [];
     const topics = getTopicsByCategory('text');
-    // Проверка на наличие промптов уже встроена в данные обычно, но тут полагаемся на то что они published
     return topics;
   }, [isText]);
+
+  // Данные для аудио-полок
+  const audioShelvesData = useMemo(() => {
+    if (!isAudio || searchQuery.trim()) return [];
+    
+    const audioTopics = getTopicsByCategory('audio');
+    const topicsWithPrompts = audioTopics.map(topic => {
+      const prompts = data.items.filter(item => item.topicSlug === topic.slug);
+      return { topic, prompts };
+    })
+    .filter(shelf => shelf.prompts.length >= 4)
+    .sort((a, b) => b.prompts.length - a.prompts.length)
+    .slice(0, 2);
+
+    return topicsWithPrompts;
+  }, [isAudio, searchQuery, data.items]);
 
   const topicIcons: Record<string, any> = {
     'seo': Sparkles,
@@ -247,7 +263,10 @@ function CategoryPage() {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       {/* 1. ШАПКА / BREADCRUMBS */}
-      <section className="pt-6 pb-4 px-6 max-w-7xl mx-auto w-full">
+      <section className={cn(
+        "pt-6 pb-4 px-6 max-w-7xl mx-auto w-full",
+        isAudio && "pt-4 pb-2"
+      )}>
         <nav className="flex items-center gap-2 text-[12px] text-muted-foreground mb-6 font-medium">
           <Link to="/prompts" className="hover:text-foreground flex items-center gap-1 transition-colors">
             <Home className="w-3 h-3" /> Главная
@@ -256,7 +275,10 @@ function CategoryPage() {
           <span className="text-foreground">{data.category?.cardTitle || data.topicSlug}</span>
         </nav>
 
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+        <div className={cn(
+          "flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8",
+          isAudio && "mb-5"
+        )}>
           <div>
             <div className="flex items-center gap-3 mb-3">
               <h1 className="text-[32px] md:text-[42px] font-bold tracking-tight">
@@ -264,7 +286,10 @@ function CategoryPage() {
               </h1>
               <div className="w-2 h-2 rounded-full bg-primary mt-2" />
             </div>
-            <p className="text-muted-foreground text-[15px] max-w-2xl leading-relaxed">
+            <p className={cn(
+              "text-muted-foreground text-[15px] max-w-2xl leading-relaxed",
+              isAudio && "line-clamp-1"
+            )}>
               {isVideo 
                 ? 'Готовые сценарии, стили и идеи для генерации видео' 
                 : (data.category?.description || 'Библиотека лучших промптов от экспертов ERA2.')}
@@ -404,32 +429,117 @@ function CategoryPage() {
       </section>
 
       {/* 3. СТРОКА СОРТИРОВКИ */}
-      <section className="max-w-7xl mx-auto px-6 w-full flex items-center justify-between mb-6">
-        <div className="text-[13px] font-medium text-muted-foreground">
-          Найдено <span className="text-foreground font-bold ml-1">{filteredItems.length}</span>
-        </div>
-        <div className="flex items-center gap-4">
-          <div className="relative hidden sm:block">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <input 
-              type="text" 
-              placeholder="Поиск в разделе..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="h-9 pl-9 pr-4 rounded-xl bg-muted/30 border border-border/50 text-[13px] focus:ring-1 focus:ring-primary outline-none w-48 transition-all focus:w-64"
-            />
+      <section className="max-w-7xl mx-auto px-6 w-full">
+        {/* АУДИО ПОЛКИ */}
+        {isAudio && audioShelvesData.length > 0 && !searchQuery.trim() && (
+          <div className="flex flex-col gap-10 mb-10">
+            {audioShelvesData.map((shelf, shelfIdx) => {
+              const scrollRef = useRef<HTMLDivElement>(null);
+              const gradients = [
+                'from-indigo-500/80 to-purple-500/80',
+                'from-emerald-500/80 to-teal-500/80',
+                'from-orange-500/80 to-rose-500/80',
+                'from-blue-500/80 to-cyan-500/80',
+              ];
+              const gradient = gradients[shelfIdx % gradients.length];
+
+              return (
+                <div key={shelf.topic.slug} className="group/shelf py-5 relative">
+                  <div className="flex items-center justify-between mb-5">
+                    <h2 className="text-[20px] font-bold">{shelf.topic.title}</h2>
+                    <Link 
+                      to="/prompts/$topic" 
+                      params={{ topic: shelf.topic.slug }}
+                      className="text-[13px] font-bold text-primary hover:underline"
+                    >
+                      Показать всё →
+                    </Link>
+                  </div>
+                  
+                  <div className="relative">
+                    <div 
+                      ref={scrollRef}
+                      className="flex gap-[14px] overflow-x-auto no-scrollbar snap-x snap-mandatory w-[calc(100%+40px)] pb-4"
+                    >
+                      {shelf.prompts.map((item) => (
+                        <Link
+                          key={item.slug}
+                          to="/prompts/$topic/$slug"
+                          params={{ topic: item.topicSlug, slug: item.slug }}
+                          className="flex-shrink-0 w-[190px] aspect-square rounded-2xl overflow-hidden relative group snap-start"
+                        >
+                          {/* Background Gradient */}
+                          <div className={cn(
+                            "absolute inset-0 bg-gradient-to-br transition-transform duration-300 group-hover:scale-[1.04]",
+                            gradient
+                          )} />
+                          
+                          {/* Wave Pattern */}
+                          <svg className="absolute inset-0 w-full h-full opacity-20 pointer-events-none" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M0,100 C20,80 40,120 60,100 C80,80 100,120 120,100 C140,80 160,120 180,100 C200,80 220,120 240,100" fill="none" stroke="white" strokeWidth="2" />
+                            <path d="M0,120 C20,100 40,140 60,120 C80,100 100,140 120,120 C140,100 160,140 180,120 C200,100 220,140 240,120" fill="none" stroke="white" strokeWidth="2" />
+                          </svg>
+
+                          {/* Top Meta */}
+                          <div className="absolute top-3 right-3 flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-black/10 backdrop-blur-sm">
+                            <Heart className="w-3 h-3 text-white fill-white" />
+                            <span className="text-[11px] font-bold text-white leading-none">{item.likes}</span>
+                          </div>
+
+                          {/* Bottom Title */}
+                          <div className="absolute bottom-3 left-3 right-3">
+                            <h3 className="text-[14px] font-bold text-white line-clamp-2 leading-tight drop-shadow-md">
+                              {item.title}
+                            </h3>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                    
+                    <button 
+                      onClick={() => {
+                        if (scrollRef.current) {
+                          scrollRef.current.scrollBy({ left: 190 * 3 + 14 * 3, behavior: 'smooth' });
+                        }
+                      }}
+                      className="absolute right-10 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-background/80 backdrop-blur-sm border border-border flex items-center justify-center opacity-0 group-hover/shelf:opacity-100 transition-opacity z-10 hover:bg-background"
+                    >
+                      <ChevronRight className="w-5 h-5" />
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
           </div>
-          <div className="flex items-center gap-2">
-            <span className="text-[11px] text-muted-foreground font-bold uppercase tracking-wider">Сортировка:</span>
-            <select 
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as any)}
-              className="bg-transparent border-none text-[13px] font-bold text-foreground focus:ring-0 cursor-pointer outline-none"
-            >
-              <option value="new">Сначала новые</option>
-              <option value="popular">Популярные</option>
-              <option value="alpha">А–Я</option>
-            </select>
+        )}
+
+        <div className="flex items-center justify-between mb-6">
+          <div className="text-[13px] font-medium text-muted-foreground">
+            Найдено <span className="text-foreground font-bold ml-1">{filteredItems.length}</span>
+          </div>
+          <div className="flex items-center gap-4">
+            <div className="relative hidden sm:block">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <input 
+                type="text" 
+                placeholder={isAudio ? "Что хотите создать? Например: lo-fi для учёбы" : "Поиск в разделе..."}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="h-9 pl-9 pr-4 rounded-xl bg-muted/30 border border-border/50 text-[13px] focus:ring-1 focus:ring-primary outline-none w-48 transition-all focus:w-64"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] text-muted-foreground font-bold uppercase tracking-wider">Сортировка:</span>
+              <select 
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as any)}
+                className="bg-transparent border-none text-[13px] font-bold text-foreground focus:ring-0 cursor-pointer outline-none"
+              >
+                <option value="new">Сначала новые</option>
+                <option value="popular">Популярные</option>
+                <option value="alpha">А–Я</option>
+              </select>
+            </div>
           </div>
         </div>
       </section>
