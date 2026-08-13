@@ -642,7 +642,7 @@ function SmallCardsShelf({ allItems, searchQuery }: { allItems: PromptItem[], se
               return (
                 <Link
                   key={item.slug}
-                  to={`/prompts/${item.topicSlug}/${item.slug}`}
+                  to={`/prompts/${item.topicSlug}/${item.slug}` as any}
                   className="w-[170px] shrink-0 aspect-[3/4] rounded-2xl bg-card border border-border p-3 flex flex-col justify-between snap-start hover:border-primary/40 hover:-translate-y-0.5 transition-all"
                 >
                   <div className="flex items-center justify-between">
