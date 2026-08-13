@@ -156,14 +156,14 @@ function AgentCard({ item }: { item: PromptItem }) {
   const IconComponent = (LucideIcons as any)[item.agentIcon || 'MessageSquare'] || LucideIcons.MessageSquare;
 
   const agentColors = [
-    'bg-teal-500/20 text-teal-600',
-    'bg-blue-500/20 text-blue-600',
-    'bg-purple-500/20 text-purple-600',
-    'bg-pink-500/20 text-pink-600',
-    'bg-red-500/20 text-red-600',
-    'bg-orange-500/20 text-orange-600',
-    'bg-yellow-500/20 text-yellow-600',
-    'bg-green-500/20 text-green-600',
+    'bg-[#14b8a6]/20',
+    'bg-[#3b82f6]/20',
+    'bg-[#a855f7]/20',
+    'bg-[#ec4899]/20',
+    'bg-[#ef4444]/20',
+    'bg-[#f97316]/20',
+    'bg-[#eab308]/20',
+    'bg-[#22c55e]/20',
   ];
   const colorClass = agentColors[item.slug.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % agentColors.length];
   const bgClass = colorClass.split(' ')[0];
