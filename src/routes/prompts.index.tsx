@@ -826,8 +826,9 @@ function PopularAudioShelf({ allItems, searchQuery }: { allItems: PromptItem[], 
         <div className="relative group/shelf">
           <div 
             ref={scrollRef}
-            className="flex gap-[14px] overflow-x-auto no-scrollbar snap-x snap-mandatory pb-2 pr-[40px]"
+            className="flex gap-[14px] overflow-x-auto no-scrollbar snap-x snap-mandatory pb-2 w-[calc(100%+40px)]"
           >
+
             {audioItems.map((item) => (
               <div
                 key={item.slug}
