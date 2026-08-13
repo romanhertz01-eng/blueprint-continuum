@@ -185,6 +185,17 @@ function PromptsHub() {
         );
       }
 
+      // Useful Agents shelf after row 4 (rowIndex === 3)
+      if (rowIndex === 3) {
+        elements.push(
+          <UsefulAgentsShelf
+            key="agents-shelf-fixed"
+            allItems={allItems}
+            searchQuery={searchQuery}
+          />
+        );
+      }
+
       // Shelf approx every 3 rows (5, 8, 11...)
       // We skip 2 because it's taken by Video shelf
       if ((rowIndex + 1) % 3 === 2 && (rowIndex + 1) !== 2) {
@@ -978,4 +989,110 @@ function VideoPromptsShelf({ allItems, searchQuery }: { allItems: PromptItem[], 
   );
 }
 
+function UsefulAgentsShelf({ allItems, searchQuery }: { allItems: PromptItem[], searchQuery: string }) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const agentItems = useMemo(() => {
+    if (searchQuery.trim()) return [];
+    return allItems
+      .filter(item => item.category === 'agents' && item.status === 'published')
+      .sort((a, b) => (b.likes || 0) - (a.likes || 0))
+      .slice(0, 8);
+  }, [allItems, searchQuery]);
+
+  if (agentItems.length < 6 || searchQuery.trim()) return null;
+
+  const scrollRight = () => {
+    if (scrollRef.current) {
+      const scrollAmount = (230 + 12) * 3;
+      scrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+  };
+
+  const agentColors = [
+    '#3B82F6', // blue
+    '#8B5CF6', // violet
+    '#EC4899', // pink
+    '#EF4444', // red
+    '#F59E0B', // amber
+    '#10B981', // emerald
+    '#06B6D4', // cyan
+    '#6366F1', // indigo
+  ];
+
+  const getAgentColor = (slug: string) => {
+    let hash = 0;
+    for (let i = 0; i < slug.length; i++) {
+      hash = slug.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return agentColors[Math.abs(hash) % agentColors.length];
+  };
+
+  return (
+    <section className="w-full mb-10">
+      <div className="rounded-3xl bg-muted/30 border border-border px-8 py-6">
+        <div className="flex items-end justify-between mb-6">
+          <div className="min-w-0">
+            <h2 className="text-[20px] font-bold leading-tight">Полезные агенты</h2>
+            <p className="text-[13px] text-muted-foreground mt-1 line-clamp-1">
+              Помощники для бизнеса, работы и повседневных задач
+            </p>
+          </div>
+          <Link 
+            to="/prompts/$topic"
+            params={{ topic: 'agents' }}
+            className="shrink-0 text-[13px] font-bold text-primary hover:opacity-80 transition-opacity whitespace-nowrap"
+          >
+            Посмотреть всех →
+          </Link>
+        </div>
+
+        <div className="relative group/shelf">
+          <div 
+            ref={scrollRef}
+            className="flex gap-[12px] overflow-x-auto no-scrollbar snap-x snap-mandatory pb-2 w-[calc(100%+40px)]"
+          >
+            {agentItems.map((item) => {
+              return (
+                <Link
+                  key={item.slug}
+                  to="/prompts/agents/$slug"
+                  params={{ slug: item.slug }}
+                  className="w-[230px] h-[96px] shrink-0 rounded-2xl bg-card border border-border/50 p-3 flex items-center gap-3 cursor-pointer snap-start transition-all duration-300 hover:bg-muted/40 hover:-translate-y-0.5"
+                >
+                  <div 
+                    className="w-11 h-11 shrink-0 rounded-full flex items-center justify-center"
+                    style={{ backgroundColor: getAgentColor(item.slug) }}
+                  >
+                    <Bot className="w-5 h-5 text-white" />
+                  </div>
+                  
+                  <div className="flex-grow min-w-0 flex flex-col justify-center">
+                    <h3 className="text-[14px] font-semibold truncate leading-tight mb-0.5">
+                      {item.title}
+                    </h3>
+                    <p className="text-[12px] text-muted-foreground line-clamp-1 mb-1">
+                      {item.agentRole}
+                    </p>
+                    <div className="flex items-center gap-1 text-[11px] text-muted-foreground">
+                      <Heart className="w-[11px] h-[11px]" />
+                      <span>{item.likes || 0}</span>
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+          
+          <button
+            onClick={scrollRight}
+            className="absolute -right-4 top-1/2 -translate-y-1/2 w-[36px] h-[36px] rounded-full bg-background/80 backdrop-blur-sm border border-border flex items-center justify-center z-30 opacity-0 group-hover/shelf:opacity-100 transition-opacity hover:bg-background"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
+        </div>
+      </div>
+    </section>
+  );
+}
 
