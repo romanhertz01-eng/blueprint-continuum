@@ -104,6 +104,89 @@ function TextCategoryCard({ item }: { item: PromptItem }) {
   );
 }
 
+function AudioCategoryCard({ item }: { item: PromptItem }) {
+  const labelColors = [
+    '#f97316', // orange
+    '#3b82f6', // blue
+    '#8b5cf6', // violet
+    '#14b8a6', // turquoise
+    '#ef4444', // red
+    '#eab308', // yellow
+  ];
+  const hash = item.slug.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  const labelColor = labelColors[hash % labelColors.length];
+
+  return (
+    <Link 
+      to="/prompts/$topic/$slug"
+      params={{ topic: item.topicSlug, slug: item.slug }}
+      className="group flex flex-col rounded-[20px] bg-card border border-border/50 h-[310px] transition-all duration-200 hover:-translate-y-0.5 hover:bg-muted/40 overflow-hidden"
+    >
+      {/* Vinyl Section (~60%) */}
+      <div className="relative flex-1 bg-muted/20 flex items-center justify-center overflow-hidden">
+        {/* Soft shadow under disk */}
+        <div className="absolute w-[142px] h-[142px] rounded-full bg-black/10 blur-sm translate-y-1" />
+        
+        {/* SVG Vinyl Record */}
+        <div className="relative w-[140px] h-[140px] transition-transform duration-400 group-hover:rotate-6">
+          <svg viewBox="0 0 140 140" className="w-full h-full drop-shadow-lg">
+            {/* Disk body */}
+            <circle cx="70" cy="70" r="70" fill="#222222" />
+            
+            {/* Tracks (concentrics) */}
+            {[0.4, 0.53, 0.66, 0.79, 0.92].map((r) => (
+              <circle 
+                key={r}
+                cx="70" 
+                cy="70" 
+                r={70 * r} 
+                fill="none" 
+                stroke="white" 
+                strokeWidth="1" 
+                strokeOpacity="0.08" 
+              />
+            ))}
+            
+            {/* Glossy reflection (arc) */}
+            <path 
+              d="M 20 70 A 50 50 0 0 1 70 20" 
+              fill="none" 
+              stroke="white" 
+              strokeWidth="4" 
+              strokeOpacity="0.08" 
+              strokeLinecap="round" 
+            />
+            
+            {/* Center Label */}
+            <circle cx="70" cy="70" r="21" fill={labelColor} />
+            
+            {/* Center Hole */}
+            <circle cx="70" cy="70" r="4" fill="hsl(var(--card))" />
+          </svg>
+        </div>
+      </div>
+
+      {/* Info Section */}
+      <div className="p-4 flex flex-col gap-1">
+        <h3 className="text-[15px] font-semibold leading-snug line-clamp-2 h-[2.6em]">
+          {item.title}
+        </h3>
+        <div className="text-[13px] text-muted-foreground truncate">
+          {item.params?.duration || '0:00'} · {item.providerId}
+        </div>
+        
+        {/* Play Button */}
+        <div className="mt-3">
+          <div className="h-9 px-4 rounded-full bg-primary text-white text-[13px] font-semibold flex items-center gap-2 w-fit">
+            <LucideIcons.Play className="w-[13px] h-[13px] fill-current" />
+            Попробовать
+          </div>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
 function CategoryPage() {
   const data = Route.useLoaderData();
   const params = Route.useParams();
