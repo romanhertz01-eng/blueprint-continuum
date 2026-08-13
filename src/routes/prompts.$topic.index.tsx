@@ -834,7 +834,8 @@ function CategoryPage() {
               : params.topic === 'audio'
                 ? "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-[18px]"
                 : params.topic === 'video'
-                  ? "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 grid-flow-dense"
+                  ? "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 grid-flow-dense items-start"
+
                   : "grid-cols-12 gap-4 md:gap-6"
           )}>
             {visibleItems.map((item, idx) => {
