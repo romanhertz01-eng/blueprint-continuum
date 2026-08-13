@@ -1,6 +1,6 @@
-import { createFileRoute, notFound, Link } from '@tanstack/react-router';
+import { createFileRoute, notFound, Link, useNavigate, redirect } from '@tanstack/react-router';
 import { ChevronRight, Eye, Heart, Bookmark, Share2, Copy } from 'lucide-react';
-import { getItemBySlug, getTopicBySlug } from '@/data/prompts';
+import { promptItems, getTopicBySlug } from '@/data/prompts';
 import { PromptGallery } from '@/components/prompts/PromptGallery';
 import { DiscoveryFeed } from '@/components/prompts/DiscoveryFeed';
 import { TryPromptButton } from '@/components/prompts/TryPromptButton';
@@ -10,11 +10,24 @@ import { ORIGIN } from '@/lib/origin';
 import { imageProviders } from '@/data/imageModels';
 import { videoProviders } from '@/data/videoModels';
 import { textProviders } from '@/data/textModels';
+import { useEffect } from 'react';
 
 export const Route = createFileRoute('/prompts/$topic/$slug')({
   loader: ({ params }) => {
-    const item = getItemBySlug(params.topic, params.slug);
+    // Ищем промпт по слагу во всем списке опубликованных, игнорируя топик в URL
+    const item = promptItems.find(i => i.status === 'published' && i.slug === params.slug);
+    
     if (!item) throw notFound();
+    
+    // Если топик в URL не совпадает с каноническим топиком промпта - редирект
+    if (params.topic !== item.topicSlug) {
+      throw redirect({
+        to: '/prompts/$topic/$slug',
+        params: { topic: item.topicSlug, slug: item.slug },
+        replace: true
+      });
+    }
+
     const topic = getTopicBySlug(item.topicSlug);
     return { item, topic };
   },
