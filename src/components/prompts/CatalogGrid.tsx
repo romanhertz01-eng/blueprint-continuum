@@ -52,9 +52,9 @@ export const CatalogCard = ({ item, type }: CatalogCardProps) => {
             <div className="px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-white/90 text-[12px] font-medium">
               Попробовать
             </div>
-            {item.model && (
+            {item.providerId && (
               <span className="text-white/50 text-[11px] font-medium uppercase tracking-wider">
-                {item.model}
+                {item.providerId}
               </span>
             )}
           </div>
@@ -112,9 +112,9 @@ export const CatalogCard = ({ item, type }: CatalogCardProps) => {
         <div className="px-3 py-1.5 rounded-full bg-primary text-white text-[12px] font-bold shadow-sm shadow-primary/20">
           Попробовать
         </div>
-        {item.model && (
+        {item.providerId && (
           <span className="text-muted-foreground/60 text-[11px] font-medium uppercase tracking-wider">
-            {item.model}
+            {item.providerId}
           </span>
         )}
       </div>
