@@ -1,11 +1,14 @@
-import { createFileRoute, Link } from '@tanstack/react-router';
-import { Home, ChevronRight, Star, ArrowRight, PlusCircle, Search } from 'lucide-react';
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
+import { Home, ChevronRight, Star, ArrowRight, Heart } from 'lucide-react';
 import { Footer } from '@/components/shared/Footer';
-import { getCategories, getTopicsByCategory, getItemsByTopic } from '@/data/prompts';
-import { AgentPromptCard } from '@/components/prompts/AgentPromptCard';
+import { getCategories, getTopicsByCategory, getItemsByTopic, PromptItem } from '@/data/prompts';
 import { cn } from '@/lib/utils';
 import { ORIGIN } from '@/lib/origin';
 import { useState } from 'react';
+import * as LucideIcons from 'lucide-react';
+import { writePromptHandoff, CATEGORY_ROUTE } from '@/lib/promptHandoff';
+import { useAuth } from '@/contexts/AuthContext';
+import { buildAuthHref } from '@/lib/authRedirect';
 
 export const Route = createFileRoute('/prompts/agents/')({
   component: AgentsHubPage,
@@ -61,7 +64,7 @@ function AgentsHubPage() {
           <span className="text-foreground">Агенты</span>
         </nav>
 
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-6">
           <div>
             <div className="flex items-center gap-3 mb-3">
               <h1 className="text-[32px] md:text-[42px] font-bold tracking-tight">
@@ -86,7 +89,7 @@ function AgentsHubPage() {
       </section>
 
       {/* 2. ЛЕНТА КАТЕГОРИЙ (PILLS) */}
-      <section className="sticky top-0 z-40 bg-background/80 backdrop-blur-md border-b border-border mb-10">
+      <section className="sticky top-0 z-40 bg-background/80 backdrop-blur-md border-b border-border mb-5">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
             <Link
@@ -115,26 +118,26 @@ function AgentsHubPage() {
       </section>
 
       {/* 3. СЕКЦИИ ПО ГРУППАМ */}
-      <section className="max-w-7xl mx-auto px-6 w-full mb-20 space-y-16">
+      <section className="max-w-7xl mx-auto px-6 w-full mb-20 space-y-8">
         {data.topics.map((topic: any) => {
           const items = getItemsByTopic(topic.slug);
           if (items.length === 0) return null;
           
           return (
-            <div key={topic.slug} className="space-y-6">
+            <div key={topic.slug} className="space-y-4">
               <div className="flex items-end justify-between border-b border-border/50 pb-4">
                 <div>
                   <h2 className="text-2xl font-bold tracking-tight">{topic.title}</h2>
                   <p className="text-muted-foreground text-[14px] mt-1">{topic.intro}</p>
                 </div>
-                <button className="text-[13px] font-bold text-primary hover:underline flex items-center gap-1">
+                <button className="text-[13px] font-bold text-muted-foreground hover:text-primary flex items-center gap-1 transition-colors">
                   Показать все <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               </div>
               
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                {items.map((item: any) => (
-                  <AgentPromptCard key={item.slug} item={item} />
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[18px]">
+                {items.map((item: PromptItem) => (
+                  <AgentCard key={item.slug} item={item} />
                 ))}
               </div>
             </div>
@@ -143,6 +146,64 @@ function AgentsHubPage() {
       </section>
 
       <Footer />
+    </div>
+  );
+}
+
+function AgentCard({ item }: { item: PromptItem }) {
+  const navigate = useNavigate();
+  const { isAuthed } = useAuth();
+  const IconComponent = (LucideIcons as any)[item.agentIcon || 'MessageSquare'] || LucideIcons.MessageSquare;
+
+  const agentColors = [
+    'bg-[#14b8a6]/20',
+    'bg-[#3b82f6]/20',
+    'bg-[#a855f7]/20',
+    'bg-[#ec4899]/20',
+    'bg-[#ef4444]/20',
+    'bg-[#f97316]/20',
+    'bg-[#eab308]/20',
+    'bg-[#22c55e]/20',
+  ];
+  const bgClass = agentColors[item.slug.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % agentColors.length];
+
+  const handleAction = () => {
+    writePromptHandoff({
+      prompt: item.promptRu,
+      category: 'agents',
+      providerId: item.providerId,
+      subModelId: item.subModelId,
+      agentId: item.slug,
+      sourceSlug: item.slug,
+    });
+
+    const targetRoute = CATEGORY_ROUTE.agents;
+    if (isAuthed) {
+      navigate({ to: targetRoute });
+    } else {
+      window.location.href = buildAuthHref(targetRoute);
+    }
+  };
+
+  return (
+    <div
+      onClick={handleAction}
+      className="group flex flex-col p-4 rounded-[22px] bg-card border border-border/60 min-h-[140px] cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:bg-muted/40 hover:border-border"
+    >
+      <div className="flex items-start justify-between">
+        <div className={cn("w-14 h-14 rounded-2xl flex items-center justify-center shrink-0", bgClass)}>
+          <IconComponent className="w-[26px] h-[26px] text-white" />
+        </div>
+        <div className="flex items-center gap-1 text-muted-foreground">
+          <Heart className="w-[13px] h-[13px]" />
+          <span className="text-[13px]">{item.likes}</span>
+        </div>
+      </div>
+
+      <div className="mt-3 flex-1 flex flex-col justify-end">
+        <h3 className="text-[16px] font-bold truncate">{item.title}</h3>
+        <p className="text-[13px] text-muted-foreground line-clamp-2 mt-1">{item.agentRole}</p>
+      </div>
     </div>
   );
 }
