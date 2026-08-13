@@ -2,7 +2,17 @@ import { ORIGIN } from "@/lib/origin";
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
 import { Search, X, Sparkles, Star, PlusCircle, ArrowRight, Filter, ChevronLeft, ChevronRight, FileText, Music, Video, Bot, Heart, Image as ImageIcon } from 'lucide-react';
 import { Footer } from '@/components/shared/Footer';
-import { getPublishedItems, getPublishedTopics, countItemsByCategory, getCategories, PromptItem, getProvidersWithPrompts, promptTopics } from '@/data/prompts';
+import { 
+  getPublishedItems, 
+  getPublishedTopics, 
+  countItemsByCategory, 
+  getCategories, 
+  PromptItem, 
+  getProvidersWithPrompts, 
+  promptTopics,
+  MIN_ITEMS_FOR_INDEX,
+  RESERVED_PROMPT_SLUGS
+} from '@/data/prompts';
 import { CatalogCard } from '@/components/prompts/CatalogCard';
 import { CollectionShelf } from '@/components/prompts/CollectionShelf';
 import { EditorialBanner } from '@/components/prompts/EditorialBanner';
@@ -34,6 +44,18 @@ export const Route = createFileRoute('/prompts/')({
 });
 
 const PAGE_SIZE = 30;
+
+function hasTopicPage(slug: string, allItems: PromptItem[]) {
+  const topic = promptTopics.find(t => t.slug === slug);
+  if (!topic || topic.status !== 'published') return false;
+  if (RESERVED_PROMPT_SLUGS.includes(slug)) return false;
+  
+  const count = allItems.filter(item => 
+    item.topicSlug === slug || item.extraTopicSlugs?.includes(slug)
+  ).length;
+  
+  return count >= MIN_ITEMS_FOR_INDEX;
+}
 
 function PromptsHub() {
   const navigate = useNavigate();
@@ -154,8 +176,11 @@ function PromptsHub() {
       if ((rowIndex + 1) % 3 === 2) {
         // Selection of items for the shelf
         const shelfItems = [...allItems].sort(() => 0.5 - Math.random()).slice(0, 8);
+        const topicSlugs = ["marketing", "work", "design", "creative"];
         const titles = ["Популярное в маркетинге", "Лучшие для работы", "Топ в дизайне", "Креативные идеи"];
-        const title = titles[Math.floor((rowIndex / 3) % titles.length)];
+        const idx = Math.floor((rowIndex / 3) % titles.length);
+        const title = titles[idx];
+        const topicSlug = topicSlugs[idx];
         
         elements.push(
           <CollectionShelf 
@@ -163,7 +188,7 @@ function PromptsHub() {
             title={title}
             subtitle="Подборка промптов, которые экономят время"
             items={shelfItems}
-            ctaHref="/prompts"
+            ctaHref={hasTopicPage(topicSlug, allItems) ? `/prompts/${topicSlug}` : undefined}
           />
         );
       }
@@ -598,7 +623,7 @@ function SmallCardsShelf({ allItems, searchQuery }: { allItems: PromptItem[], se
       .filter(t => t.status === 'published' && t.category === 'text')
       .map(t => ({
         topic: t,
-        count: allItems.filter(item => item.topicSlug === t.slug).length
+        count: allItems.filter(item => item.topicSlug === t.slug || item.extraTopicSlugs?.includes(t.slug)).length
       }))
       .filter(t => t.count >= 6)
       .sort((a, b) => b.count - a.count);
@@ -643,12 +668,14 @@ function SmallCardsShelf({ allItems, searchQuery }: { allItems: PromptItem[], se
             <h2 className="text-[22px] font-bold leading-tight">{textTopic.topic.title}</h2>
             <p className="text-[13px] text-muted-foreground line-clamp-1 mt-1">{intro}</p>
           </div>
-          <Link
-            to={`/prompts/${textTopic.topic.slug}` as any}
-            className="shrink-0 bg-primary text-white h-10 px-5 rounded-xl text-[13px] font-bold flex items-center justify-center hover:opacity-90 transition-opacity"
-          >
-            Перейти к подборке
-          </Link>
+          {hasTopicPage(textTopic.topic.slug, allItems) && (
+            <Link
+              to={`/prompts/${textTopic.topic.slug}` as any}
+              className="shrink-0 bg-primary text-white h-10 px-5 rounded-xl text-[13px] font-bold flex items-center justify-center hover:opacity-90 transition-opacity"
+            >
+              Перейти к подборке
+            </Link>
+          )}
         </div>
 
         <div className="relative group/shelf">
