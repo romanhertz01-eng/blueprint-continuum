@@ -197,7 +197,7 @@ export function SoftPromptCard({ item }: BaseCardProps) {
         </div>
         
         <ModelChip providerId={item.providerId} />
-        <h3 className="text-[17px] font-semibold text-foreground leading-[1.3] mt-2 line-clamp-3">
+        <h3 className="text-[17px] font-semibold text-slate-900 leading-[1.3] mt-2 line-clamp-3">
           {item.title}
         </h3>
       </div>
