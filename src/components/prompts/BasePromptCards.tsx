@@ -199,7 +199,9 @@ export function SoftPromptCard({ item }: BaseCardProps) {
           <IconComponent className="w-8 h-8 text-primary/70" />
         </div>
         
-        <ModelChip providerId={item.providerId} />
+        <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+          {item.providerId?.replace('-', ' ')}
+        </span>
         <h3 className="text-[17px] font-semibold text-slate-900 leading-[1.3] mt-2 line-clamp-3">
           {item.title}
         </h3>
