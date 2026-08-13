@@ -155,18 +155,37 @@ export function SoftPromptCard({ item }: BaseCardProps) {
   const navigate = useNavigate();
   const { isAuthed } = useAuth();
 
+  const getAudioGradient = (genre?: string, slug?: string) => {
+    // ERA2 Theme tokens based gradients
+    switch (genre) {
+      case 'Lo-Fi': 
+        return 'linear-gradient(135deg, hsl(35, 30%, 92%), hsl(25, 25%, 85%))';
+      case 'Epic':
+      case 'Trailer':
+        return 'linear-gradient(135deg, hsl(230, 20%, 25%), hsl(260, 25%, 15%))';
+      case 'Nature':
+        return 'linear-gradient(135deg, hsl(140, 25%, 90%), hsl(160, 20%, 82%))';
+      case 'Podcast':
+      case 'Voice':
+        return 'linear-gradient(135deg, hsl(210, 30%, 92%), hsl(200, 25%, 85%))';
+      case 'Meditation':
+      case 'Calm':
+        return 'linear-gradient(135deg, hsl(280, 25%, 92%), hsl(260, 20%, 86%))';
+      case 'Music':
+        return 'linear-gradient(135deg, hsl(15, 40%, 90%), hsl(340, 30%, 85%))';
+      default:
+        const hues = [210, 260, 280, 310, 340, 15, 40];
+        const charSum = (slug || '').split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+        const hue = hues[charSum % hues.length];
+        return `linear-gradient(135deg, hsl(${hue}, 40%, 95%), hsl(${hue + 20}, 40%, 90%))`;
+    }
+  };
+
   const getGradient = (slug: string) => {
     const hues = [210, 260, 280, 310, 340, 15, 40];
     const charSum = slug.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
     const hue = hues[charSum % hues.length];
     return `linear-gradient(135deg, hsl(${hue}, 40%, 95%), hsl(${hue + 20}, 40%, 90%))`;
-  };
-
-  const getAccentColor = (slug: string) => {
-    const hues = [210, 260, 280, 310, 340, 15, 40];
-    const charSum = slug.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-    const hue = hues[charSum % hues.length];
-    return `hsl(${hue}, 70%, 50%)`;
   };
 
   const handleAction = (e: React.MouseEvent) => {
@@ -186,33 +205,62 @@ export function SoftPromptCard({ item }: BaseCardProps) {
   };
 
   const IconComponent = (LucideIcons as any)[item.agentIcon || 'Sparkles'] || Sparkles;
+  const isAudio = item.category === 'audio';
 
   return (
     <div 
-      className="group relative flex flex-col h-[400px] p-5 rounded-2xl border border-border/20 hover:shadow-xl hover:shadow-black/5 hover:-translate-y-1 transition-all cursor-pointer"
-      style={{ background: getGradient(item.slug) }}
+      className="group relative flex flex-col h-[400px] p-5 rounded-2xl border border-border/20 hover:shadow-xl hover:shadow-black/5 hover:-translate-y-1 transition-all cursor-pointer overflow-hidden"
+      style={{ background: isAudio ? getAudioGradient(item.params?.genre, item.slug) : getGradient(item.slug) }}
     >
-      <div className="flex items-center justify-between mb-6">
-        <div className="w-7 h-7 rounded-lg bg-white/50 flex items-center justify-center text-slate-600">
+      {/* Visual Header - Like & Category */}
+      <div className="flex items-center justify-between mb-4 z-10">
+        <div className={cn(
+          "w-7 h-7 rounded-lg flex items-center justify-center backdrop-blur-md",
+          isAudio && (item.params?.genre === 'Epic' || item.params?.genre === 'Trailer') 
+            ? "bg-white/10 text-white/80 border border-white/5" 
+            : "bg-white/50 text-slate-600 border border-white/20"
+        )}>
           <CategoryIcon category={item.category} />
         </div>
-        <div className="flex items-center gap-1 text-slate-600">
+        <div className={cn(
+          "px-2 py-1 rounded-lg flex items-center gap-1.5 backdrop-blur-md border",
+          isAudio && (item.params?.genre === 'Epic' || item.params?.genre === 'Trailer')
+            ? "bg-white/10 border-white/5 text-white/90"
+            : "bg-white/50 border-white/20 text-slate-600"
+        )}>
           <Heart className="w-3.5 h-3.5" />
           <span className="text-[11px] font-bold">{item.likes || 0}</span>
         </div>
       </div>
 
-      <div className="flex-grow flex flex-col items-center justify-center text-center px-2">
-        {item.category === 'audio' ? (
-          <div className="relative w-20 h-20 mb-6 flex items-center justify-center">
-            <div className="absolute inset-0 rounded-full border border-primary/10 animate-[pulse_3s_infinite]" />
-            <div className="absolute inset-[15%] rounded-full border border-primary/5 animate-[pulse_4s_infinite]" />
-            <div className="absolute inset-[-10%] rounded-full border border-primary/5 animate-[pulse_5s_infinite]" />
-            <div className="absolute inset-0 rounded-full bg-white/80 border border-white shadow-sm flex items-center justify-center overflow-hidden">
-               <div className="absolute inset-[10%] rounded-full border-t-2 border-primary/20 animate-spin" style={{ animationDuration: '8s' }} />
-               <div className="w-4 h-4 rounded-full z-10 shadow-sm" style={{ backgroundColor: getAccentColor(item.slug) }} />
-               <div className="absolute w-full h-[1px] bg-black/5 rotate-45" />
-               <div className="absolute w-full h-[1px] bg-black/5 -rotate-45" />
+      {/* Media / Icon Area */}
+      <div className="flex-grow flex flex-col items-center justify-center text-center px-2 z-10">
+        {isAudio ? (
+          <div className="relative w-full aspect-[4/3] mb-6 rounded-xl overflow-hidden shadow-sm group-hover:scale-[1.02] transition-transform duration-500">
+            {/* Background Cover */}
+            <div className="absolute inset-0 opacity-40 mix-blend-overlay bg-gradient-to-br from-white/20 to-transparent" />
+            
+            {/* Waveform Visualization */}
+            <div className="absolute inset-0 flex items-center justify-center gap-[3px] px-8">
+              {Array.from({ length: 12 }).map((_, i) => {
+                const charSum = item.slug.split('').reduce((acc, char) => acc + char.charCodeAt(0) * (i + 1), 0);
+                const height = 15 + (charSum % 40);
+                return (
+                  <div 
+                    key={i}
+                    className={cn(
+                      "w-[3px] rounded-full transition-all duration-500 group-hover:scale-y-125",
+                      (item.params?.genre === 'Epic' || item.params?.genre === 'Trailer') ? "bg-white/40" : "bg-primary/30"
+                    )}
+                    style={{ height: `${height}%`, animationDelay: `${i * 0.1}s` }}
+                  />
+                );
+              })}
+            </div>
+
+            {/* Subtle Center Glow */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-32 h-32 rounded-full bg-primary/5 blur-2xl group-hover:bg-primary/10 transition-colors" />
             </div>
           </div>
         ) : (
@@ -222,19 +270,29 @@ export function SoftPromptCard({ item }: BaseCardProps) {
         )}
         
         <div className="flex flex-col items-center gap-1">
-          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
-            {item.category === 'audio' && item.params?.duration ? `${item.params.duration} · ` : ''}
-            {item.providerId?.replace('-', ' ')}
+          <span className={cn(
+            "text-[12px] font-bold uppercase tracking-widest",
+            isAudio && (item.params?.genre === 'Epic' || item.params?.genre === 'Trailer') ? "text-white/50" : "text-slate-500"
+          )}>
+            {isAudio ? `${item.params?.duration || '0:00'} · ${item.providerId?.replace('-', ' ')}` : item.providerId?.replace('-', ' ')}
           </span>
-          <h3 className="text-[17px] font-semibold text-slate-900 leading-[1.3] line-clamp-3">
+          <h3 className={cn(
+            "text-[18px] font-semibold leading-[1.3] line-clamp-2 mt-1 px-2",
+            isAudio && (item.params?.genre === 'Epic' || item.params?.genre === 'Trailer') ? "text-white" : "text-slate-900"
+          )}>
             {item.title}
           </h3>
         </div>
       </div>
 
-      <div className="mt-4 flex justify-center">
+      <div className="mt-4 flex justify-center z-10">
         <CompactCTA label="Попробовать" onClick={handleAction} />
       </div>
+      
+      {/* Decorative Glow for Audio */}
+      {isAudio && (
+        <div className="absolute -bottom-20 -right-20 w-40 h-40 rounded-full bg-primary/5 blur-[80px]" />
+      )}
     </div>
   );
 }
