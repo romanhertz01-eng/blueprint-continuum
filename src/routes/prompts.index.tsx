@@ -906,12 +906,14 @@ function PopularAudioShelf({ allItems, searchQuery }: { allItems: PromptItem[], 
             ))}
           </div>
 
-          <button
-            onClick={scrollRight}
-            className="absolute -right-4 top-1/2 -translate-y-1/2 w-[36px] h-[36px] rounded-full bg-background/80 backdrop-blur-sm border border-border flex items-center justify-center z-30 opacity-0 group-hover/shelf:opacity-100 transition-opacity hover:bg-background"
-          >
-            <ChevronRight className="w-5 h-5" />
-          </button>
+          {canScroll && (
+            <button
+              onClick={scrollRight}
+              className="absolute -right-4 top-1/2 -translate-y-1/2 w-[36px] h-[36px] rounded-full bg-background/80 backdrop-blur-sm border border-border flex items-center justify-center z-30 opacity-0 group-hover/shelf:opacity-100 transition-opacity hover:bg-background"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+          )}
         </div>
       </div>
     </section>
