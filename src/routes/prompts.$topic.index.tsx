@@ -160,12 +160,32 @@ function CategoryPage() {
     
     const audioTopics = getTopicsByCategory('audio');
     const topicsWithPrompts = audioTopics.map(topic => {
-      const prompts = data.items.filter(item => item.topicSlug === topic.slug);
+      // Собираем промпты, где topicSlug совпадает ИЛИ slug темы есть в extraTopicSlugs
+      const prompts = data.items.filter(item => 
+        item.topicSlug === topic.slug || item.extraTopicSlugs?.includes(topic.slug)
+      );
       return { topic, prompts };
     })
-    .filter(shelf => shelf.prompts.length >= 4)
+    .filter(shelf => shelf.prompts.length >= 3) // Снизили порог до 3
     .sort((a, b) => b.prompts.length - a.prompts.length)
     .slice(0, 2);
+
+    // Фолбэк: если подходящих тем мало, но аудио промптов достаточно (>=6)
+    if (topicsWithPrompts.length === 0 && data.items.length >= 6) {
+      const popularPrompts = [...data.items]
+        .sort((a, b) => (b.likes || 0) - (a.likes || 0))
+        .slice(0, 8);
+      
+      return [{
+        topic: { 
+          slug: 'popular', 
+          title: 'Популярное в аудио',
+          cardTitle: 'Популярное'
+        } as any,
+        prompts: popularPrompts,
+        isFallback: true
+      }];
+    }
 
     return topicsWithPrompts;
   }, [isAudio, searchQuery, data.items]);
