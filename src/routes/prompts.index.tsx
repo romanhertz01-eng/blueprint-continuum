@@ -185,6 +185,17 @@ function PromptsHub() {
         );
       }
 
+      // Useful Agents shelf after row 4 (rowIndex === 3)
+      if (rowIndex === 3) {
+        elements.push(
+          <UsefulAgentsShelf
+            key="agents-shelf-fixed"
+            allItems={allItems}
+            searchQuery={searchQuery}
+          />
+        );
+      }
+
       // Shelf approx every 3 rows (5, 8, 11...)
       // We skip 2 because it's taken by Video shelf
       if ((rowIndex + 1) % 3 === 2 && (rowIndex + 1) !== 2) {
