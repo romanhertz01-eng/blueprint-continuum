@@ -32,6 +32,7 @@ export interface PromptItem {
   params?: {
     aspect?: string; quality?: string; quantity?: number;
     duration?: string; resolution?: string;
+    genre?: string; mood?: string;
   };
   // BACKEND: задается вручную в админке или вычисляется автоматически
   layout?: 'default' | 'wide' | 'featured';
