@@ -1,7 +1,10 @@
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
-import { Search, X, Sparkles, Star, PlusCircle, ArrowRight, Home, ChevronRight, Heart, Zap, LayoutGrid, Check, Play } from 'lucide-react';
+import { Search, X, Sparkles, Star, PlusCircle, ArrowRight, Home, ChevronRight, Heart, Zap, LayoutGrid, Check, Play, AlertCircle } from 'lucide-react';
+import * as LucideIcons from 'lucide-react';
 import { Footer } from '@/components/shared/Footer';
-import { getPublishedItems, getCategories, PromptItem, getItemsByCategory, getTopicsByCategory } from '@/data/prompts';
+import { getPublishedItems, getCategories, PromptItem, getItemsByCategory, getTopicsByCategory, promptTopics } from '@/data/prompts';
+import { agentTopics } from '@/data/prompts/agentTopics';
+import { agentItems } from '@/data/prompts/agentItems';
 import { EditorialPromptCard } from '@/components/prompts/EditorialPromptCard';
 import { TextPromptCard } from '@/components/prompts/TextPromptCard';
 import { AudioPromptCard } from '@/components/prompts/AudioPromptCard';
@@ -19,15 +22,41 @@ const PAGE_SIZE = 30;
 export const Route = createFileRoute('/prompts/$topic/')({
   component: CategoryPage,
   loader: ({ params }) => {
-    const categories = getCategories();
-    const currentCategory = categories.find(c => c.slug === params.topic);
-    const items = getItemsByCategory(params.topic as any);
+    const allCategories = getCategories();
+    
+    // 1. Пытаемся найти как основную категорию (image, video, etc)
+    const category = allCategories.find(c => c.slug === params.topic);
+    let items: PromptItem[] = [];
+    let isAgentTopic = false;
+    let topicData: any = null;
+
+    if (category) {
+      items = getItemsByCategory(params.topic as any);
+    } else {
+      // 2. Пытаемся найти как тему (topic) в обычных темах
+      topicData = promptTopics.find(t => t.slug === params.topic && t.status === 'published');
+      if (topicData) {
+        items = getPublishedItems().filter(item => 
+          item.topicSlug === params.topic || item.extraTopicSlugs?.includes(params.topic)
+        );
+      } else {
+        // 3. Пытаемся найти как тему агентов
+        topicData = agentTopics.find(t => t.slug === params.topic && t.status === 'published');
+        if (topicData) {
+          isAgentTopic = true;
+          items = agentItems.filter(item => 
+            item.topicSlug === params.topic && item.status === 'published'
+          );
+        }
+      }
+    }
     
     return {
-      category: currentCategory,
+      category: category || topicData,
       items,
       topicSlug: params.topic,
-      allCategories: categories
+      allCategories,
+      isAgentTopic
     };
   },
   head: (options) => {
@@ -321,12 +350,52 @@ function VideoCategoryCard({ item }: { item: PromptItem }) {
 }
 
 
+function AgentCategoryCard({ item }: { item: PromptItem }) {
+  const IconComponent = (LucideIcons as any)[item.agentIcon || 'MessageSquare'] || LucideIcons.MessageSquare;
+
+  const agentColors = [
+    'bg-[#14b8a6]', // бирюзовый
+    'bg-[#3b82f6]', // синий
+    'bg-[#8b5cf6]', // фиолетовый
+    'bg-[#d946ef]', // розовый
+    'bg-[#ef4444]', // красный
+    'bg-[#f97316]', // оранжевый
+    'bg-[#eab308]', // жёлтый
+    'bg-[#22c55e]', // зелёный
+  ];
+  const bgClass = agentColors[item.slug.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % agentColors.length];
+
+  return (
+    <Link
+      to="/prompts/agents/$slug"
+      params={{ slug: item.slug }}
+      className="group flex flex-col p-4 rounded-[22px] bg-card border border-border/60 min-h-[140px] cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:bg-muted/40 hover:border-border"
+    >
+      <div className="flex items-start justify-between">
+        <div className={cn("w-14 h-14 rounded-2xl flex items-center justify-center shrink-0", bgClass)}>
+          <IconComponent className="w-[26px] h-[26px] text-white" />
+        </div>
+        <div className="flex items-center gap-1 text-muted-foreground">
+          <Heart className="w-[13px] h-[13px]" />
+          <span className="text-[13px]">{item.likes}</span>
+        </div>
+      </div>
+
+      <div className="mt-3 flex-1">
+        <h3 className="text-[16px] font-bold truncate leading-snug group-hover:text-primary transition-colors">{item.title}</h3>
+        <p className="text-[13px] text-muted-foreground line-clamp-2 mt-1 leading-normal">{item.agentRole}</p>
+      </div>
+    </Link>
+  );
+}
+
 function CategoryPage() {
   const data = Route.useLoaderData();
   const params = Route.useParams();
   const isVideo = params.topic === 'video';
   const isAudio = params.topic === 'audio';
   const isText = params.topic === 'text';
+  const isAgentTopic = data.isAgentTopic;
   const navigate = useNavigate();
   const { isAuthed } = useAuth();
 
@@ -340,7 +409,6 @@ function CategoryPage() {
   const [topicFilter, setTopicFilter] = useState('Все');
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
-
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -362,12 +430,20 @@ function CategoryPage() {
   }, [isPanelOpen]);
 
   const categoryTopics = useMemo(() => {
-    const topics = getTopicsByCategory(params.topic as any);
-    // Фильтруем темы, у которых есть хотя бы один промпт в этой категории
+    const categorySlug = data.category?.category || params.topic;
+    const topics = [
+      ...getTopicsByCategory(categorySlug as any), 
+      ...agentTopics.filter(t => t.category === categorySlug)
+    ];
+    
+    // Если мы на странице конкретной темы, список items уже отфильтрован в лоадере.
+    // Для корректной работы панели "Категории", нам нужно знать, есть ли промпты в этих темах ВООБЩЕ в базе.
+    const allPublished = [...getPublishedItems(), ...agentItems];
+    
     return topics.filter(topic => 
-      data.items.some(item => item.topicSlug === topic.slug || item.extraTopicSlugs?.includes(topic.slug))
+      allPublished.some(item => item.topicSlug === topic.slug || item.extraTopicSlugs?.includes(topic.slug))
     );
-  }, [params.topic, data.items]);
+  }, [params.topic, data.category]);
 
   // Сброс фильтров при смене категории
   useEffect(() => {
@@ -375,6 +451,22 @@ function CategoryPage() {
     setTopicFilter('Все');
     setIsPanelOpen(false);
   }, [params.topic]);
+
+  if (!data.category) {
+    return (
+      <div className="min-h-screen bg-background text-foreground flex flex-col items-center justify-center p-6 text-center">
+        <AlertCircle className="w-16 h-16 text-muted-foreground mb-4 opacity-20" />
+        <h1 className="text-2xl font-bold mb-2">Страница не найдена</h1>
+        <p className="text-muted-foreground mb-8">Тема или категория «{params.topic}» не существует.</p>
+        <Link to="/prompts" className="h-11 px-6 rounded-xl bg-primary text-white font-bold flex items-center gap-2 transition-transform active:scale-95">
+           <Home className="w-4 h-4" /> На главную каталога
+        </Link>
+        <div className="w-full mt-auto">
+          <Footer />
+        </div>
+      </div>
+    );
+  }
 
 
   const audioShelvesData = useMemo(() => {
@@ -884,6 +976,14 @@ function CategoryPage() {
                   {block.items.map((item, iIdx) => (
                     <VideoCategoryCard key={`${item.slug}-${bIdx}-${iIdx}`} item={item} />
                   ))}
+                </div>
+              ))}
+            </div>
+          ) : isAgentTopic ? (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-[18px]">
+              {visibleItems.map((item, idx) => (
+                <div key={`${item.slug}-${idx}`}>
+                  <AgentCategoryCard item={item} />
                 </div>
               ))}
             </div>
