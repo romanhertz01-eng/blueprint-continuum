@@ -1,6 +1,8 @@
 import { PromptItem } from './types';
 import { agentItems } from './agentItems';
 
+import { agentItems } from './agentItems';
+
 
 // BACKEND: промпты приходят из админки.
 export const promptItems: PromptItem[] = [
