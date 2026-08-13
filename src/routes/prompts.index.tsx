@@ -158,6 +158,16 @@ function PromptsHub() {
       rows.push(visibleItems.slice(i, i + itemsPerRow));
     }
 
+    // Prepare valid topics for shelves
+    const validShelfTopics = promptTopics
+      .filter(t => t.status === 'published' && !RESERVED_PROMPT_SLUGS.includes(t.slug))
+      .map(topic => {
+        const items = allItems.filter(item => item.topicSlug === topic.slug || item.extraTopicSlugs?.includes(topic.slug));
+        return { topic, items, count: items.length };
+      })
+      .filter(t => t.count >= 5)
+      .sort((a, b) => b.count - a.count);
+
     // Logic for inserting shelf/banner between rows
     rows.forEach((row, rowIndex) => {
       // Add the row of cards
@@ -170,27 +180,23 @@ function PromptsHub() {
       );
 
       // Rhythm: shelf after row 2, 5, 8... banner after row 4, 9...
-      // Real row index starts at 0. Row index 1 is the 2nd row.
       
       // Shelf approx every 3 rows (2, 5, 8, 11...)
       if ((rowIndex + 1) % 3 === 2) {
-        // Selection of items for the shelf
-        const shelfItems = [...allItems].sort(() => 0.5 - Math.random()).slice(0, 8);
-        const topicSlugs = ["marketing", "work", "design", "creative"];
-        const titles = ["Популярное в маркетинге", "Лучшие для работы", "Топ в дизайне", "Креативные идеи"];
-        const idx = Math.floor((rowIndex / 3) % titles.length);
-        const title = titles[idx];
-        const topicSlug = topicSlugs[idx];
+        const shelfIdx = Math.floor(rowIndex / 3);
+        const shelfTopicData = validShelfTopics[shelfIdx];
         
-        elements.push(
-          <CollectionShelf 
-            key={`shelf-${rowIndex}`}
-            title={title}
-            subtitle="Подборка промптов, которые экономят время"
-            items={shelfItems}
-            ctaHref={hasTopicPage(topicSlug, allItems) ? `/prompts/${topicSlug}` : undefined}
-          />
-        );
+        if (shelfTopicData) {
+          elements.push(
+            <CollectionShelf 
+              key={`shelf-${rowIndex}`}
+              title={shelfTopicData.topic.title}
+              subtitle="Подборка промптов, которые экономят время"
+              items={shelfTopicData.items.slice(0, 8)}
+              ctaHref={`/prompts/${shelfTopicData.topic.slug}`}
+            />
+          );
+        }
       }
 
       // Banner approx every 5 rows (4, 9, 14...)
