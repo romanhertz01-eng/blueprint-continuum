@@ -269,10 +269,11 @@ function VideoCategoryCard({ item }: { item: PromptItem }) {
     <div 
       onClick={handleCardClick}
       className={cn(
-        "group relative flex flex-col rounded-2xl overflow-hidden bg-card border border-border/50 transition-all duration-200 cursor-pointer h-full",
-        isVertical ? "row-span-2" : ""
+        "group relative flex flex-col rounded-2xl overflow-hidden bg-card border border-border/50 transition-all duration-200 cursor-pointer",
+        isVertical ? "row-span-2 h-full" : "h-auto"
       )}
     >
+
       <div className={cn(
         "relative overflow-hidden shrink-0",
         isVertical ? "aspect-[9/16]" : "aspect-video"
