@@ -599,62 +599,84 @@ function SmallCardsShelf({ allItems, searchQuery }: { allItems: PromptItem[], se
 
   const scrollRight = () => {
     if (scrollRef.current) {
-      const scrollAmount = (150 + 10) * 3;
+      const scrollAmount = (175 + 12) * 3;
       scrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-    }
-  };
-
-  const getIcon = (category: string) => {
-    switch (category) {
-      case 'text': return FileText;
-      case 'audio': return Music;
-      case 'video': return Video;
-      case 'agents': return Bot;
-      default: return ImageIcon;
     }
   };
 
   const intro = textTopic.topic.intro.split(/[.!?]/)[0].slice(0, 90);
 
+  const gradientPairs = [
+    'from-orange-500/30 to-rose-600/30',
+    'from-blue-600/30 to-indigo-700/30',
+    'from-emerald-600/30 to-teal-700/30',
+    'from-fuchsia-600/30 to-purple-700/30',
+    'from-amber-500/30 to-orange-600/30',
+    'from-sky-500/30 to-blue-600/30',
+    'from-violet-600/30 to-fuchsia-700/30',
+    'from-slate-600/30 to-gray-700/30',
+  ];
+
   return (
     <section className="max-w-[1520px] mx-auto px-6 w-full mb-10">
-      <div className="rounded-3xl bg-muted/30 border border-border py-5 px-8 overflow-hidden">
-        <div className="flex items-baseline justify-between gap-4 mb-4">
-          <div className="min-w-0 flex items-baseline gap-3">
-            <h2 className="text-[20px] font-bold leading-tight shrink-0">{textTopic.topic.title}</h2>
-            <p className="text-[13px] text-muted-foreground line-clamp-1">{intro}</p>
+      <div className="rounded-3xl bg-muted/40 border border-border py-6 px-8 overflow-hidden">
+        <div className="flex items-center justify-between gap-4 mb-5">
+          <div className="min-w-0">
+            <h2 className="text-[22px] font-bold leading-tight">{textTopic.topic.title}</h2>
+            <p className="text-[13px] text-muted-foreground line-clamp-1 mt-1">{intro}</p>
           </div>
           <Link
             to={`/prompts/${textTopic.topic.slug}` as any}
-            className="shrink-0 text-[13px] font-bold text-primary hover:opacity-80 transition-opacity"
+            className="shrink-0 bg-primary text-white h-10 px-5 rounded-xl text-[13px] font-bold flex items-center justify-center hover:opacity-90 transition-opacity"
           >
-            Открыть →
+            Перейти к подборке
           </Link>
         </div>
 
         <div className="relative group/shelf">
           <div 
             ref={scrollRef}
-            className="flex gap-[10px] overflow-x-auto no-scrollbar snap-x snap-mandatory w-[calc(100%+40px)]"
+            className="flex gap-3 overflow-x-auto no-scrollbar snap-x snap-mandatory w-[calc(100%+40px)] pb-2"
           >
-            {items.map((item) => {
-              const Icon = getIcon(item.category);
+            {items.map((item, idx) => {
+              const gradient = gradientPairs[idx % gradientPairs.length];
               return (
                 <Link
                   key={item.slug}
                   to={`/prompts/${item.topicSlug}/${item.slug}` as any}
-                  className="w-[150px] h-[150px] shrink-0 rounded-xl bg-card border border-border p-3 flex flex-col justify-between snap-start hover:border-primary/40 hover:-translate-y-0.5 transition duration-200"
+                  className="w-[175px] aspect-[3/4] shrink-0 rounded-2xl overflow-hidden relative group/card snap-start"
                 >
-                  <div className="flex items-center justify-between">
-                    <Icon className="w-4 h-4 text-muted-foreground/70" />
-                    <div className="flex items-center gap-1 text-muted-foreground/70">
-                      <Heart className="w-[11px] h-[11px]" />
-                      <span className="text-[11px] font-medium">{item.views || 0}</span>
-                    </div>
+                  {/* Background Gradient */}
+                  <div className={cn(
+                    "absolute inset-0 bg-gradient-to-br transition-transform duration-300 group-hover/card:scale-[1.05]",
+                    gradient
+                  )} />
+                  
+                  {/* SVG Pattern */}
+                  <div className="absolute inset-0 opacity-15 pointer-events-none">
+                    <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <circle cx="20" cy="20" r="30" fill="white" />
+                      <circle cx="90" cy="80" r="40" fill="white" />
+                      <path d="M-10 60 Q 30 40 110 60" stroke="white" strokeWidth="1" />
+                      <path d="M-10 70 Q 30 50 110 70" stroke="white" strokeWidth="1" />
+                    </svg>
                   </div>
-                  <h3 className="text-[12px] font-semibold line-clamp-3 leading-snug">
-                    {item.title}
-                  </h3>
+
+                  {/* Dark Overlay */}
+                  <div className="absolute inset-x-0 bottom-0 h-[60%] bg-gradient-to-t from-black/55 via-black/15 to-transparent z-10" />
+
+                  {/* Top Meta */}
+                  <div className="absolute top-3 right-3 flex items-center gap-1 z-20 text-white drop-shadow-sm">
+                    <Heart className="w-[11px] h-[11px] fill-white" />
+                    <span className="text-[11px] font-bold leading-none">{item.likes || 0}</span>
+                  </div>
+
+                  {/* Bottom Title */}
+                  <div className="absolute bottom-0 left-0 right-0 p-3 z-20">
+                    <h3 className="text-[13px] font-bold text-white line-clamp-3 leading-snug">
+                      {item.title}
+                    </h3>
+                  </div>
                 </Link>
               );
             })}
@@ -662,7 +684,7 @@ function SmallCardsShelf({ allItems, searchQuery }: { allItems: PromptItem[], se
           
           <button
             onClick={scrollRight}
-            className="absolute right-10 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-background/80 backdrop-blur-sm border border-border flex items-center justify-center z-10 opacity-0 group-hover/shelf:opacity-100 transition-opacity hover:bg-muted"
+            className="absolute right-10 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-background/80 backdrop-blur-sm border border-border flex items-center justify-center z-30 opacity-0 group-hover/shelf:opacity-100 transition-opacity hover:bg-muted"
           >
             <ChevronRight className="w-5 h-5" />
           </button>
