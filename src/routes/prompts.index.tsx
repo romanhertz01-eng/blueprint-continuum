@@ -49,19 +49,22 @@ function PromptsHub() {
   const displayItems = useMemo(() => {
     if (sortBy !== 'new') return allItems;
 
-    // Interleave text and images to ensure mixed visual content
+    // Interleave text, images and audio to ensure mixed visual content
     const textItems = allItems.filter(i => i.category === 'text');
     const imageItems = allItems.filter(i => i.category === 'image');
-    const otherItems = allItems.filter(i => i.category !== 'text' && i.category !== 'image');
+    const audioItems = allItems.filter(i => i.category === 'audio');
+    const otherItems = allItems.filter(i => i.category !== 'text' && i.category !== 'image' && i.category !== 'audio');
 
     const result: PromptItem[] = [];
-    let tIdx = 0, iIdx = 0, oIdx = 0;
+    let tIdx = 0, iIdx = 0, aIdx = 0, oIdx = 0;
 
     // To ensure variety, we mix them in a specific pattern
-    // pattern: [image, text, image, other, image, text...]
-    while (tIdx < textItems.length || iIdx < imageItems.length || oIdx < otherItems.length) {
+    // pattern: [image, text, image, audio, image, other...]
+    while (tIdx < textItems.length || iIdx < imageItems.length || aIdx < audioItems.length || oIdx < otherItems.length) {
       if (iIdx < imageItems.length) result.push(imageItems[iIdx++]);
       if (tIdx < textItems.length) result.push(textItems[tIdx++]);
+      if (iIdx < imageItems.length) result.push(imageItems[iIdx++]);
+      if (aIdx < audioItems.length) result.push(audioItems[aIdx++]);
       if (iIdx < imageItems.length) result.push(imageItems[iIdx++]);
       if (oIdx < otherItems.length) result.push(otherItems[oIdx++]);
     }
