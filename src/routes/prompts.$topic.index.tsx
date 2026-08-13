@@ -474,15 +474,8 @@ function CategoryPage() {
         {/* АУДИО ПОЛКИ */}
         {isAudio && audioShelvesData.length > 0 && !searchQuery.trim() && (
           <div className="flex flex-col gap-10 mb-10">
-            {(audioShelvesData as any[]).map((shelf, shelfIdx) => {
+            {(audioShelvesData as any[]).map((shelf) => {
               const scrollRef = useRef<HTMLDivElement>(null);
-              const gradients = [
-                'from-indigo-500/80 to-purple-500/80',
-                'from-emerald-500/80 to-teal-500/80',
-                'from-orange-500/80 to-rose-500/80',
-                'from-blue-500/80 to-cyan-500/80',
-              ];
-              const gradient = gradients[shelfIdx % gradients.length];
 
               return (
                 <div key={shelf.topic.slug} className="group/shelf py-5 relative">
@@ -504,39 +497,40 @@ function CategoryPage() {
                       ref={scrollRef}
                       className="flex gap-[14px] overflow-x-auto no-scrollbar snap-x snap-mandatory w-[calc(100%+40px)] pb-4"
                     >
-                      {shelf.prompts.map((item: PromptItem) => (
-                        <Link
-                          key={item.slug}
-                          to="/prompts/$topic/$slug"
-                          params={{ topic: item.topicSlug, slug: item.slug }}
-                          className="flex-shrink-0 w-[190px] aspect-square rounded-2xl overflow-hidden relative group snap-start"
-                        >
-                          {/* Background Gradient */}
-                          <div className={cn(
-                            "absolute inset-0 bg-gradient-to-br transition-transform duration-300 group-hover:scale-[1.04]",
-                            gradient
-                          )} />
-                          
-                          {/* Wave Pattern */}
-                          <svg className="absolute inset-0 w-full h-full opacity-20 pointer-events-none" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M0,100 C20,80 40,120 60,100 C80,80 100,120 120,100 C140,80 160,120 180,100 C200,80 220,120 240,100" fill="none" stroke="white" strokeWidth="2" />
-                            <path d="M0,120 C20,100 40,140 60,120 C80,100 100,140 120,120 C140,100 160,140 180,120 C200,100 220,140 240,120" fill="none" stroke="white" strokeWidth="2" />
-                          </svg>
+                      {shelf.prompts.map((item: PromptItem) => {
+                        const hash = item.topicSlug.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+                        const gradient = audioGradients[hash % audioGradients.length];
+                        
+                        return (
+                          <Link
+                            key={item.slug}
+                            to="/prompts/$topic/$slug"
+                            params={{ topic: item.topicSlug, slug: item.slug }}
+                            className="flex-shrink-0 w-[190px] aspect-square rounded-2xl overflow-hidden relative group snap-start"
+                          >
+                            <div className={cn(
+                              "absolute inset-0 bg-gradient-to-br transition-transform duration-300 group-hover:scale-[1.04]",
+                              gradient
+                            )} />
+                            
+                            <svg className="absolute inset-0 w-full h-full opacity-20 pointer-events-none" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M0,100 C20,80 40,120 60,100 C80,80 100,120 120,100 C140,80 160,120 180,100 C200,80 220,120 240,100" fill="none" stroke="white" strokeWidth="2" />
+                              <path d="M0,120 C20,100 40,140 60,120 C80,100 100,140 120,120 C140,100 160,140 180,120 C200,100 220,140 240,120" fill="none" stroke="white" strokeWidth="2" />
+                            </svg>
 
-                          {/* Top Meta */}
-                          <div className="absolute top-3 right-3 flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-black/10 backdrop-blur-sm">
-                            <Heart className="w-3 h-3 text-white fill-white" />
-                            <span className="text-[11px] font-bold text-white leading-none">{item.likes}</span>
-                          </div>
+                            <div className="absolute top-3 right-3 flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-black/10 backdrop-blur-sm">
+                              <Heart className="w-3 h-3 text-white fill-white" />
+                              <span className="text-[11px] font-bold text-white leading-none">{item.likes}</span>
+                            </div>
 
-                          {/* Bottom Title */}
-                          <div className="absolute bottom-3 left-3 right-3">
-                            <h3 className="text-[14px] font-bold text-white line-clamp-2 leading-tight drop-shadow-md">
-                              {item.title}
-                            </h3>
-                          </div>
-                        </Link>
-                      ))}
+                            <div className="absolute bottom-3 left-3 right-3">
+                              <h3 className="text-[14px] font-bold text-white line-clamp-2 leading-tight drop-shadow-md">
+                                {item.title}
+                              </h3>
+                            </div>
+                          </Link>
+                        );
+                      })}
                     </div>
                     
                     <button 
