@@ -373,6 +373,9 @@ function PromptsHub() {
         </div>
       </section>
 
+      {/* ГАЗ S — ПОЛКА МЕЛКИХ КАРТОЧЕК */}
+      <SmallCardsShelf allItems={allItems} searchQuery={searchQuery} />
+
       {/* 3. СТРОКА СОРТИРОВКИ */}
       <section className="max-w-[1520px] mx-auto px-6 w-full flex items-center justify-between mb-4">
         <div className="text-[13px] font-medium text-muted-foreground">
