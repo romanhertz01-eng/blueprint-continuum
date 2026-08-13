@@ -341,7 +341,35 @@ function CategoryPage() {
       {/* 2. ЛЕНТА КАТЕГОРИЙ (PILLS) */}
       <section className="sticky top-0 z-40 bg-background/80 backdrop-blur-md border-b border-border/40 mb-6">
         <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
+            <Link
+              to="/prompts"
+              className="px-5 py-2.5 rounded-full text-[13px] font-medium whitespace-nowrap transition-all border bg-muted/30 border-border/50 hover:bg-muted/60 text-muted-foreground"
+            >
+              Все темы
+            </Link>
+            {data.allCategories.map(cat => (
+              <Link
+                key={cat.slug}
+                to="/prompts/$topic"
+                params={{ topic: cat.slug }}
+                className={cn(
+                  "px-5 py-2.5 rounded-full text-[13px] font-medium whitespace-nowrap transition-all border",
+                  params.topic === cat.slug
+                    ? "bg-primary text-white border-primary shadow-md shadow-primary/20"
+                    : "bg-muted/30 border-border/50 hover:bg-muted/60 text-muted-foreground"
+                )}
+              >
+                {cat.cardTitle}
+              </Link>
+            ))}
+          </div>
+
+          {/* ВТОРАЯ СТРОКА: Кнопка "Категории" и опциональные чипы тем */}
+          <div className={cn(
+            "flex items-center gap-3",
+            isVideo ? "mt-4 pt-4 border-t border-border/40" : "mt-4 pt-0"
+          )}>
             {categoryTopics.length >= 2 && (
               <div className="relative shrink-0" ref={panelRef}>
                 <button
@@ -412,35 +440,9 @@ function CategoryPage() {
               </div>
             )}
 
-            <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 flex-1">
-              <Link
-                to="/prompts"
-                className="px-5 py-2.5 rounded-full text-[13px] font-medium whitespace-nowrap transition-all border bg-muted/30 border-border/50 hover:bg-muted/60 text-muted-foreground"
-              >
-                Все темы
-              </Link>
-              {data.allCategories.map(cat => (
-                <Link
-                  key={cat.slug}
-                  to="/prompts/$topic"
-                  params={{ topic: cat.slug }}
-                  className={cn(
-                    "px-5 py-2.5 rounded-full text-[13px] font-medium whitespace-nowrap transition-all border",
-                    params.topic === cat.slug
-                      ? "bg-primary text-white border-primary shadow-md shadow-primary/20"
-                      : "bg-muted/30 border-border/50 hover:bg-muted/60 text-muted-foreground"
-                  )}
-                >
-                  {cat.cardTitle}
-                </Link>
-              ))}
-            </div>
-          </div>
-
-          {/* ВТОРИЧНАЯ ЛЕНТА ФИЛЬТРОВ ДЛЯ ВИДЕО */}
-          {isVideo && (
-            <div className="mt-4 pt-4 border-t border-border/40">
-              <div className="flex gap-2 overflow-x-auto no-scrollbar">
+            {/* ВТОРИЧНАЯ ЛЕНТА ФИЛЬТРОВ ДЛЯ ВИДЕО */}
+            {isVideo && (
+              <div className="flex gap-2 overflow-x-auto no-scrollbar ml-3">
                 {videoFilters.map(filter => (
                   <button
                     key={filter}
@@ -456,8 +458,8 @@ function CategoryPage() {
                   </button>
                 ))}
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </section>
 
