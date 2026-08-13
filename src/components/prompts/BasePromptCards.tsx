@@ -81,7 +81,7 @@ export function LightPromptCard({ item }: BaseCardProps) {
     } else if (item.category === 'image' || item.category === 'video') {
       navigate({
         to: "/prompts/$topic/$slug" as any,
-        params: { topic: item.topicSlug, slug: item.slug }
+        params: { topic: item.topicSlug, slug: item.slug } as any
       });
     } else if (item.category === 'agents') {
       navigate({
@@ -160,7 +160,7 @@ export function ImagePromptCard({ item }: BaseCardProps) {
     } else if (item.category === 'image' || item.category === 'video') {
       navigate({
         to: "/prompts/$topic/$slug" as any,
-        params: { topic: item.topicSlug, slug: item.slug }
+        params: { topic: item.topicSlug, slug: item.slug } as any
       });
     } else if (item.category === 'agents') {
       navigate({
@@ -246,7 +246,7 @@ export function SoftPromptCard({ item }: BaseCardProps) {
     } else if (item.category === 'image' || item.category === 'video') {
       navigate({
         to: "/prompts/$topic/$slug" as any,
-        params: { topic: item.topicSlug, slug: item.slug }
+        params: { topic: item.topicSlug, slug: item.slug } as any
       });
     } else if (item.category === 'agents') {
       navigate({
