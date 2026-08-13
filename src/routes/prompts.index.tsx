@@ -174,8 +174,20 @@ function PromptsHub() {
       // Rhythm: shelf after row 2, 5, 8... banner after row 4, 9...
       // Real row index starts at 0. Row index 1 is the 2nd row.
       
-      // Shelf approx every 3 rows (2, 5, 8, 11...)
-      if ((rowIndex + 1) % 3 === 2) {
+      // Video shelf after row 2 (rowIndex === 1)
+      if (rowIndex === 1) {
+        elements.push(
+          <VideoPromptsShelf 
+            key="video-shelf-fixed" 
+            allItems={allItems} 
+            searchQuery={searchQuery} 
+          />
+        );
+      }
+
+      // Shelf approx every 3 rows (5, 8, 11...)
+      // We skip 2 because it's taken by Video shelf
+      if ((rowIndex + 1) % 3 === 2 && (rowIndex + 1) !== 2) {
         // Selection of items for the shelf
         const shelfItems = [...allItems].sort(() => 0.5 - Math.random()).slice(0, 8);
         const topicSlugs = ["marketing", "work", "design", "creative"];
