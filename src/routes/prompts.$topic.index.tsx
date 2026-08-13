@@ -3,6 +3,8 @@ import { Search, X, Sparkles, Star, PlusCircle, ArrowRight, Home, ChevronRight }
 import { Footer } from '@/components/shared/Footer';
 import { getPublishedItems, getCategories, PromptItem, getItemsByCategory } from '@/data/prompts';
 import { EditorialPromptCard } from '@/components/prompts/EditorialPromptCard';
+import { TextPromptCard } from '@/components/prompts/TextPromptCard';
+import { AudioPromptCard } from '@/components/prompts/AudioPromptCard';
 import { useState, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { ORIGIN } from '@/lib/origin';
@@ -272,6 +274,20 @@ function CategoryPage() {
         {visibleItems.length > 0 ? (
           <div className="grid grid-cols-12 gap-4 md:gap-5">
             {visibleItems.map((item, idx) => {
+              if (item.category === 'text') {
+                return (
+                  <div key={`${item.slug}-${idx}`} className="col-span-12 sm:col-span-6 lg:col-span-3">
+                    <TextPromptCard item={item} />
+                  </div>
+                );
+              }
+              if (item.category === 'audio') {
+                return (
+                  <div key={`${item.slug}-${idx}`} className="col-span-12 sm:col-span-6 lg:col-span-3">
+                    <AudioPromptCard item={item} />
+                  </div>
+                );
+              }
               const type = getCardType(idx, item);
               const span = getCardSpan(type);
               return (
