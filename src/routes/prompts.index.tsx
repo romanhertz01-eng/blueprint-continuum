@@ -264,7 +264,7 @@ function PromptsHub() {
             return (
               <Link
                 key={cat.slug}
-                to={href}
+                to={href as any}
                 className="relative h-[140px] rounded-[18px] overflow-hidden group border border-border/20 shadow-sm"
               >
                 <img 
