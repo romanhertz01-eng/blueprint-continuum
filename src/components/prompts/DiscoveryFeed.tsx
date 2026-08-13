@@ -238,7 +238,7 @@ function DiscoveryCard({ item, modelName }: { item: PromptItem, modelName: strin
                 <TryPromptButton 
                   item={item} 
                   label="Создать" 
-                  className="w-full py-2 h-auto text-[13px] font-semibold bg-white text-black hover:bg-white/90 border-none shadow-xl"
+                  className="w-full py-2 h-auto text-[13px] font-semibold bg-white text-black hover:bg-white/90 border-none shadow-xl relative z-20"
                 />
               </div>
             </div>

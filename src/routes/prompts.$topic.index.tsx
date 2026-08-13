@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from '@tanstack/react-router';
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
 import { Search, X, Sparkles, Star, PlusCircle, ArrowRight, Home, ChevronRight, Heart, Zap, LayoutGrid, Check, Play } from 'lucide-react';
 import { Footer } from '@/components/shared/Footer';
 import { getPublishedItems, getCategories, PromptItem, getItemsByCategory, getTopicsByCategory } from '@/data/prompts';
@@ -6,6 +6,9 @@ import { EditorialPromptCard } from '@/components/prompts/EditorialPromptCard';
 import { TextPromptCard } from '@/components/prompts/TextPromptCard';
 import { AudioPromptCard } from '@/components/prompts/AudioPromptCard';
 import { AgentPromptCard } from '@/components/prompts/AgentPromptCard';
+import { useAuth } from '@/contexts/AuthContext';
+import { writePromptHandoff, CATEGORY_ROUTE } from '@/lib/promptHandoff';
+import { buildAuthHref } from '@/lib/authRedirect';
 
 import { useState, useMemo, useRef, useEffect } from 'react';
 import { cn } from '@/lib/utils';
@@ -57,6 +60,9 @@ export const Route = createFileRoute('/prompts/$topic/')({
 
 
 function TextCategoryCard({ item }: { item: PromptItem }) {
+  const navigate = useNavigate();
+  const { isAuthed } = useAuth();
+
   const providerColors: Record<string, string> = {
     chatgpt: 'bg-[#10a37f]/7',
     claude: 'bg-[#d97757]/7',
@@ -66,16 +72,43 @@ function TextCategoryCard({ item }: { item: PromptItem }) {
   
   const tintClass = providerColors[item.providerId.toLowerCase()] || 'bg-muted/7';
 
+  const handleAction = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    writePromptHandoff({
+      prompt: item.promptRu,
+      category: 'text',
+      providerId: item.providerId,
+      subModelId: item.subModelId,
+      sourceSlug: item.slug,
+    });
+    const targetRoute = '/text';
+    if (isAuthed) navigate({ to: targetRoute });
+    else window.location.href = buildAuthHref(targetRoute);
+  };
+
+  const handleCardClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    writePromptHandoff({
+      prompt: item.promptRu,
+      category: 'text',
+      providerId: item.providerId,
+      subModelId: item.subModelId,
+      sourceSlug: item.slug,
+    });
+    const targetRoute = '/text';
+    if (isAuthed) navigate({ to: targetRoute });
+    else window.location.href = buildAuthHref(targetRoute);
+  };
+
   return (
-    <Link 
-      to="/prompts/$topic/$slug"
-      params={{ topic: item.topicSlug, slug: item.slug }}
+    <div 
+      onClick={handleCardClick}
       className={cn(
-        "group relative flex flex-col p-5 rounded-2xl border border-dashed border-border bg-card aspect-[4/5] transition-all duration-200 hover:-translate-y-0.5 hover:border-solid hover:border-primary/40 overflow-hidden",
+        "group relative flex flex-col p-5 rounded-2xl border border-dashed border-border bg-card aspect-[4/5] transition-all duration-200 hover:-translate-y-0.5 hover:border-solid hover:border-primary/40 overflow-hidden cursor-pointer",
         tintClass
       )}
     >
-      {/* Upper row */}
       <div className="flex items-center justify-between">
         <span className="text-[11px] font-bold tracking-wide uppercase px-2.5 py-1 rounded-full bg-muted/50 border border-border/60">
           {item.providerId}
@@ -86,25 +119,28 @@ function TextCategoryCard({ item }: { item: PromptItem }) {
         </div>
       </div>
 
-      {/* Title */}
       <h3 className="mt-4 text-[17px] font-bold line-clamp-2 leading-tight">
         {item.title}
       </h3>
 
-      {/* Prompt text */}
       <div className="mt-3 flex-1 text-[14px] text-muted-foreground italic leading-relaxed line-clamp-6">
         «{item.promptRu}»
       </div>
 
-      {/* Bottom row */}
-      <div className="mt-4 flex items-center gap-2 text-primary font-bold text-[14px]">
+      <div 
+        onClick={handleAction}
+        className="mt-4 flex items-center gap-2 text-primary font-bold text-[14px] cursor-pointer"
+      >
         <Zap className="w-3.5 h-3.5" /> Попробовать
       </div>
-    </Link>
+    </div>
   );
 }
 
 function AudioCategoryCard({ item }: { item: PromptItem }) {
+  const navigate = useNavigate();
+  const { isAuthed } = useAuth();
+
   const labelColors = [
     '#f97316', // orange
     '#3b82f6', // blue
@@ -116,24 +152,45 @@ function AudioCategoryCard({ item }: { item: PromptItem }) {
   const hash = item.slug.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
   const labelColor = labelColors[hash % labelColors.length];
 
+  const handleAction = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    writePromptHandoff({
+      prompt: item.promptRu,
+      category: 'audio',
+      providerId: item.providerId,
+      subModelId: item.subModelId,
+      sourceSlug: item.slug,
+    });
+    const targetRoute = '/audio';
+    if (isAuthed) navigate({ to: targetRoute });
+    else window.location.href = buildAuthHref(targetRoute);
+  };
+
+  const handleCardClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    writePromptHandoff({
+      prompt: item.promptRu,
+      category: 'audio',
+      providerId: item.providerId,
+      subModelId: item.subModelId,
+      sourceSlug: item.slug,
+    });
+    const targetRoute = '/audio';
+    if (isAuthed) navigate({ to: targetRoute });
+    else window.location.href = buildAuthHref(targetRoute);
+  };
+
   return (
-    <Link 
-      to="/prompts/$topic/$slug"
-      params={{ topic: item.topicSlug, slug: item.slug }}
-      className="group flex flex-col rounded-[20px] bg-card border border-border/50 h-[310px] transition-all duration-200 hover:-translate-y-0.5 hover:bg-muted/40 overflow-hidden"
+    <div 
+      onClick={handleCardClick}
+      className="group flex flex-col rounded-[20px] bg-card border border-border/50 h-[310px] transition-all duration-200 hover:-translate-y-0.5 hover:bg-muted/40 overflow-hidden cursor-pointer"
     >
-      {/* Vinyl Section (~60%) */}
       <div className="relative flex-1 bg-muted/20 flex items-center justify-center overflow-hidden">
-        {/* Soft shadow under disk */}
         <div className="absolute w-[142px] h-[142px] rounded-full bg-black/10 blur-sm translate-y-1" />
-        
-        {/* SVG Vinyl Record */}
         <div className="relative w-[140px] h-[140px] transition-transform duration-400 group-hover:rotate-6">
           <svg viewBox="0 0 140 140" className="w-full h-full drop-shadow-lg">
-            {/* Disk body */}
             <circle cx="70" cy="70" r="70" fill="#222222" />
-            
-            {/* Tracks (concentrics) */}
             {[0.4, 0.53, 0.66, 0.79, 0.92].map((r) => (
               <circle 
                 key={r}
@@ -146,8 +203,6 @@ function AudioCategoryCard({ item }: { item: PromptItem }) {
                 strokeOpacity="0.08" 
               />
             ))}
-            
-            {/* Glossy reflection (arc) */}
             <path 
               d="M 20 70 A 50 50 0 0 1 70 20" 
               fill="none" 
@@ -156,17 +211,12 @@ function AudioCategoryCard({ item }: { item: PromptItem }) {
               strokeOpacity="0.08" 
               strokeLinecap="round" 
             />
-            
-            {/* Center Label */}
             <circle cx="70" cy="70" r="21" fill={labelColor} />
-            
-            {/* Center Hole */}
             <circle cx="70" cy="70" r="4" fill="hsl(var(--card))" />
           </svg>
         </div>
       </div>
 
-      {/* Info Section */}
       <div className="p-4 flex flex-col gap-1">
         <h3 className="text-[15px] font-semibold leading-snug line-clamp-2 h-[2.6em]">
           {item.title}
@@ -175,17 +225,20 @@ function AudioCategoryCard({ item }: { item: PromptItem }) {
           {item.params?.duration || '0:00'} · {item.providerId}
         </div>
         
-        {/* Play Button */}
         <div className="mt-3">
-          <div className="h-9 px-4 rounded-full bg-primary text-white text-[13px] font-semibold flex items-center gap-2 w-fit">
+          <div 
+            onClick={handleAction}
+            className="h-9 px-4 rounded-full bg-primary text-white text-[13px] font-semibold flex items-center gap-2 w-fit cursor-pointer"
+          >
             <Play className="w-[13px] h-[13px] fill-current" />
             Попробовать
           </div>
         </div>
       </div>
-    </Link>
+    </div>
   );
 }
+
 
 function CategoryPage() {
   const data = Route.useLoaderData();
