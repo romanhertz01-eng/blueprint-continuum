@@ -226,14 +226,14 @@ function PromptsHub() {
       <HeroCarousel allItems={allItems} />
 
       {/* 1. INTRO-ЗОНА */}
-      <section className="pt-8 pb-6 px-6 max-w-[1520px] mx-auto w-full">
+      <section className="pt-5 pb-4 px-6 max-w-[1520px] mx-auto w-full">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
           <div className="flex-grow">
             <div className="flex items-center gap-2 mb-2">
               <h1 className="text-[32px] md:text-[40px] font-bold tracking-tight">Каталог промптов</h1>
               <Sparkles className="w-5 h-5 text-primary animate-pulse" />
             </div>
-            <p className="text-[14px] md:text-[15px] text-muted-foreground mb-5 max-w-md leading-relaxed">
+            <p className="text-[14px] md:text-[15px] text-muted-foreground mb-4 max-w-2xl leading-relaxed line-clamp-1">
               Идеи и рабочие сценарии для любых задач с ERA2. Оптимизируйте работу и творчество.
             </p>
             <div className="flex flex-wrap gap-3">
