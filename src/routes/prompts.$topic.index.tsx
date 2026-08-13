@@ -23,7 +23,15 @@ export const Route = createFileRoute('/prompts/$topic/')({
       allCategories: categories
     };
   },
-  head: ({ data }) => {
+  head: (options) => {
+    const data = options.loaderData as { 
+      category?: any; 
+      items: any[]; 
+      topicSlug: string; 
+      allCategories: any[] 
+    };
+    if (!data) return {};
+    
     const title = data.category?.seoTitle || `Промпты для ${data.category?.cardTitle || data.topicSlug} — ERA2.ai`;
     const description = data.category?.seoDescription || `Библиотека лучших промптов для ${data.category?.cardTitle || data.topicSlug}. Готовые примеры и инструкции.`;
     const canonical = `${ORIGIN}/prompts/${data.topicSlug}`;
