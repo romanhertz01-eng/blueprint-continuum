@@ -145,7 +145,7 @@ function AgentDetailPage() {
               {item.promptRu}
             </div>
             <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-              <CopyPromptButton prompt={item.promptRu} />
+              <CopyPromptButton text={item.promptRu} />
             </div>
           </div>
         </section>
