@@ -122,6 +122,31 @@ function PromptsHub() {
     return filteredItems.slice(0, page * PAGE_SIZE);
   }, [filteredItems, page]);
 
+  const recommendedTopic = useMemo(() => {
+    if (searchQuery.trim()) return null;
+
+    const publishedTopics = getPublishedTopics();
+    if (selectedTopic && selectedTopic !== 'popular') {
+      const topic = publishedTopics.find(t => t.slug === selectedTopic);
+      if (topic) {
+        const items = allItems.filter(item => item.topicSlug === topic.slug || item.extraTopicSlugs?.includes(topic.slug));
+        if (items.length >= 5) return { topic, items, isBestOf: true };
+      }
+      return null;
+    }
+
+    // popular or null: find topic with most items
+    const topicCounts = publishedTopics.map(t => ({
+      topic: t,
+      count: allItems.filter(item => item.topicSlug === t.slug || item.extraTopicSlugs?.includes(t.slug)).length
+    })).filter(t => t.count >= 5).sort((a, b) => b.count - a.count);
+
+    if (topicCounts.length > 0) {
+      return { topic: topicCounts[0].topic, items: allItems.filter(item => item.topicSlug === topicCounts[0].topic.slug || item.extraTopicSlugs?.includes(topicCounts[0].topic.slug)), isBestOf: false };
+    }
+    return null;
+  }, [selectedTopic, searchQuery, allItems]);
+
   // Rhythm logic for long feed
   const feedElements = useMemo(() => {
     const elements: React.ReactNode[] = [];
@@ -372,6 +397,40 @@ function PromptsHub() {
           </div>
         </div>
       </section>
+
+      {/* РЕКОМЕНДОВАННАЯ ПОДБОРКА (ГАЗ 2) */}
+      {recommendedTopic && (
+        <section className="max-w-[1520px] mx-auto px-6 w-full mb-8">
+          <div className="rounded-[28px] bg-muted/30 p-6 md:p-8">
+            <div className="flex items-start justify-between mb-8">
+              <div>
+                <h2 className="text-[22px] md:text-[26px] font-bold tracking-tight mb-1 text-foreground">
+                  {recommendedTopic.isBestOf ? `Лучшее: ${recommendedTopic.topic.cardTitle || recommendedTopic.topic.title}` : recommendedTopic.topic.title}
+                </h2>
+                <p className="text-[14px] md:text-[15px] text-muted-foreground font-medium max-w-2xl">
+                  {recommendedTopic.topic.intro.slice(0, 90).trim()}{recommendedTopic.topic.intro.length > 90 ? '...' : ''}
+                </p>
+              </div>
+              <Link 
+                to="/prompts/$topic"
+                params={{ topic: recommendedTopic.topic.slug }}
+                className="flex items-center gap-1.5 text-[14px] font-bold text-primary hover:opacity-80 transition-opacity shrink-0 mt-1"
+              >
+                Смотреть все <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+
+            <div className="flex gap-4 overflow-x-auto no-scrollbar snap-x pb-2 -mx-2 px-2">
+              {recommendedTopic.items.slice(0, 8).map((item, idx) => (
+                <div key={`${item.slug}-${idx}`} className="flex-none w-[200px] md:w-[240px] snap-start">
+                   <CatalogCard item={item} index={idx} />
+                </div>
+              ))}
+              <div className="flex-none w-1" />
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* 3. СТРОКА СОРТИРОВКИ */}
       <section className="max-w-[1520px] mx-auto px-6 w-full flex items-center justify-between mb-4">
