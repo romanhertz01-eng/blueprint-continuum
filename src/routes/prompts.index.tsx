@@ -149,11 +149,6 @@ function PromptsHub() {
   };
 
   const getCardSpan = (type: 'A' | 'B' | 'C' | 'D' | 'E', item?: PromptItem): string => {
-    // Текстовые карточки на главной всегда 3 колонки (4 в ряд)
-    if (item && item.category === 'text') {
-      return 'col-span-12 sm:col-span-6 lg:col-span-3';
-    }
-
     switch (type) {
       case 'A': return 'col-span-12 sm:col-span-6 lg:col-span-3';
       case 'B': return 'col-span-12 sm:col-span-6 lg:col-span-3';
