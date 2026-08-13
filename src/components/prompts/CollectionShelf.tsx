@@ -7,7 +7,7 @@ interface CollectionShelfProps {
   title: string;
   subtitle: string;
   items: PromptItem[];
-  ctaHref: string;
+  ctaHref?: string;
 }
 
 export function CollectionShelf({ title, subtitle, items, ctaHref }: CollectionShelfProps) {
@@ -22,12 +22,14 @@ export function CollectionShelf({ title, subtitle, items, ctaHref }: CollectionS
             {subtitle}
           </p>
         </div>
-        <Link 
-          to={ctaHref as any}
-          className="w-12 h-12 rounded-full bg-background border border-border flex items-center justify-center text-foreground hover:bg-muted transition-colors shadow-sm shrink-0"
-        >
-          <ArrowRight className="w-5 h-5" />
-        </Link>
+        {ctaHref && (
+          <Link 
+            to={ctaHref as any}
+            className="w-12 h-12 rounded-full bg-background border border-border flex items-center justify-center text-foreground hover:bg-muted transition-colors shadow-sm shrink-0"
+          >
+            <ArrowRight className="w-5 h-5" />
+          </Link>
+        )}
       </div>
 
       <div className="flex gap-4 overflow-x-auto no-scrollbar snap-x pb-2 -mx-2 px-2">
