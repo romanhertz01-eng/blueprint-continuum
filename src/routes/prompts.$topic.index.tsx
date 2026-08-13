@@ -869,61 +869,73 @@ function CategoryPage() {
       {/* 4. MIXED-GRID */}
       <section className="max-w-7xl mx-auto px-6 w-full mb-20 flex-grow">
         {visibleItems.length > 0 ? (
-          <div className={cn(
-            "grid",
+          isVideo ? (
+            <div className="flex flex-col gap-4">
+              {videoBlocks.map((block, bIdx) => (
+                <div 
+                  key={bIdx}
+                  className={cn(
+                    "grid gap-4",
+                    block.type === 'horizontal' 
+                      ? "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 items-start" 
+                      : "grid-cols-2 sm:grid-cols-4 lg:grid-cols-5"
+                  )}
+                >
+                  {block.items.map((item, iIdx) => (
+                    <VideoCategoryCard key={`${item.slug}-${bIdx}-${iIdx}`} item={item} />
+                  ))}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className={cn(
+              "grid",
               params.topic === 'text' 
               ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5" 
               : params.topic === 'audio'
                 ? "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-[18px]"
-                : params.topic === 'video'
-                  ? "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 grid-flow-dense items-start"
+                : "grid-cols-12 gap-4 md:gap-6"
+            )}>
+              {visibleItems.map((item, idx) => {
+                if (params.topic === 'text') {
+                  return (
+                    <div key={`${item.slug}-${idx}`}>
+                      <TextCategoryCard item={item} />
+                    </div>
+                  );
+                }
+                if (params.topic === 'audio') {
+                  return (
+                    <div key={`${item.slug}-${idx}`}>
+                      <AudioCategoryCard item={item} />
+                    </div>
+                  );
+                }
+                if (item.category === 'audio') {
+                  return (
+                    <div key={`${item.slug}-${idx}`} className="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3">
+                      <AudioPromptCard item={item} />
+                    </div>
+                  );
+                }
+                if (item.category === 'agents') {
+                  return (
+                    <div key={`${item.slug}-${idx}`} className="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3">
+                      <AgentPromptCard item={item} />
+                    </div>
+                  );
+                }
 
-                  : "grid-cols-12 gap-4 md:gap-6"
-          )}>
-            {visibleItems.map((item, idx) => {
-              if (params.topic === 'text') {
+                const type = getCardType(idx, item);
+                const span = getCardSpan(type, item);
                 return (
-                  <div key={`${item.slug}-${idx}`}>
-                    <TextCategoryCard item={item} />
+                  <div key={`${item.slug}-${idx}`} className={span}>
+                    <EditorialPromptCard item={item} type={type} />
                   </div>
                 );
-              }
-              if (params.topic === 'audio') {
-                return (
-                  <div key={`${item.slug}-${idx}`}>
-                    <AudioCategoryCard item={item} />
-                  </div>
-                );
-              }
-              if (params.topic === 'video') {
-                return (
-                  <VideoCategoryCard key={`${item.slug}-${idx}`} item={item} />
-                );
-              }
-              if (item.category === 'audio') {
-                return (
-                  <div key={`${item.slug}-${idx}`} className="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3">
-                    <AudioPromptCard item={item} />
-                  </div>
-                );
-              }
-              if (item.category === 'agents') {
-                return (
-                  <div key={`${item.slug}-${idx}`} className="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3">
-                    <AgentPromptCard item={item} />
-                  </div>
-                );
-              }
-
-              const type = getCardType(idx, item);
-              const span = getCardSpan(type, item);
-              return (
-                <div key={`${item.slug}-${idx}`} className={span}>
-                  <EditorialPromptCard item={item} type={type} />
-                </div>
-              );
-            })}
-          </div>
+              })}
+            </div>
+          )
         ) : (
           <div className="py-32 text-center bg-muted/10 rounded-[32px] border border-dashed border-border/50">
             <div className="w-16 h-16 rounded-full bg-muted/30 flex items-center justify-center mx-auto mb-6">
