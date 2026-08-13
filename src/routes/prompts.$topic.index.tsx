@@ -1,13 +1,13 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
-import { Search, X, Sparkles, Star, PlusCircle, ArrowRight, Home, ChevronRight, Heart, Zap } from 'lucide-react';
+import { Search, X, Sparkles, Star, PlusCircle, ArrowRight, Home, ChevronRight, Heart, Zap, LayoutGrid, Check } from 'lucide-react';
 import { Footer } from '@/components/shared/Footer';
-import { getPublishedItems, getCategories, PromptItem, getItemsByCategory } from '@/data/prompts';
+import { getPublishedItems, getCategories, PromptItem, getItemsByCategory, getTopicsByCategory } from '@/data/prompts';
 import { EditorialPromptCard } from '@/components/prompts/EditorialPromptCard';
 import { TextPromptCard } from '@/components/prompts/TextPromptCard';
 import { AudioPromptCard } from '@/components/prompts/AudioPromptCard';
 import { AgentPromptCard } from '@/components/prompts/AgentPromptCard';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { ORIGIN } from '@/lib/origin';
 
@@ -108,11 +108,50 @@ function CategoryPage() {
   const data = Route.useLoaderData();
   const params = Route.useParams();
   const isVideo = params.topic === 'video';
+  const isText = params.topic === 'text';
 
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<'new' | 'popular' | 'alpha'>('new');
   const [page, setPage] = useState(1);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+  
+  // Категории для текстовых промптов
+  const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
+  const [isPanelOpen, setIsPanelOpen] = useState(false);
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (panelRef.current && !panelRef.current.contains(event.target as Node)) {
+        setIsPanelOpen(false);
+      }
+    };
+    const handleEsc = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setIsPanelOpen(false);
+    };
+    if (isPanelOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('keydown', handleEsc);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleEsc);
+    };
+  }, [isPanelOpen]);
+
+  const textTopics = useMemo(() => {
+    if (!isText) return [];
+    const topics = getTopicsByCategory('text');
+    // Проверка на наличие промптов уже встроена в данные обычно, но тут полагаемся на то что они published
+    return topics;
+  }, [isText]);
+
+  const topicIcons: Record<string, any> = {
+    'seo': Sparkles,
+    'marketing': Zap,
+    'coding': LayoutGrid,
+    'education': Star,
+  };
   
   // Фильтр по типу видео (только для раздела видео)
   const [videoFilter, setVideoFilter] = useState('Все');
@@ -128,8 +167,13 @@ function CategoryPage() {
       const q = searchQuery.toLowerCase();
       result = result.filter(item => 
         item.title.toLowerCase().includes(q) || 
-        item.promptRu.toLowerCase().includes(q)
+        (item.promptRu && item.promptRu.toLowerCase().includes(q))
       );
+    }
+
+    // Фильтр по темам (для текста)
+    if (isText && selectedTopics.length > 0) {
+      result = result.filter(item => selectedTopics.includes(item.topicSlug));
     }
 
     // Фильтр по типу видео
@@ -241,7 +285,77 @@ function CategoryPage() {
       {/* 2. ЛЕНТА КАТЕГОРИЙ (PILLS) */}
       <section className="sticky top-0 z-40 bg-background/80 backdrop-blur-md border-b border-border/40 mb-6">
         <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
+            {isText && (
+              <div className="relative" ref={panelRef}>
+                <button
+                  onClick={() => setIsPanelOpen(!isPanelOpen)}
+                  className="h-11 px-5 rounded-full border border-border bg-card flex items-center gap-2.5 transition-all hover:bg-muted/50"
+                >
+                  <LayoutGrid className="w-4 h-4 text-foreground" />
+                  <span className="text-[13px] font-semibold text-foreground">Категории</span>
+                  {selectedTopics.length > 0 && (
+                    <div className="flex items-center justify-center bg-primary text-white text-[11px] font-bold w-5 h-5 rounded-full">
+                      {selectedTopics.length}
+                    </div>
+                  )}
+                </button>
+
+                {isPanelOpen && (
+                  <div className="absolute left-0 top-full z-50 mt-2 w-[340px] rounded-2xl bg-card border border-border shadow-xl p-4 animate-in fade-in zoom-in-95 duration-200">
+                    <div className="text-[15px] font-bold mb-3">Категории</div>
+                    <div className="max-h-[340px] overflow-y-auto no-scrollbar pr-1 flex flex-col gap-1">
+                      {textTopics.map(topic => {
+                        const Icon = topicIcons[topic.slug] || Sparkles;
+                        const isSelected = selectedTopics.includes(topic.slug);
+                        return (
+                          <div 
+                            key={topic.slug}
+                            onClick={() => {
+                              setSelectedTopics(prev => 
+                                isSelected ? prev.filter(s => s !== topic.slug) : [...prev, topic.slug]
+                              );
+                            }}
+                            className="flex items-center gap-3 py-2.5 px-2 rounded-xl hover:bg-muted/50 cursor-pointer transition-colors group"
+                          >
+                            <div className="w-9 h-9 rounded-full bg-muted flex items-center justify-center shrink-0">
+                              <Icon className="w-[18px] h-[18px] text-muted-foreground group-hover:text-primary transition-colors" />
+                            </div>
+                            <div className="flex-1 text-[14px] font-medium text-foreground">
+                              {topic.cardTitle || topic.title}
+                            </div>
+                            <div className={cn(
+                              "w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all",
+                              isSelected ? "bg-primary border-primary" : "border-border"
+                            )}>
+                              {isSelected && <Check className="w-3 h-3 text-white" />}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                    
+                    <div className="mt-4 pt-3 border-t border-border/40 flex items-center justify-between sticky bottom-0 bg-card">
+                      {selectedTopics.length > 0 ? (
+                        <button 
+                          onClick={() => setSelectedTopics([])}
+                          className="text-[13px] text-muted-foreground hover:text-primary transition-colors font-medium"
+                        >
+                          Сбросить
+                        </button>
+                      ) : <div />}
+                      <button 
+                        onClick={() => setIsPanelOpen(false)}
+                        className="h-9 px-5 rounded-xl bg-primary text-white text-[13px] font-bold hover:opacity-90 active:scale-95 transition-all"
+                      >
+                        Показать
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
             <Link
               to="/prompts"
               className="px-5 py-2.5 rounded-full text-[13px] font-medium whitespace-nowrap transition-all border bg-muted/30 border-border/50 hover:bg-muted/60 text-muted-foreground"
