@@ -1,6 +1,6 @@
 import { ORIGIN } from "@/lib/origin";
 import { createFileRoute, Link } from '@tanstack/react-router';
-import { Search, X, Sparkles, Star, PlusCircle, ArrowRight, Filter, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Search, X, Sparkles, Star, PlusCircle, ArrowRight, Filter, ChevronLeft, ChevronRight, FileText, Music, Video, Bot, Heart, Image as ImageIcon } from 'lucide-react';
 import { Footer } from '@/components/shared/Footer';
 import { getPublishedItems, getPublishedTopics, countItemsByCategory, getCategories, PromptItem, getProvidersWithPrompts, promptTopics } from '@/data/prompts';
 import { CatalogCard } from '@/components/prompts/CatalogCard';
@@ -373,6 +373,9 @@ function PromptsHub() {
         </div>
       </section>
 
+      {/* ГАЗ S — ПОЛКА МЕЛКИХ КАРТОЧЕК */}
+      <SmallCardsShelf allItems={allItems} searchQuery={searchQuery} />
+
       {/* 3. СТРОКА СОРТИРОВКИ */}
       <section className="max-w-[1520px] mx-auto px-6 w-full flex items-center justify-between mb-4">
         <div className="text-[13px] font-medium text-muted-foreground">
@@ -561,6 +564,110 @@ function HeroCarousel({ allItems }: { allItems: PromptItem[] }) {
               )}
             />
           ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function SmallCardsShelf({ allItems, searchQuery }: { allItems: PromptItem[], searchQuery: string }) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  
+  const textTopic = useMemo(() => {
+    if (searchQuery.trim()) return null;
+
+    const topicsWithCounts = promptTopics
+      .filter(t => t.status === 'published' && t.category === 'text')
+      .map(t => ({
+        topic: t,
+        count: allItems.filter(item => item.topicSlug === t.slug).length
+      }))
+      .filter(t => t.count >= 6)
+      .sort((a, b) => b.count - a.count);
+
+    return topicsWithCounts[0] || null;
+  }, [allItems, searchQuery]);
+
+  const items = useMemo(() => {
+    if (!textTopic) return [];
+    return allItems
+      .filter(item => item.topicSlug === textTopic.topic.slug)
+      .slice(0, 8);
+  }, [allItems, textTopic]);
+
+  if (!textTopic || items.length < 6) return null;
+
+  const scrollRight = () => {
+    if (scrollRef.current) {
+      const scrollAmount = (170 + 12) * 3;
+      scrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+  };
+
+  const getIcon = (category: string) => {
+    switch (category) {
+      case 'text': return FileText;
+      case 'audio': return Music;
+      case 'video': return Video;
+      case 'agents': return Bot;
+      default: return ImageIcon;
+    }
+  };
+
+  const intro = textTopic.topic.intro.split(/[.!?]/)[0].slice(0, 90);
+
+  return (
+    <section className="max-w-[1520px] mx-auto px-6 w-full mb-10">
+      <div className="rounded-3xl bg-muted/30 border border-border p-8">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
+          <div>
+            <h2 className="text-[24px] font-bold mb-1">{textTopic.topic.title}</h2>
+            <p className="text-[14px] text-muted-foreground">{intro}</p>
+          </div>
+          <Link
+            to={`/prompts/${textTopic.topic.slug}` as any}
+            className="bg-primary text-white h-11 px-6 rounded-xl font-bold flex items-center justify-center shrink-0 hover:opacity-90 transition-opacity"
+          >
+            Перейти к подборке
+          </Link>
+        </div>
+
+        <div className="relative group/shelf">
+          <div 
+            ref={scrollRef}
+            className="flex gap-[12px] overflow-x-auto no-scrollbar snap-x snap-mandatory"
+          >
+            {items.map((item) => {
+              const Icon = getIcon(item.category);
+              return (
+                <Link
+                  key={item.slug}
+                  to={`/prompts/${item.topicSlug}/${item.slug}` as any}
+                  className="w-[170px] shrink-0 aspect-[3/4] rounded-2xl bg-card border border-border p-3 flex flex-col justify-between snap-start hover:border-primary/40 hover:-translate-y-0.5 transition-all"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="w-[28px] h-[28px] rounded-full bg-muted flex items-center justify-center">
+                      <Icon className="w-3.5 h-3.5 text-muted-foreground" />
+                    </div>
+                    <div className="flex items-center gap-1 text-muted-foreground">
+                      <Heart className="w-3 h-3" />
+                      <span className="text-[11px] font-medium">{item.views || 0}</span>
+                    </div>
+                  </div>
+                  <h3 className="text-[13px] font-semibold line-clamp-3 leading-snug">
+                    {item.title}
+                  </h3>
+                </Link>
+              );
+            })}
+          </div>
+          
+          <button
+            onClick={scrollRight}
+            className="absolute right-[-20px] top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-background border border-border shadow-lg flex items-center justify-center z-10 opacity-0 group-hover/shelf:opacity-100 transition-opacity hover:bg-muted"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
         </div>
       </div>
     </section>
