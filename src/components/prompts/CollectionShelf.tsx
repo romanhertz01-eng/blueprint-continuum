@@ -49,13 +49,11 @@ export function CollectionShelf({ title, subtitle, items, ctaHref }: CollectionS
         {items.map((item, idx) => {
           const image = item.media?.[0]?.src || `/community/0${(idx % 8) + 1}.jpg`;
           
-          return (
-            <Link
-              key={`${item.slug}-${idx}`}
-              to={item.category === 'agents' ? "/prompts/agents/$slug" : "/prompts/$topic/$slug"}
-              params={item.category === 'agents' ? { slug: item.slug } : { topic: item.topicSlug, slug: item.slug }}
-              className="flex-none w-[170px] md:w-[190px] aspect-[3/4] rounded-[22px] overflow-hidden relative group snap-start bg-card border border-border/50"
-            >
+          const isAgent = item.category === 'agents';
+          const hasTopic = !!item.topicSlug;
+          
+          const CardContent = (
+            <>
               {/* Media Background */}
               {item.category === 'text' || item.category === 'audio' ? (
                 <div className={cn(
@@ -84,7 +82,29 @@ export function CollectionShelf({ title, subtitle, items, ctaHref }: CollectionS
                   {item.title}
                 </h3>
               </div>
-            </Link>
+            </>
+          );
+
+          if (isAgent || hasTopic) {
+            return (
+              <Link
+                key={`${item.slug}-${idx}`}
+                to={isAgent ? "/prompts/agents/$slug" : "/prompts/$topic/$slug"}
+                params={isAgent ? { slug: item.slug } : { topic: item.topicSlug as string, slug: item.slug }}
+                className="flex-none w-[170px] md:w-[190px] aspect-[3/4] rounded-[22px] overflow-hidden relative group snap-start bg-card border border-border/50"
+              >
+                {CardContent}
+              </Link>
+            );
+          }
+
+          return (
+            <div
+              key={`${item.slug}-${idx}`}
+              className="flex-none w-[170px] md:w-[190px] aspect-[3/4] rounded-[22px] overflow-hidden relative group snap-start bg-card border border-border/50"
+            >
+              {CardContent}
+            </div>
           );
         })}
         {/* Sneak peek element */}
