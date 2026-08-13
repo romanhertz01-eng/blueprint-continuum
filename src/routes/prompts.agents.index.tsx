@@ -64,7 +64,7 @@ function AgentsHubPage() {
           <span className="text-foreground">Агенты</span>
         </nav>
 
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-6">
           <div>
             <div className="flex items-center gap-3 mb-3">
               <h1 className="text-[32px] md:text-[42px] font-bold tracking-tight">
