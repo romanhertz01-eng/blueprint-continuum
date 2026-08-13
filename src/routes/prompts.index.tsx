@@ -2,7 +2,7 @@ import { ORIGIN } from "@/lib/origin";
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
 import { Search, X, Sparkles, Star, PlusCircle, ArrowRight, Filter, ChevronLeft, ChevronRight, FileText, Music, Video, Bot, Heart, Image as ImageIcon } from 'lucide-react';
 import { Footer } from '@/components/shared/Footer';
-import { getPublishedItems, getPublishedTopics, countItemsByCategory, getCategories, PromptItem, getProvidersWithPrompts, promptTopics, MIN_ITEMS_FOR_INDEX, RESERVED_PROMPT_SLUGS } from '@/data/prompts';
+import { getPublishedItems, getPublishedTopics, countItemsByCategory, getCategories, PromptItem, getProvidersWithPrompts, promptTopics } from '@/data/prompts';
 import { CatalogCard } from '@/components/prompts/CatalogCard';
 import { CollectionShelf } from '@/components/prompts/CollectionShelf';
 import { EditorialBanner } from '@/components/prompts/EditorialBanner';
@@ -152,31 +152,20 @@ function PromptsHub() {
       
       // Shelf approx every 3 rows (2, 5, 8, 11...)
       if ((rowIndex + 1) % 3 === 2) {
-        // Find valid topics for shelves
-        const validTopics = promptTopics.filter(t => 
-          t.status === 'published' && 
-          !RESERVED_PROMPT_SLUGS.includes(t.slug) &&
-          allItems.filter(item => item.topicSlug === t.slug).length >= MIN_ITEMS_FOR_INDEX
+        // Selection of items for the shelf
+        const shelfItems = [...allItems].sort(() => 0.5 - Math.random()).slice(0, 8);
+        const titles = ["Популярное в маркетинге", "Лучшие для работы", "Топ в дизайне", "Креативные идеи"];
+        const title = titles[Math.floor((rowIndex / 3) % titles.length)];
+        
+        elements.push(
+          <CollectionShelf 
+            key={`shelf-${rowIndex}`}
+            title={title}
+            subtitle="Подборка промптов, которые экономят время"
+            items={shelfItems}
+            ctaHref="/prompts"
+          />
         );
-
-        if (validTopics.length > 0) {
-          // Deterministic selection based on row index
-          const topic = validTopics[Math.floor((rowIndex / 3) % validTopics.length)];
-          const shelfItems = allItems
-            .filter(item => item.topicSlug === topic.slug)
-            .sort((a, b) => (b.views || 0) - (a.views || 0))
-            .slice(0, 8);
-          
-          elements.push(
-            <CollectionShelf 
-              key={`shelf-${rowIndex}`}
-              title={topic.cardTitle || topic.title}
-              subtitle={topic.intro.split(/[.!?]/)[0].slice(0, 90)}
-              items={shelfItems}
-              ctaHref={`/prompts/${topic.slug}`}
-            />
-          );
-        }
       }
 
       // Banner approx every 5 rows (4, 9, 14...)
@@ -480,19 +469,11 @@ export default PromptsHub;
 function HeroCarousel({ allItems }: { allItems: PromptItem[] }) {
   const slides = useMemo(() => {
     return promptTopics
-      .filter(t => 
-        t.status === 'published' && 
-        !RESERVED_PROMPT_SLUGS.includes(t.slug)
-      )
+      .filter(t => t.status === 'published')
       .map(topic => {
-        const topicItems = allItems.filter(item => item.topicSlug === topic.slug);
-        const promptCount = topicItems.length;
-        
-        if (promptCount < MIN_ITEMS_FOR_INDEX) return null;
-        
-        const firstItem = topicItems.find(item => item.media && item.media.length > 0 && item.media[0].src);
+        const firstItem = allItems.find(item => item.topicSlug === topic.slug && item.media && item.media.length > 0 && item.media[0].src);
         if (!firstItem) return null;
-
+        const promptCount = allItems.filter(item => item.topicSlug === topic.slug).length;
         return {
           topic,
           firstItem,
@@ -614,16 +595,12 @@ function SmallCardsShelf({ allItems, searchQuery }: { allItems: PromptItem[], se
     if (searchQuery.trim()) return null;
 
     const topicsWithCounts = promptTopics
-      .filter(t => 
-        t.status === 'published' && 
-        t.category === 'text' &&
-        !RESERVED_PROMPT_SLUGS.includes(t.slug)
-      )
+      .filter(t => t.status === 'published' && t.category === 'text')
       .map(t => ({
         topic: t,
         count: allItems.filter(item => item.topicSlug === t.slug).length
       }))
-      .filter(t => t.count >= MIN_ITEMS_FOR_INDEX)
+      .filter(t => t.count >= 6)
       .sort((a, b) => b.count - a.count);
 
     return topicsWithCounts[0] || null;
@@ -636,7 +613,7 @@ function SmallCardsShelf({ allItems, searchQuery }: { allItems: PromptItem[], se
       .slice(0, 10);
   }, [allItems, textTopic]);
 
-  if (!textTopic || items.length < MIN_ITEMS_FOR_INDEX) return null;
+  if (!textTopic || items.length < 6) return null;
 
   const scrollRight = () => {
     if (scrollRef.current) {
