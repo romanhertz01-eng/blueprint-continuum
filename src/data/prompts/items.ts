@@ -1,4 +1,6 @@
 import { PromptItem } from './types';
+import { agentItems } from './agentItems';
+
 
 // BACKEND: промпты приходят из админки.
 export const promptItems: PromptItem[] = [
@@ -1414,4 +1416,6 @@ export const promptItems: PromptItem[] = [
     body: { overview: 'Эмпатичная поддержка для тех, кто столкнулся с выгоранием или временным упадком сил.', breakdown: '', howToChange: '', mistakes: '' },
     status: 'published', source: 'editorial', publishedAt: '2026-08-12', updatedAt: '2026-08-12', views: 0, likes: 72, saves: 0, shares: 0
   }
+  ...agentItems
 ];
+
