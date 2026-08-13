@@ -64,8 +64,15 @@ export function EditorialPromptCard({ item, className, type }: CardProps) {
         {media?.src && item.category !== 'text' ? (
           <div className="relative aspect-[4/3] overflow-hidden">
             <img src={media.src} alt={item.title} className="w-full h-full object-cover" />
-            <div className="absolute top-2.5 right-2.5 flex items-center gap-1 px-2 py-0.5 rounded-full bg-black/40 backdrop-blur-md text-white text-[12px] font-medium">
-              <Heart className="w-3 h-3" /> {item.likes}
+            <div className="absolute top-2.5 right-2.5 flex items-center gap-1.5">
+              {item.category === 'video' && item.params?.aspect === '9:16' && (
+                <div className="px-2 py-0.5 rounded-full bg-orange-500 text-white text-[10px] font-bold uppercase tracking-wider shadow-sm">
+                  Вертикальное
+                </div>
+              )}
+              <div className="px-2 py-0.5 rounded-full bg-black/40 backdrop-blur-md text-white text-[12px] font-medium flex items-center gap-1">
+                <Heart className="w-3 h-3" /> {item.likes}
+              </div>
             </div>
           </div>
         ) : (
@@ -103,8 +110,15 @@ export function EditorialPromptCard({ item, className, type }: CardProps) {
       <div onClick={handleAction} className={cn(commonCardStyles, "aspect-[3/4] md:aspect-auto md:h-[420px]", className)}>
         <img src={media?.src} alt={item.title} className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
-        <div className="absolute top-4 right-4 flex items-center gap-1 px-2.5 py-1 rounded-full bg-black/40 backdrop-blur-md text-white text-[12px] font-medium">
-          <Heart className="w-3.5 h-3.5" /> {item.likes}
+        <div className="absolute top-4 right-4 flex items-center gap-1.5">
+          {item.category === 'video' && item.params?.aspect === '9:16' && (
+            <div className="px-2 py-1 rounded-full bg-orange-500 text-white text-[10px] font-bold uppercase tracking-wider shadow-md">
+              Вертикальное
+            </div>
+          )}
+          <div className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-black/40 backdrop-blur-md text-white text-[12px] font-medium">
+            <Heart className="w-3.5 h-3.5" /> {item.likes}
+          </div>
         </div>
         <div className="absolute inset-x-0 bottom-0 p-5 text-white overflow-hidden">
           <div className="mb-2 px-2 py-0.5 inline-block rounded-md bg-white/20 backdrop-blur-md text-[10px] font-bold uppercase tracking-wider">
