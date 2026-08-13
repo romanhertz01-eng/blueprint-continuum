@@ -4,6 +4,8 @@ import { Search, X, Sparkles, Star, PlusCircle, ArrowRight, Filter } from 'lucid
 import { Footer } from '@/components/shared/Footer';
 import { getPublishedItems, getPublishedTopics, countItemsByCategory, getCategories, PromptItem, getProvidersWithPrompts } from '@/data/prompts';
 import { CatalogCard } from '@/components/prompts/CatalogCard';
+import { CollectionShelf } from '@/components/prompts/CollectionShelf';
+import { EditorialBanner } from '@/components/prompts/EditorialBanner';
 
 import { TopicCloud } from '@/components/prompts/TopicCloud';
 import { useState, useMemo, useEffect } from 'react';
@@ -111,6 +113,89 @@ function PromptsHub() {
   const visibleItems = useMemo(() => {
     return filteredItems.slice(0, page * PAGE_SIZE);
   }, [filteredItems, page]);
+
+  // Rhythm logic for long feed
+  const feedElements = useMemo(() => {
+    const elements: React.ReactNode[] = [];
+    const itemsPerRow = 5;
+    
+    // Split items into chunks of 5 (one row)
+    const rows: PromptItem[][] = [];
+    for (let i = 0; i < visibleItems.length; i += itemsPerRow) {
+      rows.push(visibleItems.slice(i, i + itemsPerRow));
+    }
+
+    // Logic for inserting shelf/banner between rows
+    rows.forEach((row, rowIndex) => {
+      // Add the row of cards
+      elements.push(
+        <div key={`row-${rowIndex}`} className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-x-[20px] gap-y-[24px] mb-[24px]">
+          {row.map((item, idx) => (
+            <CatalogCard key={`${item.slug}-${rowIndex}-${idx}`} item={item} index={idx} />
+          ))}
+        </div>
+      );
+
+      // Rhythm: shelf after row 2, 5, 8... banner after row 4, 9...
+      // Real row index starts at 0. Row index 1 is the 2nd row.
+      
+      // Shelf approx every 3 rows (2, 5, 8, 11...)
+      if ((rowIndex + 1) % 3 === 2) {
+        // Selection of items for the shelf
+        const shelfItems = [...allItems].sort(() => 0.5 - Math.random()).slice(0, 8);
+        const titles = ["Популярное в маркетинге", "Лучшие для работы", "Топ в дизайне", "Креативные идеи"];
+        const title = titles[Math.floor((rowIndex / 3) % titles.length)];
+        
+        elements.push(
+          <CollectionShelf 
+            key={`shelf-${rowIndex}`}
+            title={title}
+            subtitle="Подборка промптов, которые экономят время"
+            items={shelfItems}
+            ctaHref="/prompts"
+          />
+        );
+      }
+
+      // Banner approx every 5 rows (4, 9, 14...)
+      if ((rowIndex + 1) % 5 === 4) {
+        const banners = [
+          {
+            label: "КУРС",
+            title: "Как писать промпты на уровне Pro",
+            subtitle: "Бесплатный мини-курс по архитектуре запросов от команды ERA2",
+            ctaLabel: "Пройти курс",
+            bgSrc: "/community/05.jpg"
+          },
+          {
+            label: "НОВОЕ",
+            title: "Генерация видео теперь в ERA2",
+            subtitle: "Лучшие видео-модели доступны для ваших творческих экспериментов",
+            ctaLabel: "Смотреть примеры",
+            bgSrc: "/community/06.jpg"
+          },
+          {
+            label: "ПОДБОРКА",
+            title: "ERA2 Featured: Выбор редакции",
+            subtitle: "Каждую неделю мы отбираем лучшие работы нашего сообщества",
+            ctaLabel: "Смотреть подборку",
+            bgSrc: "/community/08.jpg"
+          }
+        ];
+        const banner = banners[Math.floor((rowIndex / 5) % banners.length)];
+
+        elements.push(
+          <EditorialBanner 
+            key={`banner-${rowIndex}`}
+            {...banner}
+            ctaHref="/prompts"
+          />
+        );
+      }
+    });
+
+    return elements;
+  }, [visibleItems, allItems]);
 
   const hasMore = visibleItems.length < filteredItems.length;
 
@@ -300,13 +385,11 @@ function PromptsHub() {
         </div>
       </section>
 
-      {/* 4. 5-COLUMN GRID */}
+      {/* 4. 5-COLUMN GRID WITH RHYTHM */}
       <section className="max-w-[1520px] mx-auto px-6 w-full mb-12">
-        {visibleItems.length > 0 ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-x-[20px] gap-y-[24px]">
-            {visibleItems.map((item, idx) => (
-              <CatalogCard key={`${item.slug}-${idx}`} item={item} index={idx} />
-            ))}
+        {feedElements.length > 0 ? (
+          <div className="flex flex-col">
+            {feedElements}
           </div>
         ) : (
           <div className="py-20 text-center">
