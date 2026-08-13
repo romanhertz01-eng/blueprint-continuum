@@ -45,7 +45,7 @@ export function CollectionShelf({ title, subtitle, items, ctaHref }: CollectionS
               {item.category === 'text' || item.category === 'audio' ? (
                 <div className={cn(
                   "absolute inset-0 bg-gradient-to-br transition-transform duration-500 group-hover:scale-105",
-                  item.category === 'text' ? "from-primary/20 to-primary/5" : "from-muted-foreground/20 to-muted/10"
+                  item.category === 'text' ? "from-indigo-500/20 to-purple-500/20" : "from-amber-500/20 to-orange-500/20"
                 )} />
               ) : (
                 <img 

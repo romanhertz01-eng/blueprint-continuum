@@ -13,7 +13,7 @@ export const promptItems: PromptItem[] = [
     promptRu: 'Расслабляющий lofi бит, мягкие клавиши пианино, приглушенный виниловый треск, спокойный темп 80 bpm, атмосферный и уютный звук, идеально для глубокой концентрации.',
     providerId: 'suno',
     subModelId: 'suno-track',
-    params: { duration: '2:30', genre: 'Lo-Fi', mood: 'Calm' },
+    params: { duration: '2:30' },
     media: [],
     body: {
       overview: 'Идеальный фоновый трек в стиле лоу-фай с характерным теплым звучанием.',
@@ -38,7 +38,7 @@ export const promptItems: PromptItem[] = [
     promptRu: 'Профессиональная озвучка, глубокий и спокойный мужской голос, теплый тембр, размеренный темп, высокое студийное качество, стиль National Geographic.',
     providerId: 'elevenlabs',
     subModelId: 'el-studio',
-    params: { duration: '1:00', genre: 'Podcast', mood: 'Professional' },
+    params: { duration: '1:00' },
     media: [],
     body: {
       overview: 'Авторитетный и вызывающий доверие голос для серьезных видеопроектов.',
@@ -63,7 +63,7 @@ export const promptItems: PromptItem[] = [
     promptRu: 'Мрачный киберпанк эмбиент, глубокие синтезаторные басы, звуки летящих машин вдалеке, неоновые отсветы, футуристическая атмосфера, медленный и тягучий ритм.',
     providerId: 'suno',
     subModelId: 'suno-track',
-    params: { duration: '3:00', genre: 'Epic', mood: 'Dramatic' },
+    params: { duration: '3:00' },
     media: [],
     body: {
       overview: 'Погружающий саундскейп будущего с акцентом на синтезаторы и эффекты окружения.',
@@ -88,7 +88,7 @@ export const promptItems: PromptItem[] = [
     promptRu: 'Реалистичные звуки природы, утренний лес, пение лесных птиц, легкий ветер в кронах деревьев, кристально чистая запись, эффект присутствия.',
     providerId: 'suno',
     subModelId: 'suno-sfx',
-    params: { duration: '0:30', genre: 'Nature', mood: 'Peaceful' },
+    params: { duration: '0:30' },
     media: [],
     body: {
       overview: 'Успокаивающий набор звуковых эффектов для медитации или озвучки видео.',
@@ -113,7 +113,7 @@ export const promptItems: PromptItem[] = [
     promptRu: 'Энергичный synthwave, ретро-синтезаторы, драм-машина 80-х, быстрый темп, неоновая эстетика, ночная поездка по шоссе.',
     providerId: 'suno',
     subModelId: 'suno-track',
-    params: { duration: '3:30', genre: 'Music', mood: 'Energetic' },
+    params: { duration: '3:30' },
     media: [],
     body: {
       overview: 'Драйвовый трек с ностальгическим звучанием восьмидесятых.',
@@ -138,7 +138,7 @@ export const promptItems: PromptItem[] = [
     promptRu: 'Современная заставка для подкаста, энергичный электронный бит, технологичные звуковые эффекты, чистый и профессиональный микс, воодушевляющее настроение.',
     providerId: 'suno',
     subModelId: 'suno-track',
-    params: { duration: '0:15', genre: 'Podcast', mood: 'Tech' },
+    params: { duration: '0:15' },
     media: [],
     body: {
       overview: 'Короткое и запоминающееся аудио-вступление для контент-мейкеров.',
@@ -163,7 +163,7 @@ export const promptItems: PromptItem[] = [
     promptRu: 'Мощный оркестровый эпик, громкие духовые, тяжелые перкуссии, нарастающее напряжение, хор на заднем плане, героическая атмосфера, высокое качество.',
     providerId: 'suno',
     subModelId: 'suno-track',
-    params: { duration: '2:00', genre: 'Epic', mood: 'Heroic' },
+    params: { duration: '2:00' },
     media: [],
     body: {
       overview: 'Масштабный и эмоциональный трек для эпических сцен и трейлеров.',
@@ -188,7 +188,7 @@ export const promptItems: PromptItem[] = [
     promptRu: 'Пугающий хоррор эмбиент, диссонирующие звуки, резкие скрипичные акценты, низкий гул, атмосфера заброшенного дома, очень страшно.',
     providerId: 'suno',
     subModelId: 'suno-sfx',
-    params: { duration: '1:30', genre: 'Epic', mood: 'Horror' },
+    params: { duration: '1:30' },
     media: [],
     body: {
       overview: 'Звуковая атмосфера для создания чувства тревоги и страха в саспенс-сценах.',
@@ -213,7 +213,7 @@ export const promptItems: PromptItem[] = [
     promptRu: 'Чистое соло на акустической гитаре, стиль кантри-фолк, теплый и мягкий звук, расслабленная игра, уютная загородная атмосфера.',
     providerId: 'suno',
     subModelId: 'suno-track',
-    params: { duration: '2:00', genre: 'Music', mood: 'Soulful' },
+    params: { duration: '2:00' },
     media: [],
     body: {
       overview: 'Простая и искренняя гитарная мелодия с органическим звучанием.',
@@ -238,7 +238,7 @@ export const promptItems: PromptItem[] = [
     promptRu: 'Мягкий джазовый рояль, импровизация в стиле ночного кафе, приглушенный свет, элегантная и спокойная атмосфера, легкий шум толпы на фоне.',
     providerId: 'suno',
     subModelId: 'suno-track',
-    params: { duration: '3:00', genre: 'Music', mood: 'Jazz' },
+    params: { duration: '3:00' },
     media: [],
     body: {
       overview: 'Классический джазовый фон, создающий ощущение уюта и премиальности.',
@@ -263,7 +263,7 @@ export const promptItems: PromptItem[] = [
     promptRu: 'Тяжелое техно, прямой бит 135 bpm, индустриальные звуки, глубокий бас, гипнотический ритм, атмосфера закрытого клуба.',
     providerId: 'suno',
     subModelId: 'suno-track',
-    params: { duration: '4:00', genre: 'Music', mood: 'Rave' },
+    params: { duration: '4:00' },
     media: [],
     body: {
       overview: 'Высокоэнергичный танцевальный трек для фитнеса или активного монтажа.',
@@ -288,7 +288,7 @@ export const promptItems: PromptItem[] = [
     promptRu: 'Звуки тибетских поющих чаш, глубокие резонансы, спокойная атмосфера, медленное затухание звука, идеально для йоги и медитации, 432 Гц.',
     providerId: 'suno',
     subModelId: 'suno-track',
-    params: { duration: '5:00', genre: 'Meditation', mood: 'Calm' },
+    params: { duration: '5:00' },
     media: [],
     body: {
       overview: 'Медитативный саундскейп, способствующий полному расслаблению.',

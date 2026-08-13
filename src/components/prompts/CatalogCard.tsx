@@ -28,4 +28,3 @@ export function CatalogCard({ item, index }: CatalogCardProps) {
 
   return <LightPromptCard item={item} />;
 }
-
