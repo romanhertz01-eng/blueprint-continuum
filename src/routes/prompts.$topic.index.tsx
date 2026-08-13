@@ -138,7 +138,7 @@ function CategoryPage() {
     return 'A';
   };
 
-  const getCardSpan = (type: 'A' | 'B' | 'C' | 'D' | 'E'): string => {
+  const getCardSpan = (type: 'A' | 'B' | 'C' | 'D' | 'E', item?: PromptItem): string => {
     switch (type) {
       case 'A': return 'col-span-12 sm:col-span-6 lg:col-span-3';
       case 'B': return 'col-span-12 sm:col-span-6 lg:col-span-3';
@@ -274,7 +274,7 @@ function CategoryPage() {
         {visibleItems.length > 0 ? (
           <div className="grid grid-cols-12 gap-4 md:gap-5">
             {visibleItems.map((item, idx) => {
-              if (item.category === 'text') {
+              if (params.topic === 'text') {
                 return (
                   <div key={`${item.slug}-${idx}`} className="col-span-12 sm:col-span-6 lg:col-span-3">
                     <TextPromptCard item={item} />
@@ -289,7 +289,7 @@ function CategoryPage() {
                 );
               }
               const type = getCardType(idx, item);
-              const span = getCardSpan(type);
+              const span = getCardSpan(type, item);
               return (
                 <div key={`${item.slug}-${idx}`} className={span}>
                   <EditorialPromptCard item={item} type={type} />
