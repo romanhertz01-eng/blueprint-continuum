@@ -201,21 +201,24 @@ function PromptsHub() {
             title: "Как писать промпты на уровне Pro",
             subtitle: "Бесплатный мини-курс по архитектуре запросов от команды ERA2",
             ctaLabel: "Пройти курс",
-            bgSrc: "/community/05.jpg"
+            bgSrc: "/community/05.jpg",
+            topicSlug: "education"
           },
           {
             label: "НОВОЕ",
             title: "Генерация видео теперь в ERA2",
             subtitle: "Лучшие видео-модели доступны для ваших творческих экспериментов",
             ctaLabel: "Смотреть примеры",
-            bgSrc: "/community/06.jpg"
+            bgSrc: "/community/06.jpg",
+            topicSlug: "video-generation"
           },
           {
             label: "ПОДБОРКА",
             title: "ERA2 Featured: Выбор редакции",
             subtitle: "Каждую неделю мы отбираем лучшие работы нашего сообщества",
             ctaLabel: "Смотреть подборку",
-            bgSrc: "/community/08.jpg"
+            bgSrc: "/community/08.jpg",
+            topicSlug: "featured"
           }
         ];
         const banner = banners[Math.floor((rowIndex / 5) % banners.length)];
@@ -224,7 +227,7 @@ function PromptsHub() {
           <EditorialBanner 
             key={`banner-${rowIndex}`}
             {...banner}
-            ctaHref="/prompts"
+            ctaHref={hasTopicPage(banner.topicSlug, allItems) ? `/prompts/${banner.topicSlug}` : undefined}
           />
         );
       }

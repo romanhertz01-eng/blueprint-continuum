@@ -6,7 +6,7 @@ interface EditorialBannerProps {
   title: string;
   subtitle: string;
   ctaLabel: string;
-  ctaHref: string;
+  ctaHref?: string;
   bgSrc: string;
 }
 
@@ -39,13 +39,15 @@ export function EditorialBanner({ label, title, subtitle, ctaLabel, ctaHref, bgS
             {subtitle}
           </p>
           
-          <Link
-            to={ctaHref as any}
-            className="h-[52px] px-8 rounded-full bg-white text-black text-[15px] font-bold flex items-center justify-center gap-3 transition-all hover:scale-105 active:scale-95 shadow-xl"
-          >
-            {ctaLabel}
-            <ArrowRight className="w-4 h-4" />
-          </Link>
+          {ctaHref && (
+            <Link
+              to={ctaHref as any}
+              className="h-[52px] px-8 rounded-full bg-white text-black text-[15px] font-bold flex items-center justify-center gap-3 transition-all hover:scale-105 active:scale-95 shadow-xl"
+            >
+              {ctaLabel}
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          )}
         </div>
       </div>
     </section>
