@@ -342,20 +342,6 @@ function PromptsHub() {
         {visibleItems.length > 0 ? (
           <div className="grid grid-cols-12 gap-4 md:gap-5">
               {visibleItems.map((item, idx) => {
-                if (item.category === 'text') {
-                  return (
-                    <div key={`${item.slug}-${idx}`} className="col-span-12 sm:col-span-6 lg:col-span-3">
-                      <TextPromptCard item={item} />
-                    </div>
-                  );
-                }
-                if (item.category === 'audio') {
-                  return (
-                    <div key={`${item.slug}-${idx}`} className="col-span-12 sm:col-span-6 lg:col-span-3">
-                      <AudioPromptCard item={item} />
-                    </div>
-                  );
-                }
                 const type = getCardType(idx, item);
                 const span = getCardSpan(type, item);
                 return (
