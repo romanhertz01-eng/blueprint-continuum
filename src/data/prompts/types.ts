@@ -30,6 +30,8 @@ export interface PromptItem {
     aspect?: string; quality?: string; quantity?: number;
     duration?: string; resolution?: string;
   };
+  // BACKEND: задается вручную в админке или вычисляется автоматически
+  layout?: 'default' | 'wide' | 'featured';
   chain?: { label: string; prompt: string }[];  // каскадные, пока не используется
   media: { type: 'image' | 'video' | 'audio'; src: string; poster?: string; alt: string }[];
   body: {
