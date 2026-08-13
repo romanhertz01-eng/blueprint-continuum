@@ -625,7 +625,7 @@ function SmallCardsShelf({ allItems, searchQuery }: { allItems: PromptItem[], se
             <p className="text-[14px] text-muted-foreground">{intro}</p>
           </div>
           <Link
-            to={`/prompts/${textTopic.topic.slug}`}
+            to={`/prompts/${textTopic.topic.slug}` as any}
             className="bg-primary text-white h-11 px-6 rounded-xl font-bold flex items-center justify-center shrink-0 hover:opacity-90 transition-opacity"
           >
             Перейти к подборке
