@@ -55,8 +55,8 @@ function AgentsHubPage() {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       {/* 1. ШАПКА / BREADCRUMBS */}
-      <section className="pt-6 pb-4 px-6 max-w-7xl mx-auto w-full">
-        <nav className="flex items-center gap-2 text-[12px] text-muted-foreground mb-6 font-medium">
+      <section className="pt-4 pb-3 px-6 max-w-7xl mx-auto w-full">
+        <nav className="flex items-center gap-2 text-[12px] text-muted-foreground mb-4 font-medium">
           <Link to="/prompts" className="hover:text-foreground flex items-center gap-1 transition-colors">
             <Home className="w-3 h-3" /> Главная
           </Link>
@@ -64,9 +64,9 @@ function AgentsHubPage() {
           <span className="text-foreground">Агенты</span>
         </nav>
 
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-6">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-5 mb-5">
           <div>
-            <div className="flex items-center gap-3 mb-3">
+            <div className="flex items-center gap-3 mb-2">
               <h1 className="text-[32px] md:text-[42px] font-bold tracking-tight">
                 Промпты для агентов
               </h1>
