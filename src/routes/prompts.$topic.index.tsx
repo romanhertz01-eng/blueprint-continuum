@@ -1,12 +1,11 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
-import { Search, X, Sparkles, Star, PlusCircle, ArrowRight, Home, ChevronRight } from 'lucide-react';
+import { Search, X, Sparkles, Star, PlusCircle, ArrowRight, Home, ChevronRight, Heart, Zap } from 'lucide-react';
 import { Footer } from '@/components/shared/Footer';
 import { getPublishedItems, getCategories, PromptItem, getItemsByCategory } from '@/data/prompts';
 import { EditorialPromptCard } from '@/components/prompts/EditorialPromptCard';
 import { TextPromptCard } from '@/components/prompts/TextPromptCard';
 import { AudioPromptCard } from '@/components/prompts/AudioPromptCard';
 import { AgentPromptCard } from '@/components/prompts/AgentPromptCard';
-import { CatalogCard } from '@/components/prompts/CatalogCard';
 
 import { useState, useMemo } from 'react';
 import { cn } from '@/lib/utils';
@@ -55,6 +54,55 @@ export const Route = createFileRoute('/prompts/$topic/')({
     };
   }
 });
+
+
+function TextCategoryCard({ item }: { item: PromptItem }) {
+  const providerColors: Record<string, string> = {
+    chatgpt: 'bg-[#10a37f]/7',
+    claude: 'bg-[#d97757]/7',
+    gemini: 'bg-[#4285f4]/7',
+    deepseek: 'bg-[#60a5fa]/7',
+  };
+  
+  const tintClass = providerColors[item.providerId.toLowerCase()] || 'bg-muted/7';
+
+  return (
+    <Link 
+      to="/prompts/$topic/$slug"
+      params={{ topic: item.topicSlug, slug: item.slug }}
+      className={cn(
+        "group relative flex flex-col p-5 rounded-2xl border border-dashed border-border bg-card aspect-[4/5] transition-all duration-200 hover:-translate-y-0.5 hover:border-solid hover:border-primary/40 overflow-hidden",
+        tintClass
+      )}
+    >
+      {/* Upper row */}
+      <div className="flex items-center justify-between">
+        <span className="text-[11px] font-bold tracking-wide uppercase px-2.5 py-1 rounded-full bg-muted/50 border border-border/60">
+          {item.providerId}
+        </span>
+        <div className="flex items-center gap-1.5 text-muted-foreground">
+          <Heart className="w-3.5 h-3.5" />
+          <span className="text-[13px]">{item.likes}</span>
+        </div>
+      </div>
+
+      {/* Title */}
+      <h3 className="mt-4 text-[17px] font-bold line-clamp-2 leading-tight">
+        {item.title}
+      </h3>
+
+      {/* Prompt text */}
+      <div className="mt-3 flex-1 text-[14px] text-muted-foreground italic leading-relaxed line-clamp-6">
+        «{item.promptRu}»
+      </div>
+
+      {/* Bottom row */}
+      <div className="mt-4 flex items-center gap-2 text-primary font-bold text-[14px]">
+        Попробовать <Zap className="w-3.5 h-3.5" />
+      </div>
+    </Link>
+  );
+}
 
 function CategoryPage() {
   const data = Route.useLoaderData();
@@ -275,12 +323,17 @@ function CategoryPage() {
       {/* 4. MIXED-GRID */}
       <section className="max-w-7xl mx-auto px-6 w-full mb-20 flex-grow">
         {visibleItems.length > 0 ? (
-          <div className="grid grid-cols-12 gap-4 md:gap-6">
+          <div className={cn(
+            "grid gap-4 md:gap-5",
+            params.topic === 'text' 
+              ? "grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4" 
+              : "grid-cols-12"
+          )}>
             {visibleItems.map((item, idx) => {
               if (params.topic === 'text') {
                 return (
-                  <div key={`${item.slug}-${idx}`} className="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 xl:col-span-2.4">
-                    <CatalogCard item={item} index={idx} />
+                  <div key={`${item.slug}-${idx}`}>
+                    <TextCategoryCard item={item} />
                   </div>
                 );
               }
