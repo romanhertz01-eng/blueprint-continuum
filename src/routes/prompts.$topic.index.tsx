@@ -160,12 +160,32 @@ function CategoryPage() {
     
     const audioTopics = getTopicsByCategory('audio');
     const topicsWithPrompts = audioTopics.map(topic => {
-      const prompts = data.items.filter(item => item.topicSlug === topic.slug);
+      // Собираем промпты, где topicSlug совпадает ИЛИ slug темы есть в extraTopicSlugs
+      const prompts = data.items.filter(item => 
+        item.topicSlug === topic.slug || item.extraTopicSlugs?.includes(topic.slug)
+      );
       return { topic, prompts };
     })
-    .filter(shelf => shelf.prompts.length >= 4)
+    .filter(shelf => shelf.prompts.length >= 3) // Снизили порог до 3
     .sort((a, b) => b.prompts.length - a.prompts.length)
     .slice(0, 2);
+
+    // Фолбэк: если подходящих тем мало, но аудио промптов достаточно (>=6)
+    if (topicsWithPrompts.length === 0 && data.items.length >= 6) {
+      const popularPrompts = [...data.items]
+        .sort((a, b) => (b.likes || 0) - (a.likes || 0))
+        .slice(0, 8);
+      
+      return [{
+        topic: { 
+          slug: 'popular', 
+          title: 'Популярное в аудио',
+          cardTitle: 'Популярное'
+        } as any,
+        prompts: popularPrompts,
+        isFallback: true
+      }];
+    }
 
     return topicsWithPrompts;
   }, [isAudio, searchQuery, data.items]);
@@ -446,7 +466,7 @@ function CategoryPage() {
         {/* АУДИО ПОЛКИ */}
         {isAudio && audioShelvesData.length > 0 && !searchQuery.trim() && (
           <div className="flex flex-col gap-10 mb-10">
-            {audioShelvesData.map((shelf, shelfIdx) => {
+            {(audioShelvesData as any[]).map((shelf, shelfIdx) => {
               const scrollRef = useRef<HTMLDivElement>(null);
               const gradients = [
                 'from-indigo-500/80 to-purple-500/80',
@@ -460,13 +480,15 @@ function CategoryPage() {
                 <div key={shelf.topic.slug} className="group/shelf py-5 relative">
                   <div className="flex items-center justify-between mb-5">
                     <h2 className="text-[20px] font-bold">{shelf.topic.title}</h2>
-                    <Link 
-                      to="/prompts/$topic" 
-                      params={{ topic: shelf.topic.slug }}
-                      className="text-[13px] font-bold text-primary hover:underline"
-                    >
-                      Показать всё →
-                    </Link>
+                    {!shelf.isFallback && (
+                      <Link 
+                        to="/prompts/$topic" 
+                        params={{ topic: shelf.topic.slug }}
+                        className="text-[13px] font-bold text-primary hover:underline"
+                      >
+                        Показать всё →
+                      </Link>
+                    )}
                   </div>
                   
                   <div className="relative">
@@ -474,7 +496,7 @@ function CategoryPage() {
                       ref={scrollRef}
                       className="flex gap-[14px] overflow-x-auto no-scrollbar snap-x snap-mandatory w-[calc(100%+40px)] pb-4"
                     >
-                      {shelf.prompts.map((item) => (
+                      {shelf.prompts.map((item: PromptItem) => (
                         <Link
                           key={item.slug}
                           to="/prompts/$topic/$slug"
