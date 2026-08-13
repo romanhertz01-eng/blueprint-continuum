@@ -310,14 +310,15 @@ function VideoCategoryCard({ item }: { item: PromptItem }) {
         </div>
       </div>
 
-      <div className="px-3 py-2.5 flex flex-col justify-center min-h-[54px]">
-        <h3 className="text-[14px] font-semibold line-clamp-1 leading-tight mb-0.5">
+      <div className="px-3 py-2.5 flex flex-col justify-center">
+        <h3 className="text-[14px] font-semibold line-clamp-1 leading-tight">
           {item.title}
         </h3>
-        <div className="text-[11px] font-bold text-muted-foreground uppercase tracking-tight">
+        <div className="mt-[2px] text-[11px] font-bold text-muted-foreground uppercase tracking-tight leading-none">
           {item.providerId}
         </div>
       </div>
+
     </div>
   );
 }
