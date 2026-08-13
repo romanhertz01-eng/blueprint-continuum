@@ -2,7 +2,7 @@ import { ORIGIN } from "@/lib/origin";
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { Search, X, Sparkles, Star, PlusCircle, ArrowRight, Filter } from 'lucide-react';
 import { Footer } from '@/components/shared/Footer';
-import { getPublishedItems, getPublishedTopics, countItemsByCategory, getCategories, PromptItem, getProvidersWithPrompts } from '@/data/prompts';
+import { getPublishedItems, getPublishedTopics, countItemsByCategory, getCategories, PromptItem, getProvidersWithPrompts, promptTopics } from '@/data/prompts';
 import { CatalogCard } from '@/components/prompts/CatalogCard';
 import { CollectionShelf } from '@/components/prompts/CollectionShelf';
 import { EditorialBanner } from '@/components/prompts/EditorialBanner';
@@ -42,7 +42,7 @@ function PromptsHub() {
   
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
-  const [sortBy, setSortBy] = useState<'new' | 'popular' | 'used' | 'saved'>('new');
+  const [sortBy, setSortBy] = useState<'new' | 'popular'>('new');
   const [page, setPage] = useState(1);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
 
@@ -68,21 +68,29 @@ function PromptsHub() {
     return result;
   }, [allItems, sortBy]);
 
-  // Категории (chips) для ленты
-  const pillCategories = [
-    { label: 'Все темы', slug: null },
-    { label: 'Популярное', slug: 'popular' },
-    { label: 'Для работы', slug: 'rabota' },
-    { label: 'Маркетинг', slug: 'marketing' },
-    { label: 'Образование', slug: 'obrazovanie' },
-    { label: 'Саморазвитие', slug: 'samorazvitie' },
-    { label: 'Креатив', slug: 'kreativ' },
-    { label: 'Нейросети', slug: 'neyroseti' },
-    { label: 'Код', slug: 'kod' },
-    { label: 'Бизнес', slug: 'biznes' },
-    { label: 'Дизайн', slug: 'dizayn' },
-    { label: 'Аналитика', slug: 'analitika' },
-  ];
+  // Категории (chips) для ленты на основе реальных данных
+  const pillCategories = useMemo(() => {
+    const base = [
+      { label: 'Все темы', slug: null },
+      { label: 'Популярное', slug: 'popular' },
+    ];
+
+    const activeTopics = promptTopics
+      .filter(t => t.status === 'published')
+      .map(topic => {
+        const count = allItems.filter(item => item.topicSlug === topic.slug).length;
+        return {
+          label: topic.cardTitle || topic.title,
+          slug: topic.slug,
+          count
+        };
+      })
+      .filter(t => t.count > 0)
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 14);
+
+    return [...base, ...activeTopics.map(({ label, slug }) => ({ label, slug }))];
+  }, [allItems]);
 
   const filteredItems = useMemo(() => {
     let result = [...displayItems];
@@ -379,8 +387,6 @@ function PromptsHub() {
           >
             <option value="new">Сначала новые</option>
             <option value="popular">Популярные</option>
-            <option value="used">Используемые</option>
-            <option value="saved">Сохранённые</option>
           </select>
         </div>
       </section>
