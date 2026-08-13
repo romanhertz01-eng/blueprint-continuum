@@ -2,7 +2,7 @@ import { ORIGIN } from "@/lib/origin";
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { Search, X, Sparkles, Star, PlusCircle, ArrowRight, Filter } from 'lucide-react';
 import { Footer } from '@/components/shared/Footer';
-import { getPublishedItems, getPublishedTopics, countItemsByCategory, getCategories, PromptItem, getProvidersWithPrompts, promptTopics } from '@/data/prompts';
+import { getPublishedItems, getPublishedTopics, countItemsByCategory, getCategories, PromptItem, getProvidersWithPrompts } from '@/data/prompts';
 import { CatalogCard } from '@/components/prompts/CatalogCard';
 import { CollectionShelf } from '@/components/prompts/CollectionShelf';
 import { EditorialBanner } from '@/components/prompts/EditorialBanner';
@@ -42,7 +42,7 @@ function PromptsHub() {
   
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
-  const [sortBy, setSortBy] = useState<'new' | 'popular'>('new');
+  const [sortBy, setSortBy] = useState<'new' | 'popular' | 'used' | 'saved'>('new');
   const [page, setPage] = useState(1);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
 
@@ -68,29 +68,21 @@ function PromptsHub() {
     return result;
   }, [allItems, sortBy]);
 
-  // Категории (chips) для ленты на основе реальных данных
-  const pillCategories = useMemo(() => {
-    const base = [
-      { label: 'Все темы', slug: null },
-      { label: 'Популярное', slug: 'popular' },
-    ];
-
-    const activeTopics = promptTopics
-      .filter(t => t.status === 'published')
-      .map(topic => {
-        const count = allItems.filter(item => item.topicSlug === topic.slug).length;
-        return {
-          label: topic.cardTitle || topic.title,
-          slug: topic.slug,
-          count
-        };
-      })
-      .filter(t => t.count > 0)
-      .sort((a, b) => b.count - a.count)
-      .slice(0, 14);
-
-    return [...base, ...activeTopics.map(({ label, slug }) => ({ label, slug }))];
-  }, [allItems]);
+  // Категории (chips) для ленты
+  const pillCategories = [
+    { label: 'Все темы', slug: null },
+    { label: 'Популярное', slug: 'popular' },
+    { label: 'Для работы', slug: 'rabota' },
+    { label: 'Маркетинг', slug: 'marketing' },
+    { label: 'Образование', slug: 'obrazovanie' },
+    { label: 'Саморазвитие', slug: 'samorazvitie' },
+    { label: 'Креатив', slug: 'kreativ' },
+    { label: 'Нейросети', slug: 'neyroseti' },
+    { label: 'Код', slug: 'kod' },
+    { label: 'Бизнес', slug: 'biznes' },
+    { label: 'Дизайн', slug: 'dizayn' },
+    { label: 'Аналитика', slug: 'analitika' },
+  ];
 
   const filteredItems = useMemo(() => {
     let result = [...displayItems];
@@ -121,31 +113,6 @@ function PromptsHub() {
   const visibleItems = useMemo(() => {
     return filteredItems.slice(0, page * PAGE_SIZE);
   }, [filteredItems, page]);
-
-  const recommendedTopic = useMemo(() => {
-    if (searchQuery.trim()) return null;
-
-    const publishedTopics = getPublishedTopics();
-    if (selectedTopic && selectedTopic !== 'popular') {
-      const topic = publishedTopics.find(t => t.slug === selectedTopic);
-      if (topic) {
-        const items = allItems.filter(item => item.topicSlug === topic.slug || item.extraTopicSlugs?.includes(topic.slug));
-        if (items.length >= 5) return { topic, items, isBestOf: true };
-      }
-      return null;
-    }
-
-    // popular or null: find topic with most items
-    const topicCounts = publishedTopics.map(t => ({
-      topic: t,
-      count: allItems.filter(item => item.topicSlug === t.slug || item.extraTopicSlugs?.includes(t.slug)).length
-    })).filter(t => t.count >= 5).sort((a, b) => b.count - a.count);
-
-    if (topicCounts.length > 0) {
-      return { topic: topicCounts[0].topic, items: allItems.filter(item => item.topicSlug === topicCounts[0].topic.slug || item.extraTopicSlugs?.includes(topicCounts[0].topic.slug)), isBestOf: false };
-    }
-    return null;
-  }, [selectedTopic, searchQuery, allItems]);
 
   // Rhythm logic for long feed
   const feedElements = useMemo(() => {
@@ -398,40 +365,6 @@ function PromptsHub() {
         </div>
       </section>
 
-      {/* РЕКОМЕНДОВАННАЯ ПОДБОРКА (ГАЗ 2) */}
-      {recommendedTopic && (
-        <section className="max-w-[1520px] mx-auto px-6 w-full mb-8">
-          <div className="rounded-[28px] bg-muted/30 p-6 md:p-8">
-            <div className="flex items-start justify-between mb-8">
-              <div>
-                <h2 className="text-[22px] md:text-[26px] font-bold tracking-tight mb-1 text-foreground">
-                  {recommendedTopic.isBestOf ? `Лучшее: ${recommendedTopic.topic.cardTitle || recommendedTopic.topic.title}` : recommendedTopic.topic.title}
-                </h2>
-                <p className="text-[14px] md:text-[15px] text-muted-foreground font-medium max-w-2xl">
-                  {recommendedTopic.topic.intro.slice(0, 90).trim()}{recommendedTopic.topic.intro.length > 90 ? '...' : ''}
-                </p>
-              </div>
-              <Link 
-                to="/prompts/$topic"
-                params={{ topic: recommendedTopic.topic.slug }}
-                className="flex items-center gap-1.5 text-[14px] font-bold text-primary hover:opacity-80 transition-opacity shrink-0 mt-1"
-              >
-                Смотреть все <ArrowRight className="w-4 h-4" />
-              </Link>
-            </div>
-
-            <div className="flex gap-4 overflow-x-auto no-scrollbar snap-x pb-2 -mx-2 px-2">
-              {recommendedTopic.items.slice(0, 8).map((item, idx) => (
-                <div key={`${item.slug}-${idx}`} className="flex-none w-[200px] md:w-[240px] snap-start">
-                   <CatalogCard item={item} index={idx} />
-                </div>
-              ))}
-              <div className="flex-none w-1" />
-            </div>
-          </div>
-        </section>
-      )}
-
       {/* 3. СТРОКА СОРТИРОВКИ */}
       <section className="max-w-[1520px] mx-auto px-6 w-full flex items-center justify-between mb-4">
         <div className="text-[13px] font-medium text-muted-foreground">
@@ -446,6 +379,8 @@ function PromptsHub() {
           >
             <option value="new">Сначала новые</option>
             <option value="popular">Популярные</option>
+            <option value="used">Используемые</option>
+            <option value="saved">Сохранённые</option>
           </select>
         </div>
       </section>
