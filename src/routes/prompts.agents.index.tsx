@@ -89,7 +89,7 @@ function AgentsHubPage() {
       </section>
 
       {/* 2. ЛЕНТА КАТЕГОРИЙ (PILLS) */}
-      <section className="sticky top-0 z-40 bg-background/80 backdrop-blur-md border-b border-border mb-10">
+      <section className="sticky top-0 z-40 bg-background/80 backdrop-blur-md border-b border-border mb-5">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
             <Link
