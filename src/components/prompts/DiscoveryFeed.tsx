@@ -8,7 +8,7 @@ import { videoProviders } from '@/data/videoModels';
 import { textProviders } from '@/data/textModels';
 import { TryPromptButton } from './TryPromptButton';
 import { getRelatedItems, getRelatedByModel, getItemsByTopic, getPublishedItems } from '@/data/prompts';
-import { TextPromptCard } from './TextPromptCard';
+import { CatalogCard } from './CatalogCard';
 
 interface DiscoveryFeedProps {
   currentItem: PromptItem;
