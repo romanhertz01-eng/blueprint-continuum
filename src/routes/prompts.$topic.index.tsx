@@ -178,7 +178,7 @@ function AudioCategoryCard({ item }: { item: PromptItem }) {
         {/* Play Button */}
         <div className="mt-3">
           <div className="h-9 px-4 rounded-full bg-primary text-white text-[13px] font-semibold flex items-center gap-2 w-fit">
-            <LucideIcons.Play className="w-[13px] h-[13px] fill-current" />
+            <LayoutGrid className="w-[13px] h-[13px] fill-current" />
             Попробовать
           </div>
         </div>
