@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from '@tanstack/react-router';
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
 import { Home, ChevronRight, Star, ArrowRight, Heart } from 'lucide-react';
 import { Footer } from '@/components/shared/Footer';
 import { getCategories, getTopicsByCategory, getItemsByTopic, PromptItem } from '@/data/prompts';
@@ -6,9 +6,9 @@ import { cn } from '@/lib/utils';
 import { ORIGIN } from '@/lib/origin';
 import { useState } from 'react';
 import * as LucideIcons from 'lucide-react';
-import { useNavigate } from '@tanstack/react-router';
 import { writePromptHandoff, CATEGORY_ROUTE } from '@/lib/promptHandoff';
 import { useAuth } from '@/contexts/AuthContext';
+import { buildAuthHref } from '@/lib/authRedirect';
 
 export const Route = createFileRoute('/prompts/agents/')({
   component: AgentsHubPage,
