@@ -832,9 +832,9 @@ function PopularAudioShelf({ allItems, searchQuery }: { allItems: PromptItem[], 
       <div className="rounded-3xl bg-muted/30 border border-border px-8 py-6">
         <div className="flex items-end justify-between mb-6">
           <div className="min-w-0">
-            <h2 className="text-[20px] font-bold leading-tight">Популярное в аудио</h2>
+            <h2 className="text-[20px] font-bold leading-tight">Промпты для музыки и звука</h2>
             <p className="text-[13px] text-muted-foreground mt-1 line-clamp-1">
-              Музыкальные треки, саунд-дизайн, озвучка и атмосферы
+              Треки, саунд-дизайн, озвучка и атмосферы — готовые запросы
             </p>
           </div>
           <Link 
@@ -875,10 +875,12 @@ function PopularAudioShelf({ allItems, searchQuery }: { allItems: PromptItem[], 
                   </svg>
                 </div>
                 
-                <h3 className="text-[12px] font-semibold text-center line-clamp-2 leading-tight mb-1 h-8 flex items-center justify-center">
-                  {item.title}
-                </h3>
-                <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider">
+                <div className="w-full mb-1">
+                  <h3 className="text-[12px] font-semibold text-center leading-snug line-clamp-2 overflow-hidden break-words min-h-[32px] flex items-center justify-center">
+                    {item.title}
+                  </h3>
+                </div>
+                <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider text-center">
                   {item.providerId}
                 </span>
               </div>
