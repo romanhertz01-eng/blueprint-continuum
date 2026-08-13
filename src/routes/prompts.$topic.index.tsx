@@ -336,8 +336,10 @@ function CategoryPage() {
   
   // Категории (фильтры тем)
   const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
+  const [topicFilter, setTopicFilter] = useState('Все');
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
+
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
