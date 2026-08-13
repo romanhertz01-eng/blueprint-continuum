@@ -130,7 +130,7 @@ function ModelsListPage() {
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-20">
-          {providers.map(({ providerId, count, imageSrc, name }) => {
+          {providers.map(({ providerId, count, imageSrc, name }: any) => {
             return (
               <Link
                 key={providerId}
