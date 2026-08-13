@@ -300,41 +300,13 @@ function PromptsHub() {
         </div>
       </section>
 
-      {/* 4. MIXED-GRID */}
-      <section className="max-w-7xl mx-auto px-6 w-full mb-12">
+      {/* 4. 5-COLUMN GRID */}
+      <section className="max-w-[1520px] mx-auto px-6 w-full mb-12">
         {visibleItems.length > 0 ? (
-          <div className="grid grid-cols-12 gap-4 md:gap-5">
-              {visibleItems.map((item, idx) => {
-                if (item.category === 'text') {
-                  return (
-                    <div key={`${item.slug}-${idx}`} className="col-span-12 sm:col-span-6 lg:col-span-3">
-                      <TextPromptCard item={item} />
-                    </div>
-                  );
-                }
-                if (item.category === 'audio') {
-                  return (
-                    <div key={`${item.slug}-${idx}`} className="col-span-12 sm:col-span-6 lg:col-span-3">
-                    <AudioPromptCard item={item} />
-                  </div>
-                );
-              }
-              if (item.category === 'agents') {
-                return (
-                  <div key={`${item.slug}-${idx}`} className="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3">
-                    <AgentPromptCard item={item} />
-                  </div>
-                );
-              }
-
-                const type = getCardType(idx, item);
-                const span = getCardSpan(type, item);
-                return (
-                  <div key={`${item.slug}-${idx}`} className={span}>
-                    <EditorialPromptCard item={item} type={type} />
-                  </div>
-                );
-              })}
+          <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-x-[20px] gap-y-[24px]">
+            {visibleItems.map((item, idx) => (
+              <CatalogCard key={`${item.slug}-${idx}`} item={item} index={idx} />
+            ))}
           </div>
         ) : (
           <div className="py-20 text-center">
