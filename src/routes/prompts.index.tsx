@@ -148,7 +148,12 @@ function PromptsHub() {
     return 'C';
   };
 
-  const getCardSpan = (type: 'A' | 'B' | 'C' | 'D' | 'E'): string => {
+  const getCardSpan = (type: 'A' | 'B' | 'C' | 'D' | 'E', item?: PromptItem): string => {
+    // Текстовые карточки на главной всегда 3 колонки (4 в ряд)
+    if (item && item.category === 'text') {
+      return 'col-span-12 sm:col-span-6 lg:col-span-3';
+    }
+
     switch (type) {
       case 'A': return 'col-span-12 sm:col-span-6 lg:col-span-3';
       case 'B': return 'col-span-12 sm:col-span-6 lg:col-span-3';
@@ -352,7 +357,7 @@ function PromptsHub() {
                   );
                 }
                 const type = getCardType(idx, item);
-                const span = getCardSpan(type);
+                const span = getCardSpan(type, item);
                 return (
                   <div key={`${item.slug}-${idx}`} className={span}>
                     <EditorialPromptCard item={item} type={type} />
