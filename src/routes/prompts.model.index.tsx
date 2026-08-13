@@ -28,9 +28,32 @@ export const Route = createFileRoute('/prompts/model/')({
   }),
 });
 
-function getProviderName(id: string) {
-  const p = [...textProviders, ...imageProviders, ...videoProviders].find(provider => provider.id === id);
-  return p?.name || id;
+function getProviderDisplayName(id: string) {
+  const p = [
+    ...textProviders, 
+    ...imageProviders, 
+    ...videoProviders,
+    { id: 'suno', name: 'Suno' },
+    { id: 'elevenlabs', name: 'ElevenLabs' },
+    { id: 'udio', name: 'Udio' }
+  ].find(provider => provider.id.toLowerCase() === id.toLowerCase());
+  
+  if (p) return p.name;
+  
+  // Форматирование для известных, если не в списке
+  const names: Record<string, string> = {
+    'chatgpt': 'ChatGPT',
+    'claude': 'Claude',
+    'gemini': 'Gemini',
+    'deepseek': 'DeepSeek',
+    'flux': 'Flux',
+    'midjourney': 'Midjourney',
+    'stable-diffusion': 'Stable Diffusion',
+    'kling': 'Kling AI',
+    'luma': 'Luma Dream Machine'
+  };
+  
+  return names[id.toLowerCase()] || id;
 }
 
 function ModelsListPage() {
