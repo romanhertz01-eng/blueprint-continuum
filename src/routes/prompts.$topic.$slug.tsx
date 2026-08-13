@@ -3,6 +3,7 @@ import { ChevronRight, Eye, Heart, Bookmark, Share2, Copy } from 'lucide-react';
 import { promptItems, getTopicBySlug } from '@/data/prompts';
 import { PromptGallery } from '@/components/prompts/PromptGallery';
 import { DiscoveryFeed } from '@/components/prompts/DiscoveryFeed';
+import { cn } from '@/lib/utils';
 import { TryPromptButton } from '@/components/prompts/TryPromptButton';
 import { CopyPromptButton } from '@/components/prompts/CopyPromptButton';
 import { Footer } from '@/components/shared/Footer';
@@ -58,7 +59,7 @@ function PromptDetailPage() {
   const metadata = [
     modelName,
     item.params?.aspect,
-    item.params?.quality || '1K'
+    item.params?.quality
   ].filter(Boolean).join(' · ');
 
   return (
@@ -75,11 +76,16 @@ function PromptDetailPage() {
             <span className="text-foreground/70 truncate">{item.title}</span>
           </nav>
 
-          <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-12 items-start mb-12">
+          <div className={cn(
+            "grid gap-12 items-start mb-12",
+            item.media?.length > 0 ? "grid-cols-1 lg:grid-cols-[1.2fr_1fr]" : "grid-cols-1"
+          )}>
             {/* Left: Gallery */}
-            <div className="w-full">
-              <PromptGallery media={item.media} title={item.title} />
-            </div>
+            {item.media?.length > 0 && (
+              <div className="w-full">
+                <PromptGallery media={item.media} title={item.title} />
+              </div>
+            )}
 
             {/* Right: Info & Actions */}
             <div className="space-y-8 lg:sticky lg:top-[120px] self-start">
