@@ -2,10 +2,8 @@ import { createFileRoute, Link } from '@tanstack/react-router';
 import { Search, X, Sparkles, Star, PlusCircle, ArrowRight, Home, ChevronRight } from 'lucide-react';
 import { Footer } from '@/components/shared/Footer';
 import { getPublishedItems, getCategories, PromptItem, getItemsByCategory } from '@/data/prompts';
-import { EditorialPromptCard } from '@/components/prompts/EditorialPromptCard';
-import { TextPromptCard } from '@/components/prompts/TextPromptCard';
-import { AudioPromptCard } from '@/components/prompts/AudioPromptCard';
-import { AgentPromptCard } from '@/components/prompts/AgentPromptCard';
+import { CatalogCard } from '@/components/prompts/CatalogCard';
+
 
 import { useState, useMemo } from 'react';
 import { cn } from '@/lib/utils';
@@ -140,15 +138,8 @@ function CategoryPage() {
     return 'A';
   };
 
-  const getCardSpan = (type: 'A' | 'B' | 'C' | 'D' | 'E', item?: PromptItem): string => {
-    switch (type) {
-      case 'A': return 'col-span-12 sm:col-span-6 lg:col-span-3';
-      case 'B': return 'col-span-12 sm:col-span-6 lg:col-span-3';
-      case 'C': return 'col-span-12 sm:col-span-6 lg:col-span-3';
-      case 'D': return 'col-span-12 lg:col-span-6';
-      case 'E': return 'col-span-12 lg:col-span-6';
-      default: return 'col-span-12';
-    }
+  const getCardSpan = (item?: PromptItem): string => {
+    return 'col-span-12 sm:col-span-6 lg:col-span-3';
   };
 
   return (
@@ -276,33 +267,10 @@ function CategoryPage() {
         {visibleItems.length > 0 ? (
           <div className="grid grid-cols-12 gap-4 md:gap-6">
             {visibleItems.map((item, idx) => {
-              if (params.topic === 'text') {
-                return (
-                  <div key={`${item.slug}-${idx}`} className="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3">
-                    <TextPromptCard item={item} />
-                  </div>
-                );
-              }
-              if (item.category === 'audio') {
-                return (
-                  <div key={`${item.slug}-${idx}`} className="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3">
-                    <AudioPromptCard item={item} />
-                  </div>
-                );
-              }
-              if (item.category === 'agents') {
-                return (
-                  <div key={`${item.slug}-${idx}`} className="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3">
-                    <AgentPromptCard item={item} />
-                  </div>
-                );
-              }
-
-              const type = getCardType(idx, item);
-              const span = getCardSpan(type, item);
+              const span = getCardSpan(item);
               return (
                 <div key={`${item.slug}-${idx}`} className={span}>
-                  <EditorialPromptCard item={item} type={type} />
+                  <CatalogCard item={item} index={idx} />
                 </div>
               );
             })}
