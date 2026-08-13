@@ -133,7 +133,7 @@ function PromptsHub() {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       {/* 1. INTRO-ЗОНА */}
-      <section className="pt-8 pb-6 px-6 max-w-7xl mx-auto w-full">
+      <section className="pt-8 pb-6 px-6 max-w-[1520px] mx-auto w-full">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
           <div className="flex-grow">
             <div className="flex items-center gap-2 mb-2">
@@ -206,7 +206,7 @@ function PromptsHub() {
       </section>
 
       {/* ЗАДАЧА 1: 6 БЛОКОВ КАТЕГОРИЙ */}
-      <section className="max-w-7xl mx-auto px-6 w-full mb-10">
+      <section className="max-w-[1520px] mx-auto px-6 w-full mb-10">
         <h2 className="text-[20px] font-bold mb-5 flex items-center gap-2">
           Категории
           <span className="w-1.5 h-1.5 rounded-full bg-primary" />
@@ -281,7 +281,7 @@ function PromptsHub() {
       </section>
 
       {/* 3. СТРОКА СОРТИРОВКИ */}
-      <section className="max-w-7xl mx-auto px-6 w-full flex items-center justify-between mb-4">
+      <section className="max-w-[1520px] mx-auto px-6 w-full flex items-center justify-between mb-4">
         <div className="text-[13px] font-medium text-muted-foreground">
           Все промпты <span className="text-foreground font-bold ml-1">{filteredItems.length}</span>
         </div>
@@ -346,7 +346,7 @@ function PromptsHub() {
         )}
       </section>
 
-      <section className="max-w-7xl mx-auto px-6 w-full mb-20">
+      <section className="max-w-[1520px] mx-auto px-6 w-full mb-20">
         <TopicCloud topics={topics} />
       </section>
 
