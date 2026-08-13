@@ -166,7 +166,7 @@ function AgentCard({ item }: { item: PromptItem }) {
     'bg-green-500/20 text-green-600',
   ];
   const colorClass = agentColors[item.slug.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % agentColors.length];
-  const [bgClass, textClass] = colorClass.split(' ');
+  const bgClass = colorClass.split(' ')[0];
 
   const handleAction = () => {
     writePromptHandoff({
