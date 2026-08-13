@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
-import { Search, X, Sparkles, Star, PlusCircle, ArrowRight, Home, ChevronRight, Heart, Zap, LayoutGrid, Check } from 'lucide-react';
+import { Search, X, Sparkles, Star, PlusCircle, ArrowRight, Home, ChevronRight, Heart, Zap, LayoutGrid, Check, Play } from 'lucide-react';
 import { Footer } from '@/components/shared/Footer';
 import { getPublishedItems, getCategories, PromptItem, getItemsByCategory, getTopicsByCategory } from '@/data/prompts';
 import { EditorialPromptCard } from '@/components/prompts/EditorialPromptCard';
@@ -104,6 +104,89 @@ function TextCategoryCard({ item }: { item: PromptItem }) {
   );
 }
 
+function AudioCategoryCard({ item }: { item: PromptItem }) {
+  const labelColors = [
+    '#f97316', // orange
+    '#3b82f6', // blue
+    '#8b5cf6', // violet
+    '#14b8a6', // turquoise
+    '#ef4444', // red
+    '#eab308', // yellow
+  ];
+  const hash = item.slug.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  const labelColor = labelColors[hash % labelColors.length];
+
+  return (
+    <Link 
+      to="/prompts/$topic/$slug"
+      params={{ topic: item.topicSlug, slug: item.slug }}
+      className="group flex flex-col rounded-[20px] bg-card border border-border/50 h-[310px] transition-all duration-200 hover:-translate-y-0.5 hover:bg-muted/40 overflow-hidden"
+    >
+      {/* Vinyl Section (~60%) */}
+      <div className="relative flex-1 bg-muted/20 flex items-center justify-center overflow-hidden">
+        {/* Soft shadow under disk */}
+        <div className="absolute w-[142px] h-[142px] rounded-full bg-black/10 blur-sm translate-y-1" />
+        
+        {/* SVG Vinyl Record */}
+        <div className="relative w-[140px] h-[140px] transition-transform duration-400 group-hover:rotate-6">
+          <svg viewBox="0 0 140 140" className="w-full h-full drop-shadow-lg">
+            {/* Disk body */}
+            <circle cx="70" cy="70" r="70" fill="#222222" />
+            
+            {/* Tracks (concentrics) */}
+            {[0.4, 0.53, 0.66, 0.79, 0.92].map((r) => (
+              <circle 
+                key={r}
+                cx="70" 
+                cy="70" 
+                r={70 * r} 
+                fill="none" 
+                stroke="white" 
+                strokeWidth="1" 
+                strokeOpacity="0.08" 
+              />
+            ))}
+            
+            {/* Glossy reflection (arc) */}
+            <path 
+              d="M 20 70 A 50 50 0 0 1 70 20" 
+              fill="none" 
+              stroke="white" 
+              strokeWidth="4" 
+              strokeOpacity="0.08" 
+              strokeLinecap="round" 
+            />
+            
+            {/* Center Label */}
+            <circle cx="70" cy="70" r="21" fill={labelColor} />
+            
+            {/* Center Hole */}
+            <circle cx="70" cy="70" r="4" fill="hsl(var(--card))" />
+          </svg>
+        </div>
+      </div>
+
+      {/* Info Section */}
+      <div className="p-4 flex flex-col gap-1">
+        <h3 className="text-[15px] font-semibold leading-snug line-clamp-2 h-[2.6em]">
+          {item.title}
+        </h3>
+        <div className="text-[13px] text-muted-foreground truncate">
+          {item.params?.duration || '0:00'} · {item.providerId}
+        </div>
+        
+        {/* Play Button */}
+        <div className="mt-3">
+          <div className="h-9 px-4 rounded-full bg-primary text-white text-[13px] font-semibold flex items-center gap-2 w-fit">
+            <Play className="w-[13px] h-[13px] fill-current" />
+            Попробовать
+          </div>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
 function CategoryPage() {
   const data = Route.useLoaderData();
   const params = Route.useParams();
@@ -154,23 +237,20 @@ function CategoryPage() {
     setIsPanelOpen(false);
   }, [params.topic]);
 
-  // Данные для аудио-полок
   const audioShelvesData = useMemo(() => {
     if (!isAudio || searchQuery.trim()) return [];
     
     const audioTopics = getTopicsByCategory('audio');
     const topicsWithPrompts = audioTopics.map(topic => {
-      // Собираем промпты, где topicSlug совпадает ИЛИ slug темы есть в extraTopicSlugs
       const prompts = data.items.filter(item => 
         item.topicSlug === topic.slug || item.extraTopicSlugs?.includes(topic.slug)
       );
       return { topic, prompts };
     })
-    .filter(shelf => shelf.prompts.length >= 3) // Снизили порог до 3
+    .filter(shelf => shelf.prompts.length >= 3)
     .sort((a, b) => b.prompts.length - a.prompts.length)
     .slice(0, 2);
 
-    // Фолбэк: если подходящих тем мало, но аудио промптов достаточно (>=6)
     if (topicsWithPrompts.length === 0 && data.items.length >= 6) {
       const popularPrompts = [...data.items]
         .sort((a, b) => (b.likes || 0) - (a.likes || 0))
@@ -189,6 +269,15 @@ function CategoryPage() {
 
     return topicsWithPrompts;
   }, [isAudio, searchQuery, data.items]);
+
+  const audioGradients = [
+    'from-indigo-500/80 to-purple-500/80',
+    'from-emerald-500/80 to-teal-500/80',
+    'from-orange-500/80 to-rose-500/80',
+    'from-blue-500/80 to-cyan-500/80',
+    'from-violet-500/80 to-fuchsia-500/80',
+    'from-cyan-500/80 to-blue-600/80',
+  ];
 
   const topicIcons: Record<string, any> = {
     'seo': Sparkles,
@@ -468,15 +557,8 @@ function CategoryPage() {
         {/* АУДИО ПОЛКИ */}
         {isAudio && audioShelvesData.length > 0 && !searchQuery.trim() && (
           <div className="flex flex-col gap-10 mb-10">
-            {(audioShelvesData as any[]).map((shelf, shelfIdx) => {
+            {(audioShelvesData as any[]).map((shelf) => {
               const scrollRef = useRef<HTMLDivElement>(null);
-              const gradients = [
-                'from-indigo-500/80 to-purple-500/80',
-                'from-emerald-500/80 to-teal-500/80',
-                'from-orange-500/80 to-rose-500/80',
-                'from-blue-500/80 to-cyan-500/80',
-              ];
-              const gradient = gradients[shelfIdx % gradients.length];
 
               return (
                 <div key={shelf.topic.slug} className="group/shelf py-5 relative">
@@ -498,39 +580,40 @@ function CategoryPage() {
                       ref={scrollRef}
                       className="flex gap-[14px] overflow-x-auto no-scrollbar snap-x snap-mandatory w-[calc(100%+40px)] pb-4"
                     >
-                      {shelf.prompts.map((item: PromptItem) => (
-                        <Link
-                          key={item.slug}
-                          to="/prompts/$topic/$slug"
-                          params={{ topic: item.topicSlug, slug: item.slug }}
-                          className="flex-shrink-0 w-[190px] aspect-square rounded-2xl overflow-hidden relative group snap-start"
-                        >
-                          {/* Background Gradient */}
-                          <div className={cn(
-                            "absolute inset-0 bg-gradient-to-br transition-transform duration-300 group-hover:scale-[1.04]",
-                            gradient
-                          )} />
-                          
-                          {/* Wave Pattern */}
-                          <svg className="absolute inset-0 w-full h-full opacity-20 pointer-events-none" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M0,100 C20,80 40,120 60,100 C80,80 100,120 120,100 C140,80 160,120 180,100 C200,80 220,120 240,100" fill="none" stroke="white" strokeWidth="2" />
-                            <path d="M0,120 C20,100 40,140 60,120 C80,100 100,140 120,120 C140,100 160,140 180,120 C200,100 220,140 240,120" fill="none" stroke="white" strokeWidth="2" />
-                          </svg>
+                      {shelf.prompts.map((item: PromptItem) => {
+                        const hash = item.topicSlug.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+                        const gradient = audioGradients[hash % audioGradients.length];
+                        
+                        return (
+                          <Link
+                            key={item.slug}
+                            to="/prompts/$topic/$slug"
+                            params={{ topic: item.topicSlug, slug: item.slug }}
+                            className="flex-shrink-0 w-[190px] aspect-square rounded-2xl overflow-hidden relative group snap-start"
+                          >
+                            <div className={cn(
+                              "absolute inset-0 bg-gradient-to-br transition-transform duration-300 group-hover:scale-[1.04]",
+                              gradient
+                            )} />
+                            
+                            <svg className="absolute inset-0 w-full h-full opacity-20 pointer-events-none" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M0,100 C20,80 40,120 60,100 C80,80 100,120 120,100 C140,80 160,120 180,100 C200,80 220,120 240,100" fill="none" stroke="white" strokeWidth="2" />
+                              <path d="M0,120 C20,100 40,140 60,120 C80,100 100,140 120,120 C140,100 160,140 180,120 C200,100 220,140 240,120" fill="none" stroke="white" strokeWidth="2" />
+                            </svg>
 
-                          {/* Top Meta */}
-                          <div className="absolute top-3 right-3 flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-black/10 backdrop-blur-sm">
-                            <Heart className="w-3 h-3 text-white fill-white" />
-                            <span className="text-[11px] font-bold text-white leading-none">{item.likes}</span>
-                          </div>
+                            <div className="absolute top-3 right-3 flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-black/10 backdrop-blur-sm">
+                              <Heart className="w-3 h-3 text-white fill-white" />
+                              <span className="text-[11px] font-bold text-white leading-none">{item.likes}</span>
+                            </div>
 
-                          {/* Bottom Title */}
-                          <div className="absolute bottom-3 left-3 right-3">
-                            <h3 className="text-[14px] font-bold text-white line-clamp-2 leading-tight drop-shadow-md">
-                              {item.title}
-                            </h3>
-                          </div>
-                        </Link>
-                      ))}
+                            <div className="absolute bottom-3 left-3 right-3">
+                              <h3 className="text-[14px] font-bold text-white line-clamp-2 leading-tight drop-shadow-md">
+                                {item.title}
+                              </h3>
+                            </div>
+                          </Link>
+                        );
+                      })}
                     </div>
                     
                     <button 
@@ -586,15 +669,24 @@ function CategoryPage() {
         {visibleItems.length > 0 ? (
           <div className={cn(
             "grid",
-            params.topic === 'text' 
+              params.topic === 'text' 
               ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5" 
-              : "grid-cols-12 gap-4 md:gap-6"
+              : params.topic === 'audio'
+                ? "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-[18px]"
+                : "grid-cols-12 gap-4 md:gap-6"
           )}>
             {visibleItems.map((item, idx) => {
               if (params.topic === 'text') {
                 return (
                   <div key={`${item.slug}-${idx}`}>
                     <TextCategoryCard item={item} />
+                  </div>
+                );
+              }
+              if (params.topic === 'audio') {
+                return (
+                  <div key={`${item.slug}-${idx}`}>
+                    <AudioCategoryCard item={item} />
                   </div>
                 );
               }
