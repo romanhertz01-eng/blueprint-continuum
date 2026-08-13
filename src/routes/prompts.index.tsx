@@ -777,16 +777,29 @@ function PopularAudioShelf({ allItems, searchQuery }: { allItems: PromptItem[], 
   const { isAuthed } = useAuth();
   const navigate = useNavigate();
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [canScroll, setCanScroll] = useState(false);
 
   const audioItems = useMemo(() => {
     if (searchQuery.trim()) return [];
     return allItems
       .filter(item => item.category === 'audio' && item.status === 'published')
       .sort((a, b) => (b.likes || 0) - (a.likes || 0))
-      .slice(0, 7);
+      .slice(0, 10);
   }, [allItems, searchQuery]);
 
-  if (audioItems.length < 5 || searchQuery.trim()) return null;
+  useEffect(() => {
+    const checkScroll = () => {
+      if (scrollRef.current) {
+        const { scrollWidth, clientWidth } = scrollRef.current;
+        setCanScroll(scrollWidth > clientWidth + 1);
+      }
+    };
+    checkScroll();
+    window.addEventListener('resize', checkScroll);
+    return () => window.removeEventListener('resize', checkScroll);
+  }, [audioItems]);
+
+  if (audioItems.length < 4 || searchQuery.trim()) return null;
 
   const scrollRight = () => {
     if (scrollRef.current) {
@@ -849,14 +862,20 @@ function PopularAudioShelf({ allItems, searchQuery }: { allItems: PromptItem[], 
         <div className="relative group/shelf">
           <div 
             ref={scrollRef}
-            className="flex gap-[14px] overflow-x-auto no-scrollbar snap-x snap-mandatory pb-2 w-[calc(100%+40px)]"
+            className={cn(
+              "flex gap-[14px] no-scrollbar snap-x snap-mandatory pb-2",
+              canScroll ? "overflow-x-auto w-[calc(100%+40px)]" : "w-full"
+            )}
           >
 
             {audioItems.map((item) => (
               <div
                 key={item.slug}
                 onClick={() => handleCardClick(item)}
-                className="w-[150px] shrink-0 rounded-2xl bg-card border border-border/50 p-3 flex flex-col items-center cursor-pointer snap-start transition-all duration-300 hover:-translate-y-0.5 group/vinyl"
+                className={cn(
+                  "rounded-2xl bg-card border border-border/50 p-3 flex flex-col items-center cursor-pointer snap-start transition-all duration-300 hover:-translate-y-0.5 group/vinyl",
+                  canScroll ? "w-[150px] shrink-0" : "flex-1 min-w-[120px]"
+                )}
               >
                 {/* SVG Vinyl */}
                 <div className="mb-3 relative w-[100px] h-[100px] transition-transform duration-300 group-hover/vinyl:rotate-[6deg]">
@@ -887,12 +906,14 @@ function PopularAudioShelf({ allItems, searchQuery }: { allItems: PromptItem[], 
             ))}
           </div>
 
-          <button
-            onClick={scrollRight}
-            className="absolute -right-4 top-1/2 -translate-y-1/2 w-[36px] h-[36px] rounded-full bg-background/80 backdrop-blur-sm border border-border flex items-center justify-center z-30 opacity-0 group-hover/shelf:opacity-100 transition-opacity hover:bg-background"
-          >
-            <ChevronRight className="w-5 h-5" />
-          </button>
+          {canScroll && (
+            <button
+              onClick={scrollRight}
+              className="absolute -right-4 top-1/2 -translate-y-1/2 w-[36px] h-[36px] rounded-full bg-background/80 backdrop-blur-sm border border-border flex items-center justify-center z-30 opacity-0 group-hover/shelf:opacity-100 transition-opacity hover:bg-background"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+          )}
         </div>
       </div>
     </section>
