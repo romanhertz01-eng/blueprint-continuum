@@ -398,6 +398,40 @@ function PromptsHub() {
         </div>
       </section>
 
+      {/* РЕКОМЕНДОВАННАЯ ПОДБОРКА (ГАЗ 2) */}
+      {recommendedTopic && (
+        <section className="max-w-[1520px] mx-auto px-6 w-full mb-8">
+          <div className="rounded-[28px] bg-muted/30 p-6 md:p-8">
+            <div className="flex items-start justify-between mb-8">
+              <div>
+                <h2 className="text-[22px] md:text-[26px] font-bold tracking-tight mb-1 text-foreground">
+                  {recommendedTopic.isBestOf ? `Лучшее: ${recommendedTopic.topic.cardTitle || recommendedTopic.topic.title}` : recommendedTopic.topic.title}
+                </h2>
+                <p className="text-[14px] md:text-[15px] text-muted-foreground font-medium max-w-2xl">
+                  {recommendedTopic.topic.intro.slice(0, 90).trim()}{recommendedTopic.topic.intro.length > 90 ? '...' : ''}
+                </p>
+              </div>
+              <Link 
+                to="/prompts/$topic"
+                params={{ topic: recommendedTopic.topic.slug }}
+                className="flex items-center gap-1.5 text-[14px] font-bold text-primary hover:opacity-80 transition-opacity shrink-0 mt-1"
+              >
+                Смотреть все <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+
+            <div className="flex gap-4 overflow-x-auto no-scrollbar snap-x pb-2 -mx-2 px-2">
+              {recommendedTopic.items.slice(0, 8).map((item, idx) => (
+                <div key={`${item.slug}-${idx}`} className="flex-none w-[200px] md:w-[240px] snap-start">
+                   <CatalogCard item={item} index={idx} />
+                </div>
+              ))}
+              <div className="flex-none w-1" />
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* 3. СТРОКА СОРТИРОВКИ */}
       <section className="max-w-[1520px] mx-auto px-6 w-full flex items-center justify-between mb-4">
         <div className="text-[13px] font-medium text-muted-foreground">
