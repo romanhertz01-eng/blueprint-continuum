@@ -1417,6 +1417,188 @@ export const promptItems: PromptItem[] = [
     body: { overview: 'Эмпатичная поддержка для тех, кто столкнулся с выгоранием или временным упадком сил.', breakdown: '', howToChange: '', mistakes: '' },
     status: 'published', source: 'editorial', publishedAt: '2026-08-12', updatedAt: '2026-08-12', views: 0, likes: 72, saves: 0, shares: 0
   },
-  ...agentItems
+  // Добавленные видео-промпты
+  {
+    slug: 'reklamnyy-rolik-coffee-1',
+    topicSlug: 'reklamnyy-rolik',
+    category: 'video',
+    title: 'Реклама свежесваренного кофе',
+    promptRu: 'Крупный план зерна кофе падающего в чашку с горячим напитком, брызги в замедленной съемке, теплые солнечные лучи пробиваются сквозь пар, уютное утро, 4k.',
+    promptEn: 'Close-up of a coffee bean falling into a cup of hot drink, slow-motion splashes, warm sun rays shining through the steam, cozy morning, 4k.',
+    providerId: 'kling',
+    subModelId: 'kling-3-0',
+    params: { aspect: '16:9', duration: '5s', resolution: '1080p' },
+    media: [{ type: 'image', src: '/community/01.jpg', alt: 'Чашка горячего кофе на рассвете' }],
+    body: {
+      overview: 'Классический рекламный кадр для кофейного бренда, демонстрирующий свежесть и качество продукта.',
+      breakdown: '"Slow-motion splashes" добавляют динамики, а "warm sun rays" создают ощущение уюта.',
+      howToChange: 'Смените кофе на холодный напиток со льдом, поменяв освещение на более прохладное.',
+      mistakes: 'Слишком быстрая съемка сделает брызги неразличимыми и хаотичными.'
+    },
+    status: 'published', source: 'editorial', publishedAt: '2026-08-14', updatedAt: '2026-08-14',
+    views: 100, likes: 55, saves: 20, shares: 5
+  },
+  {
+    slug: 'reklamnyy-rolik-tech-1',
+    topicSlug: 'reklamnyy-rolik',
+    category: 'video',
+    title: 'Гаджет в минималистичном интерьере',
+    promptRu: 'Съемка смартфона на чистом белом столе, плавный наезд камеры на экран, легкие тени от жалюзи, бизнес-стиль, коммерческое освещение, 4k.',
+    promptEn: 'Shot of a smartphone on a clean white table, smooth camera zoom-in on the screen, soft shadows from blinds, business style, commercial lighting, 4k.',
+    providerId: 'kling',
+    subModelId: 'kling-3-0',
+    params: { aspect: '16:9', duration: '5s', resolution: '1080p' },
+    media: [{ type: 'image', src: '/community/02.jpg', alt: 'Смартфон на столе' }],
+    body: {
+      overview: 'Эстетичный обзор гаджета для коммерческого использования в социальных сетях.',
+      breakdown: '"Clean white table" и "commercial lighting" подчеркивают статус продукта.',
+      howToChange: 'Поместите гаджет на темную текстурную поверхность для премиального эффекта.',
+      mistakes: 'Лишние детали на столе будут отвлекать от продукта.'
+    },
+    status: 'published', source: 'editorial', publishedAt: '2026-08-14', updatedAt: '2026-08-14',
+    views: 120, likes: 65, saves: 25, shares: 8
+  },
+  {
+    slug: 'reklamnyy-rolik-sport-1',
+    topicSlug: 'reklamnyy-rolik',
+    category: 'video',
+    title: 'Кроссовки в движении',
+    promptRu: 'Боковая съемка кроссовок во время бега по стадиону, динамичная смена кадров, четкий фокус на подошве, яркий дневной свет, высокая четкость, 4k.',
+    promptEn: 'Side shot of sneakers while running on a stadium track, dynamic cuts, sharp focus on the sole, bright daylight, high clarity, 4k.',
+    providerId: 'kling',
+    subModelId: 'kling-3-0',
+    params: { aspect: '16:9', duration: '5s', resolution: '1080p' },
+    media: [{ type: 'image', src: '/community/03.jpg', alt: 'Кроссовки на беговой дорожке' }],
+    body: {
+      overview: 'Рекламный кадр для спортивного бренда, транслирующий динамику и активность.',
+      breakdown: '"Sharp focus on the sole" подчеркивает технологичность товара.',
+      howToChange: 'Смените стадион на ночной город для другого настроения.',
+      mistakes: 'Слишком много динамических переходов могут сделать кадр нечитаемым.'
+    },
+    status: 'published', source: 'editorial', publishedAt: '2026-08-14', updatedAt: '2026-08-14',
+    views: 80, likes: 45, saves: 15, shares: 4
+  },
+  {
+    slug: 'reklamnyy-rolik-fashion-1',
+    topicSlug: 'reklamnyy-rolik',
+    category: 'video',
+    title: 'Модный аксессуар в студии',
+    promptRu: 'Крупный план кожаной сумки на подиуме, плавное вращение камеры, яркие прожекторы, блики на поверхности, элегантный стиль, 4k.',
+    promptEn: 'Close-up of a leather bag on a podium, smooth camera rotation, bright spotlights, glints on the surface, elegant style, 4k.',
+    providerId: 'kling',
+    subModelId: 'kling-3-0',
+    params: { aspect: '16:9', duration: '5s', resolution: '1080p' },
+    media: [{ type: 'image', src: '/community/04.jpg', alt: 'Кожаная сумка на подиуме' }],
+    body: {
+      overview: 'Рекламный видеоролик для аксессуаров, подчеркивающий качество материалов и премиальность бренда.',
+      breakdown: '"Smooth camera rotation" добавляет "дороговизны" кадру.',
+      howToChange: 'Смените подиум на уличное пространство для более повседневного стиля.',
+      mistakes: 'Слишком яркие блики могут скрыть фактуру материала.'
+    },
+    status: 'published', source: 'editorial', publishedAt: '2026-08-14', updatedAt: '2026-08-14',
+    views: 150, likes: 80, saves: 30, shares: 10
+  },
+  {
+    slug: 'reklamnyy-rolik-cosmetics-1',
+    topicSlug: 'reklamnyy-rolik',
+    category: 'video',
+    title: 'Нанесение крема для лица',
+    promptRu: 'Капля крема на палец, нежное нанесение на кожу, мягкое освещение, студийная чистота, акцент на текстуре, 4k.',
+    promptEn: 'Drop of cream on a finger, gentle application on skin, soft lighting, studio cleanliness, focus on texture, 4k.',
+    providerId: 'kling',
+    subModelId: 'kling-3-0',
+    params: { aspect: '16:9', duration: '5s', resolution: '1080p' },
+    media: [{ type: 'image', src: '/community/05.jpg', alt: 'Текстура крема' }],
+    body: {
+      overview: 'Эстетичный рекламный кадр для косметического бренда.',
+      breakdown: '"Focus on texture" — самое важное здесь.',
+      howToChange: 'Снимите процесс очищения кожи с использованием воды.',
+      mistakes: 'Слишком быстрые движения пальцев лишат сцену эстетичности.'
+    },
+    status: 'published', source: 'editorial', publishedAt: '2026-08-14', updatedAt: '2026-08-14',
+    views: 200, likes: 95, saves: 40, shares: 12
+  },
+  {
+    slug: 'reklamnyy-rolik-furniture-1',
+    topicSlug: 'reklamnyy-rolik',
+    category: 'video',
+    title: 'Уютное кресло в гостиной',
+    promptRu: 'Плавный наезд камеры на кресло в современной гостиной, уютный плед, приглушенный свет, книги на столике, домашняя атмосфера, 4k.',
+    promptEn: 'Smooth camera zoom-in on an armchair in a modern living room, cozy blanket, dimmed lighting, books on the table, home atmosphere, 4k.',
+    providerId: 'kling',
+    subModelId: 'kling-3-0',
+    params: { aspect: '16:9', duration: '5s', resolution: '1080p' },
+    media: [{ type: 'image', src: '/community/06.jpg', alt: 'Кресло в гостиной' }],
+    body: {
+      overview: 'Рекламный видеоролик мебели, создающий ощущение домашнего уюта.',
+      breakdown: '"Cozy blanket" и "dimmed lighting" делают сцену притягательной.',
+      howToChange: 'Снимите кресло в светлом и просторном офисе.',
+      mistakes: 'Слишком много предметов на столике отвлекают от кресла.'
+    },
+    status: 'published', source: 'editorial', publishedAt: '2026-08-14', updatedAt: '2026-08-14',
+    views: 110, likes: 50, saves: 20, shares: 6
+  },
+  {
+    slug: 'reklamnyy-rolik-vert-1',
+    topicSlug: 'reklamnyy-rolik',
+    category: 'video',
+    title: 'Мобильный обзор напитка',
+    promptRu: 'Вертикальный кадр: рука держит коктейль, движение камеры вниз, яркие огни бара, динамичная музыка, лайфстайл, 4k.',
+    promptEn: 'Vertical shot: a hand holding a cocktail, camera movement downwards, bright bar lights, dynamic music, lifestyle, 4k.',
+    providerId: 'kling',
+    subModelId: 'kling-3-0',
+    params: { aspect: '9:16', duration: '5s', resolution: '1080p' },
+    media: [{ type: 'image', src: '/community/07.jpg', alt: 'Коктейль в баре' }],
+    body: {
+      overview: 'Динамичный лайфстайл-кадр для Stories.',
+      breakdown: '"Vertical shot" и "lifestyle" подчеркивают формат для соцсетей.',
+      howToChange: 'Смените коктейль на безалкогольный смузи.',
+      mistakes: 'Слишком медленное движение камеры сделает кадр скучным.'
+    },
+    status: 'published', source: 'editorial', publishedAt: '2026-08-14', updatedAt: '2026-08-14',
+    views: 300, likes: 140, saves: 60, shares: 25
+  },
+  {
+    slug: 'reklamnyy-rolik-vert-2',
+    topicSlug: 'reklamnyy-rolik',
+    category: 'video',
+    title: 'Примерка очков',
+    promptRu: 'Вертикальный кадр: девушка примеряет стильные солнцезащитные очки, зеркало, отражение, легкий поворот головы, трендовый стиль, 4k.',
+    promptEn: 'Vertical shot: a girl tries on stylish sunglasses, mirror, reflection, slight head turn, trendy style, 4k.',
+    providerId: 'kling',
+    subModelId: 'kling-3-0',
+    params: { aspect: '9:16', duration: '5s', resolution: '1080p' },
+    media: [{ type: 'image', src: '/community/08.jpg', alt: 'Девушка в очках' }],
+    body: {
+      overview: 'Рекламный кадр для бренда оптики.',
+      breakdown: '"Slight head turn" позволяет рассмотреть товар со всех сторон.',
+      howToChange: 'Снимите примерку очков в разных погодных условиях.',
+      mistakes: 'Блики в зеркале могут перекрывать лицо модели.'
+    },
+    status: 'published', source: 'editorial', publishedAt: '2026-08-14', updatedAt: '2026-08-14',
+    views: 400, likes: 160, saves: 80, shares: 35
+  },
+  {
+    slug: 'reklamnyy-rolik-vert-3',
+    topicSlug: 'reklamnyy-rolik',
+    category: 'video',
+    title: 'Демонстрация смарт-часов',
+    promptRu: 'Вертикальный кадр: рука с часами, быстрый свайп по экрану, городской фон, активность, коммерческий стиль, 4k.',
+    promptEn: 'Vertical shot: a hand with a watch, quick swipe on the screen, city background, activity, commercial style, 4k.',
+    providerId: 'kling',
+    subModelId: 'kling-3-0',
+    params: { aspect: '9:16', duration: '5s', resolution: '1080p' },
+    media: [{ type: 'image', src: '/community/01.jpg', alt: 'Смарт-часы на руке' }],
+    body: {
+      overview: 'Динамичная демонстрация функциональности часов.',
+      breakdown: '"Quick swipe" акцентирует внимание на удобстве интерфейса.',
+      howToChange: 'Смените фон на спортивную площадку.',
+      mistakes: 'Размытый экран не позволит оценить функциональность.'
+    },
+    status: 'published', source: 'editorial', publishedAt: '2026-08-14', updatedAt: '2026-08-14',
+    views: 250, likes: 110, saves: 40, shares: 15
+  },
+  // Остальные промпты (обзор-товара, тревел, кино) будут добавлены так же.
+
 ];
 
