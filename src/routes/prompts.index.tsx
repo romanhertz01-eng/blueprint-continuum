@@ -445,3 +445,124 @@ function PromptsHub() {
 }
 
 export default PromptsHub;
+function HeroCarousel({ allItems }: { allItems: PromptItem[] }) {
+  const slides = useMemo(() => {
+    return promptTopics
+      .filter(t => t.status === 'published')
+      .map(topic => {
+        const firstItem = allItems.find(item => item.topicSlug === topic.slug && item.media && item.media.length > 0 && item.media[0].src);
+        if (!firstItem) return null;
+        const promptCount = allItems.filter(item => item.topicSlug === topic.slug).length;
+        return {
+          topic,
+          firstItem,
+          promptCount
+        };
+      })
+      .filter((s): s is NonNullable<typeof s> => s !== null)
+      .sort((a, b) => b.promptCount - a.promptCount)
+      .slice(0, 4)
+      .map(s => ({
+        title: s.topic.title,
+        subtitle: s.topic.intro.split(/[.!?]/)[0].slice(0, 80) + (s.topic.intro.length > 80 ? '...' : ''),
+        image: s.firstItem.media[0].src,
+        href: `/prompts/${s.topic.slug}`
+      }));
+  }, [allItems]);
+
+  const [current, setCurrent] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  const nextSlide = () => setCurrent(prev => (prev + 1) % slides.length);
+  const prevSlide = () => setCurrent(prev => (prev - 1 + slides.length) % slides.length);
+
+  useEffect(() => {
+    if (!isPaused && slides.length > 1) {
+      timerRef.current = setInterval(nextSlide, 7000);
+    }
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [isPaused, slides.length, current]);
+
+  if (slides.length === 0) return null;
+
+  return (
+    <section 
+      className="max-w-[1520px] mx-auto w-full mt-8 px-6"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+    >
+      <div className="relative h-[280px] md:h-[400px] rounded-3xl bg-muted/40 border border-border overflow-hidden">
+        {slides.map((slide, idx) => (
+          <div 
+            key={idx}
+            className={cn(
+              "absolute inset-0 transition-opacity duration-[400ms] ease-in-out",
+              idx === current ? "opacity-100 z-10" : "opacity-0 z-0"
+            )}
+          >
+            {/* Left Content */}
+            <div className="absolute left-0 top-0 h-full w-full md:w-[55%] p-8 md:p-[56px] flex flex-col justify-center z-20">
+              <h2 className="text-[28px] md:text-[44px] font-bold leading-tight mb-4 line-clamp-2">
+                {slide.title}
+              </h2>
+              <p className="text-[14px] md:text-[16px] text-muted-foreground mb-8 md:mb-10 line-clamp-2 max-w-[440px]">
+                {slide.subtitle}
+              </p>
+              
+              <div className="flex items-center gap-4">
+                <Link 
+                  to={slide.href as any}
+                  className="bg-primary text-white h-12 px-8 rounded-xl font-bold flex items-center justify-center transition-opacity hover:opacity-90"
+                >
+                  Попробовать
+                </Link>
+                
+                <div className="hidden md:flex items-center gap-2">
+                  <button 
+                    onClick={prevSlide}
+                    className="w-[44px] h-[44px] rounded-full bg-background/60 border border-border flex items-center justify-center hover:bg-background/80 transition-colors"
+                  >
+                    <ChevronLeft className="w-5 h-5" />
+                  </button>
+                  <button 
+                    onClick={nextSlide}
+                    className="w-[44px] h-[44px] rounded-full bg-background/60 border border-border flex items-center justify-center hover:bg-background/80 transition-colors"
+                  >
+                    <ChevronRight className="w-5 h-5" />
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Image */}
+            <div className="hidden md:block absolute right-0 top-0 h-full w-[50%]">
+              <img 
+                src={slide.image} 
+                alt={slide.title}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-r from-muted/40 via-muted/40 to-transparent w-[40%]" />
+            </div>
+          </div>
+        ))}
+
+        {/* Indicators */}
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-30">
+          {slides.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => setCurrent(idx)}
+              className={cn(
+                "w-2 h-2 rounded-full transition-colors",
+                idx === current ? "bg-foreground" : "bg-foreground/25 hover:bg-foreground/40"
+              )}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
