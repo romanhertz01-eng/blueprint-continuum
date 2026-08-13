@@ -14,7 +14,7 @@ export function TextPromptCard({ item }: TextPromptCardProps) {
   const navigate = useNavigate();
   const { isAuthed } = useAuth();
 
-  // Детерминированный градиент на основе слага (только токены темы)
+  // Детерминированный градиент на основе слага (только токены темы, мягкие оттенки)
   const getGradient = (slug: string) => {
     const gradients = [
       'from-blue-500/10 to-indigo-500/10',
@@ -50,7 +50,7 @@ export function TextPromptCard({ item }: TextPromptCardProps) {
   return (
     <div 
       onClick={handleAction}
-      className="group relative w-full h-[240px] rounded-2xl border border-border overflow-hidden cursor-pointer transition-all hover:shadow-lg hover:border-primary/30 flex flex-col bg-card break-inside-avoid mb-[12px]"
+      className="group relative w-full aspect-[3/4] rounded-2xl border border-border overflow-hidden cursor-pointer transition-all hover:shadow-lg hover:border-primary/30 flex flex-col bg-card"
     >
       {/* Плашка с градиентом */}
       <div className={cn(
@@ -61,24 +61,24 @@ export function TextPromptCard({ item }: TextPromptCardProps) {
       {/* Контент поверх плашки */}
       <div className="relative z-10 p-5 flex flex-col h-full">
         {/* Счётчик лайков сверху */}
-        <div className="flex justify-end mb-4">
-          <div className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-background/50 backdrop-blur-sm border border-border/50 text-[12px] font-medium">
+        <div className="flex justify-end">
+          <div className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-background/50 backdrop-blur-sm border border-border/50 text-[12px] font-medium text-foreground">
             <Heart className="w-3.5 h-3.5 text-muted-foreground" />
             <span>{item.likes}</span>
           </div>
         </div>
 
         {/* Название по центру */}
-        <div className="flex-grow flex items-center justify-center text-center px-4">
-          <h3 className="text-[16px] font-medium text-foreground leading-tight line-clamp-3">
+        <div className="flex-grow flex items-center justify-center text-center px-2">
+          <h3 className="text-[15px] md:text-[16px] font-medium text-foreground leading-snug line-clamp-4">
             {item.title}
           </h3>
         </div>
 
         {/* Кнопка внизу */}
-        <div className="mt-auto flex justify-center">
+        <div className="mt-auto">
           <button 
-            className="w-full h-10 rounded-xl bg-primary text-white text-[13px] font-semibold flex items-center justify-center gap-2 shadow-sm transition-transform active:scale-95 group-hover:brightness-110"
+            className="w-full h-10 rounded-xl bg-primary text-white text-[13px] font-bold flex items-center justify-center gap-2 shadow-sm transition-transform active:scale-95 group-hover:brightness-110"
           >
             Попробовать
             <Zap className="w-3.5 h-3.5 fill-current" />
@@ -88,4 +88,5 @@ export function TextPromptCard({ item }: TextPromptCardProps) {
     </div>
   );
 }
+
 

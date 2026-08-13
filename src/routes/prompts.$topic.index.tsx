@@ -276,7 +276,7 @@ function CategoryPage() {
             {visibleItems.map((item, idx) => {
               if (params.topic === 'text') {
                 return (
-                  <div key={`${item.slug}-${idx}`} className="col-span-12 sm:col-span-6 lg:col-span-3">
+                  <div key={`${item.slug}-${idx}`} className="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3">
                     <TextPromptCard item={item} />
                   </div>
                 );
