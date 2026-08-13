@@ -1,12 +1,13 @@
 import { ORIGIN } from "@/lib/origin";
-import { createFileRoute, Link } from '@tanstack/react-router';
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
 import { Search, X, Sparkles, Star, PlusCircle, ArrowRight, Filter, ChevronLeft, ChevronRight, FileText, Music, Video, Bot, Heart, Image as ImageIcon } from 'lucide-react';
 import { Footer } from '@/components/shared/Footer';
 import { getPublishedItems, getPublishedTopics, countItemsByCategory, getCategories, PromptItem, getProvidersWithPrompts, promptTopics } from '@/data/prompts';
 import { CatalogCard } from '@/components/prompts/CatalogCard';
 import { CollectionShelf } from '@/components/prompts/CollectionShelf';
 import { EditorialBanner } from '@/components/prompts/EditorialBanner';
-
+import { useAuth } from '@/contexts/AuthContext';
+import { buildAuthHref } from '@/lib/authRedirect';
 import { TopicCloud } from '@/components/prompts/TopicCloud';
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
@@ -35,6 +36,8 @@ export const Route = createFileRoute('/prompts/')({
 const PAGE_SIZE = 30;
 
 function PromptsHub() {
+  const navigate = useNavigate();
+  const { isAuthed } = useAuth();
   const allItems = getPublishedItems();
   const topics = getPublishedTopics();
   const promptCategories = getCategories();
@@ -237,13 +240,13 @@ function PromptsHub() {
               Идеи и рабочие сценарии для любых задач с ERA2. Оптимизируйте работу и творчество.
             </p>
             <div className="flex flex-wrap gap-3">
-              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-muted/40 text-[12px] font-medium text-muted-foreground border border-border/50">
+              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-muted/40 text-[12px] font-medium text-muted-foreground border border-border/50 select-none">
                 <Star className="w-3.5 h-3.5 fill-primary text-primary" /> 12 540 использований
               </div>
-              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-muted/40 text-[12px] font-medium text-muted-foreground border border-border/50">
+              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-muted/40 text-[12px] font-medium text-muted-foreground border border-border/50 select-none">
                 <PlusCircle className="w-3.5 h-3.5" /> 8 632 промпта
               </div>
-              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-muted/40 text-[12px] font-medium text-muted-foreground border border-border/50">
+              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-muted/40 text-[12px] font-medium text-muted-foreground border border-border/50 select-none">
                 <ArrowRight className="w-3.5 h-3.5" /> Обновления каждый день
               </div>
             </div>
@@ -251,7 +254,19 @@ function PromptsHub() {
 
           <div className="flex flex-wrap sm:flex-nowrap gap-4 shrink-0">
             {/* Featured A */}
-            <div className="flex-1 sm:w-64 p-4 rounded-2xl bg-muted/30 border border-border/50 flex flex-col justify-between group cursor-pointer hover:bg-muted/50 transition-colors">
+            <Link 
+              to={(() => {
+                const topicsWithCounts = promptTopics
+                  .filter(t => t.status === 'published')
+                  .map(t => ({
+                    slug: t.slug,
+                    count: allItems.filter(item => item.topicSlug === t.slug).length
+                  }))
+                  .sort((a, b) => b.count - a.count);
+                return topicsWithCounts.length > 0 ? `/prompts/${topicsWithCounts[0].slug}` : '/prompts';
+              })() as any}
+              className="flex-1 sm:w-64 p-4 rounded-2xl bg-muted/30 border border-border/50 flex flex-col justify-between group cursor-pointer hover:bg-muted/50 transition-colors"
+            >
               <div>
                 <div className="flex items-center gap-2 mb-2">
                   <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
@@ -274,10 +289,13 @@ function PromptsHub() {
                 </div>
                 <span className="text-[12px] font-bold text-primary group-hover:translate-x-1 transition-transform">Смотреть →</span>
               </div>
-            </div>
+            </Link>
 
             {/* Featured B */}
-            <div className="flex-1 sm:w-64 p-4 rounded-2xl bg-muted/30 border border-border/50 flex flex-col justify-between group cursor-pointer hover:bg-muted/50 transition-colors">
+            <Link
+              to={isAuthed ? '/text' : buildAuthHref('/text') as any}
+              className="flex-1 sm:w-64 p-4 rounded-2xl bg-muted/30 border border-border/50 flex flex-col justify-between group cursor-pointer hover:bg-muted/50 transition-colors"
+            >
                <div>
                 <div className="flex items-center gap-2 mb-2">
                   <div className="w-8 h-8 rounded-full bg-orange-500/10 flex items-center justify-center">
@@ -293,7 +311,7 @@ function PromptsHub() {
                  <span className="text-[12px] font-bold text-orange-500 group-hover:translate-x-1 transition-transform">Создать промпт</span>
                  <div className="text-orange-500 font-bold text-xl leading-none">⚡️</div>
               </div>
-            </div>
+            </Link>
           </div>
         </div>
       </section>
@@ -316,7 +334,7 @@ function PromptsHub() {
               return (
                 <div 
                   key={cat.slug} 
-                  className="relative h-[140px] rounded-[18px] overflow-hidden bg-muted/20 border border-border/50 opacity-60 grayscale cursor-not-allowed group"
+                  className="relative h-[140px] rounded-[18px] overflow-hidden bg-muted/20 border border-border/50 opacity-60 grayscale group"
                 >
                   <div className="absolute inset-0 bg-black/40" />
                   <div className="absolute inset-0 flex flex-col justify-center items-center text-center p-4">
