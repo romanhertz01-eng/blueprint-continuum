@@ -116,7 +116,7 @@ function CategoryPage() {
   const [page, setPage] = useState(1);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   
-  // Категории для текстовых промптов
+  // Категории (фильтры тем)
   const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -140,11 +140,19 @@ function CategoryPage() {
     };
   }, [isPanelOpen]);
 
-  const textTopics = useMemo(() => {
-    if (!isText) return [];
-    const topics = getTopicsByCategory('text');
-    return topics;
-  }, [isText]);
+  const categoryTopics = useMemo(() => {
+    const topics = getTopicsByCategory(params.topic as any);
+    // Фильтруем темы, у которых есть хотя бы один промпт в этой категории
+    return topics.filter(topic => 
+      data.items.some(item => item.topicSlug === topic.slug || item.extraTopicSlugs?.includes(topic.slug))
+    );
+  }, [params.topic, data.items]);
+
+  // Сброс фильтров при смене категории
+  useEffect(() => {
+    setSelectedTopics([]);
+    setIsPanelOpen(false);
+  }, [params.topic]);
 
   // Данные для аудио-полок
   const audioShelvesData = useMemo(() => {
@@ -187,9 +195,12 @@ function CategoryPage() {
       );
     }
 
-    // Фильтр по темам (для текста)
-    if (isText && selectedTopics.length > 0) {
-      result = result.filter(item => selectedTopics.includes(item.topicSlug));
+    // Фильтр по темам (множественный выбор)
+    if (selectedTopics.length > 0) {
+      result = result.filter(item => 
+        selectedTopics.includes(item.topicSlug) || 
+        item.extraTopicSlugs?.some(slug => selectedTopics.includes(slug))
+      );
     }
 
     // Фильтр по типу видео
@@ -310,9 +321,9 @@ function CategoryPage() {
       {/* 2. ЛЕНТА КАТЕГОРИЙ (PILLS) */}
       <section className="sticky top-0 z-40 bg-background/80 backdrop-blur-md border-b border-border/40 mb-6">
         <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
-            {isText && (
-              <div className="relative" ref={panelRef}>
+          <div className="flex items-center gap-2">
+            {categoryTopics.length >= 2 && (
+              <div className="relative shrink-0" ref={panelRef}>
                 <button
                   onClick={() => setIsPanelOpen(!isPanelOpen)}
                   className="h-11 px-5 rounded-full border border-border bg-card flex items-center gap-2.5 transition-all hover:bg-muted/50"
@@ -330,7 +341,7 @@ function CategoryPage() {
                   <div className="absolute left-0 top-full z-50 mt-2 w-[340px] rounded-2xl bg-card border border-border shadow-xl p-4 animate-in fade-in zoom-in-95 duration-200">
                     <div className="text-[15px] font-bold mb-3">Категории</div>
                     <div className="max-h-[340px] overflow-y-auto no-scrollbar pr-1 flex flex-col gap-1">
-                      {textTopics.map(topic => {
+                      {categoryTopics.map(topic => {
                         const Icon = topicIcons[topic.slug] || Sparkles;
                         const isSelected = selectedTopics.includes(topic.slug);
                         return (
@@ -381,27 +392,29 @@ function CategoryPage() {
               </div>
             )}
 
-            <Link
-              to="/prompts"
-              className="px-5 py-2.5 rounded-full text-[13px] font-medium whitespace-nowrap transition-all border bg-muted/30 border-border/50 hover:bg-muted/60 text-muted-foreground"
-            >
-              Все темы
-            </Link>
-            {data.allCategories.map(cat => (
+            <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 flex-1">
               <Link
-                key={cat.slug}
-                to="/prompts/$topic"
-                params={{ topic: cat.slug }}
-                className={cn(
-                  "px-5 py-2.5 rounded-full text-[13px] font-medium whitespace-nowrap transition-all border",
-                  params.topic === cat.slug
-                    ? "bg-primary text-white border-primary shadow-md shadow-primary/20"
-                    : "bg-muted/30 border-border/50 hover:bg-muted/60 text-muted-foreground"
-                )}
+                to="/prompts"
+                className="px-5 py-2.5 rounded-full text-[13px] font-medium whitespace-nowrap transition-all border bg-muted/30 border-border/50 hover:bg-muted/60 text-muted-foreground"
               >
-                {cat.cardTitle}
+                Все темы
               </Link>
-            ))}
+              {data.allCategories.map(cat => (
+                <Link
+                  key={cat.slug}
+                  to="/prompts/$topic"
+                  params={{ topic: cat.slug }}
+                  className={cn(
+                    "px-5 py-2.5 rounded-full text-[13px] font-medium whitespace-nowrap transition-all border",
+                    params.topic === cat.slug
+                      ? "bg-primary text-white border-primary shadow-md shadow-primary/20"
+                      : "bg-muted/30 border-border/50 hover:bg-muted/60 text-muted-foreground"
+                  )}
+                >
+                  {cat.cardTitle}
+                </Link>
+              ))}
+            </div>
           </div>
 
           {/* ВТОРИЧНАЯ ЛЕНТА ФИЛЬТРОВ ДЛЯ ВИДЕО */}
