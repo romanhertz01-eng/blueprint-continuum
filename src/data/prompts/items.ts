@@ -1417,6 +1417,433 @@ export const promptItems: PromptItem[] = [
     body: { overview: 'Эмпатичная поддержка для тех, кто столкнулся с выгоранием или временным упадком сил.', breakdown: '', howToChange: '', mistakes: '' },
     status: 'published', source: 'editorial', publishedAt: '2026-08-12', updatedAt: '2026-08-12', views: 0, likes: 72, saves: 0, shares: 0
   },
+  // Добавленные видео-промпты
+  {
+    slug: 'reklamnyy-rolik-coffee-1',
+    topicSlug: 'reklamnyy-rolik',
+    category: 'video',
+    title: 'Реклама свежесваренного кофе',
+    promptRu: 'Крупный план зерна кофе падающего в чашку с горячим напитком, брызги в замедленной съемке, теплые солнечные лучи пробиваются сквозь пар, уютное утро, 4k.',
+    promptEn: 'Close-up of a coffee bean falling into a cup of hot drink, slow-motion splashes, warm sun rays shining through the steam, cozy morning, 4k.',
+    providerId: 'kling',
+    subModelId: 'kling-3-0',
+    params: { aspect: '16:9', duration: '5s', resolution: '1080p' },
+    media: [{ type: 'image', src: '/community/01.jpg', alt: 'Чашка горячего кофе на рассвете' }],
+    body: {
+      overview: 'Классический рекламный кадр для кофейного бренда, демонстрирующий свежесть и качество продукта.',
+      breakdown: '"Slow-motion splashes" добавляют динамики, а "warm sun rays" создают ощущение уюта.',
+      howToChange: 'Смените кофе на холодный напиток со льдом, поменяв освещение на более прохладное.',
+      mistakes: 'Слишком быстрая съемка сделает брызги неразличимыми и хаотичными.'
+    },
+    status: 'published', source: 'editorial', publishedAt: '2026-08-14', updatedAt: '2026-08-14',
+    views: 100, likes: 55, saves: 20, shares: 5
+  },
+  {
+    slug: 'reklamnyy-rolik-tech-1',
+    topicSlug: 'reklamnyy-rolik',
+    category: 'video',
+    title: 'Гаджет в минималистичном интерьере',
+    promptRu: 'Съемка смартфона на чистом белом столе, плавный наезд камеры на экран, легкие тени от жалюзи, бизнес-стиль, коммерческое освещение, 4k.',
+    promptEn: 'Shot of a smartphone on a clean white table, smooth camera zoom-in on the screen, soft shadows from blinds, business style, commercial lighting, 4k.',
+    providerId: 'kling',
+    subModelId: 'kling-3-0',
+    params: { aspect: '16:9', duration: '5s', resolution: '1080p' },
+    media: [{ type: 'image', src: '/community/02.jpg', alt: 'Смартфон на столе' }],
+    body: {
+      overview: 'Эстетичный обзор гаджета для коммерческого использования в социальных сетях.',
+      breakdown: '"Clean white table" и "commercial lighting" подчеркивают статус продукта.',
+      howToChange: 'Поместите гаджет на темную текстурную поверхность для премиального эффекта.',
+      mistakes: 'Лишние детали на столе будут отвлекать от продукта.'
+    },
+    status: 'published', source: 'editorial', publishedAt: '2026-08-14', updatedAt: '2026-08-14',
+    views: 120, likes: 65, saves: 25, shares: 8
+  },
+  {
+    slug: 'reklamnyy-rolik-sport-1',
+    topicSlug: 'reklamnyy-rolik',
+    category: 'video',
+    title: 'Кроссовки в движении',
+    promptRu: 'Боковая съемка кроссовок во время бега по стадиону, динамичная смена кадров, четкий фокус на подошве, яркий дневной свет, высокая четкость, 4k.',
+    promptEn: 'Side shot of sneakers while running on a stadium track, dynamic cuts, sharp focus on the sole, bright daylight, high clarity, 4k.',
+    providerId: 'kling',
+    subModelId: 'kling-3-0',
+    params: { aspect: '16:9', duration: '5s', resolution: '1080p' },
+    media: [{ type: 'image', src: '/community/03.jpg', alt: 'Кроссовки на беговой дорожке' }],
+    body: {
+      overview: 'Рекламный кадр для спортивного бренда, транслирующий динамику и активность.',
+      breakdown: '"Sharp focus on the sole" подчеркивает технологичность товара.',
+      howToChange: 'Смените стадион на ночной город для другого настроения.',
+      mistakes: 'Слишком много динамических переходов могут сделать кадр нечитаемым.'
+    },
+    status: 'published', source: 'editorial', publishedAt: '2026-08-14', updatedAt: '2026-08-14',
+    views: 80, likes: 45, saves: 15, shares: 4
+  },
+  {
+    slug: 'reklamnyy-rolik-fashion-1',
+    topicSlug: 'reklamnyy-rolik',
+    category: 'video',
+    title: 'Модный аксессуар в студии',
+    promptRu: 'Крупный план кожаной сумки на подиуме, плавное вращение камеры, яркие прожекторы, блики на поверхности, элегантный стиль, 4k.',
+    promptEn: 'Close-up of a leather bag on a podium, smooth camera rotation, bright spotlights, glints on the surface, elegant style, 4k.',
+    providerId: 'kling',
+    subModelId: 'kling-3-0',
+    params: { aspect: '16:9', duration: '5s', resolution: '1080p' },
+    media: [{ type: 'image', src: '/community/04.jpg', alt: 'Кожаная сумка на подиуме' }],
+    body: {
+      overview: 'Рекламный видеоролик для аксессуаров, подчеркивающий качество материалов и премиальность бренда.',
+      breakdown: '"Smooth camera rotation" добавляет "дороговизны" кадру.',
+      howToChange: 'Смените подиум на уличное пространство для более повседневного стиля.',
+      mistakes: 'Слишком яркие блики могут скрыть фактуру материала.'
+    },
+    status: 'published', source: 'editorial', publishedAt: '2026-08-14', updatedAt: '2026-08-14',
+    views: 150, likes: 80, saves: 30, shares: 10
+  },
+  {
+    slug: 'reklamnyy-rolik-cosmetics-1',
+    topicSlug: 'reklamnyy-rolik',
+    category: 'video',
+    title: 'Нанесение крема для лица',
+    promptRu: 'Капля крема на палец, нежное нанесение на кожу, мягкое освещение, студийная чистота, акцент на текстуре, 4k.',
+    promptEn: 'Drop of cream on a finger, gentle application on skin, soft lighting, studio cleanliness, focus on texture, 4k.',
+    providerId: 'kling',
+    subModelId: 'kling-3-0',
+    params: { aspect: '16:9', duration: '5s', resolution: '1080p' },
+    media: [{ type: 'image', src: '/community/05.jpg', alt: 'Текстура крема' }],
+    body: {
+      overview: 'Эстетичный рекламный кадр для косметического бренда.',
+      breakdown: '"Focus on texture" — самое важное здесь.',
+      howToChange: 'Снимите процесс очищения кожи с использованием воды.',
+      mistakes: 'Слишком быстрые движения пальцев лишат сцену эстетичности.'
+    },
+    status: 'published', source: 'editorial', publishedAt: '2026-08-14', updatedAt: '2026-08-14',
+    views: 200, likes: 95, saves: 40, shares: 12
+  },
+  {
+    slug: 'reklamnyy-rolik-furniture-1',
+    topicSlug: 'reklamnyy-rolik',
+    category: 'video',
+    title: 'Уютное кресло в гостиной',
+    promptRu: 'Плавный наезд камеры на кресло в современной гостиной, уютный плед, приглушенный свет, книги на столике, домашняя атмосфера, 4k.',
+    promptEn: 'Smooth camera zoom-in on an armchair in a modern living room, cozy blanket, dimmed lighting, books on the table, home atmosphere, 4k.',
+    providerId: 'kling',
+    subModelId: 'kling-3-0',
+    params: { aspect: '16:9', duration: '5s', resolution: '1080p' },
+    media: [{ type: 'image', src: '/community/06.jpg', alt: 'Кресло в гостиной' }],
+    body: {
+      overview: 'Рекламный видеоролик мебели, создающий ощущение домашнего уюта.',
+      breakdown: '"Cozy blanket" и "dimmed lighting" делают сцену притягательной.',
+      howToChange: 'Снимите кресло в светлом и просторном офисе.',
+      mistakes: 'Слишком много предметов на столике отвлекают от кресла.'
+    },
+    status: 'published', source: 'editorial', publishedAt: '2026-08-14', updatedAt: '2026-08-14',
+    views: 110, likes: 50, saves: 20, shares: 6
+  },
+  {
+    slug: 'reklamnyy-rolik-vert-1',
+    topicSlug: 'reklamnyy-rolik',
+    category: 'video',
+    title: 'Мобильный обзор напитка',
+    promptRu: 'Вертикальный кадр: рука держит коктейль, движение камеры вниз, яркие огни бара, динамичная музыка, лайфстайл, 4k.',
+    promptEn: 'Vertical shot: a hand holding a cocktail, camera movement downwards, bright bar lights, dynamic music, lifestyle, 4k.',
+    providerId: 'kling',
+    subModelId: 'kling-3-0',
+    params: { aspect: '9:16', duration: '5s', resolution: '1080p' },
+    media: [{ type: 'image', src: '/community/07.jpg', alt: 'Коктейль в баре' }],
+    body: {
+      overview: 'Динамичный лайфстайл-кадр для Stories.',
+      breakdown: '"Vertical shot" и "lifestyle" подчеркивают формат для соцсетей.',
+      howToChange: 'Смените коктейль на безалкогольный смузи.',
+      mistakes: 'Слишком медленное движение камеры сделает кадр скучным.'
+    },
+    status: 'published', source: 'editorial', publishedAt: '2026-08-14', updatedAt: '2026-08-14',
+    views: 300, likes: 140, saves: 60, shares: 25
+  },
+  {
+    slug: 'reklamnyy-rolik-vert-2',
+    topicSlug: 'reklamnyy-rolik',
+    category: 'video',
+    title: 'Примерка очков',
+    promptRu: 'Вертикальный кадр: девушка примеряет стильные солнцезащитные очки, зеркало, отражение, легкий поворот головы, трендовый стиль, 4k.',
+    promptEn: 'Vertical shot: a girl tries on stylish sunglasses, mirror, reflection, slight head turn, trendy style, 4k.',
+    providerId: 'kling',
+    subModelId: 'kling-3-0',
+    params: { aspect: '9:16', duration: '5s', resolution: '1080p' },
+    media: [{ type: 'image', src: '/community/08.jpg', alt: 'Девушка в очках' }],
+    body: {
+      overview: 'Рекламный кадр для бренда оптики.',
+      breakdown: '"Slight head turn" позволяет рассмотреть товар со всех сторон.',
+      howToChange: 'Снимите примерку очков в разных погодных условиях.',
+      mistakes: 'Блики в зеркале могут перекрывать лицо модели.'
+    },
+    status: 'published', source: 'editorial', publishedAt: '2026-08-14', updatedAt: '2026-08-14',
+    views: 400, likes: 160, saves: 80, shares: 35
+  },
+  {
+    slug: 'reklamnyy-rolik-vert-3',
+    topicSlug: 'reklamnyy-rolik',
+    category: 'video',
+    title: 'Демонстрация смарт-часов',
+    promptRu: 'Вертикальный кадр: рука с часами, быстрый свайп по экрану, городской фон, активность, коммерческий стиль, 4k.',
+    promptEn: 'Vertical shot: a hand with a watch, quick swipe on the screen, city background, activity, commercial style, 4k.',
+    providerId: 'kling',
+    subModelId: 'kling-3-0',
+    params: { aspect: '9:16', duration: '5s', resolution: '1080p' },
+    media: [{ type: 'image', src: '/community/01.jpg', alt: 'Смарт-часы на руке' }],
+    body: {
+      overview: 'Динамичная демонстрация функциональности часов.',
+      breakdown: '"Quick swipe" акцентирует внимание на удобстве интерфейса.',
+      howToChange: 'Смените фон на спортивную площадку.',
+      mistakes: 'Размытый экран не позволит оценить функциональность.'
+    },
+    status: 'published', source: 'editorial', publishedAt: '2026-08-14', updatedAt: '2026-08-14',
+    views: 250, likes: 110, saves: 40, shares: 15
+  },
+  // obzor-tovara
+  {
+    slug: 'obzor-tovara-1', topicSlug: 'obzor-tovara', category: 'video', title: 'Обзор наушников',
+    promptRu: 'Макросъемка беспроводных наушников, вращение на 360 градусов, стильный кейс, яркое освещение, студийный фон, 4k.',
+    promptEn: 'Macro shot of wireless headphones, 360-degree rotation, stylish case, bright lighting, studio background, 4k.',
+    providerId: 'kling', subModelId: 'kling-3-0', params: { aspect: '16:9', duration: '5s', resolution: '1080p' },
+    media: [{ type: 'image', src: '/community/02.jpg', alt: 'Наушники' }],
+    body: { overview: 'Обзор современных наушников с акцентом на дизайне.', breakdown: '', howToChange: '', mistakes: '' },
+    status: 'published', source: 'editorial', publishedAt: '2026-08-14', updatedAt: '2026-08-14', views: 50, likes: 30, saves: 10, shares: 2
+  },
+  {
+    slug: 'obzor-tovara-2', topicSlug: 'obzor-tovara', category: 'video', title: 'Обзор клавиатуры',
+    promptRu: 'Обзор механической клавиатуры, подсветка RGB, клик клавиш, крупный план, геймерский стол, 4k.',
+    promptEn: 'Review of a mechanical keyboard, RGB lighting, key clicks, close-up, gamer desk, 4k.',
+    providerId: 'kling', subModelId: 'kling-3-0', params: { aspect: '16:9', duration: '5s', resolution: '1080p' },
+    media: [{ type: 'image', src: '/community/03.jpg', alt: 'Клавиатура' }],
+    body: { overview: 'Демонстрация работы игровой периферии.', breakdown: '', howToChange: '', mistakes: '' },
+    status: 'published', source: 'editorial', publishedAt: '2026-08-14', updatedAt: '2026-08-14', views: 60, likes: 40, saves: 15, shares: 3
+  },
+  {
+    slug: 'obzor-tovara-3', topicSlug: 'obzor-tovara', category: 'video', title: 'Обзор мыши',
+    promptRu: 'Плавный наезд на игровую мышь, матовый корпус, светящийся логотип, эргономичный дизайн, темный фон, 4k.',
+    promptEn: 'Smooth zoom on a gaming mouse, matte body, glowing logo, ergonomic design, dark background, 4k.',
+    providerId: 'kling', subModelId: 'kling-3-0', params: { aspect: '16:9', duration: '5s', resolution: '1080p' },
+    media: [{ type: 'image', src: '/community/04.jpg', alt: 'Мышь' }],
+    body: { overview: 'Обзор эргономичного устройства для геймеров.', breakdown: '', howToChange: '', mistakes: '' },
+    status: 'published', source: 'editorial', publishedAt: '2026-08-14', updatedAt: '2026-08-14', views: 70, likes: 45, saves: 18, shares: 4
+  },
+  {
+    slug: 'obzor-tovara-4-vert', topicSlug: 'obzor-tovara', category: 'video', title: 'Вертикальный обзор часов',
+    promptRu: 'Вертикальный кадр: детальный обзор часов на руке, работа механизма, строгий деловой стиль, 4k.',
+    promptEn: 'Vertical shot: detailed review of a watch on the wrist, movement of the mechanism, strict business style, 4k.',
+    providerId: 'kling', subModelId: 'kling-3-0', params: { aspect: '9:16', duration: '5s', resolution: '1080p' },
+    media: [{ type: 'image', src: '/community/05.jpg', alt: 'Часы' }],
+    body: { overview: 'Короткий обзор аксессуара для Reels.', breakdown: '', howToChange: '', mistakes: '' },
+    status: 'published', source: 'editorial', publishedAt: '2026-08-14', updatedAt: '2026-08-14', views: 90, likes: 50, saves: 20, shares: 5
+  },
+  {
+    slug: 'obzor-tovara-5-vert', topicSlug: 'obzor-tovara', category: 'video', title: 'Вертикальный обзор телефона',
+    promptRu: 'Вертикальный кадр: смартфон в руках, демонстрация экрана, свайпы, городской фон, лайфстайл, 4k.',
+    promptEn: 'Vertical shot: smartphone in hands, screen demonstration, swipes, city background, lifestyle, 4k.',
+    providerId: 'kling', subModelId: 'kling-3-0', params: { aspect: '9:16', duration: '5s', resolution: '1080p' },
+    media: [{ type: 'image', src: '/community/06.jpg', alt: 'Телефон' }],
+    body: { overview: 'Демонстрация нового гаджета в действии.', breakdown: '', howToChange: '', mistakes: '' },
+    status: 'published', source: 'editorial', publishedAt: '2026-08-14', updatedAt: '2026-08-14', views: 110, likes: 60, saves: 25, shares: 6
+  },
+  {
+    slug: 'obzor-tovara-6-vert', topicSlug: 'obzor-tovara', category: 'video', title: 'Вертикальный обзор косметики',
+    promptRu: 'Вертикальный кадр: баночка крема, открывание крышки, текстура, мягкое освещение, косметический стол, 4k.',
+    promptEn: 'Vertical shot: a jar of cream, opening the lid, texture, soft lighting, cosmetic table, 4k.',
+    providerId: 'kling', subModelId: 'kling-3-0', params: { aspect: '9:16', duration: '5s', resolution: '1080p' },
+    media: [{ type: 'image', src: '/community/07.jpg', alt: 'Крем' }],
+    body: { overview: 'Текстурный обзор бьюти-продукта.', breakdown: '', howToChange: '', mistakes: '' },
+    status: 'published', source: 'editorial', publishedAt: '2026-08-14', updatedAt: '2026-08-14', views: 130, likes: 70, saves: 30, shares: 7
+  },
+  {
+    slug: 'obzor-tovara-7-vert', topicSlug: 'obzor-tovara', category: 'video', title: 'Вертикальный обзор очков',
+    promptRu: 'Вертикальный кадр: очки на лице, зеркало, отражение, стильный образ, светлая студия, 4k.',
+    promptEn: 'Vertical shot: glasses on face, mirror, reflection, stylish look, bright studio, 4k.',
+    providerId: 'kling', subModelId: 'kling-3-0', params: { aspect: '9:16', duration: '5s', resolution: '1080p' },
+    media: [{ type: 'image', src: '/community/08.jpg', alt: 'Очки' }],
+    body: { overview: 'Модный обзор аксессуаров.', breakdown: '', howToChange: '', mistakes: '' },
+    status: 'published', source: 'editorial', publishedAt: '2026-08-14', updatedAt: '2026-08-14', views: 150, likes: 80, saves: 35, shares: 8
+  },
+  {
+    slug: 'obzor-tovara-8-vert', topicSlug: 'obzor-tovara', category: 'video', title: 'Вертикальный обзор парфюма',
+    promptRu: 'Вертикальный кадр: флакон духов, распыление, блики, роскошный интерьер, вечерний свет, 4k.',
+    promptEn: 'Vertical shot: perfume bottle, spray, glints, luxurious interior, evening light, 4k.',
+    providerId: 'kling', subModelId: 'kling-3-0', params: { aspect: '9:16', duration: '5s', resolution: '1080p' },
+    media: [{ type: 'image', src: '/community/01.jpg', alt: 'Парфюм' }],
+    body: { overview: 'Эстетичный обзор люксового парфюма.', breakdown: '', howToChange: '', mistakes: '' },
+    status: 'published', source: 'editorial', publishedAt: '2026-08-14', updatedAt: '2026-08-14', views: 170, likes: 90, saves: 40, shares: 9
+  },
+  {
+    slug: 'obzor-tovara-9-vert', topicSlug: 'obzor-tovara', category: 'video', title: 'Вертикальный обзор обуви',
+    promptRu: 'Вертикальный кадр: кроссовки в руках, детальный осмотр материала, уличный фон, лайфстайл, 4k.',
+    promptEn: 'Vertical shot: sneakers in hands, detailed inspection of material, street background, lifestyle, 4k.',
+    providerId: 'kling', subModelId: 'kling-3-0', params: { aspect: '9:16', duration: '5s', resolution: '1080p' },
+    media: [{ type: 'image', src: '/community/02.jpg', alt: 'Обувь' }],
+    body: { overview: 'Уличный обзор новой коллекции обуви.', breakdown: '', howToChange: '', mistakes: '' },
+    status: 'published', source: 'editorial', publishedAt: '2026-08-14', updatedAt: '2026-08-14', views: 190, likes: 100, saves: 45, shares: 10
+  },
+  // trevel-video
+  {
+    slug: 'trevel-video-1', topicSlug: 'trevel-video', category: 'video', title: 'Пустыня на закате',
+    promptRu: 'Аэросъемка бескрайней пустыни, длинные тени на барханах, оранжевое небо, тишина, величие природы, 4k.',
+    promptEn: 'Aerial shot of an endless desert, long shadows on dunes, orange sky, silence, majesty of nature, 4k.',
+    providerId: 'kling', subModelId: 'kling-3-0', params: { aspect: '16:9', duration: '5s', resolution: '1080p' },
+    media: [{ type: 'image', src: '/community/03.jpg', alt: 'Пустыня' }],
+    body: { overview: 'Захватывающий пейзаж пустыни с высоты.', breakdown: '', howToChange: '', mistakes: '' },
+    status: 'published', source: 'editorial', publishedAt: '2026-08-14', updatedAt: '2026-08-14', views: 100, likes: 50, saves: 20, shares: 5
+  },
+  {
+    slug: 'trevel-video-2', topicSlug: 'trevel-video', category: 'video', title: 'Лес в тумане',
+    promptRu: 'Лес в густом утреннем тумане, лучи солнца пробиваются сквозь деревья, сказочная атмосфера, высокое качество, 4k.',
+    promptEn: 'Forest in thick morning fog, sun rays breaking through trees, fairytale atmosphere, high quality, 4k.',
+    providerId: 'kling', subModelId: 'kling-3-0', params: { aspect: '16:9', duration: '5s', resolution: '1080p' },
+    media: [{ type: 'image', src: '/community/04.jpg', alt: 'Лес' }],
+    body: { overview: 'Атмосферный кадр лесной природы.', breakdown: '', howToChange: '', mistakes: '' },
+    status: 'published', source: 'editorial', publishedAt: '2026-08-14', updatedAt: '2026-08-14', views: 110, likes: 55, saves: 22, shares: 6
+  },
+  {
+    slug: 'trevel-video-3', topicSlug: 'trevel-video', category: 'video', title: 'Водопад в джунглях',
+    promptRu: 'Мощный водопад в джунглях, брызги, радуга в капле воды, зеленые растения, буйство природы, 4k.',
+    promptEn: 'Powerful waterfall in the jungle, splashes, rainbow in water drops, green plants, wild nature, 4k.',
+    providerId: 'kling', subModelId: 'kling-3-0', params: { aspect: '16:9', duration: '5s', resolution: '1080p' },
+    media: [{ type: 'image', src: '/community/05.jpg', alt: 'Водопад' }],
+    body: { overview: 'Кадр дикой природы с водопадом.', breakdown: '', howToChange: '', mistakes: '' },
+    status: 'published', source: 'editorial', publishedAt: '2026-08-14', updatedAt: '2026-08-14', views: 120, likes: 60, saves: 25, shares: 7
+  },
+  {
+    slug: 'trevel-video-4', topicSlug: 'trevel-video', category: 'video', title: 'Пляж на Мальдивах',
+    promptRu: 'Бирюзовая вода, белый песок, пальмы, райский уголок, спокойствие, идеальный отдых, 4k.',
+    promptEn: 'Turquoise water, white sand, palm trees, paradise corner, tranquility, perfect vacation, 4k.',
+    providerId: 'kling', subModelId: 'kling-3-0', params: { aspect: '16:9', duration: '5s', resolution: '1080p' },
+    media: [{ type: 'image', src: '/community/06.jpg', alt: 'Пляж' }],
+    body: { overview: 'Визуализация идеального тропического отдыха.', breakdown: '', howToChange: '', mistakes: '' },
+    status: 'published', source: 'editorial', publishedAt: '2026-08-14', updatedAt: '2026-08-14', views: 130, likes: 65, saves: 28, shares: 8
+  },
+  {
+    slug: 'trevel-video-5', topicSlug: 'trevel-video', category: 'video', title: 'Городской ночной пейзаж',
+    promptRu: 'Ночной город с высоты птичьего полета, огни машин, неоновая реклама, футуризм, движение, 4k.',
+    promptEn: 'Night city from a bird\'s eye view, car lights, neon advertising, futurism, movement, 4k.',
+    providerId: 'kling', subModelId: 'kling-3-0', params: { aspect: '16:9', duration: '5s', resolution: '1080p' },
+    media: [{ type: 'image', src: '/community/07.jpg', alt: 'Город' }],
+    body: { overview: 'Динамичный вид на ночной мегаполис.', breakdown: '', howToChange: '', mistakes: '' },
+    status: 'published', source: 'editorial', publishedAt: '2026-08-14', updatedAt: '2026-08-14', views: 140, likes: 70, saves: 30, shares: 9
+  },
+  {
+    slug: 'trevel-video-6', topicSlug: 'trevel-video', category: 'video', title: 'Заснеженная деревня',
+    promptRu: 'Уютная заснеженная деревня в горах, дым из труб, теплые окна домов, зимняя сказка, 4k.',
+    promptEn: 'Cozy snowy village in the mountains, smoke from chimneys, warm windows of houses, winter fairytale, 4k.',
+    providerId: 'kling', subModelId: 'kling-3-0', params: { aspect: '16:9', duration: '5s', resolution: '1080p' },
+    media: [{ type: 'image', src: '/community/08.jpg', alt: 'Деревня' }],
+    body: { overview: 'Зимний пейзаж горной деревни.', breakdown: '', howToChange: '', mistakes: '' },
+    status: 'published', source: 'editorial', publishedAt: '2026-08-14', updatedAt: '2026-08-14', views: 150, likes: 75, saves: 32, shares: 10
+  },
+  {
+    slug: 'trevel-video-7', topicSlug: 'trevel-video', category: 'video', title: 'Цветущее поле',
+    promptRu: 'Бескрайнее поле цветущих тюльпанов, яркие цвета, весна, легкость, идеальный солнечный день, 4k.',
+    promptEn: 'Endless field of blooming tulips, bright colors, spring, lightness, perfect sunny day, 4k.',
+    providerId: 'kling', subModelId: 'kling-3-0', params: { aspect: '16:9', duration: '5s', resolution: '1080p' },
+    media: [{ type: 'image', src: '/community/01.jpg', alt: 'Поле' }],
+    body: { overview: 'Яркий весенний пейзаж с цветами.', breakdown: '', howToChange: '', mistakes: '' },
+    status: 'published', source: 'editorial', publishedAt: '2026-08-14', updatedAt: '2026-08-14', views: 160, likes: 80, saves: 35, shares: 11
+  },
+  {
+    slug: 'trevel-video-8', topicSlug: 'trevel-video', category: 'video', title: 'Горное озеро',
+    promptRu: 'Зеркальное горное озеро, отражение снежных вершин в воде, тишина, нетронутая природа, 4k.',
+    promptEn: 'Mirror mountain lake, reflection of snowy peaks in water, silence, untouched nature, 4k.',
+    providerId: 'kling', subModelId: 'kling-3-0', params: { aspect: '16:9', duration: '5s', resolution: '1080p' },
+    media: [{ type: 'image', src: '/community/02.jpg', alt: 'Озеро' }],
+    body: { overview: 'Спокойный вид на горное озеро.', breakdown: '', howToChange: '', mistakes: '' },
+    status: 'published', source: 'editorial', publishedAt: '2026-08-14', updatedAt: '2026-08-14', views: 170, likes: 85, saves: 38, shares: 12
+  },
+  {
+    slug: 'trevel-video-9-vert', topicSlug: 'trevel-video', category: 'video', title: 'Вертикальный обзор джунглей',
+    promptRu: 'Вертикальный кадр: прогулка по густым джунглям, экзотические растения, солнечные лучи в листве, приключения, 4k.',
+    promptEn: 'Vertical shot: walk through dense jungle, exotic plants, sun rays in leaves, adventures, 4k.',
+    providerId: 'kling', subModelId: 'kling-3-0', params: { aspect: '9:16', duration: '5s', resolution: '1080p' },
+    media: [{ type: 'image', src: '/community/03.jpg', alt: 'Джунгли' }],
+    body: { overview: 'Короткое видео-приключение в джунглях.', breakdown: '', howToChange: '', mistakes: '' },
+    status: 'published', source: 'editorial', publishedAt: '2026-08-14', updatedAt: '2026-08-14', views: 180, likes: 90, saves: 40, shares: 13
+  },
+  // kinematografichnyy-kadr
+  {
+    slug: 'kino-1', topicSlug: 'kinematografichnyy-kadr', category: 'video', title: 'Нуар в дождливом городе',
+    promptRu: 'Кадр в стиле нуар, мужчина в плаще, ночная улица, отражение неоновых огней в лужах, дождь, тайна, кинематографичный контраст, 4k.',
+    promptEn: 'Noir shot, man in a trench coat, night street, reflection of neon lights in puddles, rain, mystery, cinematic contrast, 4k.',
+    providerId: 'kling', subModelId: 'kling-3-0', params: { aspect: '16:9', duration: '5s', resolution: '1080p' },
+    media: [{ type: 'image', src: '/community/04.jpg', alt: 'Нуар' }],
+    body: { overview: 'Стилизованный кадр из детективного фильма.', breakdown: '', howToChange: '', mistakes: '' },
+    status: 'published', source: 'editorial', publishedAt: '2026-08-14', updatedAt: '2026-08-14', views: 100, likes: 50, saves: 20, shares: 5
+  },
+  {
+    slug: 'kino-2', topicSlug: 'kinematografichnyy-kadr', category: 'video', title: 'Сай-фай лаборатория',
+    promptRu: 'Футуристичная лаборатория, голограммы данных, синее освещение, плавное движение камеры, высокая детализация, 4k.',
+    promptEn: 'Futuristic laboratory, data holograms, blue lighting, smooth camera movement, high detail, 4k.',
+    providerId: 'kling', subModelId: 'kling-3-0', params: { aspect: '16:9', duration: '5s', resolution: '1080p' },
+    media: [{ type: 'image', src: '/community/05.jpg', alt: 'Лаборатория' }],
+    body: { overview: 'Научно-фантастическая сцена в лаборатории.', breakdown: '', howToChange: '', mistakes: '' },
+    status: 'published', source: 'editorial', publishedAt: '2026-08-14', updatedAt: '2026-08-14', views: 110, likes: 55, saves: 22, shares: 6
+  },
+  {
+    slug: 'kino-3', topicSlug: 'kinematografichnyy-kadr', category: 'video', title: 'Драматичный закат',
+    promptRu: 'Осенний парк, падающие листья, грустный герой, мягкий вечерний свет, глубокие эмоции, кинематограф, 4k.',
+    promptEn: 'Autumn park, falling leaves, sad hero, soft evening light, deep emotions, cinematography, 4k.',
+    providerId: 'kling', subModelId: 'kling-3-0', params: { aspect: '16:9', duration: '5s', resolution: '1080p' },
+    media: [{ type: 'image', src: '/community/06.jpg', alt: 'Драма' }],
+    body: { overview: 'Эмоциональный кадр осенней меланхолии.', breakdown: '', howToChange: '', mistakes: '' },
+    status: 'published', source: 'editorial', publishedAt: '2026-08-14', updatedAt: '2026-08-14', views: 120, likes: 60, saves: 25, shares: 7
+  },
+  {
+    slug: 'kino-4', topicSlug: 'kinematografichnyy-kadr', category: 'video', title: 'Исторический дворец',
+    promptRu: 'Величественный интерьер дворца, золотые светильники, высокие потолки, свет из окон, история, масштаб, 4k.',
+    promptEn: 'Majestic interior of a palace, golden lamps, high ceilings, light from windows, history, scale, 4k.',
+    providerId: 'kling', subModelId: 'kling-3-0', params: { aspect: '16:9', duration: '5s', resolution: '1080p' },
+    media: [{ type: 'image', src: '/community/07.jpg', alt: 'Дворец' }],
+    body: { overview: 'Масштабная сцена в историческом интерьере.', breakdown: '', howToChange: '', mistakes: '' },
+    status: 'published', source: 'editorial', publishedAt: '2026-08-14', updatedAt: '2026-08-14', views: 130, likes: 65, saves: 28, shares: 8
+  },
+  {
+    slug: 'kino-5', topicSlug: 'kinematografichnyy-kadr', category: 'video', title: 'Фэнтези лес',
+    promptRu: 'Магический лес, светящиеся растения, загадочные существа, мягкий фиолетовый свет, приключения, 4k.',
+    promptEn: 'Magic forest, glowing plants, mysterious creatures, soft purple light, adventures, 4k.',
+    providerId: 'kling', subModelId: 'kling-3-0', params: { aspect: '16:9', duration: '5s', resolution: '1080p' },
+    media: [{ type: 'image', src: '/community/08.jpg', alt: 'Фэнтези' }],
+    body: { overview: 'Волшебная сцена в лесу.', breakdown: '', howToChange: '', mistakes: '' },
+    status: 'published', source: 'editorial', publishedAt: '2026-08-14', updatedAt: '2026-08-14', views: 140, likes: 70, saves: 30, shares: 9
+  },
+  {
+    slug: 'kino-6', topicSlug: 'kinematografichnyy-kadr', category: 'video', title: 'Экшн сцена',
+    promptRu: 'Динамичная сцена погони на мотоциклах, ночной мегаполис, взрывы, искры, адреналин, 4k.',
+    promptEn: 'Dynamic motorcycle chase scene, night metropolis, explosions, sparks, adrenaline, 4k.',
+    providerId: 'kling', subModelId: 'kling-3-0', params: { aspect: '16:9', duration: '5s', resolution: '1080p' },
+    media: [{ type: 'image', src: '/community/01.jpg', alt: 'Экшн' }],
+    body: { overview: 'Высокодинамичный кадр погони.', breakdown: '', howToChange: '', mistakes: '' },
+    status: 'published', source: 'editorial', publishedAt: '2026-08-14', updatedAt: '2026-08-14', views: 150, likes: 75, saves: 32, shares: 10
+  },
+  {
+    slug: 'kino-7', topicSlug: 'kinematografichnyy-kadr', category: 'video', title: 'Апокалиптический вид',
+    promptRu: 'Заброшенный город, разрушенные здания, густой туман, зловещая тишина, масштаб, 4k.',
+    promptEn: 'Abandoned city, destroyed buildings, thick fog, ominous silence, scale, 4k.',
+    providerId: 'kling', subModelId: 'kling-3-0', params: { aspect: '16:9', duration: '5s', resolution: '1080p' },
+    media: [{ type: 'image', src: '/community/02.jpg', alt: 'Апокалипсис' }],
+    body: { overview: 'Мрачный вид на постапокалиптический мир.', breakdown: '', howToChange: '', mistakes: '' },
+    status: 'published', source: 'editorial', publishedAt: '2026-08-14', updatedAt: '2026-08-14', views: 160, likes: 80, saves: 35, shares: 11
+  },
+  {
+    slug: 'kino-8-vert', topicSlug: 'kinematografichnyy-kadr', category: 'video', title: 'Вертикальный нуар',
+    promptRu: 'Вертикальный кадр: детектив в тени, зажженная спичка, напряжение, детали лица, 4k.',
+    promptEn: 'Vertical shot: detective in shadows, lit match, tension, face details, 4k.',
+    providerId: 'kling', subModelId: 'kling-3-0', params: { aspect: '9:16', duration: '5s', resolution: '1080p' },
+    media: [{ type: 'image', src: '/community/03.jpg', alt: 'Детектив' }],
+    body: { overview: 'Крупный план персонажа в стиле нуар.', breakdown: '', howToChange: '', mistakes: '' },
+    status: 'published', source: 'editorial', publishedAt: '2026-08-14', updatedAt: '2026-08-14', views: 170, likes: 85, saves: 38, shares: 12
+  },
+  {
+    slug: 'kino-9-vert', topicSlug: 'kinematografichnyy-kadr', category: 'video', title: 'Вертикальный сай-фай',
+    promptRu: 'Вертикальный кадр: андроид смотрит на звезды, отражение в линзе глаза, космос, футуризм, 4k.',
+    promptEn: 'Vertical shot: android looking at the stars, reflection in eye lens, space, futurism, 4k.',
+    providerId: 'kling', subModelId: 'kling-3-0', params: { aspect: '9:16', duration: '5s', resolution: '1080p' },
+    media: [{ type: 'image', src: '/community/04.jpg', alt: 'Андроид' }],
+    body: { overview: 'Футуристический портрет андроида.', breakdown: '', howToChange: '', mistakes: '' },
+    status: 'published', source: 'editorial', publishedAt: '2026-08-14', updatedAt: '2026-08-14', views: 180, likes: 90, saves: 40, shares: 13
+  },
   ...agentItems
 ];
 
