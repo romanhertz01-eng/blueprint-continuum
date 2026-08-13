@@ -324,10 +324,10 @@ function CategoryPage() {
       <section className="max-w-7xl mx-auto px-6 w-full mb-20 flex-grow">
         {visibleItems.length > 0 ? (
           <div className={cn(
-            "grid gap-4 md:gap-5",
+            "grid",
             params.topic === 'text' 
-              ? "grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4" 
-              : "grid-cols-12"
+              ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5" 
+              : "grid-cols-12 gap-4 md:gap-6"
           )}>
             {visibleItems.map((item, idx) => {
               if (params.topic === 'text') {
