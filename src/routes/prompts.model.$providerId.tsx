@@ -117,6 +117,36 @@ function ModelDetailPage() {
     return result;
   }, [items, filter, searchQuery, sortBy]);
 
+  const { videoBlocks, otherItems } = useMemo(() => {
+    const videoItems = filteredItems.filter(item => item.category === 'video');
+    const remainingItems = filteredItems.filter(item => item.category !== 'video');
+    
+    const horizontals = videoItems.filter(item => item.params?.aspect !== '9:16');
+    const verticals = videoItems.filter(item => item.params?.aspect === '9:16');
+    
+    const blocks: { type: 'horizontal' | 'vertical', items: PromptItem[] }[] = [];
+    let hIdx = 0;
+    let vIdx = 0;
+
+    while (hIdx < horizontals.length || vIdx < verticals.length) {
+      if (hIdx < horizontals.length) {
+        blocks.push({ 
+          type: 'horizontal', 
+          items: horizontals.slice(hIdx, hIdx + 8) 
+        });
+        hIdx += 8;
+      }
+      if (vIdx < verticals.length) {
+        blocks.push({ 
+          type: 'vertical', 
+          items: verticals.slice(vIdx, vIdx + 5) 
+        });
+        vIdx += 5;
+      }
+    }
+    return { videoBlocks: blocks, otherItems: remainingItems };
+  }, [filteredItems]);
+
   if (items.length === 0) {
     return (
       <div className="min-h-screen bg-background flex flex-col">
@@ -217,10 +247,34 @@ function ModelDetailPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 items-start">
-          {filteredItems.map(item => (
-            <ModelPromptCard key={item.slug} item={item} />
-          ))}
+        <div className="flex flex-col gap-8 items-start">
+          {videoBlocks.length > 0 && (
+            <div className="w-full flex flex-col gap-4">
+              {videoBlocks.map((block, bIdx) => (
+                <div 
+                  key={bIdx}
+                  className={cn(
+                    "grid gap-4",
+                    block.type === 'horizontal' 
+                      ? "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 items-start" 
+                      : "grid-cols-2 sm:grid-cols-4 lg:grid-cols-5"
+                  )}
+                >
+                  {block.items.map((item) => (
+                    <ModelPromptCard key={item.slug} item={item} />
+                  ))}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {otherItems.length > 0 && (
+            <div className="w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 items-start">
+              {otherItems.map(item => (
+                <ModelPromptCard key={item.slug} item={item} />
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
