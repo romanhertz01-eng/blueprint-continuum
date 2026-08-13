@@ -268,10 +268,7 @@ function VideoCategoryCard({ item }: { item: PromptItem }) {
   return (
     <div 
       onClick={handleCardClick}
-      className={cn(
-        "group relative flex flex-col rounded-2xl overflow-hidden bg-card border border-border/50 transition-all duration-200 cursor-pointer",
-        isVertical ? "row-span-2 h-full" : "h-auto"
-      )}
+      className="group relative flex flex-col rounded-2xl overflow-hidden bg-card border border-border/50 transition-all duration-200 cursor-pointer h-auto"
     >
 
       <div className={cn(
