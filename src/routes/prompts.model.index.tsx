@@ -74,7 +74,7 @@ function ModelsListPage() {
       const pId = item.providerId.toLowerCase();
       counts[pId] = (counts[pId] || 0) + 1;
       if (!firstMedias[pId]) {
-        const media = item.media?.find(m => m.src);
+        const media = item.media?.find((m: any) => m.src);
         if (media) firstMedias[pId] = media.src;
       }
     });
