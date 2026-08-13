@@ -474,7 +474,7 @@ function CategoryPage() {
     }
 
     return result;
-  }, [data.items, searchQuery, sortBy, videoFilter, isVideo]);
+  }, [data.items, searchQuery, sortBy, topicFilter, isVideo, selectedTopics]);
 
   const visibleItems = useMemo(() => {
     return filteredItems.slice(0, page * PAGE_SIZE);
