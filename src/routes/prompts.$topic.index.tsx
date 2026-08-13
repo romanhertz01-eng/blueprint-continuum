@@ -190,7 +190,7 @@ function CategoryPage() {
       </section>
 
       {/* 2. ЛЕНТА КАТЕГОРИЙ (PILLS) */}
-      <section className="sticky top-0 z-40 bg-background/80 backdrop-blur-md border-b border-border mb-6">
+      <section className="sticky top-0 z-40 bg-background/80 backdrop-blur-md border-b border-border/40 mb-6">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
             <Link
@@ -285,7 +285,7 @@ function CategoryPage() {
               }
               if (item.category === 'audio') {
                 return (
-                  <div key={`${item.slug}-${idx}`} className="col-span-12 sm:col-span-6 lg:col-span-3">
+                  <div key={`${item.slug}-${idx}`} className="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3">
                     <AudioPromptCard item={item} />
                   </div>
                 );

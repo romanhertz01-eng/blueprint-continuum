@@ -1,4 +1,4 @@
-import { PromptItem, PromptTopic } from '@/data/prompts/types';
+import { PromptItem } from '@/data/prompts/types';
 import { useNavigate } from '@tanstack/react-router';
 import { Zap, Heart } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -14,23 +14,21 @@ export function AudioPromptCard({ item }: AudioPromptCardProps) {
   const navigate = useNavigate();
   const { isAuthed } = useAuth();
 
-  const getGradient = (slug: string) => {
-    const gradients = [
-      'from-slate-800 to-slate-900',
-      'from-zinc-800 to-zinc-900',
-      'from-neutral-800 to-neutral-900',
+  const getAccentColor = (slug: string) => {
+    // Палитра ERA2: мягкий фиолетово-сиреневый / тёплый синий / бирюза / коралл / мягкий оранжевый
+    const colors = [
+      'bg-[#A855F7]', // Purple
+      'bg-[#3B82F6]', // Blue
+      'bg-[#06B6D4]', // Cyan
+      'bg-[#F43F5E]', // Rose/Coral
+      'bg-[#F59E0B]', // Orange
     ];
-    const index = slug.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % gradients.length;
-    return gradients[index];
-  };
-
-  const getLabelColor = (slug: string) => {
-    const colors = ['bg-blue-500', 'bg-purple-500', 'bg-rose-500', 'bg-amber-500', 'bg-emerald-500'];
     const index = slug.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % colors.length;
     return colors[index];
   };
 
-  const handleAction = () => {
+  const handleAction = (e: React.MouseEvent) => {
+    e.stopPropagation();
     writePromptHandoff({
       prompt: item.promptRu,
       category: 'audio',
@@ -50,35 +48,54 @@ export function AudioPromptCard({ item }: AudioPromptCardProps) {
   return (
     <div 
       onClick={handleAction}
-      className="group relative w-full aspect-[3/4] rounded-[20px] border border-border bg-card overflow-hidden cursor-pointer transition-all hover:shadow-lg hover:-translate-y-1 flex flex-col"
+      className="group relative w-full aspect-[3/4.2] rounded-[24px] border border-border bg-card overflow-hidden cursor-pointer transition-all hover:shadow-xl hover:-translate-y-1 flex flex-col shadow-sm"
     >
-      {/* ПРЕВЬЮ: ВИНИЛ */}
-      <div className={cn("relative flex-grow flex items-center justify-center overflow-hidden transition-all duration-300", getGradient(item.slug))}>
-        <div className="absolute top-3 right-3 flex items-center gap-1.5 px-2 py-1 rounded-full bg-black/20 backdrop-blur-sm text-white/90 text-[11px] font-medium">
-          <Heart className="w-3 h-3" /> {item.likes}
-        </div>
-        
-        {/* CSS ВИНИЛ */}
-        <div className="w-[60%] aspect-square rounded-full bg-zinc-950 border-[8px] border-zinc-900 relative shadow-2xl transition-transform duration-1000 group-hover:rotate-[360deg] ease-linear">
-          <div className="absolute inset-0 rounded-full border border-white/10" />
-          <div className="absolute inset-[15%] rounded-full border border-white/10" />
-          <div className="absolute inset-[30%] rounded-full border border-white/10" />
+      {/* 1. ВЕРХ-ПРАВО: ЛАЙК В МАЛЕНЬКОЙ CAPSULE */}
+      <div className="absolute top-4 right-4 z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-background/80 backdrop-blur-sm border border-border/50 text-foreground/70 text-[11px] font-bold">
+        <Heart className="w-3 h-3 transition-colors group-hover:text-rose-500" /> {item.likes}
+      </div>
+      
+      {/* 2. ЦЕНТР: ЛЁГКИЙ AUDIO-VISUAL */}
+      <div className="relative flex-grow flex items-center justify-center overflow-hidden bg-muted/5">
+        <div className="relative w-[45%] aspect-square flex items-center justify-center">
+          {/* Тонкие полупрозрачные кольца (2-3 слоя) */}
+          <div className="absolute inset-0 rounded-full border border-primary/10 animate-[pulse_3s_infinite]" />
+          <div className="absolute inset-[15%] rounded-full border border-primary/5 animate-[pulse_4s_infinite]" />
+          <div className="absolute inset-[-10%] rounded-full border border-primary/5 animate-[pulse_5s_infinite]" />
           
-          {/* Лейбл */}
-          <div className={cn("absolute inset-[35%] rounded-full flex items-center justify-center", getLabelColor(item.slug))}>
-            <div className="w-2 h-2 rounded-full bg-black/20" />
+          {/* Нежный glow/свечение */}
+          <div className={cn(
+            "absolute inset-[20%] rounded-full blur-2xl opacity-20 transition-opacity group-hover:opacity-40",
+            getAccentColor(item.slug)
+          )} />
+
+          {/* Мягкий круг/диск */}
+          <div className="absolute inset-0 rounded-full bg-background border border-border/40 shadow-inner flex items-center justify-center overflow-hidden">
+             {/* Progress-ring или waveform деталь */}
+             <div className="absolute inset-[10%] rounded-full border-t-2 border-primary/20 animate-spin" style={{ animationDuration: '8s' }} />
+             
+             {/* Маленький цветной центр */}
+             <div className={cn("w-4 h-4 rounded-full shadow-sm z-10", getAccentColor(item.slug))} />
+             
+             {/* Тонкие линии-насечки для характера */}
+             <div className="absolute w-full h-[1px] bg-border/20 rotate-45" />
+             <div className="absolute w-full h-[1px] bg-border/20 -rotate-45" />
           </div>
         </div>
       </div>
 
-      {/* ПОД ПЛАСТИНКОЙ */}
-      <div className="p-4 flex flex-col">
-        <h3 className="text-[14px] font-bold leading-snug line-clamp-2 mb-1.5">{item.title}</h3>
-        <p className="text-[12px] text-muted-foreground mb-4">
+      {/* 3. ТЕКСТ И МЕТАДАННЫЕ */}
+      <div className="px-5 pt-2 pb-5 flex flex-col">
+        <h3 className="text-[17px] font-semibold leading-[1.3] line-clamp-2 mb-2 text-foreground h-[44px]">
+          {item.title}
+        </h3>
+        <p className="text-[13px] text-muted-foreground font-medium mb-4">
           {item.params?.duration ? `${item.params.duration} · ` : ''}{item.providerId}
         </p>
-        <button className="w-full h-9 rounded-xl bg-primary text-white text-[12px] font-bold flex items-center justify-center gap-2 transition-all hover:brightness-110 active:scale-95 shadow-sm">
-          Попробовать <Zap className="w-3 h-3 fill-current" />
+        
+        {/* 4. КОМПАКТНЫЙ CTA */}
+        <button className="h-[42px] px-6 rounded-full bg-primary text-white text-[13px] font-bold flex items-center justify-center gap-2 transition-all hover:brightness-105 active:scale-95 shadow-md shadow-primary/10 w-fit">
+          Попробовать <Zap className="w-3.5 h-3.5 fill-current" />
         </button>
       </div>
     </div>
