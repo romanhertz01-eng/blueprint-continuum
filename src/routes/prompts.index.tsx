@@ -4,6 +4,8 @@ import { Search, X, Sparkles, Star, PlusCircle, ArrowRight, Filter } from 'lucid
 import { Footer } from '@/components/shared/Footer';
 import { getPublishedItems, getPublishedTopics, countItemsByCategory, getCategories, PromptItem, getProvidersWithPrompts } from '@/data/prompts';
 import { EditorialPromptCard } from '@/components/prompts/EditorialPromptCard';
+import { TextPromptCard } from '@/components/prompts/TextPromptCard';
+import { AudioPromptCard } from '@/components/prompts/AudioPromptCard';
 import { TopicCloud } from '@/components/prompts/TopicCloud';
 import { useState, useMemo, useEffect } from 'react';
 import { cn } from '@/lib/utils';
@@ -335,14 +337,28 @@ function PromptsHub() {
         {visibleItems.length > 0 ? (
           <div className="grid grid-cols-12 gap-4 md:gap-5">
               {visibleItems.map((item, idx) => {
+                if (item.category === 'text') {
+                  return (
+                    <div key={`${item.slug}-${idx}`} className="col-span-12 sm:col-span-6 lg:col-span-3">
+                      <TextPromptCard item={item} />
+                    </div>
+                  );
+                }
+                if (item.category === 'audio') {
+                  return (
+                    <div key={`${item.slug}-${idx}`} className="col-span-12 sm:col-span-6 lg:col-span-3">
+                      <AudioPromptCard item={item} />
+                    </div>
+                  );
+                }
                 const type = getCardType(idx, item);
-              const span = getCardSpan(type);
-              return (
-                <div key={`${item.slug}-${idx}`} className={span}>
-                  <EditorialPromptCard item={item} type={type} />
-                </div>
-              );
-            })}
+                const span = getCardSpan(type);
+                return (
+                  <div key={`${item.slug}-${idx}`} className={span}>
+                    <EditorialPromptCard item={item} type={type} />
+                  </div>
+                );
+              })}
           </div>
         ) : (
           <div className="py-20 text-center">
