@@ -154,23 +154,20 @@ function CategoryPage() {
     setIsPanelOpen(false);
   }, [params.topic]);
 
-  // Данные для аудио-полок
   const audioShelvesData = useMemo(() => {
     if (!isAudio || searchQuery.trim()) return [];
     
     const audioTopics = getTopicsByCategory('audio');
     const topicsWithPrompts = audioTopics.map(topic => {
-      // Собираем промпты, где topicSlug совпадает ИЛИ slug темы есть в extraTopicSlugs
       const prompts = data.items.filter(item => 
         item.topicSlug === topic.slug || item.extraTopicSlugs?.includes(topic.slug)
       );
       return { topic, prompts };
     })
-    .filter(shelf => shelf.prompts.length >= 3) // Снизили порог до 3
+    .filter(shelf => shelf.prompts.length >= 3)
     .sort((a, b) => b.prompts.length - a.prompts.length)
     .slice(0, 2);
 
-    // Фолбэк: если подходящих тем мало, но аудио промптов достаточно (>=6)
     if (topicsWithPrompts.length === 0 && data.items.length >= 6) {
       const popularPrompts = [...data.items]
         .sort((a, b) => (b.likes || 0) - (a.likes || 0))
@@ -189,6 +186,15 @@ function CategoryPage() {
 
     return topicsWithPrompts;
   }, [isAudio, searchQuery, data.items]);
+
+  const audioGradients = [
+    'from-indigo-500/80 to-purple-500/80',
+    'from-emerald-500/80 to-teal-500/80',
+    'from-orange-500/80 to-rose-500/80',
+    'from-blue-500/80 to-cyan-500/80',
+    'from-violet-500/80 to-fuchsia-500/80',
+    'from-cyan-500/80 to-blue-600/80',
+  ];
 
   const topicIcons: Record<string, any> = {
     'seo': Sparkles,
