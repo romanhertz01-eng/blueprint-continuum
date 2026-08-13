@@ -164,14 +164,16 @@ export function DiscoveryFeed({ currentItem }: DiscoveryFeedProps) {
 
 function DiscoveryCard({ item, modelName }: { item: PromptItem, modelName: string }) {
   const [isSaved, setIsSaved] = useState(false);
-  const media = item.media[0];
+  const media = item.media && item.media[0];
   
   const aspectStyle = React.useMemo(() => {
     const aspect = item.params?.aspect || '3:4';
     const [w, h] = aspect.split(':').map(Number);
-    if (!w || !h) return { aspectRatio: '3/4' };
+    if (!w || !h || isNaN(w) || isNaN(h)) return { aspectRatio: '3/4' };
     return { aspectRatio: `${w}/${h}` };
   }, [item.params?.aspect]);
+
+  if (!media) return null;
 
   useEffect(() => {
     try {

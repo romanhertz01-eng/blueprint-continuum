@@ -59,7 +59,9 @@ function PromptDetailPage() {
   const metadata = [
     modelName,
     item.params?.aspect,
-    item.params?.quality
+    item.params?.quality,
+    item.params?.resolution,
+    item.params?.duration && `${item.params.duration}s`
   ].filter(Boolean).join(' · ');
 
   return (
@@ -144,6 +146,36 @@ function PromptDetailPage() {
                 label="Создать с этим промптом"
                 className="w-full h-[54px] text-base font-semibold rounded-xl shadow-md shadow-primary/10 hover:shadow-lg hover:shadow-primary/20 transition-all"
               />
+
+              {/* Descriptions & Breakdown */}
+              {(item.body?.overview || item.body?.breakdown || item.body?.howToChange || item.body?.mistakes) && (
+                <div className="pt-8 border-t border-border space-y-8">
+                  {item.body.overview && (
+                    <div className="space-y-3">
+                      <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Описание</h3>
+                      <p className="text-[15px] leading-relaxed text-foreground/80">{item.body.overview}</p>
+                    </div>
+                  )}
+                  {item.body.breakdown && (
+                    <div className="space-y-3">
+                      <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Разбор промпта</h3>
+                      <p className="text-[15px] leading-relaxed text-foreground/80 whitespace-pre-wrap">{item.body.breakdown}</p>
+                    </div>
+                  )}
+                  {item.body.howToChange && (
+                    <div className="space-y-3">
+                      <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Как изменить</h3>
+                      <p className="text-[15px] leading-relaxed text-foreground/80">{item.body.howToChange}</p>
+                    </div>
+                  )}
+                  {item.body.mistakes && (
+                    <div className="space-y-3">
+                      <h3 className="text-sm font-semibold uppercase tracking-wider text-error/80">Частые ошибки</h3>
+                      <p className="text-[15px] leading-relaxed text-foreground/80">{item.body.mistakes}</p>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>
