@@ -122,6 +122,31 @@ function PromptsHub() {
     return filteredItems.slice(0, page * PAGE_SIZE);
   }, [filteredItems, page]);
 
+  const recommendedTopic = useMemo(() => {
+    if (searchQuery.trim()) return null;
+
+    const publishedTopics = getPublishedTopics();
+    if (selectedTopic && selectedTopic !== 'popular') {
+      const topic = publishedTopics.find(t => t.slug === selectedTopic);
+      if (topic) {
+        const items = allItems.filter(item => item.topicSlug === topic.slug || item.extraTopicSlugs?.includes(topic.slug));
+        if (items.length >= 5) return { topic, items, isBestOf: true };
+      }
+      return null;
+    }
+
+    // popular or null: find topic with most items
+    const topicCounts = publishedTopics.map(t => ({
+      topic: t,
+      count: allItems.filter(item => item.topicSlug === t.slug || item.extraTopicSlugs?.includes(t.slug)).length
+    })).filter(t => t.count >= 5).sort((a, b) => b.count - a.count);
+
+    if (topicCounts.length > 0) {
+      return { topic: topicCounts[0].topic, items: allItems.filter(item => item.topicSlug === topicCounts[0].topic.slug || item.extraTopicSlugs?.includes(topicCounts[0].topic.slug)), isBestOf: false };
+    }
+    return null;
+  }, [selectedTopic, searchQuery, allItems]);
+
   // Rhythm logic for long feed
   const feedElements = useMemo(() => {
     const elements: React.ReactNode[] = [];
