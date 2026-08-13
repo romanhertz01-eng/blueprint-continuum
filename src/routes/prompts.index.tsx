@@ -618,10 +618,10 @@ function SmallCardsShelf({ allItems, searchQuery }: { allItems: PromptItem[], se
 
   return (
     <section className="max-w-[1520px] mx-auto px-6 w-full mb-10">
-      <div className="rounded-3xl bg-muted/30 border border-border py-5 px-8">
+      <div className="rounded-3xl bg-muted/30 border border-border py-5 px-8 overflow-hidden">
         <div className="flex items-baseline justify-between gap-4 mb-4">
-          <div className="min-w-0">
-            <h2 className="text-[20px] font-bold leading-tight">{textTopic.topic.title}</h2>
+          <div className="min-w-0 flex items-baseline gap-3">
+            <h2 className="text-[20px] font-bold leading-tight shrink-0">{textTopic.topic.title}</h2>
             <p className="text-[13px] text-muted-foreground line-clamp-1">{intro}</p>
           </div>
           <Link
@@ -646,8 +646,8 @@ function SmallCardsShelf({ allItems, searchQuery }: { allItems: PromptItem[], se
                   className="w-[150px] h-[150px] shrink-0 rounded-xl bg-card border border-border p-3 flex flex-col justify-between snap-start hover:border-primary/40 hover:-translate-y-0.5 transition duration-200"
                 >
                   <div className="flex items-center justify-between">
-                    <Icon className="w-4 h-4 text-muted-foreground" />
-                    <div className="flex items-center gap-1 text-muted-foreground">
+                    <Icon className="w-4 h-4 text-muted-foreground/70" />
+                    <div className="flex items-center gap-1 text-muted-foreground/70">
                       <Heart className="w-[11px] h-[11px]" />
                       <span className="text-[11px] font-medium">{item.views || 0}</span>
                     </div>
@@ -662,7 +662,7 @@ function SmallCardsShelf({ allItems, searchQuery }: { allItems: PromptItem[], se
           
           <button
             onClick={scrollRight}
-            className="absolute right-0 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-background/80 backdrop-blur-sm border border-border flex items-center justify-center z-10 opacity-0 group-hover/shelf:opacity-100 transition-opacity hover:bg-muted"
+            className="absolute right-10 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-background/80 backdrop-blur-sm border border-border flex items-center justify-center z-10 opacity-0 group-hover/shelf:opacity-100 transition-opacity hover:bg-muted"
           >
             <ChevronRight className="w-5 h-5" />
           </button>
