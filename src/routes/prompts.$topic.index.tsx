@@ -108,6 +108,7 @@ function CategoryPage() {
   const data = Route.useLoaderData();
   const params = Route.useParams();
   const isVideo = params.topic === 'video';
+  const isAudio = params.topic === 'audio';
   const isText = params.topic === 'text';
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -142,9 +143,24 @@ function CategoryPage() {
   const textTopics = useMemo(() => {
     if (!isText) return [];
     const topics = getTopicsByCategory('text');
-    // Проверка на наличие промптов уже встроена в данные обычно, но тут полагаемся на то что они published
     return topics;
   }, [isText]);
+
+  // Данные для аудио-полок
+  const audioShelvesData = useMemo(() => {
+    if (!isAudio || searchQuery.trim()) return [];
+    
+    const audioTopics = getTopicsByCategory('audio');
+    const topicsWithPrompts = audioTopics.map(topic => {
+      const prompts = data.items.filter(item => item.topicSlug === topic.slug);
+      return { topic, prompts };
+    })
+    .filter(shelf => shelf.prompts.length >= 4)
+    .sort((a, b) => b.prompts.length - a.prompts.length)
+    .slice(0, 2);
+
+    return topicsWithPrompts;
+  }, [isAudio, searchQuery, data.items]);
 
   const topicIcons: Record<string, any> = {
     'seo': Sparkles,
