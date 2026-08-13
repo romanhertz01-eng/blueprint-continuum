@@ -461,7 +461,9 @@ function CategoryPage() {
         <Link to="/prompts" className="h-11 px-6 rounded-xl bg-primary text-white font-bold flex items-center gap-2 transition-transform active:scale-95">
            <Home className="w-4 h-4" /> На главную каталога
         </Link>
-        <Footer className="w-full mt-auto" />
+        <div className="w-full mt-auto">
+          <Footer />
+        </div>
       </div>
     );
   }
