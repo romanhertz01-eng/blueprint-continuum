@@ -508,11 +508,8 @@ function CategoryPage() {
           </div>
 
           {/* ВТОРАЯ СТРОКА: Кнопка "Категории" и опциональные чипы тем */}
-          <div className={cn(
-            "flex items-center gap-3",
-            isVideo ? "mt-4 pt-4 border-t border-border/40" : "mt-4 pt-0"
-          )}>
-            {categoryTopics.length >= 2 && (
+          <div className="mt-4 pt-4 border-t border-border/40 flex items-center gap-3">
+            {categoryTopics.length >= 2 ? (
               <div className="relative shrink-0" ref={panelRef}>
                 <button
                   onClick={() => setIsPanelOpen(!isPanelOpen)}
@@ -580,7 +577,7 @@ function CategoryPage() {
                   </div>
                 )}
               </div>
-            )}
+            ) : <div className="h-11" />}
 
             {/* ВТОРИЧНАЯ ЛЕНТА ФИЛЬТРОВ ДЛЯ ВИДЕО */}
             {isVideo && (
