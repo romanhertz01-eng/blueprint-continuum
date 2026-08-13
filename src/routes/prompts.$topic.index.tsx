@@ -596,9 +596,9 @@ function CategoryPage() {
             ))}
           </div>
 
-          {/* ВТОРАЯ СТРОКА: Кнопка "Категории" и опциональные чипы тем */}
+          {/* ВТОРАЯ СТРОКА: Кнопка "Категории" и чипы тем */}
           <div className="mt-4 pt-4 border-t border-border/40 flex items-center gap-3">
-            {categoryTopics.length >= 2 ? (
+            {categoryTopics.length >= 2 && (
               <div className="relative shrink-0" ref={panelRef}>
                 <button
                   onClick={() => setIsPanelOpen(!isPanelOpen)}
@@ -666,30 +666,49 @@ function CategoryPage() {
                   </div>
                 )}
               </div>
-            ) : <div className="h-11" />}
+            )}
 
-            {/* ВТОРИЧНАЯ ЛЕНТА ФИЛЬТРОВ ДЛЯ ВИДЕО */}
-            {isVideo && (
-              <div className="flex gap-2 overflow-x-auto no-scrollbar ml-3">
-                {videoFilters.map(filter => (
+            {/* ВТОРИЧНАЯ ЛЕНТА ФИЛЬТРОВ (ЧИПЫ ТЕМ) */}
+            <div className={cn(
+              "flex gap-2 overflow-x-auto no-scrollbar",
+              categoryTopics.length >= 2 && "ml-3"
+            )}>
+              {isVideo ? (
+                videoFilters.map(filter => (
                   <button
                     key={filter}
-                    onClick={() => {setVideoFilter(filter); setPage(1);}}
+                    onClick={() => {setTopicFilter(filter); setPage(1);}}
                     className={cn(
-                      "px-4 py-1.5 rounded-full text-[12px] font-bold whitespace-nowrap transition-all border uppercase tracking-wider",
-                      videoFilter === filter
+                      "px-4 py-1.5 rounded-full text-[12px] font-bold whitespace-nowrap transition-all border uppercase tracking-wider h-8 flex items-center justify-center",
+                      topicFilter === filter
                         ? "bg-orange-500 text-white border-orange-500 shadow-sm"
                         : "bg-muted/20 border-border/50 hover:bg-muted/40 text-muted-foreground"
                     )}
                   >
                     {filter}
                   </button>
-                ))}
-              </div>
-            )}
+                ))
+              ) : categoryTopics.length >= 2 && (
+                ['Все', ...categoryTopics.map(t => t.cardTitle || t.title)].map(filter => (
+                  <button
+                    key={filter}
+                    onClick={() => {setTopicFilter(filter); setPage(1);}}
+                    className={cn(
+                      "px-4 py-1.5 rounded-full text-[12px] font-bold whitespace-nowrap transition-all border uppercase tracking-wider h-8 flex items-center justify-center",
+                      topicFilter === filter
+                        ? (params.topic === 'text' ? "bg-primary text-white border-primary shadow-sm" : "bg-primary text-white border-primary shadow-sm")
+                        : "bg-muted/20 border-border/50 hover:bg-muted/40 text-muted-foreground"
+                    )}
+                  >
+                    {filter}
+                  </button>
+                ))
+              )}
+            </div>
           </div>
         </div>
       </section>
+
 
       {/* 3. СТРОКА СОРТИРОВКИ */}
       <section className="max-w-7xl mx-auto px-6 w-full">
