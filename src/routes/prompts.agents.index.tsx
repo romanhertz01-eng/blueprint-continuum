@@ -151,8 +151,6 @@ function AgentsHubPage() {
 }
 
 function AgentCard({ item }: { item: PromptItem }) {
-  const navigate = useNavigate();
-  const { isAuthed } = useAuth();
   const IconComponent = (LucideIcons as any)[item.agentIcon || 'MessageSquare'] || LucideIcons.MessageSquare;
 
   const agentColors = [
@@ -167,27 +165,10 @@ function AgentCard({ item }: { item: PromptItem }) {
   ];
   const bgClass = agentColors[item.slug.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % agentColors.length];
 
-  const handleAction = () => {
-    writePromptHandoff({
-      prompt: item.promptRu,
-      category: 'agents',
-      providerId: item.providerId,
-      subModelId: item.subModelId,
-      agentId: item.slug,
-      sourceSlug: item.slug,
-    });
-
-    const targetRoute = CATEGORY_ROUTE.agents;
-    if (isAuthed) {
-      navigate({ to: targetRoute });
-    } else {
-      window.location.href = buildAuthHref(targetRoute);
-    }
-  };
-
   return (
-    <div
-      onClick={handleAction}
+    <Link
+      to="/prompts/agents/$slug"
+      params={{ slug: item.slug }}
       className="group flex flex-col p-4 rounded-[22px] bg-card border border-border/60 min-h-[140px] cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:bg-muted/40 hover:border-border"
     >
       <div className="flex items-start justify-between">
@@ -201,9 +182,9 @@ function AgentCard({ item }: { item: PromptItem }) {
       </div>
 
       <div className="mt-3 flex-1">
-        <h3 className="text-[16px] font-bold truncate leading-snug">{item.title}</h3>
+        <h3 className="text-[16px] font-bold truncate leading-snug group-hover:text-primary transition-colors">{item.title}</h3>
         <p className="text-[13px] text-muted-foreground line-clamp-2 mt-1 leading-normal">{item.agentRole}</p>
       </div>
-    </div>
+    </Link>
   );
 }

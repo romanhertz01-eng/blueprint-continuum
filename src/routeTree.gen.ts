@@ -40,6 +40,7 @@ import { Route as PromptsModelIndexRouteImport } from './routes/prompts.model.in
 import { Route as PromptsAgentsIndexRouteImport } from './routes/prompts.agents.index'
 import { Route as PromptsTopicIndexRouteImport } from './routes/prompts.$topic.index'
 import { Route as PromptsModelProviderIdRouteImport } from './routes/prompts.model.$providerId'
+import { Route as PromptsAgentsSlugRouteImport } from './routes/prompts.agents.$slug'
 import { Route as PromptsTopicSlugRouteImport } from './routes/prompts.$topic.$slug'
 
 const VideoRoute = VideoRouteImport.update({
@@ -197,6 +198,11 @@ const PromptsModelProviderIdRoute = PromptsModelProviderIdRouteImport.update({
   path: '/prompts/model/$providerId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PromptsAgentsSlugRoute = PromptsAgentsSlugRouteImport.update({
+  id: '/prompts/agents/$slug',
+  path: '/prompts/agents/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PromptsTopicSlugRoute = PromptsTopicSlugRouteImport.update({
   id: '/prompts/$topic/$slug',
   path: '/prompts/$topic/$slug',
@@ -232,6 +238,7 @@ export interface FileRoutesByFullPath {
   '/guides/': typeof GuidesIndexRoute
   '/prompts/': typeof PromptsIndexRoute
   '/prompts/$topic/$slug': typeof PromptsTopicSlugRoute
+  '/prompts/agents/$slug': typeof PromptsAgentsSlugRoute
   '/prompts/model/$providerId': typeof PromptsModelProviderIdRoute
   '/prompts/$topic/': typeof PromptsTopicIndexRoute
   '/prompts/agents/': typeof PromptsAgentsIndexRoute
@@ -266,6 +273,7 @@ export interface FileRoutesByTo {
   '/guides': typeof GuidesIndexRoute
   '/prompts': typeof PromptsIndexRoute
   '/prompts/$topic/$slug': typeof PromptsTopicSlugRoute
+  '/prompts/agents/$slug': typeof PromptsAgentsSlugRoute
   '/prompts/model/$providerId': typeof PromptsModelProviderIdRoute
   '/prompts/$topic': typeof PromptsTopicIndexRoute
   '/prompts/agents': typeof PromptsAgentsIndexRoute
@@ -301,6 +309,7 @@ export interface FileRoutesById {
   '/guides/': typeof GuidesIndexRoute
   '/prompts/': typeof PromptsIndexRoute
   '/prompts/$topic/$slug': typeof PromptsTopicSlugRoute
+  '/prompts/agents/$slug': typeof PromptsAgentsSlugRoute
   '/prompts/model/$providerId': typeof PromptsModelProviderIdRoute
   '/prompts/$topic/': typeof PromptsTopicIndexRoute
   '/prompts/agents/': typeof PromptsAgentsIndexRoute
@@ -337,6 +346,7 @@ export interface FileRouteTypes {
     | '/guides/'
     | '/prompts/'
     | '/prompts/$topic/$slug'
+    | '/prompts/agents/$slug'
     | '/prompts/model/$providerId'
     | '/prompts/$topic/'
     | '/prompts/agents/'
@@ -371,6 +381,7 @@ export interface FileRouteTypes {
     | '/guides'
     | '/prompts'
     | '/prompts/$topic/$slug'
+    | '/prompts/agents/$slug'
     | '/prompts/model/$providerId'
     | '/prompts/$topic'
     | '/prompts/agents'
@@ -405,6 +416,7 @@ export interface FileRouteTypes {
     | '/guides/'
     | '/prompts/'
     | '/prompts/$topic/$slug'
+    | '/prompts/agents/$slug'
     | '/prompts/model/$providerId'
     | '/prompts/$topic/'
     | '/prompts/agents/'
@@ -440,6 +452,7 @@ export interface RootRouteChildren {
   GuidesIndexRoute: typeof GuidesIndexRoute
   PromptsIndexRoute: typeof PromptsIndexRoute
   PromptsTopicSlugRoute: typeof PromptsTopicSlugRoute
+  PromptsAgentsSlugRoute: typeof PromptsAgentsSlugRoute
   PromptsModelProviderIdRoute: typeof PromptsModelProviderIdRoute
   PromptsTopicIndexRoute: typeof PromptsTopicIndexRoute
   PromptsAgentsIndexRoute: typeof PromptsAgentsIndexRoute
@@ -665,6 +678,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PromptsModelProviderIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/prompts/agents/$slug': {
+      id: '/prompts/agents/$slug'
+      path: '/prompts/agents/$slug'
+      fullPath: '/prompts/agents/$slug'
+      preLoaderRoute: typeof PromptsAgentsSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/prompts/$topic/$slug': {
       id: '/prompts/$topic/$slug'
       path: '/prompts/$topic/$slug'
@@ -704,6 +724,7 @@ const rootRouteChildren: RootRouteChildren = {
   GuidesIndexRoute: GuidesIndexRoute,
   PromptsIndexRoute: PromptsIndexRoute,
   PromptsTopicSlugRoute: PromptsTopicSlugRoute,
+  PromptsAgentsSlugRoute: PromptsAgentsSlugRoute,
   PromptsModelProviderIdRoute: PromptsModelProviderIdRoute,
   PromptsTopicIndexRoute: PromptsTopicIndexRoute,
   PromptsAgentsIndexRoute: PromptsAgentsIndexRoute,
