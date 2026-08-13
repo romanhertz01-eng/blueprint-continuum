@@ -6,6 +6,7 @@ import { EditorialPromptCard } from '@/components/prompts/EditorialPromptCard';
 import { TextPromptCard } from '@/components/prompts/TextPromptCard';
 import { AudioPromptCard } from '@/components/prompts/AudioPromptCard';
 import { AgentPromptCard } from '@/components/prompts/AgentPromptCard';
+import { CatalogCard } from '@/components/prompts/CatalogCard';
 
 import { useState, useMemo } from 'react';
 import { cn } from '@/lib/utils';
@@ -278,8 +279,8 @@ function CategoryPage() {
             {visibleItems.map((item, idx) => {
               if (params.topic === 'text') {
                 return (
-                  <div key={`${item.slug}-${idx}`} className="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3">
-                    <TextPromptCard item={item} />
+                  <div key={`${item.slug}-${idx}`} className="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 xl:col-span-2.4">
+                    <CatalogCard item={item} index={idx} />
                   </div>
                 );
               }

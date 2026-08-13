@@ -116,7 +116,7 @@ function PromptsHub() {
     }
 
     return result;
-  }, [allItems, searchQuery, selectedTopic, sortBy]);
+  }, [displayItems, searchQuery, selectedTopic, sortBy]);
 
   const visibleItems = useMemo(() => {
     return filteredItems.slice(0, page * PAGE_SIZE);
@@ -219,9 +219,6 @@ function PromptsHub() {
     setSelectedTopic(slug);
     setPage(1);
   };
-
-  // 5-column grid system is handled by Tailwind classes in the render.
-  // Card type selection logic is now inside CatalogCard.
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
@@ -443,3 +440,5 @@ function PromptsHub() {
     </div>
   );
 }
+
+export default PromptsHub;
