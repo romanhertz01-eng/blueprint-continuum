@@ -350,6 +350,45 @@ function VideoCategoryCard({ item }: { item: PromptItem }) {
 }
 
 
+function AgentCategoryCard({ item }: { item: PromptItem }) {
+  const IconComponent = (LucideIcons as any)[item.agentIcon || 'MessageSquare'] || LucideIcons.MessageSquare;
+
+  const agentColors = [
+    'bg-[#14b8a6]', // бирюзовый
+    'bg-[#3b82f6]', // синий
+    'bg-[#8b5cf6]', // фиолетовый
+    'bg-[#d946ef]', // розовый
+    'bg-[#ef4444]', // красный
+    'bg-[#f97316]', // оранжевый
+    'bg-[#eab308]', // жёлтый
+    'bg-[#22c55e]', // зелёный
+  ];
+  const bgClass = agentColors[item.slug.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % agentColors.length];
+
+  return (
+    <Link
+      to="/prompts/agents/$slug"
+      params={{ slug: item.slug }}
+      className="group flex flex-col p-4 rounded-[22px] bg-card border border-border/60 min-h-[140px] cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:bg-muted/40 hover:border-border"
+    >
+      <div className="flex items-start justify-between">
+        <div className={cn("w-14 h-14 rounded-2xl flex items-center justify-center shrink-0", bgClass)}>
+          <IconComponent className="w-[26px] h-[26px] text-white" />
+        </div>
+        <div className="flex items-center gap-1 text-muted-foreground">
+          <Heart className="w-[13px] h-[13px]" />
+          <span className="text-[13px]">{item.likes}</span>
+        </div>
+      </div>
+
+      <div className="mt-3 flex-1">
+        <h3 className="text-[16px] font-bold truncate leading-snug group-hover:text-primary transition-colors">{item.title}</h3>
+        <p className="text-[13px] text-muted-foreground line-clamp-2 mt-1 leading-normal">{item.agentRole}</p>
+      </div>
+    </Link>
+  );
+}
+
 function CategoryPage() {
   const data = Route.useLoaderData();
   const params = Route.useParams();
