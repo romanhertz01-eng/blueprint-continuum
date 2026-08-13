@@ -22,15 +22,41 @@ const PAGE_SIZE = 30;
 export const Route = createFileRoute('/prompts/$topic/')({
   component: CategoryPage,
   loader: ({ params }) => {
-    const categories = getCategories();
-    const currentCategory = categories.find(c => c.slug === params.topic);
-    const items = getItemsByCategory(params.topic as any);
+    const allCategories = getCategories();
+    
+    // 1. Пытаемся найти как основную категорию (image, video, etc)
+    const category = allCategories.find(c => c.slug === params.topic);
+    let items: PromptItem[] = [];
+    let isAgentTopic = false;
+    let topicData: any = null;
+
+    if (category) {
+      items = getItemsByCategory(params.topic as any);
+    } else {
+      // 2. Пытаемся найти как тему (topic) в обычных темах
+      topicData = promptTopics.find(t => t.slug === params.topic && t.status === 'published');
+      if (topicData) {
+        items = getPublishedItems().filter(item => 
+          item.topicSlug === params.topic || item.extraTopicSlugs?.includes(params.topic)
+        );
+      } else {
+        // 3. Пытаемся найти как тему агентов
+        topicData = agentTopics.find(t => t.slug === params.topic && t.status === 'published');
+        if (topicData) {
+          isAgentTopic = true;
+          items = agentItems.filter(item => 
+            item.topicSlug === params.topic && item.status === 'published'
+          );
+        }
+      }
+    }
     
     return {
-      category: currentCategory,
+      category: category || topicData,
       items,
       topicSlug: params.topic,
-      allCategories: categories
+      allCategories,
+      isAgentTopic
     };
   },
   head: (options) => {
