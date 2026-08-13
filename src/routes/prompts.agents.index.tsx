@@ -2,7 +2,7 @@ import { createFileRoute, Link } from '@tanstack/react-router';
 import { Home, ChevronRight, Star, ArrowRight, PlusCircle, Search } from 'lucide-react';
 import { Footer } from '@/components/shared/Footer';
 import { getCategories, getTopicsByCategory, getItemsByTopic } from '@/data/prompts';
-import { AgentPromptCard } from '@/components/prompts/AgentPromptCard';
+import { CatalogCard } from '@/components/prompts/CatalogCard';
 import { cn } from '@/lib/utils';
 import { ORIGIN } from '@/lib/origin';
 import { useState } from 'react';
@@ -132,9 +132,9 @@ function AgentsHubPage() {
                 </button>
               </div>
               
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                {items.map((item: any) => (
-                  <AgentPromptCard key={item.slug} item={item} />
+              <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-x-[20px] gap-y-[24px]">
+                {items.map((item: any, idx: number) => (
+                  <CatalogCard key={item.slug} item={item} index={idx} />
                 ))}
               </div>
             </div>

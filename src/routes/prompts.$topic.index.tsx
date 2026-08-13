@@ -2,10 +2,7 @@ import { createFileRoute, Link } from '@tanstack/react-router';
 import { Search, X, Sparkles, Star, PlusCircle, ArrowRight, Home, ChevronRight } from 'lucide-react';
 import { Footer } from '@/components/shared/Footer';
 import { getPublishedItems, getCategories, PromptItem, getItemsByCategory } from '@/data/prompts';
-import { EditorialPromptCard } from '@/components/prompts/EditorialPromptCard';
-import { TextPromptCard } from '@/components/prompts/TextPromptCard';
-import { AudioPromptCard } from '@/components/prompts/AudioPromptCard';
-import { AgentPromptCard } from '@/components/prompts/AgentPromptCard';
+import { CatalogCard } from '@/components/prompts/CatalogCard';
 
 import { useState, useMemo } from 'react';
 import { cn } from '@/lib/utils';
@@ -274,38 +271,10 @@ function CategoryPage() {
       {/* 4. MIXED-GRID */}
       <section className="max-w-7xl mx-auto px-6 w-full mb-20 flex-grow">
         {visibleItems.length > 0 ? (
-          <div className="grid grid-cols-12 gap-4 md:gap-6">
-            {visibleItems.map((item, idx) => {
-              if (params.topic === 'text') {
-                return (
-                  <div key={`${item.slug}-${idx}`} className="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3">
-                    <TextPromptCard item={item} />
-                  </div>
-                );
-              }
-              if (item.category === 'audio') {
-                return (
-                  <div key={`${item.slug}-${idx}`} className="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3">
-                    <AudioPromptCard item={item} />
-                  </div>
-                );
-              }
-              if (item.category === 'agents') {
-                return (
-                  <div key={`${item.slug}-${idx}`} className="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3">
-                    <AgentPromptCard item={item} />
-                  </div>
-                );
-              }
-
-              const type = getCardType(idx, item);
-              const span = getCardSpan(type, item);
-              return (
-                <div key={`${item.slug}-${idx}`} className={span}>
-                  <EditorialPromptCard item={item} type={type} />
-                </div>
-              );
-            })}
+          <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-x-[20px] gap-y-[24px] mb-[24px]">
+            {visibleItems.map((item, idx) => (
+              <CatalogCard key={`${item.slug}-${idx}`} item={item} index={idx} />
+            ))}
           </div>
         ) : (
           <div className="py-32 text-center bg-muted/10 rounded-[32px] border border-dashed border-border/50">

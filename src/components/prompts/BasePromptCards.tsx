@@ -162,6 +162,13 @@ export function SoftPromptCard({ item }: BaseCardProps) {
     return `linear-gradient(135deg, hsl(${hue}, 40%, 95%), hsl(${hue + 20}, 40%, 90%))`;
   };
 
+  const getAccentColor = (slug: string) => {
+    const hues = [210, 260, 280, 310, 340, 15, 40];
+    const charSum = slug.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    const hue = hues[charSum % hues.length];
+    return `hsl(${hue}, 70%, 50%)`;
+  };
+
   const handleAction = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -170,6 +177,7 @@ export function SoftPromptCard({ item }: BaseCardProps) {
       category: item.category,
       providerId: item.providerId,
       subModelId: item.subModelId,
+      agentId: item.slug,
       sourceSlug: item.slug,
     });
     const targetRoute = CATEGORY_ROUTE[item.category as keyof typeof CATEGORY_ROUTE] || '/prompts';
@@ -195,16 +203,33 @@ export function SoftPromptCard({ item }: BaseCardProps) {
       </div>
 
       <div className="flex-grow flex flex-col items-center justify-center text-center px-2">
-        <div className="w-16 h-16 rounded-2xl mb-6 flex items-center justify-center bg-white/80 shadow-sm group-hover:scale-110 transition-transform duration-500">
-          <IconComponent className="w-8 h-8 text-primary/70" />
-        </div>
+        {item.category === 'audio' ? (
+          <div className="relative w-20 h-20 mb-6 flex items-center justify-center">
+            <div className="absolute inset-0 rounded-full border border-primary/10 animate-[pulse_3s_infinite]" />
+            <div className="absolute inset-[15%] rounded-full border border-primary/5 animate-[pulse_4s_infinite]" />
+            <div className="absolute inset-[-10%] rounded-full border border-primary/5 animate-[pulse_5s_infinite]" />
+            <div className="absolute inset-0 rounded-full bg-white/80 border border-white shadow-sm flex items-center justify-center overflow-hidden">
+               <div className="absolute inset-[10%] rounded-full border-t-2 border-primary/20 animate-spin" style={{ animationDuration: '8s' }} />
+               <div className="w-4 h-4 rounded-full z-10 shadow-sm" style={{ backgroundColor: getAccentColor(item.slug) }} />
+               <div className="absolute w-full h-[1px] bg-black/5 rotate-45" />
+               <div className="absolute w-full h-[1px] bg-black/5 -rotate-45" />
+            </div>
+          </div>
+        ) : (
+          <div className="w-16 h-16 rounded-2xl mb-6 flex items-center justify-center bg-white/80 shadow-sm group-hover:scale-110 transition-transform duration-500">
+            <IconComponent className="w-8 h-8 text-primary/70" />
+          </div>
+        )}
         
-        <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
-          {item.providerId?.replace('-', ' ')}
-        </span>
-        <h3 className="text-[17px] font-semibold text-slate-900 leading-[1.3] mt-2 line-clamp-3">
-          {item.title}
-        </h3>
+        <div className="flex flex-col items-center gap-1">
+          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+            {item.category === 'audio' && item.params?.duration ? `${item.params.duration} · ` : ''}
+            {item.providerId?.replace('-', ' ')}
+          </span>
+          <h3 className="text-[17px] font-semibold text-slate-900 leading-[1.3] line-clamp-3">
+            {item.title}
+          </h3>
+        </div>
       </div>
 
       <div className="mt-4 flex justify-center">
