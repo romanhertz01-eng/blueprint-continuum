@@ -466,7 +466,7 @@ function CategoryPage() {
         {/* АУДИО ПОЛКИ */}
         {isAudio && audioShelvesData.length > 0 && !searchQuery.trim() && (
           <div className="flex flex-col gap-10 mb-10">
-            {audioShelvesData.map((shelf, shelfIdx) => {
+            {(audioShelvesData as any[]).map((shelf, shelfIdx) => {
               const scrollRef = useRef<HTMLDivElement>(null);
               const gradients = [
                 'from-indigo-500/80 to-purple-500/80',
@@ -480,13 +480,15 @@ function CategoryPage() {
                 <div key={shelf.topic.slug} className="group/shelf py-5 relative">
                   <div className="flex items-center justify-between mb-5">
                     <h2 className="text-[20px] font-bold">{shelf.topic.title}</h2>
-                    <Link 
-                      to="/prompts/$topic" 
-                      params={{ topic: shelf.topic.slug }}
-                      className="text-[13px] font-bold text-primary hover:underline"
-                    >
-                      Показать всё →
-                    </Link>
+                    {!shelf.isFallback && (
+                      <Link 
+                        to="/prompts/$topic" 
+                        params={{ topic: shelf.topic.slug }}
+                        className="text-[13px] font-bold text-primary hover:underline"
+                      >
+                        Показать всё →
+                      </Link>
+                    )}
                   </div>
                   
                   <div className="relative">
