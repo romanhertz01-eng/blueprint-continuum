@@ -41,12 +41,10 @@ export function AgentPromptCard({ item }: AgentPromptCardProps) {
       sourceSlug: item.slug,
     });
 
-    const targetRoute = CATEGORY_ROUTE.agents;
-    if (isAuthed) {
-      navigate({ to: targetRoute });
-    } else {
-      window.location.href = buildAuthHref(targetRoute);
-    }
+    navigate({
+      to: "/prompts/agents/$slug" as any,
+      params: { slug: item.slug } as any
+    });
   };
 
   return (
