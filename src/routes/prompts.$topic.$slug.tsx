@@ -14,12 +14,12 @@ import { useEffect } from 'react';
 
 export const Route = createFileRoute('/prompts/$topic/$slug')({
   loader: ({ params }) => {
-    // Ищем промпт по слагу во всем списке опубликованных, игнорируя топик в URL
+    // Ищем промпт по слагу во всем списке опубликованных
     const item = promptItems.find(i => i.status === 'published' && i.slug === params.slug);
     
     if (!item) throw notFound();
     
-    // Если топик в URL не совпадает с каноническим топиком промпта - редирект
+    // Если топик в URL не совпадает с каноническим топиком промпта - выполняем редирект
     if (params.topic !== item.topicSlug) {
       throw redirect({
         to: '/prompts/$topic/$slug',

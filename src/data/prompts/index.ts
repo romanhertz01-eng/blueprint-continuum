@@ -9,7 +9,7 @@ export { promptItems } from './items';
 export { promptCategories } from './categories';
 
 export const RESERVED_PROMPT_SLUGS: readonly string[] = ['image', 'video', 'audio', 'text', 'agents', 'model'];
-export const MIN_ITEMS_FOR_INDEX = 8;
+export const MIN_ITEMS_FOR_INDEX = 5;
 
 export function isReservedPromptSlug(slug: string): boolean {
   return RESERVED_PROMPT_SLUGS.includes(slug);
