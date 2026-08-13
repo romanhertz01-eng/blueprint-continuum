@@ -744,12 +744,26 @@ function CategoryPage() {
                         const hash = item.topicSlug.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
                         const gradient = audioGradients[hash % audioGradients.length];
                         
+                        const handleCardClick = (e: React.MouseEvent) => {
+                          e.preventDefault();
+                          writePromptHandoff({
+                            prompt: item.promptRu,
+                            category: 'audio',
+                            providerId: item.providerId,
+                            subModelId: item.subModelId,
+                            duration: item.params?.duration,
+                            sourceSlug: item.slug,
+                          });
+                          const targetRoute = '/audio';
+                          if (isAuthed) navigate({ to: targetRoute });
+                          else window.location.href = buildAuthHref(targetRoute);
+                        };
+
                         return (
-                          <Link
+                          <div
                             key={item.slug}
-                            to="/prompts/$topic/$slug"
-                            params={{ topic: item.topicSlug, slug: item.slug }}
-                            className="flex-shrink-0 w-[190px] aspect-square rounded-2xl overflow-hidden relative group snap-start"
+                            onClick={handleCardClick}
+                            className="flex-shrink-0 w-[190px] aspect-square rounded-2xl overflow-hidden relative group snap-start cursor-pointer"
                           >
                             <div className={cn(
                               "absolute inset-0 bg-gradient-to-br transition-transform duration-300 group-hover:scale-[1.04]",
@@ -771,7 +785,7 @@ function CategoryPage() {
                                 {item.title}
                               </h3>
                             </div>
-                          </Link>
+                          </div>
                         );
                       })}
                     </div>
