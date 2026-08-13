@@ -482,6 +482,35 @@ function CategoryPage() {
   }, [filteredItems, page]);
 
   const hasMore = visibleItems.length < filteredItems.length;
+  
+  const videoBlocks = useMemo(() => {
+    if (!isVideo) return [];
+    
+    const horizontals = visibleItems.filter(item => item.params?.aspect !== '9:16');
+    const verticals = visibleItems.filter(item => item.params?.aspect === '9:16');
+    
+    const blocks: { type: 'horizontal' | 'vertical', items: PromptItem[] }[] = [];
+    let hIdx = 0;
+    let vIdx = 0;
+
+    while (hIdx < horizontals.length || vIdx < verticals.length) {
+      if (hIdx < horizontals.length) {
+        blocks.push({ 
+          type: 'horizontal', 
+          items: horizontals.slice(hIdx, hIdx + 4) 
+        });
+        hIdx += 4;
+      }
+      if (vIdx < verticals.length) {
+        blocks.push({ 
+          type: 'vertical', 
+          items: verticals.slice(vIdx, vIdx + 5) 
+        });
+        vIdx += 5;
+      }
+    }
+    return blocks;
+  }, [isVideo, visibleItems]);
 
   const handleShowMore = () => {
     setIsLoadingMore(true);
