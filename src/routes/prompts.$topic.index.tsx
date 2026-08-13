@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from '@tanstack/react-router';
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
 import { Search, X, Sparkles, Star, PlusCircle, ArrowRight, Home, ChevronRight, Heart, Zap, LayoutGrid, Check, Play } from 'lucide-react';
 import { Footer } from '@/components/shared/Footer';
 import { getPublishedItems, getCategories, PromptItem, getItemsByCategory, getTopicsByCategory } from '@/data/prompts';
@@ -6,6 +6,9 @@ import { EditorialPromptCard } from '@/components/prompts/EditorialPromptCard';
 import { TextPromptCard } from '@/components/prompts/TextPromptCard';
 import { AudioPromptCard } from '@/components/prompts/AudioPromptCard';
 import { AgentPromptCard } from '@/components/prompts/AgentPromptCard';
+import { useAuth } from '@/contexts/AuthContext';
+import { writePromptHandoff, CATEGORY_ROUTE } from '@/lib/promptHandoff';
+import { buildAuthHref } from '@/lib/authRedirect';
 
 import { useState, useMemo, useRef, useEffect } from 'react';
 import { cn } from '@/lib/utils';
