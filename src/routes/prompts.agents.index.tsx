@@ -55,8 +55,8 @@ function AgentsHubPage() {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       {/* 1. ШАПКА / BREADCRUMBS */}
-      <section className="pt-6 pb-4 px-6 max-w-7xl mx-auto w-full">
-        <nav className="flex items-center gap-2 text-[12px] text-muted-foreground mb-6 font-medium">
+      <section className="pt-4 pb-3 px-6 max-w-7xl mx-auto w-full">
+        <nav className="flex items-center gap-2 text-[12px] text-muted-foreground mb-4 font-medium">
           <Link to="/prompts" className="hover:text-foreground flex items-center gap-1 transition-colors">
             <Home className="w-3 h-3" /> Главная
           </Link>
@@ -64,9 +64,9 @@ function AgentsHubPage() {
           <span className="text-foreground">Агенты</span>
         </nav>
 
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-6">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-5 mb-5">
           <div>
-            <div className="flex items-center gap-3 mb-3">
+            <div className="flex items-center gap-3 mb-2">
               <h1 className="text-[32px] md:text-[42px] font-bold tracking-tight">
                 Промпты для агентов
               </h1>
@@ -89,7 +89,7 @@ function AgentsHubPage() {
       </section>
 
       {/* 2. ЛЕНТА КАТЕГОРИЙ (PILLS) */}
-      <section className="sticky top-0 z-40 bg-background/80 backdrop-blur-md border-b border-border mb-5">
+      <section className="sticky top-0 z-40 bg-background/80 backdrop-blur-md border-b border-border mb-3">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
             <Link
@@ -118,14 +118,14 @@ function AgentsHubPage() {
       </section>
 
       {/* 3. СЕКЦИИ ПО ГРУППАМ */}
-      <section className="max-w-7xl mx-auto px-6 w-full mb-20 space-y-8">
+      <section className="max-w-7xl mx-auto px-6 w-full mb-16 space-y-4">
         {data.topics.map((topic: any) => {
           const items = getItemsByTopic(topic.slug);
           if (items.length === 0) return null;
           
           return (
-            <div key={topic.slug} className="space-y-4">
-              <div className="flex items-end justify-between border-b border-border/50 pb-4">
+            <div key={topic.slug} className="py-4 first:pt-0">
+              <div className="flex items-end justify-between border-b border-border/50 pb-3 mb-4">
                 <div>
                   <h2 className="text-2xl font-bold tracking-tight">{topic.title}</h2>
                   <p className="text-muted-foreground text-[14px] mt-1">{topic.intro}</p>
@@ -135,7 +135,7 @@ function AgentsHubPage() {
                 </button>
               </div>
               
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[18px]">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-[18px]">
                 {items.map((item: PromptItem) => (
                   <AgentCard key={item.slug} item={item} />
                 ))}
@@ -156,14 +156,14 @@ function AgentCard({ item }: { item: PromptItem }) {
   const IconComponent = (LucideIcons as any)[item.agentIcon || 'MessageSquare'] || LucideIcons.MessageSquare;
 
   const agentColors = [
-    'bg-[#14b8a6]/20',
-    'bg-[#3b82f6]/20',
-    'bg-[#a855f7]/20',
-    'bg-[#ec4899]/20',
-    'bg-[#ef4444]/20',
-    'bg-[#f97316]/20',
-    'bg-[#eab308]/20',
-    'bg-[#22c55e]/20',
+    'bg-[#14b8a6]', // бирюзовый
+    'bg-[#3b82f6]', // синий
+    'bg-[#8b5cf6]', // фиолетовый
+    'bg-[#d946ef]', // розовый
+    'bg-[#ef4444]', // красный
+    'bg-[#f97316]', // оранжевый
+    'bg-[#eab308]', // жёлтый
+    'bg-[#22c55e]', // зелёный
   ];
   const bgClass = agentColors[item.slug.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % agentColors.length];
 
@@ -200,9 +200,9 @@ function AgentCard({ item }: { item: PromptItem }) {
         </div>
       </div>
 
-      <div className="mt-3 flex-1 flex flex-col justify-end">
-        <h3 className="text-[16px] font-bold truncate">{item.title}</h3>
-        <p className="text-[13px] text-muted-foreground line-clamp-2 mt-1">{item.agentRole}</p>
+      <div className="mt-3 flex-1">
+        <h3 className="text-[16px] font-bold truncate leading-snug">{item.title}</h3>
+        <p className="text-[13px] text-muted-foreground line-clamp-2 mt-1 leading-normal">{item.agentRole}</p>
       </div>
     </div>
   );
