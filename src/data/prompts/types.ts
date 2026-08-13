@@ -26,6 +26,9 @@ export interface PromptItem {
   providerId: string;             // id из src/data/imageModels.ts и аналогов
   subModelId?: string;
   agentId?: string;               // для category: 'agents'
+  agentRole?: string;             // короткое описание роли агента
+  agentIcon?: string;             // имя иконки Lucide
+
   params?: {
     aspect?: string; quality?: string; quantity?: number;
     duration?: string; resolution?: string;
