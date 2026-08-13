@@ -98,7 +98,7 @@ function TextCategoryCard({ item }: { item: PromptItem }) {
 
       {/* Bottom row */}
       <div className="mt-4 flex items-center gap-2 text-primary font-bold text-[14px]">
-        Попробовать <Zap className="w-3.5 h-3.5" />
+        <Zap className="w-3.5 h-3.5" /> Попробовать
       </div>
     </Link>
   );
