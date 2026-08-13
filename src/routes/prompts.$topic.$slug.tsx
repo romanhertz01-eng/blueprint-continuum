@@ -3,6 +3,7 @@ import { ChevronRight, Eye, Heart, Bookmark, Share2, Copy } from 'lucide-react';
 import { promptItems, getTopicBySlug } from '@/data/prompts';
 import { PromptGallery } from '@/components/prompts/PromptGallery';
 import { DiscoveryFeed } from '@/components/prompts/DiscoveryFeed';
+import { cn } from '@/lib/utils';
 import { TryPromptButton } from '@/components/prompts/TryPromptButton';
 import { CopyPromptButton } from '@/components/prompts/CopyPromptButton';
 import { Footer } from '@/components/shared/Footer';
@@ -58,7 +59,9 @@ function PromptDetailPage() {
   const metadata = [
     modelName,
     item.params?.aspect,
-    item.params?.quality || '1K'
+    item.params?.quality,
+    item.params?.resolution,
+    item.params?.duration && `${item.params.duration}s`
   ].filter(Boolean).join(' · ');
 
   return (
@@ -75,11 +78,16 @@ function PromptDetailPage() {
             <span className="text-foreground/70 truncate">{item.title}</span>
           </nav>
 
-          <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-12 items-start mb-12">
+          <div className={cn(
+            "grid gap-12 items-start mb-12",
+            item.media?.length > 0 ? "grid-cols-1 lg:grid-cols-[1.2fr_1fr]" : "grid-cols-1"
+          )}>
             {/* Left: Gallery */}
-            <div className="w-full">
-              <PromptGallery media={item.media} title={item.title} />
-            </div>
+            {item.media?.length > 0 && (
+              <div className="w-full">
+                <PromptGallery media={item.media} title={item.title} />
+              </div>
+            )}
 
             {/* Right: Info & Actions */}
             <div className="space-y-8 lg:sticky lg:top-[120px] self-start">
@@ -138,6 +146,36 @@ function PromptDetailPage() {
                 label="Создать с этим промптом"
                 className="w-full h-[54px] text-base font-semibold rounded-xl shadow-md shadow-primary/10 hover:shadow-lg hover:shadow-primary/20 transition-all"
               />
+
+              {/* Descriptions & Breakdown */}
+              {(item.body?.overview || item.body?.breakdown || item.body?.howToChange || item.body?.mistakes) && (
+                <div className="pt-8 border-t border-border space-y-8">
+                  {item.body.overview && (
+                    <div className="space-y-3">
+                      <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Описание</h3>
+                      <p className="text-[15px] leading-relaxed text-foreground/80">{item.body.overview}</p>
+                    </div>
+                  )}
+                  {item.body.breakdown && (
+                    <div className="space-y-3">
+                      <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Разбор промпта</h3>
+                      <p className="text-[15px] leading-relaxed text-foreground/80 whitespace-pre-wrap">{item.body.breakdown}</p>
+                    </div>
+                  )}
+                  {item.body.howToChange && (
+                    <div className="space-y-3">
+                      <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Как изменить</h3>
+                      <p className="text-[15px] leading-relaxed text-foreground/80">{item.body.howToChange}</p>
+                    </div>
+                  )}
+                  {item.body.mistakes && (
+                    <div className="space-y-3">
+                      <h3 className="text-sm font-semibold uppercase tracking-wider text-error/80">Частые ошибки</h3>
+                      <p className="text-[15px] leading-relaxed text-foreground/80">{item.body.mistakes}</p>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>
