@@ -3,10 +3,7 @@ import { createFileRoute, Link } from '@tanstack/react-router';
 import { Search, X, Sparkles, Star, PlusCircle, ArrowRight, Filter } from 'lucide-react';
 import { Footer } from '@/components/shared/Footer';
 import { getPublishedItems, getPublishedTopics, countItemsByCategory, getCategories, PromptItem, getProvidersWithPrompts } from '@/data/prompts';
-import { EditorialPromptCard } from '@/components/prompts/EditorialPromptCard';
-import { TextPromptCard } from '@/components/prompts/TextPromptCard';
-import { AudioPromptCard } from '@/components/prompts/AudioPromptCard';
-import { AgentPromptCard } from '@/components/prompts/AgentPromptCard';
+import { CatalogCard } from '@/components/prompts/CatalogCard';
 
 import { TopicCloud } from '@/components/prompts/TopicCloud';
 import { useState, useMemo, useEffect } from 'react';
@@ -130,36 +127,8 @@ function PromptsHub() {
     setPage(1);
   };
 
-  // Определение типа карточки на основе индекса для mixed-grid
-  const getCardType = (index: number, item: PromptItem): 'A' | 'B' | 'C' | 'D' | 'E' => {
-    const hasMedia = !!item.media?.[0]?.src && item.category !== 'text';
-    const cycle = index % 15;
-    
-    // Подборки и курсы — фиксированные позиции
-    if (cycle === 4) return 'D';
-    if (cycle === 9) return 'E';
-    
-    // Если есть медиа, даем тип A (с картинкой) или B (картинка на весь фон)
-    if (hasMedia) {
-      // Тип B (Image-first) встречается реже для акцента
-      if (cycle === 2 || cycle === 12) return 'B';
-      return 'A';
-    }
-    
-    // Если нет медиа (текстовый промпт), всегда тип C
-    return 'C';
-  };
-
-  const getCardSpan = (type: 'A' | 'B' | 'C' | 'D' | 'E', item?: PromptItem): string => {
-    switch (type) {
-      case 'A': return 'col-span-12 sm:col-span-6 lg:col-span-3';
-      case 'B': return 'col-span-12 sm:col-span-6 lg:col-span-3';
-      case 'C': return 'col-span-12 sm:col-span-6 lg:col-span-3';
-      case 'D': return 'col-span-12 lg:col-span-6';
-      case 'E': return 'col-span-12 lg:col-span-6';
-      default: return 'col-span-12';
-    }
-  };
+  // 5-column grid system is handled by Tailwind classes in the render.
+  // Card type selection logic is now inside CatalogCard.
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
@@ -287,20 +256,20 @@ function PromptsHub() {
         </div>
       </section>
 
-      {/* 2. ЛЕНТА КАТЕГОРИЙ */}
-      <section className="sticky top-0 z-40 bg-background/80 backdrop-blur-md border-b border-border mb-6">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center gap-3">
+      {/* 2. ЛЕНТА КАТЕГОРИЙ (STICKY) */}
+      <section className="sticky top-0 z-40 bg-background/90 backdrop-blur-md border-b border-border shadow-sm">
+        <div className="max-w-[1520px] mx-auto px-6 py-2.5 flex items-center gap-3">
           <div className="flex-grow overflow-x-auto no-scrollbar">
-            <div className="flex gap-2">
+            <div className="flex gap-2.5">
               {pillCategories.map(cat => (
                 <button
                   key={cat.label}
                   onClick={() => handleTopicClick(cat.slug)}
                   className={cn(
-                    "px-5 py-2.5 rounded-full text-[13px] font-medium whitespace-nowrap transition-all border",
+                    "px-5 py-2 rounded-full text-[13px] font-semibold whitespace-nowrap transition-all border",
                     selectedTopic === cat.slug
-                      ? "bg-primary text-white border-primary shadow-md shadow-primary/20"
-                      : "bg-muted/30 border-border/50 hover:bg-muted/60 text-muted-foreground"
+                      ? "bg-primary text-white border-primary shadow-sm shadow-primary/20"
+                      : "bg-muted/40 border-border/40 hover:bg-muted/70 text-muted-foreground/80"
                   )}
                 >
                   {cat.label}
@@ -308,9 +277,6 @@ function PromptsHub() {
               ))}
             </div>
           </div>
-          <button className="shrink-0 w-10 h-10 rounded-full border border-border flex items-center justify-center hover:bg-muted/50 transition-colors">
-            <ArrowRight className="w-4 h-4" />
-          </button>
         </div>
       </section>
 
