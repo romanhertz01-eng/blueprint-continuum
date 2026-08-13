@@ -1,7 +1,10 @@
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
-import { Search, X, Sparkles, Star, PlusCircle, ArrowRight, Home, ChevronRight, Heart, Zap, LayoutGrid, Check, Play } from 'lucide-react';
+import { Search, X, Sparkles, Star, PlusCircle, ArrowRight, Home, ChevronRight, Heart, Zap, LayoutGrid, Check, Play, AlertCircle } from 'lucide-react';
+import * as LucideIcons from 'lucide-react';
 import { Footer } from '@/components/shared/Footer';
-import { getPublishedItems, getCategories, PromptItem, getItemsByCategory, getTopicsByCategory } from '@/data/prompts';
+import { getPublishedItems, getCategories, PromptItem, getItemsByCategory, getTopicsByCategory, promptTopics } from '@/data/prompts';
+import { agentTopics } from '@/data/prompts/agentTopics';
+import { agentItems } from '@/data/prompts/agentItems';
 import { EditorialPromptCard } from '@/components/prompts/EditorialPromptCard';
 import { TextPromptCard } from '@/components/prompts/TextPromptCard';
 import { AudioPromptCard } from '@/components/prompts/AudioPromptCard';
