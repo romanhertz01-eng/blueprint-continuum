@@ -371,8 +371,10 @@ function CategoryPage() {
   // Сброс фильтров при смене категории
   useEffect(() => {
     setSelectedTopics([]);
+    setTopicFilter('Все');
     setIsPanelOpen(false);
   }, [params.topic]);
+
 
   const audioShelvesData = useMemo(() => {
     if (!isAudio || searchQuery.trim()) return [];
