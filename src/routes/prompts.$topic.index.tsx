@@ -496,7 +496,7 @@ function CategoryPage() {
                       ref={scrollRef}
                       className="flex gap-[14px] overflow-x-auto no-scrollbar snap-x snap-mandatory w-[calc(100%+40px)] pb-4"
                     >
-                      {shelf.prompts.map((item) => (
+                      {shelf.prompts.map((item: PromptItem) => (
                         <Link
                           key={item.slug}
                           to="/prompts/$topic/$slug"
