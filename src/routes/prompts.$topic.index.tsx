@@ -979,6 +979,14 @@ function CategoryPage() {
                 </div>
               ))}
             </div>
+          ) : isAgentTopic ? (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-[18px]">
+              {visibleItems.map((item, idx) => (
+                <div key={`${item.slug}-${idx}`}>
+                  <AgentCategoryCard item={item} />
+                </div>
+              ))}
+            </div>
           ) : (
             <div className={cn(
               "grid",
