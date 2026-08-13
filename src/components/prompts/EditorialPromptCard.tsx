@@ -88,11 +88,7 @@ export function EditorialPromptCard({ item, className, type }: CardProps) {
             {item.body?.overview || item.promptRu}
           </p>
           <div className="mt-auto flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2 min-w-0">
-               <div className="w-5 h-5 rounded-full bg-muted flex-shrink-0" />
-               <span className="text-[11px] text-muted-foreground truncate font-medium">@era_user</span>
-            </div>
-            <div className="px-2 py-0.5 rounded-md bg-muted/60 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+            <div className="px-2 py-0.5 rounded-md bg-muted/60 text-[10px] font-bold uppercase tracking-wider text-muted-foreground ml-auto">
               {modelName}
             </div>
           </div>
@@ -152,11 +148,7 @@ export function EditorialPromptCard({ item, className, type }: CardProps) {
           <h3 className="text-[16px] font-bold leading-tight mb-2">{item.title}</h3>
           <p className="text-[13px] text-muted-foreground line-clamp-3 italic">"{item.promptRu}"</p>
         </div>
-        <div className="mt-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-             <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-[10px] font-bold text-primary">E</div>
-             <span className="text-[11px] text-muted-foreground font-medium">@editor</span>
-          </div>
+        <div className="mt-4 flex items-center justify-end">
           <button className="text-[12px] font-bold text-primary flex items-center gap-1 group-hover:underline">
             Попробовать <ExternalLink className="w-3 h-3" />
           </button>

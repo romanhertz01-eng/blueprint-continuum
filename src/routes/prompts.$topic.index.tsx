@@ -116,15 +116,24 @@ function CategoryPage() {
   };
 
   const getCardType = (index: number, item: PromptItem): 'A' | 'B' | 'C' | 'D' | 'E' => {
+    // 1. Приоритет ручному layout (из админки)
+    if (item.layout === 'wide') return 'D';
+    if (item.layout === 'featured') return 'E';
+
+    // 2. Автоматическое определение по свойствам
     const hasMedia = !!item.media?.[0]?.src && item.category !== 'text';
-    const cycle = index % 15;
-    if (cycle === 4) return 'D';
-    if (cycle === 9) return 'E';
-    if (hasMedia) {
-      if (cycle === 2 || cycle === 12) return 'B';
-      return 'A';
-    }
-    return 'C';
+    
+    // Если текстовый - тип C
+    if (!hasMedia) return 'C';
+
+    // Ритмичность через хэш слага (стабильно при добавлении соседей)
+    const charSum = item.slug.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    const hash = charSum % 10;
+    
+    // image-first (тип B) для некоторых карточек с медиа
+    if (hash === 2 || hash === 7) return 'B';
+    
+    return 'A';
   };
 
   const getCardSpan = (type: 'A' | 'B' | 'C' | 'D' | 'E'): string => {
