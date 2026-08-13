@@ -1,11 +1,14 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { ChevronRight } from 'lucide-react';
 import { Footer } from '@/components/shared/Footer';
-import { getProvidersWithPrompts, getItemsByProvider } from '@/data/prompts';
+import { getPublishedItems } from '@/data/prompts';
+import { agentItems } from '@/data/prompts/agentItems';
 import { textProviders } from '@/data/textModels';
 import { imageProviders } from '@/data/imageModels';
 import { videoProviders } from '@/data/videoModels';
 import { ORIGIN } from '@/lib/origin';
+import { useMemo } from 'react';
+import { cn } from '@/lib/utils';
 
 const TITLE = 'Промпты по моделям — библиотека ЭРА2 | ERA2.ai';
 const DESCRIPTION = 'Коллекция лучших промптов, отобранных для конкретных нейросетей. Nano Banana, Seedream, Kling и другие модели — один и тот же запрос на разных моделях даёт разный результат.';
