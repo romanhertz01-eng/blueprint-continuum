@@ -272,7 +272,7 @@ function CategoryPage() {
       {/* 4. MIXED-GRID */}
       <section className="max-w-7xl mx-auto px-6 w-full mb-20 flex-grow">
         {visibleItems.length > 0 ? (
-          <div className="grid grid-cols-12 gap-4 md:gap-5">
+          <div className="grid grid-cols-12 gap-4 md:gap-6">
             {visibleItems.map((item, idx) => {
               if (params.topic === 'text') {
                 return (
