@@ -52,8 +52,8 @@ export function CollectionShelf({ title, subtitle, items, ctaHref }: CollectionS
           return (
             <Link
               key={`${item.slug}-${idx}`}
-              to="/prompts/$topic/$slug"
-              params={{ topic: item.category, slug: item.slug }}
+              to={item.category === 'agents' ? "/prompts/agents/$slug" : "/prompts/$topic/$slug"}
+              params={item.category === 'agents' ? { slug: item.slug } : { topic: item.topicSlug, slug: item.slug }}
               className="flex-none w-[170px] md:w-[190px] aspect-[3/4] rounded-[22px] overflow-hidden relative group snap-start bg-card border border-border/50"
             >
               {/* Media Background */}
