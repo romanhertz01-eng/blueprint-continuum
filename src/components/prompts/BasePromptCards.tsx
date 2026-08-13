@@ -74,7 +74,6 @@ export function LightPromptCard({ item }: BaseCardProps) {
         providerId: item.providerId,
         subModelId: item.subModelId,
         sourceSlug: item.slug,
-        agentId: item.category === 'agents' ? item.slug : undefined,
       });
       const targetRoute = CATEGORY_ROUTE[item.category as keyof typeof CATEGORY_ROUTE] || '/prompts';
       if (isAuthed) navigate({ to: targetRoute });
@@ -86,8 +85,7 @@ export function LightPromptCard({ item }: BaseCardProps) {
       });
     } else if (item.category === 'agents') {
       navigate({
-        to: "/prompts/agents/$slug" as any,
-        params: { slug: item.slug }
+        to: `/prompts/agents/${item.slug}` as any,
       });
     }
   };
@@ -166,8 +164,7 @@ export function ImagePromptCard({ item }: BaseCardProps) {
       });
     } else if (item.category === 'agents') {
       navigate({
-        to: "/prompts/agents/$slug" as any,
-        params: { slug: item.slug }
+        to: `/prompts/agents/${item.slug}` as any,
       });
     }
   };
@@ -253,8 +250,7 @@ export function SoftPromptCard({ item }: BaseCardProps) {
       });
     } else if (item.category === 'agents') {
       navigate({
-        to: "/prompts/agents/$slug" as any,
-        params: { slug: item.slug }
+        to: `/prompts/agents/${item.slug}` as any,
       });
     }
   };
