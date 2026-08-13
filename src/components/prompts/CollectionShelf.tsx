@@ -14,13 +14,26 @@ export function CollectionShelf({ title, subtitle, items, ctaHref }: CollectionS
   return (
     <section className="col-span-full w-full rounded-[28px] bg-muted/30 p-6 md:p-8 mb-8">
       <div className="flex items-start justify-between mb-8">
-        <div>
-          <h2 className="text-[22px] md:text-[26px] font-bold tracking-tight mb-1 text-foreground">
-            {title}
-          </h2>
-          <p className="text-[14px] md:text-[15px] text-muted-foreground font-medium">
-            {subtitle}
-          </p>
+        <div className={cn(ctaHref && "group/shelf-header cursor-pointer")}>
+          {ctaHref ? (
+            <Link to={ctaHref as any} className="block">
+              <h2 className="text-[22px] md:text-[26px] font-bold tracking-tight mb-1 text-foreground group-hover/shelf-header:text-primary transition-colors">
+                {title}
+              </h2>
+              <p className="text-[14px] md:text-[15px] text-muted-foreground font-medium">
+                {subtitle}
+              </p>
+            </Link>
+          ) : (
+            <>
+              <h2 className="text-[22px] md:text-[26px] font-bold tracking-tight mb-1 text-foreground">
+                {title}
+              </h2>
+              <p className="text-[14px] md:text-[15px] text-muted-foreground font-medium">
+                {subtitle}
+              </p>
+            </>
+          )}
         </div>
         {ctaHref && (
           <Link 
