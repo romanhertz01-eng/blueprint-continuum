@@ -36,7 +36,13 @@ export const Route = createFileRoute('/prompts/model/$providerId')({
 
     const providerInfo = allProviders.find(p => p.id === providerId);
     let name = providerInfo?.name || providerId;
-    let description = providerInfo?.description || '';
+    let description = '';
+
+    if (providerInfo) {
+      if ('description' in providerInfo) {
+        description = providerInfo.description;
+      }
+    }
 
     // Если не нашли в провайдерах, ищем в подмоделях (для субмоделей)
     if (!providerInfo) {
