@@ -592,14 +592,14 @@ function SmallCardsShelf({ allItems, searchQuery }: { allItems: PromptItem[], se
     if (!textTopic) return [];
     return allItems
       .filter(item => item.topicSlug === textTopic.topic.slug)
-      .slice(0, 8);
+      .slice(0, 10);
   }, [allItems, textTopic]);
 
   if (!textTopic || items.length < 6) return null;
 
   const scrollRight = () => {
     if (scrollRef.current) {
-      const scrollAmount = (170 + 12) * 3;
+      const scrollAmount = (150 + 10) * 3;
       scrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
     }
   };
@@ -618,24 +618,24 @@ function SmallCardsShelf({ allItems, searchQuery }: { allItems: PromptItem[], se
 
   return (
     <section className="max-w-[1520px] mx-auto px-6 w-full mb-10">
-      <div className="rounded-3xl bg-muted/30 border border-border p-8">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
-          <div>
-            <h2 className="text-[24px] font-bold mb-1">{textTopic.topic.title}</h2>
-            <p className="text-[14px] text-muted-foreground">{intro}</p>
+      <div className="rounded-3xl bg-muted/30 border border-border py-5 px-8">
+        <div className="flex items-baseline justify-between gap-4 mb-4">
+          <div className="min-w-0">
+            <h2 className="text-[20px] font-bold leading-tight">{textTopic.topic.title}</h2>
+            <p className="text-[13px] text-muted-foreground line-clamp-1">{intro}</p>
           </div>
           <Link
             to={`/prompts/${textTopic.topic.slug}` as any}
-            className="bg-primary text-white h-11 px-6 rounded-xl font-bold flex items-center justify-center shrink-0 hover:opacity-90 transition-opacity"
+            className="shrink-0 text-[13px] font-bold text-primary hover:opacity-80 transition-opacity"
           >
-            Перейти к подборке
+            Открыть →
           </Link>
         </div>
 
         <div className="relative group/shelf">
           <div 
             ref={scrollRef}
-            className="flex gap-[12px] overflow-x-auto no-scrollbar snap-x snap-mandatory"
+            className="flex gap-[10px] overflow-x-auto no-scrollbar snap-x snap-mandatory w-[calc(100%+40px)]"
           >
             {items.map((item) => {
               const Icon = getIcon(item.category);
@@ -643,18 +643,16 @@ function SmallCardsShelf({ allItems, searchQuery }: { allItems: PromptItem[], se
                 <Link
                   key={item.slug}
                   to={`/prompts/${item.topicSlug}/${item.slug}` as any}
-                  className="w-[170px] shrink-0 aspect-[3/4] rounded-2xl bg-card border border-border p-3 flex flex-col justify-between snap-start hover:border-primary/40 hover:-translate-y-0.5 transition-all"
+                  className="w-[150px] h-[150px] shrink-0 rounded-xl bg-card border border-border p-3 flex flex-col justify-between snap-start hover:border-primary/40 hover:-translate-y-0.5 transition duration-200"
                 >
                   <div className="flex items-center justify-between">
-                    <div className="w-[28px] h-[28px] rounded-full bg-muted flex items-center justify-center">
-                      <Icon className="w-3.5 h-3.5 text-muted-foreground" />
-                    </div>
+                    <Icon className="w-4 h-4 text-muted-foreground" />
                     <div className="flex items-center gap-1 text-muted-foreground">
-                      <Heart className="w-3 h-3" />
+                      <Heart className="w-[11px] h-[11px]" />
                       <span className="text-[11px] font-medium">{item.views || 0}</span>
                     </div>
                   </div>
-                  <h3 className="text-[13px] font-semibold line-clamp-3 leading-snug">
+                  <h3 className="text-[12px] font-semibold line-clamp-3 leading-snug">
                     {item.title}
                   </h3>
                 </Link>
@@ -664,7 +662,7 @@ function SmallCardsShelf({ allItems, searchQuery }: { allItems: PromptItem[], se
           
           <button
             onClick={scrollRight}
-            className="absolute right-0 md:right-[-20px] top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-background border border-border shadow-lg flex items-center justify-center z-10 opacity-0 group-hover/shelf:opacity-100 transition-opacity hover:bg-muted"
+            className="absolute right-0 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-background/80 backdrop-blur-sm border border-border flex items-center justify-center z-10 opacity-0 group-hover/shelf:opacity-100 transition-opacity hover:bg-muted"
           >
             <ChevronRight className="w-5 h-5" />
           </button>
