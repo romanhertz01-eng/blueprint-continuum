@@ -133,13 +133,9 @@ export function DiscoveryFeed({ currentItem }: DiscoveryFeedProps) {
         {/* MASONRY: CSS columns */}
         <div className="columns-2 sm:columns-3 lg:columns-5 gap-[12px] [column-fill:balance]">
           {visibleItems.map((item, index) => (
-            item.category === 'text' 
-              ? <TextPromptCard key={`${item.slug}-${activeFilter}-${index}`} item={item} />
-              : <DiscoveryCard 
-                  key={`${item.slug}-${activeFilter}-${index}`} 
-                  item={item} 
-                  modelName={getModelName(item.providerId)} 
-                />
+            <div key={`${item.slug}-${activeFilter}-${index}`} className="mb-[12px] break-inside-avoid">
+              <CatalogCard item={item} index={index} />
+            </div>
           ))}
         </div>
 

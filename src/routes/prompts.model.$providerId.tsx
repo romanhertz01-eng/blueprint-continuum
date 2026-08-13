@@ -5,8 +5,7 @@ import { getItemsByProvider, getPublishedTopics } from '@/data/prompts';
 import { textProviders } from '@/data/textModels';
 import { imageProviders } from '@/data/imageModels';
 import { videoProviders } from '@/data/videoModels';
-import { PromptMosaicTile } from '@/components/prompts/PromptMosaicTile';
-import { TextPromptCard } from '@/components/prompts/TextPromptCard';
+import { CatalogCard } from '@/components/prompts/CatalogCard';
 
 export const Route = createFileRoute('/prompts/model/$providerId')({
   component: ModelDetailPage,
@@ -46,11 +45,11 @@ function ModelDetailPage() {
 
         <div className="w-screen relative left-1/2 -translate-x-1/2 mb-12">
           <div style={{ columnWidth: '320px', columnGap: '3px', padding: '0 3px' }}>
-            {items.map((item: any) => 
-              item.category === 'text'
-                ? <TextPromptCard key={item.slug} item={item} />
-                : <PromptMosaicTile key={item.slug} item={item} topics={topics} />
-            )}
+            {items.map((item: any, idx: number) => (
+              <div key={item.slug} className="mb-[24px]">
+                <CatalogCard item={item} index={idx} />
+              </div>
+            ))}
           </div>
         </div>
       </div>
