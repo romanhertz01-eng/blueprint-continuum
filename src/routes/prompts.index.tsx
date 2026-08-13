@@ -174,8 +174,20 @@ function PromptsHub() {
       // Rhythm: shelf after row 2, 5, 8... banner after row 4, 9...
       // Real row index starts at 0. Row index 1 is the 2nd row.
       
-      // Shelf approx every 3 rows (2, 5, 8, 11...)
-      if ((rowIndex + 1) % 3 === 2) {
+      // Video shelf after row 2 (rowIndex === 1)
+      if (rowIndex === 1) {
+        elements.push(
+          <VideoPromptsShelf 
+            key="video-shelf-fixed" 
+            allItems={allItems} 
+            searchQuery={searchQuery} 
+          />
+        );
+      }
+
+      // Shelf approx every 3 rows (5, 8, 11...)
+      // We skip 2 because it's taken by Video shelf
+      if ((rowIndex + 1) % 3 === 2 && (rowIndex + 1) !== 2) {
         // Selection of items for the shelf
         const shelfItems = [...allItems].sort(() => 0.5 - Math.random()).slice(0, 8);
         const topicSlugs = ["marketing", "work", "design", "creative"];
@@ -873,4 +885,97 @@ function PopularAudioShelf({ allItems, searchQuery }: { allItems: PromptItem[], 
     </section>
   );
 }
+function VideoPromptsShelf({ allItems, searchQuery }: { allItems: PromptItem[], searchQuery: string }) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const videoItems = useMemo(() => {
+    if (searchQuery.trim()) return [];
+    return allItems
+      .filter(item => item.category === 'video' && item.status === 'published')
+      .sort((a, b) => (b.likes || 0) - (a.likes || 0))
+      .slice(0, 6);
+  }, [allItems, searchQuery]);
+
+  if (videoItems.length < 4 || searchQuery.trim()) return null;
+
+  const scrollRight = () => {
+    if (scrollRef.current) {
+      const scrollAmount = (280 + 14) * 3;
+      scrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+  };
+
+  return (
+    <section className="w-full mb-10">
+      <div className="rounded-3xl bg-muted/30 border border-border px-8 py-6">
+        <div className="flex items-end justify-between mb-6">
+          <div className="min-w-0">
+            <h2 className="text-[20px] font-bold leading-tight">Промпты для видео</h2>
+            <p className="text-[13px] text-muted-foreground mt-1 line-clamp-1">
+              Сценарии, раскадровки, рекламные ролики и визуальные концепции
+            </p>
+          </div>
+          <Link 
+            to="/prompts/$topic"
+            params={{ topic: 'video' }}
+            className="shrink-0 text-[13px] font-bold text-primary hover:opacity-80 transition-opacity whitespace-nowrap"
+          >
+            Открыть раздел →
+          </Link>
+        </div>
+
+        <div className="relative group/shelf">
+          <div 
+            ref={scrollRef}
+            className="flex gap-[14px] overflow-x-auto no-scrollbar snap-x snap-mandatory pb-2 w-[calc(100%+40px)]"
+          >
+            {videoItems.map((item) => (
+              <Link
+                key={item.slug}
+                to="/prompts/$topic/$slug"
+                params={{ topic: item.topicSlug, slug: item.slug }}
+                className="w-[280px] aspect-video shrink-0 rounded-2xl overflow-hidden relative group/card snap-start bg-muted"
+              >
+                {item.media && item.media[0] ? (
+                  <img 
+                    src={item.media[0].src} 
+                    alt={item.title}
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-[400ms] group-hover/card:scale-[1.05]"
+                  />
+                ) : (
+                  <div className="absolute inset-0 bg-muted" />
+                )}
+                
+                {/* Gradient Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent z-10" />
+
+                {/* Provider Badge */}
+                <div className="absolute top-3 right-3 z-20">
+                  <div className="bg-black/40 backdrop-blur-sm rounded-md px-2 py-0.5 text-white text-[10px] font-bold uppercase tracking-wider">
+                    {item.providerId}
+                  </div>
+                </div>
+
+                {/* Title */}
+                <div className="absolute bottom-0 left-0 right-0 p-3 z-20">
+                  <h3 className="text-[13px] font-bold text-white line-clamp-2 leading-tight">
+                    {item.title}
+                  </h3>
+                </div>
+              </Link>
+            ))}
+          </div>
+          
+          <button
+            onClick={scrollRight}
+            className="absolute -right-4 top-1/2 -translate-y-1/2 w-[36px] h-[36px] rounded-full bg-background/80 backdrop-blur-sm border border-border flex items-center justify-center z-30 opacity-0 group-hover/shelf:opacity-100 transition-opacity hover:bg-background"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 
