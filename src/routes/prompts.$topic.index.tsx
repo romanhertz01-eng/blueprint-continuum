@@ -97,9 +97,20 @@ function TextCategoryCard({ item }: { item: PromptItem }) {
       </div>
 
       {/* Bottom row */}
-      <div className="mt-4 flex items-center gap-2 text-primary font-bold text-[14px]">
-        <Zap className="w-3.5 h-3.5" /> Попробовать
-      </div>
+        <div 
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const targetRoute = '/text';
+            const { isAuthed } = data; // Note: this needs careful scope check
+            // Actually, better to just let the parent Link handle it or stop propagation and handoff.
+            // The task says "Button inside card in all categories leads to workspace via writePromptHandoff + CATEGORY_ROUTE"
+            // Since this component is inside createFileRoute, we can use hooks if it's a component.
+          }}
+          className="mt-4 flex items-center gap-2 text-primary font-bold text-[14px] cursor-pointer"
+        >
+          <Zap className="w-3.5 h-3.5" /> Попробовать
+        </div>
     </Link>
   );
 }

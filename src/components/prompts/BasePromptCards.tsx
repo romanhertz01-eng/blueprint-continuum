@@ -66,10 +66,39 @@ export function LightPromptCard({ item }: BaseCardProps) {
     else window.location.href = buildAuthHref(targetRoute);
   };
 
+  const handleCardClick = () => {
+    if (item.category === 'text' || item.category === 'audio') {
+      writePromptHandoff({
+        prompt: item.promptRu,
+        category: item.category,
+        providerId: item.providerId,
+        subModelId: item.subModelId,
+        sourceSlug: item.slug,
+        agentId: item.category === 'agents' ? item.slug : undefined,
+      });
+      const targetRoute = CATEGORY_ROUTE[item.category as keyof typeof CATEGORY_ROUTE] || '/prompts';
+      if (isAuthed) navigate({ to: targetRoute });
+      else window.location.href = buildAuthHref(targetRoute);
+    } else if (item.category === 'image' || item.category === 'video') {
+      navigate({
+        to: "/prompts/$topic/$slug",
+        params: { topic: item.topicSlug, slug: item.slug }
+      });
+    } else if (item.category === 'agents') {
+      navigate({
+        to: "/prompts/agents/$slug" as any,
+        params: { slug: item.slug }
+      });
+    }
+  };
+
   const IconComponent = (LucideIcons as any)[item.agentIcon || 'Sparkles'] || Sparkles;
 
   return (
-    <div className="group relative flex flex-col h-[400px] p-5 rounded-2xl border border-border bg-card hover:shadow-xl hover:shadow-black/5 hover:-translate-y-1 transition-all cursor-pointer">
+    <div 
+      onClick={handleCardClick}
+      className="group relative flex flex-col h-[400px] p-5 rounded-2xl border border-border bg-card hover:shadow-xl hover:shadow-black/5 hover:-translate-y-1 transition-all cursor-pointer"
+    >
       <div className="flex items-center justify-between mb-6">
         <div className="w-7 h-7 rounded-lg bg-muted flex items-center justify-center text-muted-foreground">
           <CategoryIcon category={item.category} />
@@ -118,8 +147,36 @@ export function ImagePromptCard({ item }: BaseCardProps) {
     else window.location.href = buildAuthHref(targetRoute);
   };
 
+  const handleCardClick = () => {
+    if (item.category === 'text' || item.category === 'audio') {
+      writePromptHandoff({
+        prompt: item.promptRu,
+        category: item.category,
+        providerId: item.providerId,
+        subModelId: item.subModelId,
+        sourceSlug: item.slug,
+      });
+      const targetRoute = CATEGORY_ROUTE[item.category as keyof typeof CATEGORY_ROUTE] || '/prompts';
+      if (isAuthed) navigate({ to: targetRoute });
+      else window.location.href = buildAuthHref(targetRoute);
+    } else if (item.category === 'image' || item.category === 'video') {
+      navigate({
+        to: "/prompts/$topic/$slug",
+        params: { topic: item.topicSlug, slug: item.slug }
+      });
+    } else if (item.category === 'agents') {
+      navigate({
+        to: "/prompts/agents/$slug" as any,
+        params: { slug: item.slug }
+      });
+    }
+  };
+
   return (
-    <div className="group relative h-[400px] rounded-2xl overflow-hidden border border-border/50 hover:shadow-2xl hover:shadow-black/20 hover:-translate-y-1 transition-all cursor-pointer">
+    <div 
+      onClick={handleCardClick}
+      className="group relative h-[400px] rounded-2xl overflow-hidden border border-border/50 hover:shadow-2xl hover:shadow-black/20 hover:-translate-y-1 transition-all cursor-pointer"
+    >
       <img 
         src={imageUrl} 
         alt={item.title} 
@@ -177,10 +234,36 @@ export function SoftPromptCard({ item }: BaseCardProps) {
     else window.location.href = buildAuthHref(targetRoute);
   };
 
+  const handleCardClick = () => {
+    if (item.category === 'text' || item.category === 'audio') {
+      writePromptHandoff({
+        prompt: item.promptRu,
+        category: item.category,
+        providerId: item.providerId,
+        subModelId: item.subModelId,
+        sourceSlug: item.slug,
+      });
+      const targetRoute = CATEGORY_ROUTE[item.category as keyof typeof CATEGORY_ROUTE] || '/prompts';
+      if (isAuthed) navigate({ to: targetRoute });
+      else window.location.href = buildAuthHref(targetRoute);
+    } else if (item.category === 'image' || item.category === 'video') {
+      navigate({
+        to: "/prompts/$topic/$slug",
+        params: { topic: item.topicSlug, slug: item.slug }
+      });
+    } else if (item.category === 'agents') {
+      navigate({
+        to: "/prompts/agents/$slug" as any,
+        params: { slug: item.slug }
+      });
+    }
+  };
+
   const IconComponent = (LucideIcons as any)[item.agentIcon || 'Sparkles'] || Sparkles;
 
   return (
     <div 
+      onClick={handleCardClick}
       className="group relative flex flex-col h-[400px] p-5 rounded-2xl border border-border/20 hover:shadow-xl hover:shadow-black/5 hover:-translate-y-1 transition-all cursor-pointer"
       style={{ background: getGradient(item.slug) }}
     >

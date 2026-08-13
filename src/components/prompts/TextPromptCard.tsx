@@ -103,8 +103,9 @@ export function TextPromptCard({ item }: TextPromptCardProps) {
           </h3>
 
           <button 
+            onClick={handleAction}
             className={cn(
-              "h-10 px-6 rounded-full text-[13px] font-bold flex items-center gap-2 shadow-lg transition-all active:scale-95",
+              "h-10 px-6 rounded-full text-[13px] font-bold flex items-center gap-2 shadow-lg transition-all active:scale-95 relative z-20",
               isLight 
                 ? "bg-primary text-white hover:brightness-110" 
                 : "bg-white text-primary hover:bg-white/90"

@@ -94,7 +94,10 @@ export function AudioPromptCard({ item }: AudioPromptCardProps) {
         </p>
         
         {/* 4. КОМПАКТНЫЙ CTA */}
-        <button className="h-[42px] px-6 rounded-full bg-primary text-white text-[13px] font-bold flex items-center justify-center gap-2 transition-all hover:brightness-105 active:scale-95 shadow-md shadow-primary/10 w-fit">
+        <button 
+          onClick={handleAction}
+          className="h-[42px] px-6 rounded-full bg-primary text-white text-[13px] font-bold flex items-center justify-center gap-2 transition-all hover:brightness-105 active:scale-95 shadow-md shadow-primary/10 w-fit relative z-10"
+        >
           Попробовать <Zap className="w-3.5 h-3.5 fill-current" />
         </button>
       </div>
