@@ -2,7 +2,7 @@ import { createFileRoute, Link } from '@tanstack/react-router';
 import { Search, X, Sparkles, Star, PlusCircle, ArrowRight, Home, ChevronRight } from 'lucide-react';
 import { Footer } from '@/components/shared/Footer';
 import { getPublishedItems, getCategories, PromptItem, getItemsByCategory } from '@/data/prompts';
-import { CatalogCard } from '@/components/prompts/CatalogCard';
+import { SectionMediaCard, SectionTextCard, SectionAudioCard } from '@/components/prompts/SectionPromptCards';
 
 import { useState, useMemo } from 'react';
 import { cn } from '@/lib/utils';
@@ -55,14 +55,17 @@ export const Route = createFileRoute('/prompts/$topic/')({
 function CategoryPage() {
   const data = Route.useLoaderData();
   const params = Route.useParams();
-  const isVideo = params.topic === 'video';
+  const topic = params.topic;
+  const isVideo = topic === 'video';
+  const isImage = topic === 'image';
+  const isText = topic === 'text';
+  const isAudio = topic === 'audio';
 
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<'new' | 'popular' | 'alpha'>('new');
   const [page, setPage] = useState(1);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   
-  // Фильтр по типу видео (только для раздела видео)
   const [videoFilter, setVideoFilter] = useState('Все');
   const videoFilters = [
     'Все', 'Реклама', 'Обзор товара', 'Тревел', 'Кинокадр', 'Вертикальные', 'Motion'
@@ -71,26 +74,22 @@ function CategoryPage() {
   const filteredItems = useMemo(() => {
     let result = [...data.items];
 
-    // Поиск
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
       result = result.filter(item => 
         item.title.toLowerCase().includes(q) || 
-        item.promptRu.toLowerCase().includes(q)
+        (item.promptRu && item.promptRu.toLowerCase().includes(q))
       );
     }
 
-    // Фильтр по типу видео
     if (isVideo && videoFilter !== 'Все') {
       result = result.filter(item => {
         if (videoFilter === 'Вертикальные') return item.params?.aspect === '9:16';
-        // Для остальных — поиск по совпадению в темах/описании (имитация)
         return item.topicSlug === videoFilter.toLowerCase() || 
                item.title.toLowerCase().includes(videoFilter.toLowerCase());
       });
     }
 
-    // Сортировка
     if (sortBy === 'new') {
       result.sort((a, b) => new Date(b.publishedAt || 0).getTime() - new Date(a.publishedAt || 0).getTime());
     } else if (sortBy === 'popular') {
@@ -116,41 +115,17 @@ function CategoryPage() {
     }, 600);
   };
 
-  const getCardType = (index: number, item: PromptItem): 'A' | 'B' | 'C' | 'D' | 'E' => {
-    // 1. Приоритет ручному layout (из админки)
-    if (item.layout === 'wide') return 'D';
-    if (item.layout === 'featured') return 'E';
-
-    // 2. Автоматическое определение по свойствам
-    const hasMedia = !!item.media?.[0]?.src && item.category !== 'text';
-    
-    // Если текстовый - тип C
-    if (!hasMedia) return 'C';
-
-    // Ритмичность через хэш слага (стабильно при добавлении соседей)
-    const charSum = item.slug.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-    const hash = charSum % 10;
-    
-    // image-first (тип B) для некоторых карточек с медиа
-    if (hash === 2 || hash === 7) return 'B';
-    
-    return 'A';
+  const renderCard = (item: PromptItem) => {
+    if (isImage || isVideo) return <SectionMediaCard item={item} />;
+    if (isText) return <SectionTextCard item={item} />;
+    if (isAudio) return <SectionAudioCard item={item} />;
+    return null;
   };
 
-  const getCardSpan = (type: 'A' | 'B' | 'C' | 'D' | 'E', item?: PromptItem): string => {
-    switch (type) {
-      case 'A': return 'col-span-12 sm:col-span-6 lg:col-span-3';
-      case 'B': return 'col-span-12 sm:col-span-6 lg:col-span-3';
-      case 'C': return 'col-span-12 sm:col-span-6 lg:col-span-3';
-      case 'D': return 'col-span-12 lg:col-span-6';
-      case 'E': return 'col-span-12 lg:col-span-6';
-      default: return 'col-span-12';
-    }
-  };
+  const gridCols = isText ? "grid-cols-2 md:grid-cols-3 xl:grid-cols-4" : "grid-cols-2 md:grid-cols-3 xl:grid-cols-4 lg:grid-cols-5";
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
-      {/* 1. ШАПКА / BREADCRUMBS */}
       <section className="pt-6 pb-4 px-6 max-w-7xl mx-auto w-full">
         <nav className="flex items-center gap-2 text-[12px] text-muted-foreground mb-6 font-medium">
           <Link to="/prompts" className="hover:text-foreground flex items-center gap-1 transition-colors">
@@ -186,7 +161,6 @@ function CategoryPage() {
         </div>
       </section>
 
-      {/* 2. ЛЕНТА КАТЕГОРИЙ (PILLS) */}
       <section className="sticky top-0 z-40 bg-background/80 backdrop-blur-md border-b border-border/40 mb-6">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
@@ -213,7 +187,6 @@ function CategoryPage() {
             ))}
           </div>
 
-          {/* ВТОРИЧНАЯ ЛЕНТА ФИЛЬТРОВ ДЛЯ ВИДЕО */}
           {isVideo && (
             <div className="mt-4 pt-4 border-t border-border/40">
               <div className="flex gap-2 overflow-x-auto no-scrollbar">
@@ -237,7 +210,6 @@ function CategoryPage() {
         </div>
       </section>
 
-      {/* 3. СТРОКА СОРТИРОВКИ */}
       <section className="max-w-7xl mx-auto px-6 w-full flex items-center justify-between mb-6">
         <div className="text-[13px] font-medium text-muted-foreground">
           Найдено <span className="text-foreground font-bold ml-1">{filteredItems.length}</span>
@@ -268,12 +240,13 @@ function CategoryPage() {
         </div>
       </section>
 
-      {/* 4. MIXED-GRID */}
       <section className="max-w-7xl mx-auto px-6 w-full mb-20 flex-grow">
         {visibleItems.length > 0 ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-x-[20px] gap-y-[24px] mb-[24px]">
+          <div className={cn("grid gap-x-[20px] gap-y-[24px] mb-[24px]", gridCols)}>
             {visibleItems.map((item, idx) => (
-              <CatalogCard key={`${item.slug}-${idx}`} item={item} index={idx} />
+              <div key={`${item.slug}-${idx}`}>
+                {renderCard(item)}
+              </div>
             ))}
           </div>
         ) : (
@@ -292,7 +265,6 @@ function CategoryPage() {
           </div>
         )}
 
-        {/* 5. ПОКАЗАТЬ ЕЩЁ */}
         {hasMore && (
           <div className="mt-16 flex justify-center">
             <button 
