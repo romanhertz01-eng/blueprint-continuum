@@ -467,7 +467,7 @@ function HeroCarousel({ allItems }: { allItems: PromptItem[] }) {
       .slice(0, 4)
       .map(s => ({
         title: s.topic.title,
-        subtitle: s.topic.intro.split(/[.!?]/)[0].slice(0, 80) + (s.topic.intro.length > 80 ? '...' : ''),
+        subtitle: s.topic.intro.split(/[.!?]/)[0].slice(0, 90),
         image: s.firstItem.media[0].src,
         href: `/prompts/${s.topic.slug}`
       }));
@@ -497,7 +497,7 @@ function HeroCarousel({ allItems }: { allItems: PromptItem[] }) {
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
-      <div className="relative h-[280px] md:h-[400px] rounded-3xl bg-muted/40 border border-border overflow-hidden">
+      <div className="relative h-[240px] md:h-[320px] rounded-3xl bg-muted/40 border border-border overflow-hidden">
         {slides.map((slide, idx) => (
           <div 
             key={idx}
@@ -507,32 +507,32 @@ function HeroCarousel({ allItems }: { allItems: PromptItem[] }) {
             )}
           >
             {/* Left Content */}
-            <div className="absolute left-0 top-0 h-full w-full md:w-[55%] p-8 md:p-[56px] flex flex-col justify-center z-20">
-              <h2 className="text-[28px] md:text-[44px] font-bold leading-tight mb-4 line-clamp-2">
+            <div className="absolute left-0 top-1/2 -translate-y-1/2 h-fit w-full md:w-[55%] p-8 md:p-12 flex flex-col justify-center z-20">
+              <h2 className="text-[24px] md:text-[36px] font-bold leading-tight mb-3 line-clamp-2">
                 {slide.title}
               </h2>
-              <p className="text-[14px] md:text-[16px] text-muted-foreground mb-8 md:mb-10 line-clamp-2 max-w-[440px]">
+              <p className="text-[14px] md:text-[15px] text-muted-foreground mb-6 line-clamp-2 max-w-[440px]">
                 {slide.subtitle}
               </p>
               
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-3">
                 <Link 
                   to={slide.href as any}
-                  className="bg-primary text-white h-12 px-8 rounded-xl font-bold flex items-center justify-center transition-opacity hover:opacity-90"
+                  className="bg-primary text-white h-11 px-7 rounded-xl font-bold flex items-center justify-center transition-opacity hover:opacity-90 shadow-sm"
                 >
                   Попробовать
                 </Link>
                 
-                <div className="hidden md:flex items-center gap-2">
+                <div className="flex items-center gap-2">
                   <button 
                     onClick={prevSlide}
-                    className="w-[44px] h-[44px] rounded-full bg-background/60 border border-border flex items-center justify-center hover:bg-background/80 transition-colors"
+                    className="w-10 h-10 rounded-full bg-background/60 border border-border flex items-center justify-center hover:bg-background/80 transition-colors"
                   >
                     <ChevronLeft className="w-5 h-5" />
                   </button>
                   <button 
                     onClick={nextSlide}
-                    className="w-[44px] h-[44px] rounded-full bg-background/60 border border-border flex items-center justify-center hover:bg-background/80 transition-colors"
+                    className="w-10 h-10 rounded-full bg-background/60 border border-border flex items-center justify-center hover:bg-background/80 transition-colors"
                   >
                     <ChevronRight className="w-5 h-5" />
                   </button>
@@ -547,13 +547,13 @@ function HeroCarousel({ allItems }: { allItems: PromptItem[] }) {
                 alt={slide.title}
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-r from-muted/40 via-muted/40 to-transparent w-[40%]" />
+              <div className="absolute left-0 top-0 h-full w-[40%] bg-gradient-to-r from-muted/40 via-muted/40 to-transparent" />
             </div>
           </div>
         ))}
 
         {/* Indicators */}
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-30">
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-30">
           {slides.map((_, idx) => (
             <button
               key={idx}
