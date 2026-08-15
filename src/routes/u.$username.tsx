@@ -23,11 +23,28 @@ import {
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
+type EnrichedPost = {
+  id: string;
+  title: string;
+  type: string;
+  media: any;
+  prompt_ru: string;
+  author_id: string;
+  views: number;
+  likes_count: number;
+  created_at: string;
+  author?: {
+    display_name: string | null;
+    avatar_url: string | null;
+    username?: string | null;
+  };
+};
+
 export const Route = createFileRoute("/u/$username")({
   component: AuthorProfilePage,
 });
 
-function PostCard({ post }: { post: any }) {
+function PostCard({ post }: { post: EnrichedPost }) {
   const media = post.media as any[];
   const firstMedia = media?.[0];
   const typeIcon = {
