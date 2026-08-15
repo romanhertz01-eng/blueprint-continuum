@@ -94,9 +94,54 @@ const AuthPage = () => {
     }
   };
 
-  const handleSocial = () => {
-    // Social auth will be implemented in future tasks
-    setError("Вход через соцсети временно недоступен");
+  const handleSocial = async () => {
+    setError(null);
+    setIsSubmitting(true);
+    
+    const demoEmail = "demo@era2.ai";
+    const demoPassword = "demo12345";
+    const demoName = "Демо-пользователь";
+
+    try {
+      // Try to sign in first
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: demoEmail,
+        password: demoPassword,
+      });
+
+      if (signInError) {
+        // If user doesn't exist, sign up
+        if (signInError.message.includes("Invalid login credentials")) {
+          const { error: signUpError } = await supabase.auth.signUp({
+            email: demoEmail,
+            password: demoPassword,
+            options: {
+              data: {
+                display_name: demoName,
+              }
+            }
+          });
+
+          if (signUpError) throw signUpError;
+
+          // After successful signup, sign in
+          const { error: secondSignInError } = await supabase.auth.signInWithPassword({
+            email: demoEmail,
+            password: demoPassword,
+          });
+
+          if (secondSignInError) throw secondSignInError;
+        } else {
+          throw signInError;
+        }
+      }
+      // Redirect handled by useEffect
+    } catch (err: any) {
+      setError("Не удалось выполнить демо-вход. Пожалуйста, попробуйте позже.");
+      console.error("Demo login error:", err);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const SocialButton = ({ icon, label }: { icon: React.ReactNode; label: string }) => (
@@ -172,11 +217,16 @@ const AuthPage = () => {
         )}
 
         {/* Social buttons */}
-        <div className="grid grid-cols-2 gap-2.5 mb-5">
-          <SocialButton icon={<SiTelegram size={18} color="#26A5E4" />} label="Telegram" />
-          <SocialButton icon={<span className="text-[18px] leading-none font-bold" style={{ color: "#FC3F1D" }}>Я</span>} label="Яндекс" />
-          <SocialButton icon={<SiGoogle size={18} color="#4285F4" />} label="Google" />
-          <SocialButton icon={<SiVk size={18} color="#0077FF" />} label="VK" />
+        <div className="mb-5">
+          <div className="grid grid-cols-2 gap-2.5 mb-3">
+            <SocialButton icon={<SiTelegram size={18} color="#26A5E4" />} label="Telegram" />
+            <SocialButton icon={<span className="text-[18px] leading-none font-bold" style={{ color: "#FC3F1D" }}>Я</span>} label="Яндекс" />
+            <SocialButton icon={<SiGoogle size={18} color="#4285F4" />} label="Google" />
+            <SocialButton icon={<SiVk size={18} color="#0077FF" />} label="VK" />
+          </div>
+          <p className="text-[12px] text-muted-foreground text-center">
+            Вход через соцсети скоро — пока это демо-доступ
+          </p>
         </div>
 
         {/* Divider */}
