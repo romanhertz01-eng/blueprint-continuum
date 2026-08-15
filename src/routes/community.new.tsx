@@ -239,7 +239,7 @@ function NewPostPage() {
               className="w-full h-10 px-3 rounded-xl border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring"
             >
               <option value="">Выберите категорию...</option>
-              {availableTopics.map(topic => (
+              {availableTopics.map((topic: any) => (
                 <option key={topic.slug} value={topic.slug}>
                   {topic.cardTitle}
                 </option>
