@@ -314,6 +314,10 @@ function CommunityPage() {
   const { data: postsData, isLoading: isPostsLoading, error: postsError } = useQuery({
     queryKey: ["community-posts", type, provider, sort, page],
     queryFn: async () => {
+      // If we are on the first page and "all" is selected, we want to fetch enough posts 
+      // of each type to ensure interleaving works well.
+      const isFirstPageAll = type === "all" && page === 0;
+      
       let query = supabase
         .from("posts")
         .select("*")
@@ -333,8 +337,9 @@ function CommunityPage() {
         query = query.order("created_at", { ascending: false });
       }
 
-      const limit = 10;
-      const from = page * limit;
+      // If we need a diverse first screen, we fetch a larger batch
+      const limit = isFirstPageAll ? 50 : 15;
+      const from = page * (isFirstPageAll ? 50 : 15);
       const to = from + limit - 1;
       
       const { data, error } = await query.range(from, to);
