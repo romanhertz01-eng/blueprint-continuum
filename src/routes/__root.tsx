@@ -1,6 +1,7 @@
 import { ORIGIN } from "@/lib/origin";
 import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
 import { createIsomorphicFn } from "@tanstack/react-start";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { CreditsProvider } from "@/hooks/useCredits";
@@ -37,6 +38,15 @@ const runWwwRedirect = createIsomorphicFn()
     const { checkWwwRedirect } = await import("@/lib/wwwRedirect.server");
     checkWwwRedirect();
   });
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 export const Route = createRootRoute({
   beforeLoad: async () => {
@@ -125,22 +135,24 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   return (
-    <ThemeProvider>
-      <AuthProvider>
-        <CreditsProvider>
-        <TooltipProvider>
-          <Layout>
-            <ErrorBoundary>
-              <Outlet />
-            </ErrorBoundary>
-          </Layout>
-          <OnboardingTour />
-          <CopyToastProvider />
-          <CornerPromo />
-          <DailyCheckIn />
-        </TooltipProvider>
-        </CreditsProvider>
-      </AuthProvider>
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <AuthProvider>
+          <CreditsProvider>
+            <TooltipProvider>
+              <Layout>
+                <ErrorBoundary>
+                  <Outlet />
+                </ErrorBoundary>
+              </Layout>
+              <OnboardingTour />
+              <CopyToastProvider />
+              <CornerPromo />
+              <DailyCheckIn />
+            </TooltipProvider>
+          </CreditsProvider>
+        </AuthProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 }
