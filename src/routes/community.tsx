@@ -299,12 +299,12 @@ function Sidebar({
 }
 
 function CommunityPage() {
-  const { type, sort, page } = useSearch({ from: "/community" });
+  const { type, provider, sort, page } = useSearch({ from: "/community" });
   const { isAuthed } = useAuth();
   const navigate = Route.useNavigate();
 
   const { data: postsData, isLoading: isPostsLoading, error: postsError } = useQuery({
-    queryKey: ["community-posts", type, sort, page],
+    queryKey: ["community-posts", type, provider, sort, page],
     queryFn: async () => {
       let query = supabase
         .from("posts")
@@ -315,13 +315,17 @@ function CommunityPage() {
         query = query.eq("type", type);
       }
 
+      if (provider !== "all") {
+        query = query.eq("provider_id", provider);
+      }
+
       if (sort === "popular") {
         query = query.order("views", { ascending: false });
       } else {
         query = query.order("created_at", { ascending: false });
       }
 
-      const limit = 10; // Smaller limit for vertical feed
+      const limit = 10;
       const from = page * limit;
       const to = from + limit - 1;
       
@@ -331,17 +335,31 @@ function CommunityPage() {
     },
   });
 
-  const { data: allPostsData } = useQuery({
-    queryKey: ["community-all-posts-types"],
+  const { data: allPublishedPosts } = useQuery({
+    queryKey: ["community-all-published-metadata"],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("posts")
-        .select("type")
+        .select("type, provider_id")
         .eq("status", "published");
       if (error) throw error;
       return data || [];
     },
   });
+
+  const topProviders = useMemo(() => {
+    if (!allPublishedPosts) return [];
+    const counts: Record<string, number> = {};
+    allPublishedPosts.forEach(p => {
+      if (p.provider_id) {
+        counts[p.provider_id] = (counts[p.provider_id] || 0) + 1;
+      }
+    });
+    return Object.entries(counts)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 8)
+      .map(([id]) => id);
+  }, [allPublishedPosts]);
 
   const authorIds = useMemo(() => {
     if (!postsData) return [];
@@ -436,7 +454,7 @@ function CommunityPage() {
         ...profile,
         followers_count: followersCount
       };
-    }).filter(a => a.id);
+    }).filter(a => !!a.id);
   }, [topAuthorsProfiles, allFollowsData, topAuthors]);
 
   const enrichedPosts = useMemo(() => {
@@ -458,7 +476,7 @@ function CommunityPage() {
 
   const categoryCounts = useMemo(() => {
     const counts: Record<string, number> = {
-      all: allPostsData?.length || 0,
+      all: allPublishedPosts?.length || 0,
       text: 0,
       image: 0,
       video: 0,
@@ -466,14 +484,14 @@ function CommunityPage() {
       agent: 0
     };
     
-    allPostsData?.forEach(p => {
+    allPublishedPosts?.forEach(p => {
       if (counts[p.type] !== undefined) {
         counts[p.type]++;
       }
     });
     
     return counts;
-  }, [allPostsData]);
+  }, [allPublishedPosts]);
 
   const categories = [
     { label: "Все", value: "all", count: categoryCounts.all },
@@ -488,12 +506,23 @@ function CommunityPage() {
     navigate({ search: (prev) => ({ ...prev, type: newType as any, page: 0 }) });
   };
 
+  const handleProviderChange = (newProvider: string) => {
+    navigate({ search: (prev) => ({ ...prev, provider: newProvider, page: 0 }) });
+  };
+
   const handleSortChange = (newSort: string) => {
     navigate({ search: (prev) => ({ ...prev, sort: newSort as any, page: 0 }) });
   };
 
   const handleLoadMore = () => {
     navigate({ search: (prev) => ({ ...prev, page: (prev.page || 0) + 1 }) });
+  };
+
+  const formatProviderName = (id: string) => {
+    if (id === 'gpt-4o' || id === 'gpt-3.5-turbo') return 'ChatGPT';
+    if (id === 'kling') return 'Kling AI';
+    if (id === 'nano-banana') return 'Nano Banana';
+    return id.charAt(0).toUpperCase() + id.slice(1).replace(/-/g, ' ');
   };
 
   return (
