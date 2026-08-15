@@ -58,16 +58,23 @@ function PostCard({ post }: { post: any }) {
         </h3>
         <div className="mt-auto flex items-center justify-between">
           <div className="flex items-center gap-2 min-w-0">
-            <div className="w-5 h-5 rounded-full bg-secondary border border-border flex items-center justify-center text-[10px] font-bold shrink-0 overflow-hidden">
-              {post.author?.avatar_url ? (
-                <img src={post.author.avatar_url} alt="" className="w-full h-full object-cover" />
-              ) : (
-                (post.author?.display_name || "U").charAt(0).toUpperCase()
-              )}
-            </div>
-            <span className="text-[12px] text-muted-foreground truncate">
-              {post.author?.display_name || "User"}
-            </span>
+            <Link
+              to="/u/$username"
+              params={{ username: post.author?.username || "user" }}
+              onClick={(e) => e.stopPropagation()}
+              className="flex items-center gap-2 min-w-0 group/author"
+            >
+              <div className="w-5 h-5 rounded-full bg-secondary border border-border flex items-center justify-center text-[10px] font-bold shrink-0 overflow-hidden">
+                {post.author?.avatar_url ? (
+                  <img src={post.author.avatar_url} alt="" className="w-full h-full object-cover" />
+                ) : (
+                  (post.author?.display_name || "U").charAt(0).toUpperCase()
+                )}
+              </div>
+              <span className="text-[12px] text-muted-foreground truncate group-hover/author:text-primary transition-colors">
+                {post.author?.display_name || "User"}
+              </span>
+            </Link>
           </div>
           <div className="flex items-center gap-1 text-muted-foreground shrink-0">
             <Heart size={12} className="group-hover:text-primary transition-colors" />
