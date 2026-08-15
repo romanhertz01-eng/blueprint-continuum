@@ -1147,3 +1147,147 @@ function UsefulAgentsShelf({ allItems, searchQuery }: { allItems: PromptItem[], 
   );
 }
 
+function CommunityShelf() {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const { data: communityPosts, error: postsError } = useQuery({
+    queryKey: ["community-posts-shelf"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("posts")
+        .select("*")
+        .eq("status", "published")
+        .order("published_at", { ascending: false })
+        .limit(8);
+      if (error) throw error;
+      return data || [];
+    },
+  });
+
+  const authorIds = useMemo(() => {
+    if (!communityPosts) return [];
+    return Array.from(new Set(communityPosts.map(p => p.author_id)));
+  }, [communityPosts]);
+
+  const { data: authorsData } = useQuery({
+    queryKey: ["community-authors-shelf", authorIds],
+    enabled: authorIds.length > 0,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("id, display_name, username, avatar_url")
+        .in("id", authorIds);
+      if (error) throw error;
+      return data || [];
+    },
+  });
+
+  const posts = useMemo(() => {
+    if (!communityPosts) return [];
+    return communityPosts.map(post => ({
+      ...post,
+      author: authorsData?.find(a => a.id === post.author_id) || { display_name: "User", avatar_url: null }
+    }));
+  }, [communityPosts, authorsData]);
+
+  if (postsError || !posts || posts.length < 4) return null;
+
+  const scrollRight = () => {
+    if (scrollRef.current) {
+      const scrollAmount = (175 + 16) * 3;
+      scrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+  };
+
+  return (
+    <section className="w-full mb-10 overflow-hidden">
+      <div className="flex items-end justify-between mb-6">
+        <div className="min-w-0">
+          <h2 className="text-[20px] font-bold leading-tight">Из сообщества</h2>
+          <p className="text-[13px] text-muted-foreground mt-1 line-clamp-1">
+            Промпты, которыми делятся пользователи ERA2
+          </p>
+        </div>
+        <Link 
+          to="/community"
+          className="shrink-0 text-[13px] font-bold text-primary hover:opacity-80 transition-opacity whitespace-nowrap"
+        >
+          Смотреть все →
+        </Link>
+      </div>
+
+      <div className="relative group/shelf">
+        <div 
+          ref={scrollRef}
+          className="flex gap-[16px] overflow-x-auto no-scrollbar snap-x snap-mandatory pb-4 w-[calc(100%+40px)]"
+        >
+          {posts.map((post) => {
+            const media = post.media as any[];
+            const firstMedia = media?.[0];
+            const typeIcon = {
+              text: <MessageSquare className="w-6 h-6" />,
+              image: <ImageIcon className="w-6 h-6" />,
+              video: <Video className="w-6 h-6" />,
+              audio: <Music className="w-6 h-6" />,
+              agent: <Bot className="w-6 h-6" />,
+            }[post.type as string] || <LayoutGrid className="w-6 h-6" />;
+
+            return (
+              <div key={post.id} className="w-[175px] shrink-0 snap-start flex flex-col gap-2.5">
+                <Link
+                  to="/community/$id"
+                  params={{ id: post.id }}
+                  className="block aspect-[3/4] rounded-2xl overflow-hidden relative border border-border/50 group/card"
+                >
+                  {firstMedia?.url ? (
+                    <img 
+                      src={firstMedia.url} 
+                      alt="" 
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover/card:scale-105" 
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-muted flex items-center justify-center text-muted-foreground/30">
+                      {typeIcon}
+                    </div>
+                  )}
+                  
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex flex-col justify-end p-3">
+                    <h3 className="text-[13px] font-bold text-white line-clamp-2 leading-snug">
+                      {post.title}
+                    </h3>
+                  </div>
+                </Link>
+                
+                <Link
+                  to="/u/$username"
+                  params={{ username: post.author?.username || 'user' }}
+                  className="flex items-center gap-2 group/author"
+                >
+                  <div className="w-5 h-5 rounded-full bg-secondary border border-border flex items-center justify-center text-[10px] font-bold overflow-hidden shrink-0">
+                    {post.author?.avatar_url ? (
+                      <img src={post.author.avatar_url} alt="" className="w-full h-full object-cover" />
+                    ) : (
+                      (post.author?.display_name || "U").charAt(0).toUpperCase()
+                    )}
+                  </div>
+                  <span className="text-[11px] text-muted-foreground truncate group-hover/author:text-primary transition-colors">
+                    {post.author?.display_name}
+                  </span>
+                </Link>
+              </div>
+            );
+          })}
+        </div>
+        
+        <button
+          onClick={scrollRight}
+          className="absolute -right-4 top-[40%] -translate-y-1/2 w-[36px] h-[36px] rounded-full bg-background/80 backdrop-blur-sm border border-border flex items-center justify-center z-30 opacity-0 group-hover/shelf:opacity-100 transition-opacity hover:bg-background"
+        >
+          <ChevronRight className="w-5 h-5" />
+        </button>
+      </div>
+    </section>
+  );
+}
+
+
