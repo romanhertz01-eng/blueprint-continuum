@@ -313,11 +313,7 @@ function AuthorProfilePage() {
 
   const sidebarPosts = useMemo(() => {
     if (!posts || posts.length < 6) return null;
-    // Show 5 latest except first ones seen in main grid? 
-    // Usually "seen in gallery" means we skip some, but here the request says "except those visible".
-    // Let's take 5 after the first few or just last 5 if we want variety.
-    // Assuming "visible" refers to the top of the grid.
-    return posts.slice(4, 9); // Example offset
+    return (posts as EnrichedPost[]).slice(4, 9);
   }, [posts]);
 
   if (isProfileLoading) {
