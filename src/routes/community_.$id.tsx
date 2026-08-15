@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { 
@@ -13,7 +13,12 @@ import {
   Clock,
   AlertCircle,
   Loader2,
-  ArrowRight
+  ArrowRight,
+  Play,
+  Pause,
+  Music,
+  Eye,
+  MessageSquare
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { buildAuthHref } from "@/lib/authRedirect";
@@ -22,7 +27,7 @@ import { CopyPromptButton } from "@/components/prompts/CopyPromptButton";
 import { CatalogCard } from "@/components/prompts/CatalogCard";
 import { writePromptHandoff, CATEGORY_ROUTE } from "@/lib/promptHandoff";
 import { promptItems } from "@/data/prompts";
-import { format } from "date-fns";
+import { format, formatDistanceToNow } from "date-fns";
 import { ru } from "date-fns/locale";
 import { toast } from "sonner";
 import { PromptCategory } from "@/data/prompts/types";
@@ -30,6 +35,63 @@ import { PromptCategory } from "@/data/prompts/types";
 export const Route = createFileRoute("/community_/$id")({
   component: PromptDetailPage,
 });
+
+function AudioPlayer({ url }: { url: string }) {
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+
+  const togglePlay = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (audioRef.current) {
+      if (isPlaying) audioRef.current.pause();
+      else audioRef.current.play();
+      setIsPlaying(!isPlaying);
+    }
+  };
+
+  const formatTime = (time: number) => {
+    const min = Math.floor(time / 60);
+    const sec = Math.floor(time % 60);
+    return `${min}:${sec.toString().padStart(2, '0')}`;
+  };
+
+  return (
+    <div className="flex items-center gap-4 bg-muted/20 rounded-2xl p-3 border border-border/50">
+      <div className="relative w-[88px] h-[88px] rounded-xl bg-gradient-to-br from-primary/80 to-primary flex items-center justify-center shrink-0 overflow-hidden group/audio">
+        <Music size={32} className="text-white" />
+        <button 
+          onClick={togglePlay}
+          className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 group-hover/audio:opacity-100 transition-opacity"
+        >
+          {isPlaying ? <Pause size={24} className="text-white fill-current" /> : <Play size={24} className="text-white fill-current ml-1" />}
+        </button>
+      </div>
+      <div className="flex-1 min-w-0 pr-2">
+        <audio 
+          ref={audioRef} 
+          src={url} 
+          onTimeUpdate={() => setCurrentTime(audioRef.current?.currentTime || 0)}
+          onLoadedMetadata={() => setDuration(audioRef.current?.duration || 0)}
+          onEnded={() => setIsPlaying(false)}
+          className="hidden" 
+        />
+        <div className="relative w-full h-1.5 bg-muted rounded-full overflow-hidden mb-2">
+          <div 
+            className="absolute left-0 top-0 h-full bg-primary transition-all duration-100"
+            style={{ width: `${(currentTime / duration) * 100}%` }}
+          />
+        </div>
+        <div className="flex justify-between text-[11px] text-muted-foreground font-medium">
+          <span>{formatTime(currentTime)}</span>
+          <span>{formatTime(duration)}</span>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function PromptDetailPage() {
   const { id } = Route.useParams();
@@ -138,6 +200,70 @@ function PromptDetailPage() {
     },
   });
 
+  // 5. Load other posts (Other Publications)
+  const { data: otherPosts } = useQuery({
+    queryKey: ["community-other-posts", id],
+    enabled: !!post,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("posts")
+        .select("*")
+        .eq("status", "published")
+        .neq("id", id)
+        .order("created_at", { ascending: false })
+        .limit(5);
+      if (error) throw error;
+      
+      // Fetch authors for these posts
+      if (data && data.length > 0) {
+        const uids = Array.from(new Set(data.map(p => p.author_id)));
+        const { data: authors } = await supabase
+          .from("profiles")
+          .select("id, display_name, username, avatar_url")
+          .in("id", uids);
+        
+        // Fetch social counts
+        const pids = data.map(p => p.id);
+        const { data: likes } = await supabase.from("likes").select("post_id").in("post_id", pids);
+        const { data: commentsCount } = await supabase.from("comments").select("post_id").in("post_id", pids);
+
+        return data.map(p => ({
+          ...p,
+          author: authors?.find(a => a.id === p.author_id) || { display_name: "Автор", username: "user", avatar_url: null },
+          likes_count: likes?.filter(l => l.post_id === p.id).length || 0,
+          comments_count: commentsCount?.filter(c => c.post_id === p.id).length || 0
+        }));
+      }
+      return [];
+    },
+  });
+
+  // 6. Load similar community posts (Sidebar)
+  const { data: sidebarSimilar } = useQuery({
+    queryKey: ["community-similar-sidebar", post?.type, id],
+    enabled: !!post?.type,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("posts")
+        .select("id, title, views")
+        .eq("status", "published")
+        .eq("type", post!.type)
+        .neq("id", id)
+        .limit(5);
+      if (error) throw error;
+      
+      if (data && data.length > 0) {
+        const pids = data.map(p => p.id);
+        const { data: likes } = await supabase.from("likes").select("post_id").in("post_id", pids);
+        return data.map(p => ({
+          ...p,
+          likes_count: likes?.filter(l => l.post_id === p.id).length || 0
+        }));
+      }
+      return [];
+    },
+  });
+
   // Mutations
   const likeMutation = useMutation({
     mutationFn: async () => {
@@ -242,7 +368,10 @@ function PromptDetailPage() {
   const media = (post.media as any[]) || [];
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8 md:py-12">
+    <div className="max-w-7xl mx-auto px-4 py-8 md:py-12">
+      <div className="flex flex-col lg:flex-row gap-8">
+        {/* Main Column */}
+        <div className="lg:w-[70%]">
       {/* Breadcrumbs */}
       <nav className="flex items-center gap-2 text-[13px] text-muted-foreground mb-8">
         <Link to="/" className="hover:text-foreground transition-colors">Главная</Link>
@@ -319,8 +448,8 @@ function PromptDetailPage() {
                 <video src={item.url} controls className="w-full" />
               )}
               {item.type === 'audio' && (
-                <div className="p-6">
-                   <audio src={item.url} controls className="w-full" />
+                <div className="p-4">
+                  <AudioPlayer url={item.url} />
                 </div>
               )}
             </div>
@@ -479,10 +608,131 @@ function PromptDetailPage() {
         )}
       </section>
 
+      {/* Other Publications Section */}
+      {otherPosts && otherPosts.length > 0 && (
+        <section className="mt-16 pt-16 border-t border-border">
+          <h2 className="text-[20px] font-bold mb-8">Другие публикации</h2>
+          <div className="flex flex-col gap-4">
+            {otherPosts.map((otherPost) => (
+              <PostCardMinimal key={otherPost.id} post={otherPost} />
+            ))}
+          </div>
+          <Link 
+            to="/community" 
+            search={{ type: 'all', provider: 'all', sort: 'new', page: 0 }}
+            className="mt-8 inline-flex items-center text-primary font-bold hover:underline"
+          >
+            Вся лента
+            <ArrowRight size={16} className="ml-1.5" />
+          </Link>
+        </section>
+      )}
+
       {/* Similar from Catalog */}
       <SimilarFromCatalog category={post.type as PromptCategory} />
     </div>
-  );
+
+    {/* Sidebar Column */}
+    <div className="lg:w-[30%]">
+      <aside className="space-y-8 lg:sticky lg:top-24">
+        {/* Similar Community Posts Sidebar Block */}
+        {sidebarSimilar && sidebarSimilar.length > 0 && (
+          <div className="rounded-3xl bg-card border border-border p-6">
+            <h3 className="text-[17px] font-bold mb-5">Похожее</h3>
+            <div className="space-y-5">
+              {sidebarSimilar.map((sPost) => (
+                <Link 
+                  key={sPost.id} 
+                  to="/community/$id" 
+                  params={{ id: sPost.id }}
+                  className="block group"
+                >
+                  <div className="text-[13px] font-medium leading-snug line-clamp-2 mb-2 group-hover:text-primary transition-colors">
+                    {sPost.title}
+                  </div>
+                  <div className="flex items-center gap-3 text-[11px] text-muted-foreground">
+                    <div className="flex items-center gap-1">
+                      <Heart size={12} />
+                      <span>{sPost.likes_count}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Eye size={12} />
+                      <span>{sPost.views || 0}</span>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+      </aside>
+    </div>
+  </div>
+</div>
+);
+}
+
+
+// Minimal PostCard for "Other Publications" block (matching /community style)
+function PostCardMinimal({ post }: { post: any }) {
+const media = post.media as any[] || [];
+const formattedDate = formatDistanceToNow(new Date(post.created_at), { addSuffix: true, locale: ru });
+
+const getPostGradient = (id: string) => {
+const colors = [
+  'from-blue-500/20 to-indigo-500/20',
+  'from-purple-500/20 to-pink-500/20',
+  'from-emerald-500/20 to-teal-500/20',
+  'from-orange-500/20 to-amber-500/20',
+  'from-rose-500/20 to-purple-500/20'
+];
+const index = id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % colors.length;
+return colors[index];
+};
+
+return (
+<div className="rounded-2xl bg-card border border-border p-4 flex flex-col gap-3.5 w-full">
+  <div className="flex items-center justify-between">
+    <Link to="/u/$username" params={{ username: post.author?.username || "user" }} className="flex items-center gap-2.5 group/author">
+      <div className="w-8 h-8 rounded-full bg-secondary border border-border flex items-center justify-center text-[10px] font-bold overflow-hidden shrink-0">
+        {post.author?.avatar_url ? <img src={post.author.avatar_url} alt="" className="w-full h-full object-cover" /> : (post.author?.display_name || "U").charAt(0).toUpperCase()}
+      </div>
+      <div className="min-w-0">
+        <div className="font-semibold text-[14px] text-foreground group-hover/author:text-primary transition-colors truncate">{post.author?.display_name || "User"}</div>
+        <div className="text-[11px] text-muted-foreground">{formattedDate}</div>
+      </div>
+    </Link>
+  </div>
+  <div>
+    <span className="px-2.5 py-0.5 rounded-full bg-primary/10 text-primary text-[11px] font-medium border border-primary/20 capitalize">{post.type}</span>
+  </div>
+  <Link to="/community/$id" params={{ id: post.id }}>
+    <h3 className="text-[17px] font-bold text-foreground leading-tight hover:text-primary transition-colors">{post.title}</h3>
+  </Link>
+  <Link to="/community/$id" params={{ id: post.id }} className="block overflow-hidden rounded-xl border border-border/50">
+    {media.length > 0 ? (
+      <div className="flex flex-col gap-2">
+        {media.map((item: any, idx: number) => (
+          <div key={idx} className="w-full">
+            {item.type === 'video' ? <video src={item.url} className="w-full max-h-[420px] object-cover" /> : 
+             item.type === 'audio' ? <AudioPlayer url={item.url} /> :
+             <img src={item.url} alt="" className="w-full max-h-[420px] object-cover" />}
+          </div>
+        ))}
+      </div>
+    ) : (
+      <div className={cn("p-5 text-foreground font-medium text-[15px] leading-relaxed whitespace-pre-wrap rounded-xl bg-gradient-to-br min-h-[140px] flex flex-col justify-center", getPostGradient(post.id))}>
+        <div className="line-clamp-2">{post.prompt_ru}</div>
+      </div>
+    )}
+  </Link>
+  <div className="flex items-center gap-2 pt-1">
+    <div className="flex items-center gap-1.5 bg-muted/50 rounded-full px-3 py-1.5 text-[12px] font-medium"><Heart size={15} /><span>{post.likes_count || 0}</span></div>
+    <div className="flex items-center gap-1.5 bg-muted/50 rounded-full px-3 py-1.5 text-[12px] font-medium"><MessageSquare size={15} /><span>{post.comments_count || 0}</span></div>
+    <div className="flex items-center gap-1.5 bg-muted/50 rounded-full px-3 py-1.5 text-[12px] font-medium ml-auto"><Eye size={15} /><span>{post.views || 0}</span></div>
+  </div>
+</div>
+);
 }
 
 function SimilarFromCatalog({ category }: { category: PromptCategory }) {
@@ -519,5 +769,6 @@ function SimilarFromCatalog({ category }: { category: PromptCategory }) {
     </section>
   );
 }
+
 
 
