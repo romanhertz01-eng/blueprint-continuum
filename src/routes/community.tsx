@@ -211,8 +211,9 @@ function CommunityPage() {
           </div>
           <h2 className="text-xl font-semibold mb-2">Здесь пока пусто</h2>
           <p className="text-muted-foreground mb-6 max-w-xs">
-            Станьте первым, кто поделится своим уникальным промптом с сообществом! Добавьте первый промпт.
+            Здесь пока пусто — добавьте первый промпт
           </p>
+
           <Link
             to={isAuthed ? "/community/new" : buildAuthHref("/community/new")}
             className="inline-flex items-center gap-2 h-10 px-6 rounded-full bg-primary text-white font-semibold hover:bg-primary/90 transition-all"
