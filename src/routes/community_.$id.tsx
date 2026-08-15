@@ -819,7 +819,9 @@ function PromptDetailPage() {
             )}
           </div>
         </aside>
-);
+      </div>
+    </div>
+  );
 }
 
 
