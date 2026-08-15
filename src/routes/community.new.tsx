@@ -38,9 +38,11 @@ function NewPostPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Filter categories based on selected type
-  const availableTopics = type === 'agent' 
-    ? agentTopics 
-    : promptTopics.filter(t => t.category === type as PromptCategory);
+  const availableTopics = useMemo(() => {
+    return type === 'agent' 
+      ? agentTopics 
+      : promptTopics.filter(t => t.category === type as PromptCategory);
+  }, [type]);
 
   useEffect(() => {
     // Reset category when type changes
