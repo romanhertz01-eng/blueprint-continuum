@@ -644,12 +644,12 @@ function CommunityPage() {
             </div>
           ) : enrichedPosts.length > 0 ? (
             <>
-              <div className="flex flex-col gap-[20px]">
+              <div className="flex flex-col gap-4">
                 {enrichedPosts.map((post) => (
                   <PostCard key={post.id} post={post} />
                 ))}
               </div>
-              <div className="mt-12 text-center">
+              <div className="mt-8 text-center">
                 <button
                   onClick={handleLoadMore}
                   className="inline-flex items-center gap-2 h-10 px-6 rounded-full border border-border bg-secondary font-medium text-[13px] hover:bg-card transition-colors"
