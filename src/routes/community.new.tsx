@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { RequireAuth } from "@/components/auth/RequireAuth";
 import { Button } from "@/components/ui/button";
