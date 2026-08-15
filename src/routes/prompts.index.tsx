@@ -1,6 +1,6 @@
 import { ORIGIN } from "@/lib/origin";
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
-import { Search, X, Sparkles, Star, PlusCircle, ArrowRight, Filter, ChevronLeft, ChevronRight, FileText, Music, Video, Bot, Heart, Image as ImageIcon } from 'lucide-react';
+import { Search, X, Sparkles, Star, PlusCircle, ArrowRight, Filter, ChevronLeft, ChevronRight, FileText, Music, Video, Bot, Heart, Image as ImageIcon, MessageSquare, User, LayoutGrid } from 'lucide-react';
 import { Footer } from '@/components/shared/Footer';
 import { 
   getPublishedItems, 
@@ -22,6 +22,8 @@ import { TopicCloud } from '@/components/prompts/TopicCloud';
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
 import { writePromptHandoff } from '@/lib/promptHandoff';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
 
 
 const TITLE = 'Библиотека промптов для нейросетей — готовые примеры | ERA2.ai';
