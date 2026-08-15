@@ -14,7 +14,7 @@ import { PromptCategory } from "@/data/prompts/types";
 
 type PostType = 'text' | 'image' | 'video' | 'audio' | 'agent';
 
-export const Route = createFileRoute("/community/new")({
+export const Route = createFileRoute("/community_/new")({
   component: () => (
     <RequireAuth>
       <NewPostPage />
