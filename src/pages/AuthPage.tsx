@@ -5,18 +5,29 @@ import { Mail, Lock, User, ArrowRight, Eye, EyeOff } from "lucide-react";
 import { SiTelegram, SiGoogle, SiVk } from "@icons-pack/react-simple-icons";
 import { readSafeNext } from "@/lib/authRedirect";
 
+import { supabase } from "@/integrations/supabase/client";
+
 const AuthPage = () => {
-  const { login } = useAuth();
+  const { isAuthed, isLoading } = useAuth();
   const navigate = useNavigate();
   const getNext = () => {
     if (typeof window === "undefined") return "/";
     return readSafeNext(window.location.search) ?? "/";
   };
+
+  useEffect(() => {
+    if (!isLoading && isAuthed) {
+      navigate({ to: getNext() });
+    }
+  }, [isAuthed, isLoading, navigate]);
+
   const [mode, setMode] = useState<"login" | "register">("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [timeLeft, setTimeLeft] = useState(3 * 24 * 3600);
 
@@ -39,17 +50,53 @@ const AuthPage = () => {
 
   useEffect(() => {
     document.title = mode === "login" ? "ERA2 — Вход" : "ERA2 — Регистрация";
+    setError(null);
   }, [mode]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    login();
-    navigate({ to: getNext() });
+    setError(null);
+    setIsSubmitting(true);
+
+    try {
+      if (mode === "register") {
+        const { error: signUpError } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: {
+              display_name: name,
+            }
+          }
+        });
+        if (signUpError) throw signUpError;
+      } else {
+        const { error: signInError } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+        if (signInError) throw signInError;
+      }
+      // Redirect handled by useEffect
+    } catch (err: any) {
+      const message = err.message || "Произошла ошибка";
+      if (message.includes("Invalid login credentials")) {
+        setError("Неверный email или пароль");
+      } else if (message.includes("User already registered")) {
+        setError("Пользователь с таким email уже зарегистрирован");
+      } else if (message.includes("Password should be")) {
+        setError("Пароль должен быть не менее 6 символов");
+      } else {
+        setError(message);
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleSocial = () => {
-    login();
-    navigate({ to: getNext() });
+    // Social auth will be implemented in future tasks
+    setError("Вход через соцсети временно недоступен");
   };
 
   const SocialButton = ({ icon, label }: { icon: React.ReactNode; label: string }) => (
@@ -194,16 +241,23 @@ const AuthPage = () => {
             </div>
           )}
 
+          {error && (
+            <div className="text-xs text-destructive text-center bg-destructive/10 py-2 rounded-lg border border-destructive/20">
+              {error}
+            </div>
+          )}
+
           <button
             type="submit"
-            className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-[14px] text-sm font-semibold text-white transition-all hover:opacity-95"
+            disabled={isSubmitting}
+            className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-[14px] text-sm font-semibold text-white transition-all hover:opacity-95 disabled:opacity-50"
             style={{
               background: "linear-gradient(135deg, hsl(var(--primary)), #ff7a3d)",
               boxShadow: "0 8px 22px -8px rgba(232,84,32,0.55)",
             }}
           >
-            <span>{mode === "login" ? "Войти" : "Создать аккаунт"}</span>
-            <ArrowRight size={16} />
+            <span>{isSubmitting ? "Загрузка..." : (mode === "login" ? "Войти" : "Создать аккаунт")}</span>
+            {!isSubmitting && <ArrowRight size={16} />}
           </button>
         </form>
 
