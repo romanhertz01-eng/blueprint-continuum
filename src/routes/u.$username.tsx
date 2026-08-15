@@ -84,6 +84,7 @@ function PostCard({ post }: { post: any }) {
 
 function AuthorProfilePage() {
   const { username } = Route.useParams();
+  const navigate = useNavigate();
   const { user, isAuthed } = useAuth();
   const queryClient = useQueryClient();
 
