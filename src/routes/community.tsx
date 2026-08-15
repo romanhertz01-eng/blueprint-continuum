@@ -152,41 +152,52 @@ function PostCard({ post }: { post: any }) {
       </Link>
 
       {/* Media or Prompt Preview */}
-      <Link to="/community/$id" params={{ id: post.id }} className="block overflow-hidden rounded-xl">
-        {media && media.length > 0 ? (
-          <div className="flex flex-col gap-2">
-            {media.map((item, idx) => (
-              <div key={idx} className="w-full">
-                {item.type === 'video' ? (
-                  <video 
-                    src={item.url} 
-                    controls 
-                    className="w-full aspect-video object-cover rounded-xl"
-                    poster={item.thumbnail_url}
-                  />
-                ) : item.type === 'audio' ? (
-                  <AudioPlayer url={item.url} />
-                ) : (
-                  <img 
-                    src={item.url} 
-                    alt="" 
-                    className="w-full rounded-xl object-cover max-h-[560px]" 
-                  />
-                )}
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className={cn(
-            "w-full aspect-[16/10] text-white font-medium text-[15px] leading-relaxed whitespace-pre-wrap rounded-xl bg-gradient-to-br flex items-center justify-center p-8 text-center",
-            getPostGradient(post.id).replace(/\/20/g, '/80') // Darker gradient for text-on-gradient
-          )}>
-            <div className="line-clamp-2">
-              {post.prompt_ru}
+      {post.type === 'text' || post.type === 'agent' ? (
+        <Link to="/community/$id" params={{ id: post.id }} className="block bg-muted/30 rounded-xl p-5">
+          {post.type === 'agent' && (
+            <div className="text-[12px] font-semibold text-primary mb-2 uppercase tracking-wider">
+              {post.params?.role || 'Агент'}
             </div>
+          )}
+          <div className={cn(
+            "text-[14px] text-muted-foreground italic leading-relaxed",
+            post.type === 'agent' ? "line-clamp-3" : "line-clamp-4"
+          )}>
+            «{post.prompt_ru}»
           </div>
-        )}
-      </Link>
+        </Link>
+      ) : (
+        <Link to="/community/$id" params={{ id: post.id }} className="block overflow-hidden rounded-xl">
+          {media && media.length > 0 ? (
+            <div className="flex flex-col gap-2">
+              {media.map((item, idx) => (
+                <div key={idx} className="w-full">
+                  {item.type === 'video' ? (
+                    <video 
+                      src={item.url} 
+                      controls 
+                      className="w-full aspect-video object-cover rounded-xl max-h-[380px]"
+                      poster={item.thumbnail_url}
+                    />
+                  ) : item.type === 'audio' ? (
+                    <AudioPlayer url={item.url} />
+                  ) : (
+                    <img 
+                      src={item.url} 
+                      alt="" 
+                      className="w-full rounded-xl object-cover max-h-[380px]" 
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="w-full aspect-[16/10] bg-muted/30 rounded-xl flex items-center justify-center p-8 text-center text-muted-foreground italic text-[14px]">
+              «{post.prompt_ru}»
+            </div>
+          )}
+        </Link>
+      )}
 
       {/* Actions */}
       <div className="flex items-center gap-2 pt-1 flex-wrap">
