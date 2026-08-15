@@ -99,7 +99,7 @@ const AuthPage = () => {
     setIsSubmitting(true);
     
     const demoEmail = "demo@era2.ai";
-    const demoPassword = "demo12345";
+    const demoPassword = "Era2-Demo-9f3kQx7w";
     const demoName = "Демо-пользователь";
 
     try {
