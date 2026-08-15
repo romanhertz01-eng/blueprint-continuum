@@ -11,17 +11,18 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useCredits, getCreditsMetrics, ringColorClass, barColorClass } from "@/hooks/useCredits";
 
-const PLAN: "PRO" | "FREE" = "FREE";
-const EMAIL = "roman2024gerts@gmail.com";
-const DISPLAY_NAME = "Роман Г.";
-
 export function UserDropdown() {
-  const { logout, userName } = useAuth();
+  const { logout, userName, user, profile } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const credits = useCredits();
   const { hasPeriod, leftPct } = getCreditsMetrics(credits);
-  const initial = (userName || DISPLAY_NAME).charAt(0).toUpperCase();
+  
+  const displayName = profile?.display_name || userName;
+  const email = user?.email || "";
+  const plan = (profile?.is_admin ? "PRO" : "FREE") as "PRO" | "FREE";
+
+  const initial = displayName.charAt(0).toUpperCase();
   const leftPctRounded = Math.round(leftPct);
 
   const radius = 20;
@@ -89,10 +90,11 @@ export function UserDropdown() {
         {/* Profile header */}
         <div className="px-3 py-2.5 flex items-start justify-between gap-2">
           <div className="min-w-0">
-            <div className="font-semibold text-sm text-foreground truncate">{DISPLAY_NAME}</div>
-            <div className="text-xs text-muted-foreground truncate">{EMAIL}</div>
+            <div className="font-semibold text-sm text-foreground truncate">{displayName}</div>
+            <div className="text-xs text-muted-foreground truncate">{email}</div>
           </div>
-          <StatusBadge variant={PLAN === "PRO" ? "pro" : "new"}>{PLAN}</StatusBadge>
+          <StatusBadge variant={plan === "PRO" ? "pro" : "new"}>{plan}</StatusBadge>
+
         </div>
 
         <div className="my-2 h-px bg-border" />
