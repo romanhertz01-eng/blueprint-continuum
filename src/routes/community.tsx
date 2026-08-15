@@ -15,8 +15,7 @@ import { z } from "zod";
 
 const searchSchema = z.object({
   type: z.enum(["all", "text", "image", "video", "audio", "agent"]).optional().default("all"),
-  provider: z.string().optional().default("all"),
-  provider: z.string().optional().default("all"),
+  provider: z.string().catch("all").optional().default("all"),
   sort: z.enum(["new", "popular"]).optional().default("new"),
   page: z.number().optional().default(0),
 });
