@@ -162,6 +162,10 @@ function PromptsHub() {
       rows.push(visibleItems.slice(i, i + itemsPerRow));
     }
 
+    // Community shelf and banner indices
+    const COMMUNITY_SHELF_INDEX = 1; // After row 2
+    const COMMUNITY_BANNER_INDEX = 3; // After row 4 (2 rows after shelf)
+
     // Logic for inserting shelf/banner between rows
     rows.forEach((row, rowIndex) => {
       // Add the row of cards
