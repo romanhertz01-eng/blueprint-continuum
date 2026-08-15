@@ -6,7 +6,6 @@ import {
   Heart, 
   Bookmark, 
   Share2, 
-  Copy, 
   Send, 
   Trash2, 
   ChevronRight, 
@@ -23,6 +22,7 @@ import { writePromptHandoff, CATEGORY_ROUTE } from "@/lib/promptHandoff";
 import { format } from "date-fns";
 import { ru } from "date-fns/locale";
 import { toast } from "sonner";
+import { PromptCategory } from "@/data/prompts/types";
 
 export const Route = createFileRoute("/community_/$id")({
   component: PromptDetailPage,
@@ -30,9 +30,11 @@ export const Route = createFileRoute("/community_/$id")({
 
 function PromptDetailPage() {
   const { id } = Route.useParams();
-  const { user, isAuthed, isAdmin } = useAuth();
+  const { user, isAuthed, profile } = useAuth();
   const queryClient = useQueryClient();
   const [commentText, setCommentText] = useState("");
+  
+  const isAdmin = profile?.is_admin || false;
 
   // 1. Load the post
   const { data: post, isLoading: isPostLoading, error: postError } = useQuery({
@@ -53,6 +55,7 @@ function PromptDetailPage() {
     queryKey: ["community-author", post?.author_id],
     enabled: !!post?.author_id,
     queryFn: async () => {
+      if (!post) return null;
       const { data, error } = await supabase
         .from("profiles")
         .select("id, display_name, username, avatar_url")
@@ -76,7 +79,7 @@ function PromptDetailPage() {
       
       // Fetch authors for comments
       if (data && data.length > 0) {
-        const uids = Array.from(new Set(data.map(c => c.user_id)));
+        const uids = Array.from(new Set(data.map(c => c.author_id)));
         const { data: authors, error: aError } = await supabase
           .from("profiles")
           .select("id, display_name, avatar_url")
@@ -85,11 +88,11 @@ function PromptDetailPage() {
         if (!aError && authors) {
           return data.map(c => ({
             ...c,
-            author: authors.find(a => a.id === c.user_id) || { display_name: "User" }
+            author: authors.find(a => a.id === c.author_id) || { display_name: "Пользователь", avatar_url: null }
           }));
         }
       }
-      return data || [];
+      return (data || []).map(c => ({ ...c, author: { display_name: "Пользователь", avatar_url: null } }));
     },
   });
 
@@ -113,7 +116,7 @@ function PromptDetailPage() {
       if (user?.id) {
         const { data: myLike } = await supabase
           .from("likes")
-          .select("id")
+          .select("created_at")
           .eq("post_id", id)
           .eq("user_id", user.id)
           .maybeSingle();
@@ -121,7 +124,7 @@ function PromptDetailPage() {
 
         const { data: mySave } = await supabase
           .from("saves")
-          .select("id")
+          .select("created_at")
           .eq("post_id", id)
           .eq("user_id", user.id)
           .maybeSingle();
@@ -135,14 +138,14 @@ function PromptDetailPage() {
   // Mutations
   const likeMutation = useMutation({
     mutationFn: async () => {
-      if (!isAuthed) {
+      if (!isAuthed || !user) {
         window.location.href = buildAuthHref(`/community/${id}`);
         return;
       }
       if (socialState?.isLiked) {
-        await supabase.from("likes").delete().eq("post_id", id).eq("user_id", user?.id);
+        await supabase.from("likes").delete().eq("post_id", id).eq("user_id", user.id);
       } else {
-        await supabase.from("likes").insert({ post_id: id, user_id: user?.id });
+        await supabase.from("likes").insert({ post_id: id, user_id: user.id });
       }
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["community-social", id] }),
@@ -150,14 +153,14 @@ function PromptDetailPage() {
 
   const saveMutation = useMutation({
     mutationFn: async () => {
-      if (!isAuthed) {
+      if (!isAuthed || !user) {
         window.location.href = buildAuthHref(`/community/${id}`);
         return;
       }
       if (socialState?.isSaved) {
-        await supabase.from("saves").delete().eq("post_id", id).eq("user_id", user?.id);
+        await supabase.from("saves").delete().eq("post_id", id).eq("user_id", user.id);
       } else {
-        await supabase.from("saves").insert({ post_id: id, user_id: user?.id });
+        await supabase.from("saves").insert({ post_id: id, user_id: user.id });
       }
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["community-social", id] }),
@@ -165,10 +168,11 @@ function PromptDetailPage() {
 
   const commentMutation = useMutation({
     mutationFn: async (text: string) => {
+      if (!user) return;
       const { error } = await supabase.from("comments").insert({
         post_id: id,
-        user_id: user?.id,
-        content: text
+        author_id: user.id,
+        body: text
       });
       if (error) throw error;
     },
@@ -196,11 +200,11 @@ function PromptDetailPage() {
     if (!post) return;
     writePromptHandoff({
       prompt: post.prompt_ru,
-      category: post.type as any,
+      category: post.type as PromptCategory,
       providerId: post.provider_id || undefined,
       sourceSlug: post.id
     });
-    const route = CATEGORY_ROUTE[post.type as any] || "/workspace";
+    const route = CATEGORY_ROUTE[post.type as PromptCategory] || "/workspace";
     window.location.href = isAuthed ? route : buildAuthHref(route);
   };
 
@@ -221,14 +225,18 @@ function PromptDetailPage() {
         <AlertCircle className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
         <h1 className="text-2xl font-bold mb-2">Промпт не найден</h1>
         <p className="text-muted-foreground mb-8">Возможно, он был удален или еще находится на модерации.</p>
-        <Link to="/community" className="text-primary font-medium hover:underline">
+        <Link 
+          to="/community" 
+          search={{ type: 'all', sort: 'new', page: 0 }}
+          className="text-primary font-medium hover:underline"
+        >
           Вернуться в сообщество
         </Link>
       </div>
     );
   }
 
-  const media = post.media as any[] || [];
+  const media = (post.media as any[]) || [];
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 md:py-12">
@@ -236,7 +244,13 @@ function PromptDetailPage() {
       <nav className="flex items-center gap-2 text-[13px] text-muted-foreground mb-8">
         <Link to="/" className="hover:text-foreground transition-colors">Главная</Link>
         <ChevronRight size={14} />
-        <Link to="/community" className="hover:text-foreground transition-colors">Сообщество</Link>
+        <Link 
+          to="/community" 
+          search={{ type: 'all', sort: 'new', page: 0 }}
+          className="hover:text-foreground transition-colors"
+        >
+          Сообщество
+        </Link>
         <ChevronRight size={14} />
         <span className="text-foreground truncate max-w-[200px]">{post.title}</span>
       </nav>
@@ -391,11 +405,11 @@ function PromptDetailPage() {
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="font-bold text-[14px]">{comment.author?.display_name || "User"}</span>
+                  <span className="font-bold text-[14px]">{comment.author?.display_name || "Пользователь"}</span>
                   <span className="text-[12px] text-muted-foreground">
                     {format(new Date(comment.created_at), "d MMM, HH:mm", { locale: ru })}
                   </span>
-                  {(user?.id === comment.user_id || isAdmin) && (
+                  {(user?.id === comment.author_id || isAdmin) && (
                     <button 
                       onClick={() => deleteCommentMutation.mutate(comment.id)}
                       className="ml-auto opacity-0 group-hover:opacity-100 p-1 hover:text-destructive transition-all"
@@ -405,7 +419,7 @@ function PromptDetailPage() {
                   )}
                 </div>
                 <div className="text-[15px] leading-relaxed text-foreground/90 whitespace-pre-wrap">
-                  {comment.content}
+                  {comment.body}
                 </div>
               </div>
             </div>
@@ -456,3 +470,4 @@ function PromptDetailPage() {
     </div>
   );
 }
+
