@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -24,11 +24,6 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/u/$username")({
   component: AuthorProfilePage,
 });
-
-// Reuse the PostCard structure from community.tsx logic
-// Since the prompt asks to re-use the component, we should ideally import it, 
-// but it's defined inside community.tsx. I will copy the minimal version for accuracy
-// or try to match its visual style exactly.
 
 function PostCard({ post }: { post: any }) {
   const media = post.media as any[];
@@ -111,6 +106,7 @@ function AuthorProfilePage() {
     queryKey: ["author-posts", authorId],
     enabled: !!authorId,
     queryFn: async () => {
+      if (!authorId) return [];
       const { data, error } = await supabase
         .from("posts")
         .select("*")
@@ -127,6 +123,8 @@ function AuthorProfilePage() {
     queryKey: ["author-stats", authorId, user?.id],
     enabled: !!authorId,
     queryFn: async () => {
+      if (!authorId) return { followersCount: 0, followingCount: 0, totalLikes: 0, isFollowing: false };
+
       // Followers count
       const { count: followersCount } = await supabase
         .from("follows")
@@ -189,7 +187,11 @@ function AuthorProfilePage() {
         await supabase.from("follows").insert({ follower_id: user.id, following_id: authorId });
       }
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["author-stats", authorId] }),
+    onSuccess: () => {
+      if (authorId) {
+        queryClient.invalidateQueries({ queryKey: ["author-stats", authorId] });
+      }
+    },
   });
 
   if (isProfileLoading) {
