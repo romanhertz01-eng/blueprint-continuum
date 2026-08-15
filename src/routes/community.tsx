@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useSearch } from "@tanstack/react-router";
 import { useState, useMemo } from "react";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Plus, Heart, MessageSquare, Image, Video, Music, User, LayoutGrid, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -85,16 +85,12 @@ function CommunityPage() {
   const { isAuthed } = useAuth();
   const navigate = Route.useNavigate();
 
-  const { data } = useSuspenseQuery({
+  const { data: postsData, isLoading: isPostsLoading, error: postsError } = useQuery({
     queryKey: ["community-posts", type, sort, page],
     queryFn: async () => {
       let query = supabase
         .from("posts")
-        .select(`
-          *,
-          author:profiles(display_name, avatar_url),
-          likes_count:likes(count)
-        `)
+        .select("*")
         .eq("status", "published");
 
       if (type !== "all") {
@@ -102,8 +98,6 @@ function CommunityPage() {
       }
 
       if (sort === "popular") {
-        // Note: Real popular sort requires a more complex query or a view
-        // For now sorting by views or assuming likes count logic
         query = query.order("views", { ascending: false });
       } else {
         query = query.order("created_at", { ascending: false });
@@ -118,6 +112,60 @@ function CommunityPage() {
       return data || [];
     },
   });
+
+  const authorIds = useMemo(() => {
+    if (!postsData) return [];
+    return Array.from(new Set(postsData.map(p => p.author_id)));
+  }, [postsData]);
+
+  const { data: authorsData } = useQuery({
+    queryKey: ["community-authors", authorIds],
+    enabled: authorIds.length > 0,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("id, display_name, username, avatar_url")
+        .in("id", authorIds);
+      if (error) throw error;
+      return data || [];
+    },
+  });
+
+  const postIds = useMemo(() => {
+    if (!postsData) return [];
+    return postsData.map(p => p.id);
+  }, [postsData]);
+
+  const { data: likesData } = useQuery({
+    queryKey: ["community-likes", postIds],
+    enabled: postIds.length > 0,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("likes")
+        .select("post_id");
+      if (error) throw error;
+      return data || [];
+    },
+  });
+
+  const enrichedPosts = useMemo(() => {
+    if (!postsData) return [];
+    
+    return postsData.map(post => {
+      const author = authorsData?.find(a => a.id === post.author_id);
+      const postLikes = likesData?.filter(l => l.post_id === post.id).length || 0;
+      
+      return {
+        ...post,
+        author: author || { display_name: "Автор", avatar_url: null },
+        likes_count: postLikes
+      };
+    });
+  }, [postsData, authorsData, likesData]);
+
+  const isLoading = isPostsLoading;
+  const error = postsError;
+  const data = enrichedPosts;
 
   const filterChips = [
     { label: "Все", value: "all" },
@@ -188,7 +236,18 @@ function CommunityPage() {
       </div>
 
       {/* Feed */}
-      {data.length > 0 ? (
+      {isLoading ? (
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {[...Array(8)].map((_, i) => (
+            <div key={i} className="aspect-[4/5] rounded-[18px] bg-muted animate-pulse" />
+          ))}
+        </div>
+      ) : error ? (
+        <div className="flex flex-col items-center justify-center py-20 text-center border border-destructive/20 rounded-[24px] bg-destructive/5">
+          <h2 className="text-xl font-semibold mb-2 text-destructive">Не удалось загрузить промпты</h2>
+          <p className="text-muted-foreground mb-6">{(error as Error).message}</p>
+        </div>
+      ) : data.length > 0 ? (
         <>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {data.map((post) => (

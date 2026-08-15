@@ -574,7 +574,7 @@ export default function AccountPage() {
 }
 
 function MyPostsList() {
-  const { data: posts, isLoading } = useQuery({
+  const { data: posts, isLoading, error } = useQuery({
     queryKey: ["my-posts"],
     queryFn: async () => {
       const { data: { user } } = await supabase.auth.getUser();
@@ -589,12 +589,25 @@ function MyPostsList() {
     },
   });
 
-  if (isLoading) return <div className="py-8 text-center text-muted-foreground text-sm">Загрузка промптов...</div>;
+  if (isLoading) return (
+    <div className="grid grid-cols-1 gap-3">
+      {[...Array(3)].map((_, i) => (
+        <div key={i} className="h-[72px] rounded-xl bg-muted animate-pulse" />
+      ))}
+    </div>
+  );
+
+  if (error) return (
+    <div className="py-8 text-center border border-destructive/20 rounded-xl bg-destructive/5">
+      <p className="text-sm text-destructive font-medium">Не удалось загрузить промпты</p>
+      <p className="text-xs text-muted-foreground mt-1">{(error as Error).message}</p>
+    </div>
+  );
 
   if (!posts?.length) {
     return (
       <div className="py-12 text-center border border-dashed border-border rounded-2xl bg-muted/20">
-        <p className="text-sm text-muted-foreground">У вас пока нет промптов</p>
+        <p className="text-sm text-muted-foreground">Здесь пока пусто — добавьте первый промпт</p>
       </div>
     );
   }
