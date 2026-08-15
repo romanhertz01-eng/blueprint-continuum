@@ -1,8 +1,14 @@
 import { createFileRoute, Link, useSearch } from "@tanstack/react-router";
 import { useState, useMemo } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Plus, Heart, MessageSquare, Image, Video, Music, User, LayoutGrid, ChevronRight } from "lucide-react";
+import { 
+  Plus, Heart, MessageSquare, Image, Video, Music, 
+  User, LayoutGrid, ChevronRight, UserPlus, Bookmark, 
+  Share2, Eye, MoreHorizontal, Check
+} from "lucide-react";
+import { formatDistanceToNow } from "date-fns";
+import { ru } from "date-fns/locale";
 import { cn } from "@/lib/utils";
 import { buildAuthHref } from "@/lib/authRedirect";
 import { useAuth } from "@/contexts/AuthContext";
