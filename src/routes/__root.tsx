@@ -135,13 +135,21 @@ function RootShell({ children }: { children: React.ReactNode }) {
 }
 
 function RootComponent() {
-  const { theme } = useTheme();
-  
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
-        <AuthProvider>
-          <CreditsProvider>
+        <RootWithToaster />
+      </ThemeProvider>
+    </QueryClientProvider>
+  );
+}
+
+function RootWithToaster() {
+  const { theme } = useTheme();
+
+  return (
+    <AuthProvider>
+      <CreditsProvider>
             <TooltipProvider>
               <Layout>
                 <ErrorBoundary>
@@ -156,7 +164,5 @@ function RootComponent() {
             </TooltipProvider>
           </CreditsProvider>
         </AuthProvider>
-      </ThemeProvider>
-    </QueryClientProvider>
   );
 }
