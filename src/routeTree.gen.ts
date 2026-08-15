@@ -41,7 +41,6 @@ import { Route as AiImageRouteImport } from './routes/ai.image'
 import { Route as AiAudioRouteImport } from './routes/ai.audio'
 import { Route as AiAgentsRouteImport } from './routes/ai.agents'
 import { Route as AdminModerationRouteImport } from './routes/admin/moderation'
-import { Route as CommunityRouteImport } from './routes/community_.'
 import { Route as PromptsModelIndexRouteImport } from './routes/prompts.model.index'
 import { Route as PromptsAgentsIndexRouteImport } from './routes/prompts.agents.index'
 import { Route as PromptsTopicIndexRouteImport } from './routes/prompts.$topic.index'
@@ -209,11 +208,6 @@ const AdminModerationRoute = AdminModerationRouteImport.update({
   path: '/admin/moderation',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CommunityRoute = CommunityRouteImport.update({
-  id: '/community_/',
-  path: '/community/',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const PromptsModelIndexRoute = PromptsModelIndexRouteImport.update({
   id: '/prompts/model/',
   path: '/prompts/model/',
@@ -262,7 +256,6 @@ export interface FileRoutesByFullPath {
   '/text': typeof TextRoute
   '/toolkit': typeof ToolkitRoute
   '/video': typeof VideoRoute
-  '/community/': typeof CommunityRoute
   '/admin/moderation': typeof AdminModerationRoute
   '/ai/agents': typeof AiAgentsRoute
   '/ai/audio': typeof AiAudioRoute
@@ -344,7 +337,6 @@ export interface FileRoutesById {
   '/text': typeof TextRoute
   '/toolkit': typeof ToolkitRoute
   '/video': typeof VideoRoute
-  '/community_/': typeof CommunityRoute
   '/admin/moderation': typeof AdminModerationRoute
   '/ai/agents': typeof AiAgentsRoute
   '/ai/audio': typeof AiAudioRoute
@@ -387,7 +379,6 @@ export interface FileRouteTypes {
     | '/text'
     | '/toolkit'
     | '/video'
-    | '/community/'
     | '/admin/moderation'
     | '/ai/agents'
     | '/ai/audio'
@@ -468,7 +459,6 @@ export interface FileRouteTypes {
     | '/text'
     | '/toolkit'
     | '/video'
-    | '/community_/'
     | '/admin/moderation'
     | '/ai/agents'
     | '/ai/audio'
@@ -510,7 +500,6 @@ export interface RootRouteChildren {
   TextRoute: typeof TextRoute
   ToolkitRoute: typeof ToolkitRoute
   VideoRoute: typeof VideoRoute
-  CommunityRoute: typeof CommunityRoute
   AdminModerationRoute: typeof AdminModerationRoute
   AiAgentsRoute: typeof AiAgentsRoute
   AiAudioRoute: typeof AiAudioRoute
@@ -761,13 +750,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminModerationRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/community_/': {
-      id: '/community_/'
-      path: '/community'
-      fullPath: '/community/'
-      preLoaderRoute: typeof CommunityRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/prompts/model/': {
       id: '/prompts/model/'
       path: '/prompts/model'
@@ -830,7 +812,6 @@ const rootRouteChildren: RootRouteChildren = {
   TextRoute: TextRoute,
   ToolkitRoute: ToolkitRoute,
   VideoRoute: VideoRoute,
-  CommunityRoute: CommunityRoute,
   AdminModerationRoute: AdminModerationRoute,
   AiAgentsRoute: AiAgentsRoute,
   AiAudioRoute: AiAudioRoute,
