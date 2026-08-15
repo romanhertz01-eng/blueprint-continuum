@@ -54,9 +54,9 @@ function AudioPlayer({ url }: { url: string }) {
   };
 
   return (
-    <div className="flex items-center gap-4 bg-muted/20 rounded-2xl p-3 border border-border/50">
-      <div className="relative w-[88px] h-[88px] rounded-xl bg-gradient-to-br from-primary/80 to-primary flex items-center justify-center shrink-0 overflow-hidden group/audio">
-        <Music size={32} className="text-white" />
+    <div className="flex items-center gap-4 bg-gradient-to-br from-primary/10 to-primary/5 rounded-xl p-3 border border-primary/10 w-full h-[96px]">
+      <div className="relative w-[72px] h-[72px] rounded-xl bg-gradient-to-br from-primary/80 to-primary flex items-center justify-center shrink-0 overflow-hidden group/audio">
+        <Music size={28} className="text-white" />
         <button 
           onClick={togglePlay}
           className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 group-hover/audio:opacity-100 transition-opacity"
@@ -164,25 +164,34 @@ function PostCard({ post }: { post: any }) {
       </Link>
 
       {/* Media or Prompt Preview */}
-      <Link to="/community/$id" params={{ id: post.id }} className="block overflow-hidden rounded-xl border border-border/50">
+      <Link to="/community/$id" params={{ id: post.id }} className="block overflow-hidden rounded-xl">
         {media && media.length > 0 ? (
           <div className="flex flex-col gap-2">
             {media.map((item, idx) => (
               <div key={idx} className="w-full">
                 {item.type === 'video' ? (
-                  <video src={item.url} controls className="w-full max-h-[420px] object-cover" />
+                  <video 
+                    src={item.url} 
+                    controls 
+                    className="w-full aspect-video object-cover rounded-xl"
+                    poster={item.thumbnail_url}
+                  />
                 ) : item.type === 'audio' ? (
                   <AudioPlayer url={item.url} />
                 ) : (
-                  <img src={item.url} alt="" className="w-full max-h-[420px] object-cover" />
+                  <img 
+                    src={item.url} 
+                    alt="" 
+                    className="w-full rounded-xl object-cover max-h-[560px]" 
+                  />
                 )}
               </div>
             ))}
           </div>
         ) : (
           <div className={cn(
-            "p-5 text-foreground font-medium text-[15px] leading-relaxed whitespace-pre-wrap rounded-xl bg-gradient-to-br min-h-[140px] flex flex-col justify-center",
-            getPostGradient(post.id)
+            "w-full aspect-[16/10] text-white font-medium text-[15px] leading-relaxed whitespace-pre-wrap rounded-xl bg-gradient-to-br flex items-center justify-center p-8 text-center",
+            getPostGradient(post.id).replace(/\/20/g, '/80') // Darker gradient for text-on-gradient
           )}>
             <div className="line-clamp-2">
               {post.prompt_ru}
@@ -460,7 +469,7 @@ function CommunityPage() {
   const enrichedPosts = useMemo(() => {
     if (!postsData) return [];
     
-    return postsData.map(post => {
+    const enriched = postsData.map(post => {
       const author = authorsData?.find(a => a.id === post.author_id);
       const postLikes = likesData?.filter(l => l.post_id === post.id).length || 0;
       const postComments = commentsData?.filter(c => c.post_id === post.id).length || 0;
@@ -472,6 +481,36 @@ function CommunityPage() {
         comments_count: postComments
       };
     });
+
+    // Interleave types while preserving sort order (within pages)
+    // types order: image -> video -> text -> audio -> agent
+    const typesOrder = ['image', 'video', 'text', 'audio', 'agent'];
+    const buckets: Record<string, any[]> = {};
+    typesOrder.forEach(t => buckets[t] = []);
+    
+    enriched.forEach(p => {
+      const t = p.type || 'text';
+      if (buckets[t]) buckets[t].push(p);
+      else buckets['text'].push(p);
+    });
+
+    const result = [];
+    let hasMore = true;
+    let typeIdx = 0;
+
+    while (hasMore) {
+      hasMore = false;
+      for (let i = 0; i < typesOrder.length; i++) {
+        const type = typesOrder[(typeIdx + i) % typesOrder.length];
+        if (buckets[type].length > 0) {
+          result.push(buckets[type].shift());
+          hasMore = true;
+        }
+      }
+      typeIdx++;
+    }
+
+    return result;
   }, [postsData, authorsData, likesData, commentsData]);
 
   const categoryCounts = useMemo(() => {
@@ -548,61 +587,45 @@ function CommunityPage() {
           {/* Filters & Sort */}
           <div className="flex flex-col gap-4 mb-8">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-              <div className="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0 scrollbar-hide">
-                {categories.map((cat) => (
+              {/* Model Filters (Chips) */}
+              <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                <button
+                  onClick={() => handleProviderChange("all")}
+                  className={cn(
+                    "h-8 px-3 rounded-full text-[12px] font-medium transition-all shrink-0 border",
+                    provider === "all"
+                      ? "bg-primary text-white border-primary"
+                      : "bg-muted/30 text-muted-foreground border-border hover:text-foreground"
+                  )}
+                >
+                  Все модели
+                </button>
+                {topProviders.map((pId) => (
                   <button
-                    key={cat.value}
-                    onClick={() => handleTypeChange(cat.value)}
+                    key={pId}
+                    onClick={() => handleProviderChange(pId)}
                     className={cn(
-                      "h-9 px-4 rounded-full text-[13px] font-medium transition-all shrink-0 border",
-                      type === cat.value 
-                        ? "bg-primary text-white border-primary" 
-                        : "bg-secondary text-muted-foreground border-border hover:text-foreground hover:border-primary/30"
+                      "h-8 px-3 rounded-full text-[12px] font-medium transition-all shrink-0 border",
+                      provider === pId
+                        ? "bg-primary text-white border-primary"
+                        : "bg-muted/30 text-muted-foreground border-border hover:text-foreground"
                     )}
                   >
-                    {cat.label}
+                    {formatProviderName(pId)}
                   </button>
                 ))}
               </div>
-              <div className="flex items-center gap-2 self-end md:self-auto">
+              
+              <div className="flex items-center gap-2 self-end md:self-auto shrink-0">
                 <select 
                   value={sort}
                   onChange={(e) => handleSortChange(e.target.value)}
-                  className="h-9 px-3 rounded-lg bg-secondary border border-border text-[13px] font-medium focus:outline-none focus:ring-1 focus:ring-primary/40"
+                  className="h-8 px-3 rounded-lg bg-secondary border border-border text-[12px] font-medium focus:outline-none focus:ring-1 focus:ring-primary/40"
                 >
                   <option value="new">Сначала новые</option>
                   <option value="popular">Популярные</option>
                 </select>
               </div>
-            </div>
-
-            {/* Model Filters (Chips) */}
-            <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide border-t border-border/50 pt-4">
-              <button
-                onClick={() => handleProviderChange("all")}
-                className={cn(
-                  "h-8 px-3 rounded-full text-[12px] font-medium transition-all shrink-0 border",
-                  provider === "all"
-                    ? "bg-primary text-white border-primary"
-                    : "bg-muted/30 text-muted-foreground border-border hover:text-foreground"
-                )}
-              >
-                Все модели
-              </button>
-              {topProviders.map((pId) => (
-                <button
-                  key={pId}
-                  onClick={() => handleProviderChange(pId)}
-                  className={cn(
-                    "h-8 px-3 rounded-full text-[12px] font-medium transition-all shrink-0 border",
-                    provider === pId
-                      ? "bg-primary text-white border-primary"
-                      : "bg-muted/30 text-muted-foreground border-border hover:text-foreground"
-                  )}
-                >
-                  {formatProviderName(pId)}
-                </button>
-              ))}
             </div>
           </div>
 
