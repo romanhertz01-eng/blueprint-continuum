@@ -30,6 +30,7 @@ export function PublishModal({ open, onOpenChange, initialData }: PublishModalPr
   const [prompt, setPrompt] = useState(initialData.prompt);
   const [category, setCategory] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -38,6 +39,7 @@ export function PublishModal({ open, onOpenChange, initialData }: PublishModalPr
       setPrompt(initialData.prompt);
       setCategory("");
       setError(null);
+      setIsSuccess(false);
     }
   }, [open, initialData.prompt]);
 
@@ -104,16 +106,7 @@ export function PublishModal({ open, onOpenChange, initialData }: PublishModalPr
         });
 
       if (insertError) throw insertError;
-
-      toast("Промпт отправлен на проверку — появится в сообществе после модерации", {
-        description: "Это может занять некоторое время",
-        duration: 5000,
-        action: {
-          label: "Мои промпты",
-          onClick: () => window.location.href = "/account"
-        }
-      });
-      onOpenChange(false);
+      setIsSuccess(true);
     } catch (err: any) {
       console.error("Error publishing post:", err);
       const errorMsg = err.message || 'попробуйте позже';
@@ -127,98 +120,130 @@ export function PublishModal({ open, onOpenChange, initialData }: PublishModalPr
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px] rounded-3xl">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold">Опубликовать в сообщество</DialogTitle>
+          <DialogTitle className="text-xl font-bold">
+            {isSuccess ? "Отправлено" : "Опубликовать в сообщество"}
+          </DialogTitle>
         </DialogHeader>
         
-        <form onSubmit={handleSubmit} className="space-y-4 py-4">
-          <div className="space-y-2">
-            <div className="flex justify-between items-center">
-              <Label htmlFor="pub-title">Заголовок *</Label>
-              <span className="text-[10px] text-muted-foreground">{title.length}/120</span>
-            </div>
-            <Input
-              id="pub-title"
-              placeholder="Коротко о результате..."
-              value={title}
-              onChange={(e) => setTitle(e.target.value.slice(0, 120))}
-              required
-              maxLength={120}
-              className="rounded-xl"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="pub-prompt">Промпт</Label>
-            <Textarea
-              id="pub-prompt"
-              placeholder="Текст промпта..."
-              value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
-              className="rounded-xl min-h-[100px] resize-none"
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
+        {isSuccess ? (
+          <div className="py-8 text-center space-y-6">
             <div className="space-y-2">
-              <Label>Модель</Label>
-              <div className="h-10 px-3 flex items-center rounded-xl border border-input bg-secondary/30 text-sm text-muted-foreground overflow-hidden whitespace-nowrap">
-                {initialData.model} {initialData.subModel ? `· ${initialData.subModel}` : ''}
-              </div>
+              <h3 className="text-lg font-semibold text-foreground">Промпт отправлен на проверку</h3>
+              <p className="text-sm text-muted-foreground px-6">
+                Он появится в сообществе после того, как пройдёт модерацию.
+              </p>
             </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="pub-category">Категория</Label>
-              <select
-                id="pub-category"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                className="w-full h-10 px-3 rounded-xl border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+            
+            <div className="flex flex-col gap-3 px-6">
+              <Button 
+                variant="outline" 
+                className="w-full rounded-xl"
+                onClick={() => {
+                  onOpenChange(false);
+                  window.location.href = "/account";
+                }}
               >
-                <option value="">Без категории</option>
-                {availableTopics.map((topic) => (
-                  <option key={topic.slug} value={topic.slug}>
-                    {topic.cardTitle}
-                  </option>
-                ))}
-              </select>
+                Мои промпты
+              </Button>
+              <Button 
+                className="w-full rounded-xl"
+                onClick={() => onOpenChange(false)}
+              >
+                Закрыть
+              </Button>
             </div>
           </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="space-y-4 py-4">
+            <div className="space-y-2">
+              <div className="flex justify-between items-center">
+                <Label htmlFor="pub-title">Заголовок *</Label>
+                <span className="text-[10px] text-muted-foreground">{title.length}/120</span>
+              </div>
+              <Input
+                id="pub-title"
+                placeholder="Коротко о результате..."
+                value={title}
+                onChange={(e) => setTitle(e.target.value.slice(0, 120))}
+                required
+                maxLength={120}
+                className="rounded-xl"
+              />
+            </div>
 
-          <DialogFooter className="pt-4 flex flex-col sm:flex-row gap-2">
-            <div className="w-full flex flex-col gap-4">
-              {error && (
-                <div className="text-sm text-destructive font-medium px-1 animate-in fade-in slide-in-from-top-1">
-                  {error}
+            <div className="space-y-2">
+              <Label htmlFor="pub-prompt">Промпт</Label>
+              <Textarea
+                id="pub-prompt"
+                placeholder="Текст промпта..."
+                value={prompt}
+                onChange={(e) => setPrompt(e.target.value)}
+                className="rounded-xl min-h-[100px] resize-none"
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Модель</Label>
+                <div className="h-10 px-3 flex items-center rounded-xl border border-input bg-secondary/30 text-sm text-muted-foreground overflow-hidden whitespace-nowrap">
+                  {initialData.model} {initialData.subModel ? `· ${initialData.subModel}` : ''}
                 </div>
-              )}
-              <div className="flex gap-2 w-full">
-                <Button
-                  type="button"
-                  variant="ghost"
-                  className="flex-1 rounded-xl"
-                  onClick={() => onOpenChange(false)}
-                  disabled={isSubmitting}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="pub-category">Категория</Label>
+                <select
+                  id="pub-category"
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  className="w-full h-10 px-3 rounded-xl border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                 >
-                  Отмена
-                </Button>
-                <Button
-                  type="submit"
-                  className="flex-1 rounded-xl font-semibold"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Публикуем...
-                    </>
-                  ) : (
-                    "Опубликовать"
-                  )}
-                </Button>
+                  <option value="">Без категории</option>
+                  {availableTopics.map((topic) => (
+                    <option key={topic.slug} value={topic.slug}>
+                      {topic.cardTitle}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
-          </DialogFooter>
-        </form>
+
+            <DialogFooter className="pt-4 flex flex-col sm:flex-row gap-2">
+              <div className="w-full flex flex-col gap-4">
+                {error && (
+                  <div className="text-sm text-destructive font-medium px-1 animate-in fade-in slide-in-from-top-1">
+                    {error}
+                  </div>
+                )}
+                <div className="flex gap-2 w-full">
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    className="flex-1 rounded-xl"
+                    onClick={() => onOpenChange(false)}
+                    disabled={isSubmitting}
+                  >
+                    Отмена
+                  </Button>
+                  <Button
+                    type="submit"
+                    className="flex-1 rounded-xl font-semibold"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Публикуем...
+                      </>
+                    ) : (
+                      "Опубликовать"
+                    )}
+                  </Button>
+                </div>
+              </div>
+            </DialogFooter>
+          </form>
+        )}
       </DialogContent>
     </Dialog>
   );
