@@ -101,20 +101,8 @@ function PostCard({ post }: { post: any }) {
     navigator.clipboard.writeText(`${window.location.origin}/community/${post.id}`);
   };
 
-  const getPostGradient = (id: string) => {
-    const colors = [
-      'from-blue-500/20 to-indigo-500/20',
-      'from-purple-500/20 to-pink-500/20',
-      'from-emerald-500/20 to-teal-500/20',
-      'from-orange-500/20 to-amber-500/20',
-      'from-rose-500/20 to-purple-500/20'
-    ];
-    const index = id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % colors.length;
-    return colors[index];
-  };
-
   return (
-    <div className="rounded-2xl bg-card border border-border p-4 flex flex-col gap-3.5 w-full">
+    <div className="mx-auto w-full max-w-[680px] rounded-2xl bg-card border border-border p-4 flex flex-col gap-3.5">
       {/* Author Header */}
       <div className="flex items-center justify-between">
         <Link
