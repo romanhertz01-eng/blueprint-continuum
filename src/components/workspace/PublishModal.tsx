@@ -54,6 +54,7 @@ export function PublishModal({ open, onOpenChange, initialData }: PublishModalPr
     }
 
     setIsSubmitting(true);
+    setError(null);
     try {
       let uploadedMedia: any[] = [];
 
@@ -84,7 +85,6 @@ export function PublishModal({ open, onOpenChange, initialData }: PublishModalPr
           }
         } catch (fetchErr) {
           console.error("Failed to fetch/upload media:", fetchErr);
-          // Continue anyway as per requirements: "поле media оставить пустым массивом и всё равно опубликовать промпт"
         }
       }
 
@@ -105,16 +105,19 @@ export function PublishModal({ open, onOpenChange, initialData }: PublishModalPr
 
       if (insertError) throw insertError;
 
-      toast.success("Отправлено на проверку — появится в сообществе после модерации", {
+      toast("Промпт отправлен на проверку — появится в сообществе после модерации", {
+        description: "Это может занять некоторое время",
+        duration: 5000,
         action: {
-          label: "В кабинет",
+          label: "Мои промпты",
           onClick: () => window.location.href = "/account"
         }
       });
       onOpenChange(false);
     } catch (err: any) {
       console.error("Error publishing post:", err);
-      toast.error(`Ошибка: ${err.message || 'попробуйте позже'}`);
+      const errorMsg = err.message || 'попробуйте позже';
+      setError(`Ошибка: ${errorMsg}`);
     } finally {
       setIsSubmitting(false);
     }
