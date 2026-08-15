@@ -469,7 +469,7 @@ function CommunityPage() {
   const enrichedPosts = useMemo(() => {
     if (!postsData) return [];
     
-    return postsData.map(post => {
+    const enriched = postsData.map(post => {
       const author = authorsData?.find(a => a.id === post.author_id);
       const postLikes = likesData?.filter(l => l.post_id === post.id).length || 0;
       const postComments = commentsData?.filter(c => c.post_id === post.id).length || 0;
@@ -481,6 +481,36 @@ function CommunityPage() {
         comments_count: postComments
       };
     });
+
+    // Interleave types while preserving sort order (within pages)
+    // types order: image -> video -> text -> audio -> agent
+    const typesOrder = ['image', 'video', 'text', 'audio', 'agent'];
+    const buckets: Record<string, any[]> = {};
+    typesOrder.forEach(t => buckets[t] = []);
+    
+    enriched.forEach(p => {
+      const t = p.type || 'text';
+      if (buckets[t]) buckets[t].push(p);
+      else buckets['text'].push(p);
+    });
+
+    const result = [];
+    let hasMore = true;
+    let typeIdx = 0;
+
+    while (hasMore) {
+      hasMore = false;
+      for (let i = 0; i < typesOrder.length; i++) {
+        const type = typesOrder[(typeIdx + i) % typesOrder.length];
+        if (buckets[type].length > 0) {
+          result.push(buckets[type].shift());
+          hasMore = true;
+        }
+      }
+      typeIdx++;
+    }
+
+    return result;
   }, [postsData, authorsData, likesData, commentsData]);
 
   const categoryCounts = useMemo(() => {
