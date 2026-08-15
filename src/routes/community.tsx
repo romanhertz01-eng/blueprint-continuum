@@ -307,11 +307,7 @@ function Sidebar({
 }
 
 function CommunityPage() {
-  return (
-    <Layout>
-      <CommunityContent />
-    </Layout>
-  );
+  return <CommunityContent />;
 }
 
 function CommunityContent() {
@@ -701,6 +697,6 @@ function CommunityContent() {
   );
 }
 
-import { Layout } from "@/components/layout/Layout";
+
 
 export default CommunityPage;
