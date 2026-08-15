@@ -54,9 +54,9 @@ function AudioPlayer({ url }: { url: string }) {
   };
 
   return (
-    <div className="flex items-center gap-4 bg-muted/20 rounded-2xl p-3 border border-border/50">
-      <div className="relative w-[88px] h-[88px] rounded-xl bg-gradient-to-br from-primary/80 to-primary flex items-center justify-center shrink-0 overflow-hidden group/audio">
-        <Music size={32} className="text-white" />
+    <div className="flex items-center gap-4 bg-gradient-to-br from-primary/10 to-primary/5 rounded-xl p-3 border border-primary/10 w-full h-[96px]">
+      <div className="relative w-[72px] h-[72px] rounded-xl bg-gradient-to-br from-primary/80 to-primary flex items-center justify-center shrink-0 overflow-hidden group/audio">
+        <Music size={28} className="text-white" />
         <button 
           onClick={togglePlay}
           className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 group-hover/audio:opacity-100 transition-opacity"
