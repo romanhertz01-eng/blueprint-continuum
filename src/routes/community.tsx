@@ -500,18 +500,15 @@ function CommunityPage() {
 
     const result = [];
     let hasMore = true;
-    let typeIdx = 0;
 
     while (hasMore) {
       hasMore = false;
-      for (let i = 0; i < typesOrder.length; i++) {
-        const type = typesOrder[(typeIdx + i) % typesOrder.length];
-        if (buckets[type].length > 0) {
-          result.push(buckets[type].shift());
+      for (const t of typesOrder) {
+        if (buckets[t].length > 0) {
+          result.push(buckets[t].shift());
           hasMore = true;
         }
       }
-      typeIdx++;
     }
 
     return result;
