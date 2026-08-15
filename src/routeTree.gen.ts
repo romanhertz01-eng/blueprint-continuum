@@ -39,6 +39,7 @@ import { Route as AiTextRouteImport } from './routes/ai.text'
 import { Route as AiImageRouteImport } from './routes/ai.image'
 import { Route as AiAudioRouteImport } from './routes/ai.audio'
 import { Route as AiAgentsRouteImport } from './routes/ai.agents'
+import { Route as AdminModerationRouteImport } from './routes/admin/moderation'
 import { Route as PromptsModelIndexRouteImport } from './routes/prompts.model.index'
 import { Route as PromptsAgentsIndexRouteImport } from './routes/prompts.agents.index'
 import { Route as PromptsTopicIndexRouteImport } from './routes/prompts.$topic.index'
@@ -196,6 +197,11 @@ const AiAgentsRoute = AiAgentsRouteImport.update({
   path: '/ai/agents',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminModerationRoute = AdminModerationRouteImport.update({
+  id: '/admin/moderation',
+  path: '/admin/moderation',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PromptsModelIndexRoute = PromptsModelIndexRouteImport.update({
   id: '/prompts/model/',
   path: '/prompts/model/',
@@ -244,6 +250,7 @@ export interface FileRoutesByFullPath {
   '/text': typeof TextRoute
   '/toolkit': typeof ToolkitRoute
   '/video': typeof VideoRoute
+  '/admin/moderation': typeof AdminModerationRoute
   '/ai/agents': typeof AiAgentsRoute
   '/ai/audio': typeof AiAudioRoute
   '/ai/image': typeof AiImageRoute
@@ -282,6 +289,7 @@ export interface FileRoutesByTo {
   '/text': typeof TextRoute
   '/toolkit': typeof ToolkitRoute
   '/video': typeof VideoRoute
+  '/admin/moderation': typeof AdminModerationRoute
   '/ai/agents': typeof AiAgentsRoute
   '/ai/audio': typeof AiAudioRoute
   '/ai/image': typeof AiImageRoute
@@ -321,6 +329,7 @@ export interface FileRoutesById {
   '/text': typeof TextRoute
   '/toolkit': typeof ToolkitRoute
   '/video': typeof VideoRoute
+  '/admin/moderation': typeof AdminModerationRoute
   '/ai/agents': typeof AiAgentsRoute
   '/ai/audio': typeof AiAudioRoute
   '/ai/image': typeof AiImageRoute
@@ -361,6 +370,7 @@ export interface FileRouteTypes {
     | '/text'
     | '/toolkit'
     | '/video'
+    | '/admin/moderation'
     | '/ai/agents'
     | '/ai/audio'
     | '/ai/image'
@@ -399,6 +409,7 @@ export interface FileRouteTypes {
     | '/text'
     | '/toolkit'
     | '/video'
+    | '/admin/moderation'
     | '/ai/agents'
     | '/ai/audio'
     | '/ai/image'
@@ -437,6 +448,7 @@ export interface FileRouteTypes {
     | '/text'
     | '/toolkit'
     | '/video'
+    | '/admin/moderation'
     | '/ai/agents'
     | '/ai/audio'
     | '/ai/image'
@@ -476,6 +488,7 @@ export interface RootRouteChildren {
   TextRoute: typeof TextRoute
   ToolkitRoute: typeof ToolkitRoute
   VideoRoute: typeof VideoRoute
+  AdminModerationRoute: typeof AdminModerationRoute
   AiAgentsRoute: typeof AiAgentsRoute
   AiAudioRoute: typeof AiAudioRoute
   AiImageRoute: typeof AiImageRoute
@@ -710,6 +723,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AiAgentsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/moderation': {
+      id: '/admin/moderation'
+      path: '/admin/moderation'
+      fullPath: '/admin/moderation'
+      preLoaderRoute: typeof AdminModerationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/prompts/model/': {
       id: '/prompts/model/'
       path: '/prompts/model'
@@ -772,6 +792,7 @@ const rootRouteChildren: RootRouteChildren = {
   TextRoute: TextRoute,
   ToolkitRoute: ToolkitRoute,
   VideoRoute: VideoRoute,
+  AdminModerationRoute: AdminModerationRoute,
   AiAgentsRoute: AiAgentsRoute,
   AiAudioRoute: AiAudioRoute,
   AiImageRoute: AiImageRoute,
