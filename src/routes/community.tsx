@@ -16,6 +16,7 @@ import { z } from "zod";
 const searchSchema = z.object({
   type: z.enum(["all", "text", "image", "video", "audio", "agent"]).optional().default("all"),
   provider: z.string().optional().default("all"),
+  provider: z.string().optional().default("all"),
   sort: z.enum(["new", "popular"]).optional().default("new"),
   page: z.number().optional().default(0),
 });
@@ -503,7 +504,7 @@ function CommunityPage() {
   ];
 
   const handleTypeChange = (newType: string) => {
-    navigate({ search: (prev) => ({ ...prev, type: newType as any, page: 0 }) });
+    navigate({ search: (prev) => ({ ...prev, type: newType as any, provider: 'all', page: 0 }) });
   };
 
   const handleProviderChange = (newProvider: string) => {
@@ -546,32 +547,63 @@ function CommunityPage() {
         {/* Main Feed Column */}
         <div className="lg:w-[70%]">
           {/* Filters & Sort */}
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-            <div className="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0 scrollbar-hide">
-              {categories.map((cat) => (
+          <div className="flex flex-col gap-4 mb-8">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div className="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0 scrollbar-hide">
+                {categories.map((cat) => (
+                  <button
+                    key={cat.value}
+                    onClick={() => handleTypeChange(cat.value)}
+                    className={cn(
+                      "h-9 px-4 rounded-full text-[13px] font-medium transition-all shrink-0 border",
+                      type === cat.value 
+                        ? "bg-primary text-white border-primary" 
+                        : "bg-secondary text-muted-foreground border-border hover:text-foreground hover:border-primary/30"
+                    )}
+                  >
+                    {cat.label}
+                  </button>
+                ))}
+              </div>
+              <div className="flex items-center gap-2 self-end md:self-auto">
+                <select 
+                  value={sort}
+                  onChange={(e) => handleSortChange(e.target.value)}
+                  className="h-9 px-3 rounded-lg bg-secondary border border-border text-[13px] font-medium focus:outline-none focus:ring-1 focus:ring-primary/40"
+                >
+                  <option value="new">Сначала новые</option>
+                  <option value="popular">Популярные</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Model Filters (Chips) */}
+            <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide border-t border-border/50 pt-4">
+              <button
+                onClick={() => handleProviderChange("all")}
+                className={cn(
+                  "h-8 px-3 rounded-full text-[12px] font-medium transition-all shrink-0 border",
+                  provider === "all"
+                    ? "bg-primary text-white border-primary"
+                    : "bg-muted/30 text-muted-foreground border-border hover:text-foreground"
+                )}
+              >
+                Все модели
+              </button>
+              {topProviders.map((pId) => (
                 <button
-                  key={cat.value}
-                  onClick={() => handleTypeChange(cat.value)}
+                  key={pId}
+                  onClick={() => handleProviderChange(pId)}
                   className={cn(
-                    "h-9 px-4 rounded-full text-[13px] font-medium transition-all shrink-0 border",
-                    type === cat.value 
-                      ? "bg-primary text-white border-primary" 
-                      : "bg-secondary text-muted-foreground border-border hover:text-foreground hover:border-primary/30"
+                    "h-8 px-3 rounded-full text-[12px] font-medium transition-all shrink-0 border",
+                    provider === pId
+                      ? "bg-primary text-white border-primary"
+                      : "bg-muted/30 text-muted-foreground border-border hover:text-foreground"
                   )}
                 >
-                  {cat.label}
+                  {formatProviderName(pId)}
                 </button>
               ))}
-            </div>
-            <div className="flex items-center gap-2 self-end md:self-auto">
-              <select 
-                value={sort}
-                onChange={(e) => handleSortChange(e.target.value)}
-                className="h-9 px-3 rounded-lg bg-secondary border border-border text-[13px] font-medium focus:outline-none focus:ring-1 focus:ring-primary/40"
-              >
-                <option value="new">Сначала новые</option>
-                <option value="popular">Популярные</option>
-              </select>
             </div>
           </div>
 
