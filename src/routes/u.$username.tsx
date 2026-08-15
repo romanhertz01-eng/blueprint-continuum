@@ -100,11 +100,7 @@ function PostCard({ post }: { post: EnrichedPost }) {
 }
 
 function AuthorProfilePage() {
-  return (
-    <Layout>
-      <AuthorProfileContent />
-    </Layout>
-  );
+  return <AuthorProfileContent />;
 }
 
 function AuthorProfileContent() {
@@ -587,4 +583,4 @@ function AuthorProfileContent() {
   );
 }
 
-import { Layout } from "@/components/layout/Layout";
+
