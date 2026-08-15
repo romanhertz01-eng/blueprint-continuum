@@ -13,6 +13,7 @@ import { CopyToastProvider } from "@/components/shared/CopyToast";
 import { CornerPromo } from "@/components/shared/CornerPromo";
 import { DailyCheckIn } from "@/components/shared/DailyCheckIn";
 
+import { Toaster } from "sonner";
 import appCss from "../styles.css?url";
 
 function NotFoundComponent() {
@@ -134,6 +135,8 @@ function RootShell({ children }: { children: React.ReactNode }) {
 }
 
 function RootComponent() {
+  const { theme } = useTheme();
+  
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
@@ -149,6 +152,7 @@ function RootComponent() {
               <CopyToastProvider />
               <CornerPromo />
               <DailyCheckIn />
+              <Toaster position="bottom-right" theme={theme as "light" | "dark" | "system"} />
             </TooltipProvider>
           </CreditsProvider>
         </AuthProvider>
