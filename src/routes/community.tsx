@@ -87,14 +87,14 @@ function PostCard({ post }: { post: any }) {
       </div>
 
       {/* Title */}
-      <Link to={`/community/${post.id}`}>
+      <Link to="/community_/$id" params={{ id: post.id }}>
         <h3 className="text-[20px] font-bold text-foreground leading-tight hover:text-primary transition-colors">
           {post.title}
         </h3>
       </Link>
 
       {/* Media or Prompt Preview */}
-      <Link to={`/community/${post.id}`} className="block overflow-hidden rounded-xl border border-border/50">
+      <Link to="/community_/$id" params={{ id: post.id }} className="block overflow-hidden rounded-xl border border-border/50">
         {media && media.length > 0 ? (
           <div className="flex flex-col gap-2">
             {media.map((item, idx) => (
