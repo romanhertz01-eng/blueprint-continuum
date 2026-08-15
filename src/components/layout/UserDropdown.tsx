@@ -20,7 +20,7 @@ export function UserDropdown() {
   
   const displayName = profile?.display_name || userName;
   const email = user?.email || "";
-  const plan = (profile?.is_admin ? "PRO" : "FREE") as "PRO" | "FREE";
+  const plan = "FREE" as "PRO" | "FREE"; // Поле тарифа появится позже
 
   const initial = displayName.charAt(0).toUpperCase();
   const leftPctRounded = Math.round(leftPct);
