@@ -1,9 +1,14 @@
+import { useState } from "react";
 import { ORIGIN } from "@/lib/origin";
-import { Play, Copy, Share2, Download, Heart } from "lucide-react";
+import { Play, Copy, Share2, Download, Heart, Upload } from "lucide-react";
 import { motion } from "framer-motion";
 import { useCopyToast } from "@/components/shared/CopyToast";
 import { ModelGlyph } from "@/components/ui/era/ModelGlyph";
 import { Placeholder } from "@/components/ui/era";
+import { PublishModal } from "./PublishModal";
+import { useAuth } from "@/contexts/AuthContext";
+import { buildAuthHref } from "@/lib/authRedirect";
+import { useNavigate } from "@tanstack/react-router";
 
 export interface MediaGeneration {
   id: string;
@@ -101,6 +106,20 @@ function AudioResult({ gen }: { gen: MediaGeneration }) {
 
 export function MediaChatFeed({ generations }: Props) {
   const copy = useCopyToast();
+  const { isAuthed } = useAuth();
+  const navigate = useNavigate();
+  const [publishModalOpen, setPublishModalOpen] = useState(false);
+  const [selectedGen, setSelectedGen] = useState<MediaGeneration | null>(null);
+
+  const handlePublishClick = (gen: MediaGeneration) => {
+    if (!isAuthed) {
+      window.location.href = buildAuthHref(window.location.pathname);
+      return;
+    }
+    setSelectedGen(gen);
+    setPublishModalOpen(true);
+  };
+
   return (
     <div className="max-w-[780px] mx-auto py-6 px-4 space-y-6">
       {generations.map((gen) => (
@@ -161,6 +180,14 @@ export function MediaChatFeed({ generations }: Props) {
                   Поделиться
                 </button>
                 <button
+                  onClick={() => handlePublishClick(gen)}
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-[8px] text-[12px] text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+                  title="Опубликовать в сообществе"
+                >
+                  <Upload className="h-3.5 w-3.5" />
+                  Опубликовать
+                </button>
+                <button
                   className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-[8px] text-[12px] text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
                   title="Скачать"
                 >
@@ -178,6 +205,24 @@ export function MediaChatFeed({ generations }: Props) {
           </motion.div>
         </div>
       ))}
+      {selectedGen && (
+        <PublishModal
+          open={publishModalOpen}
+          onOpenChange={setPublishModalOpen}
+          initialData={{
+            prompt: selectedGen.prompt,
+            model: selectedGen.model,
+            subModel: selectedGen.subModel,
+            type: selectedGen.type,
+            params: {
+              aspect: selectedGen.aspect,
+              quality: selectedGen.quality,
+              resolution: selectedGen.resolution,
+              duration: selectedGen.duration || selectedGen.audioDuration
+            }
+          }}
+        />
+      )}
     </div>
   );
 }

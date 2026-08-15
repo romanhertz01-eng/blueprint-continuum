@@ -1,11 +1,14 @@
 import { useState, useRef, useEffect, useCallback } from "react";
-import { ChevronDown, Paperclip, Send, Globe, Brain, Copy, RefreshCw, ThumbsUp, ThumbsDown, Settings, PenLine, Lightbulb, Code, Languages, Search, BarChart3 } from "lucide-react";
+import { ChevronDown, Paperclip, Send, Globe, Brain, Copy, RefreshCw, ThumbsUp, ThumbsDown, Settings, PenLine, Lightbulb, Code, Languages, Search, BarChart3, Upload } from "lucide-react";
 import { textProviders, textQuickActions } from "@/data/textModels";
 import { TextModelSelector } from "@/components/text/TextModelSelector";
 import { ModelIcon } from "@/components/text/ModelIcon";
 import { ModelGlyph } from "@/components/ui/era/ModelGlyph";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { buildAuthHref } from "@/lib/authRedirect";
+import { PublishModal } from "@/components/workspace/PublishModal";
 
 import { ModelCarousel, type CarouselModel } from "@/components/workspace/ModelCarousel";
 import { WorkspaceTabs } from "@/components/workspace/WorkspaceTabs";
@@ -185,9 +188,40 @@ const TextPage = () => {
     setTimeout(() => textareaRef.current?.focus(), 50);
   };
 
+  const { isAuthed } = useAuth();
+  const [publishModalOpen, setPublishModalOpen] = useState(false);
+  const [selectedMsg, setSelectedMsg] = useState<Message | null>(null);
+
+  const handlePublishClick = (msg: Message) => {
+    if (!isAuthed) {
+      window.location.href = buildAuthHref(window.location.pathname);
+      return;
+    }
+    // Find the user prompt for this assistant message
+    const msgIndex = messages.findIndex(m => m.id === msg.id);
+    const userPrompt = msgIndex > 0 ? messages[msgIndex - 1].content : "";
+    
+    setSelectedMsg({ ...msg, content: userPrompt }); // We want the user prompt to be editable in the modal
+    setPublishModalOpen(true);
+  };
+
   return (
     <ErrorBoundary>
     <div className="flex flex-col h-[calc(100vh-var(--header-height,64px))] mesh-background" style={{ background: c.bg }}>
+      {selectedMsg && (
+        <PublishModal
+          open={publishModalOpen}
+          onOpenChange={setPublishModalOpen}
+          initialData={{
+            prompt: selectedMsg.content,
+            model: selectedMsg.providerId || providerId,
+            subModel: selectedMsg.model || subModelId,
+            type: "text",
+            params: {}
+          }}
+        />
+      )}
+
       {/* ─── Chat area ─── */}
       <div className="flex-1 overflow-y-auto relative z-[1]">
         <div className="sticky top-0 z-20 flex justify-center py-2" style={{ background: "color-mix(in oklab, var(--c-bg) 85%, transparent)", backdropFilter: "blur(12px)" }}>
@@ -216,7 +250,7 @@ const TextPage = () => {
         {!hasMessages ? (
           <WelcomeScreen providerId={providerId} providerName={provider.name} subModelName={subModel.name} onQuickAction={handleQuickAction} colors={c} />
         ) : (
-          <ChatMessages messages={messages} isGenerating={isGenerating} currentModel={subModel.name} currentProviderId={provider.id} colors={c} />
+          <ChatMessages messages={messages} isGenerating={isGenerating} currentModel={subModel.name} currentProviderId={provider.id} colors={c} onPublish={handlePublishClick} />
         )}
         <div ref={chatEndRef} />
 
@@ -412,14 +446,16 @@ function WelcomeScreen({ providerId, providerName, subModelName, onQuickAction, 
 
 /* ─── Chat messages ─── */
 
-function ChatMessages({ messages, isGenerating, currentModel, currentProviderId, colors: c }: {
+function ChatMessages({ messages, isGenerating, currentModel, currentProviderId, colors: c, onPublish }: {
   messages: Message[]; isGenerating: boolean; currentModel: string; currentProviderId: string;
   colors: ReturnType<typeof useColors>;
+  onPublish: (msg: Message) => void;
 }) {
   return (
     <div className="max-w-[780px] mx-auto py-6 px-4 space-y-5">
       {messages.map((msg) => (
-        <div key={msg.id} className={cn("flex gap-3", msg.role === "user" ? "justify-end" : "justify-start")}>
+
+        <div key={msg.id} className={cn("flex gap-3 group", msg.role === "user" ? "justify-end" : "justify-start")}>
           {msg.role === "assistant" && (
             <ModelIcon providerId={msg.providerId || currentProviderId} size={24} className="mt-1" />
           )}
@@ -441,18 +477,26 @@ function ChatMessages({ messages, isGenerating, currentModel, currentProviderId,
               {msg.content}
             </div>
             {msg.role === "assistant" && (
-              <div className="flex items-center gap-1 mt-1.5 opacity-0 hover:opacity-100 transition-opacity">
-                {[
-                  { Icon: Copy, title: "Копировать" },
-                  { Icon: RefreshCw, title: "Регенерировать" },
-                  { Icon: ThumbsUp, title: "Нравится" },
-                  { Icon: ThumbsDown, title: "Не нравится" },
-                ].map(({ Icon, title }) => (
-                  <button key={title} className="w-7 h-7 rounded-md flex items-center justify-center transition-colors" style={{ color: c.textSecondary }} title={title}>
-                    <Icon className="w-3.5 h-3.5" />
-                  </button>
-                ))}
-              </div>
+                <div className="flex items-center gap-1 mt-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                  {[
+                    { Icon: Copy, title: "Копировать", onClick: () => {} },
+                    { Icon: Upload, title: "Опубликовать", onClick: () => onPublish(msg) },
+                    { Icon: RefreshCw, title: "Регенерировать", onClick: () => {} },
+                    { Icon: ThumbsUp, title: "Нравится", onClick: () => {} },
+                    { Icon: ThumbsDown, title: "Не нравится", onClick: () => {} },
+                  ].map(({ Icon, title, onClick }) => (
+                    <button 
+                      key={title} 
+                      onClick={onClick}
+                      className="w-7 h-7 rounded-md flex items-center justify-center transition-colors hover:bg-secondary" 
+                      style={{ color: c.textSecondary }} 
+                      title={title}
+                    >
+                      <Icon className="w-3.5 h-3.5" />
+                    </button>
+                  ))}
+                </div>
+
             )}
           </div>
         </div>
