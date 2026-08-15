@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState, useMemo, useRef } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -18,7 +18,8 @@ import {
   Pause,
   Music,
   Eye,
-  MessageSquare
+  MessageSquare,
+  UserPlus
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { buildAuthHref } from "@/lib/authRedirect";
@@ -95,6 +96,7 @@ function AudioPlayer({ url }: { url: string }) {
 
 function PromptDetailPage() {
   const { id } = Route.useParams();
+  const navigate = useNavigate();
   const { user, isAuthed, profile } = useAuth();
   const queryClient = useQueryClient();
   const [commentText, setCommentText] = useState("");
@@ -263,6 +265,93 @@ function PromptDetailPage() {
       return [];
     },
   });
+
+  // 7. Load Sidebar Categories & Authors
+  const { data: allPublishedPosts } = useQuery({
+    queryKey: ["community-all-published-metadata"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("posts")
+        .select("type, provider_id")
+        .eq("status", "published");
+      if (error) throw error;
+      return data || [];
+    },
+  });
+
+  const categoryCounts = useMemo(() => {
+    const counts: Record<string, number> = {
+      all: allPublishedPosts?.length || 0,
+      text: 0,
+      image: 0,
+      video: 0,
+      audio: 0,
+      agent: 0
+    };
+    
+    allPublishedPosts?.forEach(p => {
+      if (counts[p.type] !== undefined) {
+        counts[p.type]++;
+      }
+    });
+    
+    return counts;
+  }, [allPublishedPosts]);
+
+  const categories = [
+    { label: "Все", value: "all", count: categoryCounts.all },
+    { label: "Текст", value: "text", count: categoryCounts.text },
+    { label: "Изображения", value: "image", count: categoryCounts.image },
+    { label: "Видео", value: "video", count: categoryCounts.video },
+    { label: "Аудио", value: "audio", count: categoryCounts.audio },
+    { label: "Агенты", value: "agent", count: categoryCounts.agent },
+  ];
+
+  const { data: allFollowsData } = useQuery({
+    queryKey: ["community-all-follows"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("follows")
+        .select("following_id");
+      if (error) throw error;
+      return data || [];
+    },
+  });
+
+  const topAuthorIds = useMemo(() => {
+    if (!allFollowsData) return [];
+    const counts: Record<string, number> = {};
+    allFollowsData.forEach(f => {
+      counts[f.following_id] = (counts[f.following_id] || 0) + 1;
+    });
+    return Object.keys(counts).sort((a, b) => counts[b] - counts[a]).slice(0, 5);
+  }, [allFollowsData]);
+
+  const { data: topAuthorsProfiles } = useQuery({
+    queryKey: ["community-top-authors-profiles", topAuthorIds],
+    enabled: topAuthorIds.length > 0,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("id, display_name, username, avatar_url")
+        .in("id", topAuthorIds);
+      if (error) throw error;
+      return data || [];
+    },
+  });
+
+  const enrichedTopAuthors = useMemo(() => {
+    if (!topAuthorsProfiles || !allFollowsData) return [];
+    return topAuthorIds.map(id => {
+      const profile = topAuthorsProfiles.find(p => p.id === id);
+      const followersCount = allFollowsData.filter(f => f.following_id === id).length;
+      return { ...profile, followers_count: followersCount };
+    }).filter(a => !!a.id);
+  }, [topAuthorsProfiles, allFollowsData, topAuthorIds]);
+
+  const handleTypeChange = (type: string) => {
+    navigate({ to: "/community", search: { type: type as any, provider: 'all', sort: 'new', page: 0 } });
+  };
 
   // Mutations
   const likeMutation = useMutation({
@@ -632,44 +721,107 @@ function PromptDetailPage() {
       <SimilarFromCatalog category={post.type as PromptCategory} />
     </div>
 
-    {/* Sidebar Column */}
-    <div className="lg:w-[30%]">
-      <aside className="space-y-8 lg:sticky lg:top-24">
-        {/* Similar Community Posts Sidebar Block */}
-        {sidebarSimilar && sidebarSimilar.length > 0 && (
-          <div className="rounded-3xl bg-card border border-border p-6">
-            <h3 className="text-[17px] font-bold mb-5">Похожее</h3>
-            <div className="space-y-5">
-              {sidebarSimilar.map((sPost) => (
-                <Link 
-                  key={sPost.id} 
-                  to="/community/$id" 
-                  params={{ id: sPost.id }}
-                  className="block group"
-                >
-                  <div className="text-[13px] font-medium leading-snug line-clamp-2 mb-2 group-hover:text-primary transition-colors">
-                    {sPost.title}
-                  </div>
-                  <div className="flex items-center gap-3 text-[11px] text-muted-foreground">
-                    <div className="flex items-center gap-1">
-                      <Heart size={12} />
-                      <span>{sPost.likes_count}</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Eye size={12} />
-                      <span>{sPost.views || 0}</span>
-                    </div>
-                  </div>
-                </Link>
-              ))}
+        {/* Sidebar Column */}
+        <aside className="lg:w-[30%]">
+          <div className="flex flex-col gap-6 lg:sticky lg:top-24">
+            {/* Categories Block */}
+            <div className="rounded-2xl bg-muted/30 border border-border p-5">
+              <h4 className="font-bold mb-4 text-[16px]">Категории</h4>
+              <div className="flex flex-col gap-1">
+                {categories.map((cat) => (
+                  <button
+                    key={cat.value}
+                    onClick={() => handleTypeChange(cat.value)}
+                    className={cn(
+                      "flex items-center justify-between py-2 px-3 rounded-xl transition-colors text-left text-[14px]",
+                      "hover:bg-muted text-muted-foreground hover:text-foreground"
+                    )}
+                  >
+                    <span>{cat.label}</span>
+                    <span className="text-[12px] opacity-60 bg-muted px-2 py-0.5 rounded-full">
+                      {cat.count}
+                    </span>
+                  </button>
+                ))}
+              </div>
             </div>
+
+            {/* Top Authors Block */}
+            <div className="rounded-2xl bg-muted/30 border border-border p-5">
+              <h4 className="font-bold mb-4 text-[16px]">Топ авторов</h4>
+              <div className="flex flex-col gap-4">
+                {enrichedTopAuthors.map((author, idx) => (
+                  <Link
+                    key={author.id}
+                    to="/u/$username"
+                    params={{ username: author.username! }}
+                    className="flex items-center gap-3 group"
+                  >
+                    <div className="text-[13px] font-bold text-muted-foreground w-4">
+                      {idx + 1}
+                    </div>
+                    <div className="w-9 h-9 rounded-full bg-secondary border border-border flex items-center justify-center text-[12px] font-bold overflow-hidden shrink-0">
+                      {author.avatar_url ? (
+                        <img src={author.avatar_url} alt="" className="w-full h-full object-cover" />
+                      ) : (
+                        (author.display_name || "U").charAt(0).toUpperCase()
+                      )}
+                    </div>
+                    <div className="min-w-0">
+                      <div className="font-semibold text-[14px] text-foreground group-hover:text-primary transition-colors truncate">
+                        {author.display_name}
+                      </div>
+                      <div className="text-[12px] text-muted-foreground">
+                        {author.followers_count} {author.followers_count === 1 ? 'подписчик' : 'подписчиков'}
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+              <Link 
+                to="/community" 
+                search={{ type: 'all', provider: 'all', sort: 'new', page: 0 }}
+                className="block text-center text-primary text-[13px] font-medium mt-6 hover:underline"
+              >
+                Все авторы
+              </Link>
+            </div>
+
+            {/* Similar Community Posts Sidebar Block */}
+            {sidebarSimilar && sidebarSimilar.length > 0 && (
+              <div className="rounded-2xl bg-muted/30 border border-border p-5">
+                <h4 className="font-bold mb-4 text-[16px]">Похожее</h4>
+                <div className="space-y-5">
+                  {sidebarSimilar.map((sPost) => (
+                    <Link 
+                      key={sPost.id} 
+                      to="/community/$id" 
+                      params={{ id: sPost.id }}
+                      className="block group"
+                    >
+                      <div className="text-[13px] font-medium leading-snug line-clamp-2 mb-2 group-hover:text-primary transition-colors">
+                        {sPost.title}
+                      </div>
+                      <div className="flex items-center gap-3 text-[11px] text-muted-foreground">
+                        <div className="flex items-center gap-1">
+                          <Heart size={12} />
+                          <span>{sPost.likes_count}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Eye size={12} />
+                          <span>{sPost.views || 0}</span>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
-        )}
-      </aside>
+        </aside>
+      </div>
     </div>
-  </div>
-</div>
-);
+  );
 }
 
 
