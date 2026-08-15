@@ -12,13 +12,16 @@ import {
   User, 
   Clock,
   AlertCircle,
-  Loader2
+  Loader2,
+  ArrowRight
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { buildAuthHref } from "@/lib/authRedirect";
 import { useAuth } from "@/contexts/AuthContext";
 import { CopyPromptButton } from "@/components/prompts/CopyPromptButton";
+import { CatalogCard } from "@/components/prompts/CatalogCard";
 import { writePromptHandoff, CATEGORY_ROUTE } from "@/lib/promptHandoff";
+import { promptItems } from "@/data/prompts";
 import { format } from "date-fns";
 import { ru } from "date-fns/locale";
 import { toast } from "sonner";
@@ -467,7 +470,7 @@ function PromptDetailPage() {
           <div className="bg-muted/30 border border-dashed border-border rounded-2xl p-8 text-center">
             <p className="text-muted-foreground mb-4">Войдите, чтобы оставлять комментарии</p>
             <Link
-              to={buildAuthHref(window.location.pathname)}
+              to={buildAuthHref(typeof window !== 'undefined' ? window.location.pathname : `/community/${id}`)}
               className="inline-flex items-center h-10 px-6 rounded-full bg-primary text-white font-semibold hover:bg-primary/90 transition-all"
             >
               Войти
@@ -475,7 +478,45 @@ function PromptDetailPage() {
           </div>
         )}
       </section>
+
+      {/* Similar from Catalog */}
+      <SimilarFromCatalog category={post.type as PromptCategory} />
     </div>
+  );
+}
+
+function SimilarFromCatalog({ category }: { category: PromptCategory }) {
+  const similarItems = useMemo(() => {
+    return promptItems
+      .filter(item => item.category === category && item.status === 'published')
+      .slice(0, 4);
+  }, [category]);
+
+  if (similarItems.length < 2) return null;
+
+  return (
+    <section className="mt-16">
+      <div className="flex items-center justify-between mb-8">
+        <h2 className="text-[20px] font-bold">Похожее из каталога ERA2</h2>
+        <Link 
+          to="/prompts" 
+          className="text-[14px] text-muted-foreground hover:text-primary transition-colors flex items-center gap-1.5 font-medium"
+        >
+          Весь каталог
+          <ArrowRight size={14} />
+        </Link>
+      </div>
+      
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+        {similarItems.map((item, idx) => (
+          <CatalogCard 
+            key={`${item.topicSlug}-${item.slug}`} 
+            item={item} 
+            index={idx}
+          />
+        ))}
+      </div>
+    </section>
   );
 }
 
