@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { RequireAuth } from "@/components/auth/RequireAuth";
 import { useAuth } from "@/contexts/AuthContext";
@@ -20,11 +20,22 @@ import {
   Bot, 
   FileText,
   ExternalLink,
-  MessageSquare,
   Eye
 } from "lucide-react";
 import { format } from "date-fns";
 import { ru } from "date-fns/locale";
+
+type PostMedia = {
+  type: 'image' | 'video' | 'audio';
+  src: string;
+};
+
+type Author = {
+  id: string;
+  username: string;
+  display_name: string | null;
+  avatar_url: string | null;
+};
 
 export const Route = createFileRoute("/admin/moderation")({
   component: () => (
@@ -61,14 +72,14 @@ function ModerationPage() {
   const { data: authors } = useQuery({
     queryKey: ['admin-authors', posts?.map(p => p.author_id)],
     queryFn: async () => {
-      if (!posts || posts.length === 0) return {};
+      if (!posts || posts.length === 0) return {} as Record<string, Author>;
       const authorIds = Array.from(new Set(posts.map(p => p.author_id)));
       const { data, error } = await supabase
         .from('profiles')
         .select('id, username, display_name, avatar_url')
         .in('id', authorIds);
       if (error) throw error;
-      return (data || []).reduce((acc, profile) => ({ ...acc, [profile.id]: profile }), {});
+      return (data || []).reduce((acc, profile) => ({ ...acc, [profile.id]: profile }), {} as Record<string, Author>);
     },
     enabled: !!posts && posts.length > 0
   });
@@ -163,7 +174,7 @@ function ModerationPage() {
         <div className="space-y-4">
           {posts.map(post => {
             const author = authors?.[post.author_id];
-            const media = Array.isArray(post.media) ? post.media : [];
+            const media = (Array.isArray(post.media) ? post.media : []) as unknown as PostMedia[];
             const isExpanded = expandedId === post.id;
             
             return (
@@ -289,7 +300,7 @@ function ModerationPage() {
                     {/* Media stack */}
                     {media.length > 0 && (
                       <div className="flex flex-col gap-4 max-w-[600px]">
-                        {media.map((item: any, idx: number) => (
+                        {media.map((item: PostMedia, idx: number) => (
                           <div key={idx} className="rounded-xl overflow-hidden border border-border bg-muted/20">
                             {item.type === 'image' && (
                               <img src={item.src} className="w-full h-auto" alt="" />
@@ -325,12 +336,12 @@ function ModerationPage() {
                       </div>
                       <div>
                         <span className="text-muted-foreground block">Ссылка</span>
-                        <Link 
-                          to={`/community/${post.id}`} 
+                        <a 
+                          href={`/community/${post.id}`} 
                           className="text-primary hover:underline flex items-center gap-1"
                         >
                           Открыть страницу <ExternalLink className="h-3 w-3" />
-                        </Link>
+                        </a>
                       </div>
                     </div>
                     
