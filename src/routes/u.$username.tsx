@@ -100,6 +100,14 @@ function PostCard({ post }: { post: EnrichedPost }) {
 }
 
 function AuthorProfilePage() {
+  return (
+    <Layout>
+      <AuthorProfileContent />
+    </Layout>
+  );
+}
+
+function AuthorProfileContent() {
   const { username } = Route.useParams();
   const navigate = useNavigate();
   const { user, isAuthed } = useAuth();
@@ -578,3 +586,5 @@ function AuthorProfilePage() {
     </div>
   );
 }
+
+import { Layout } from "@/components/layout/Layout";
