@@ -122,7 +122,7 @@ function AuthorProfilePage() {
   const authorId = author?.id;
 
   // 2. Fetch Author's Posts
-  const { data: posts, isLoading: isPostsLoading } = useQuery({
+  const { data: posts, isLoading: isPostsLoading } = useQuery<EnrichedPost[]>({
     queryKey: ["author-posts", authorId],
     enabled: !!authorId,
     queryFn: async () => {
@@ -139,11 +139,11 @@ function AuthorProfilePage() {
         const pids = data.map(p => p.id);
         const { data: likes } = await supabase.from("likes").select("post_id").in("post_id", pids);
         return data.map(p => ({
-          ...p,
+          ...(p as any),
           likes_count: likes?.filter(l => l.post_id === p.id).length || 0
-        }));
+        })) as EnrichedPost[];
       }
-      return data || [];
+      return (data || []) as EnrichedPost[];
     },
   });
 
