@@ -733,6 +733,8 @@ return (
   </div>
 </div>
 );
+}
+
 function SimilarFromCatalog({ category }: { category: PromptCategory }) {
   const similarItems = useMemo(() => {
     return promptItems
