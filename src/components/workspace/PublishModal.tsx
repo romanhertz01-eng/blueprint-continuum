@@ -184,30 +184,39 @@ export function PublishModal({ open, onOpenChange, initialData }: PublishModalPr
             </div>
           </div>
 
-          <DialogFooter className="pt-4 flex sm:flex-row gap-2">
-            <Button
-              type="button"
-              variant="ghost"
-              className="flex-1 rounded-xl"
-              onClick={() => onOpenChange(false)}
-              disabled={isSubmitting}
-            >
-              Отмена
-            </Button>
-            <Button
-              type="submit"
-              className="flex-1 rounded-xl font-semibold"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Публикация...
-                </>
-              ) : (
-                "Опубликовать"
+          <DialogFooter className="pt-4 flex flex-col sm:flex-row gap-2">
+            <div className="w-full flex flex-col gap-4">
+              {error && (
+                <div className="text-sm text-destructive font-medium px-1 animate-in fade-in slide-in-from-top-1">
+                  {error}
+                </div>
               )}
-            </Button>
+              <div className="flex gap-2 w-full">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  className="flex-1 rounded-xl"
+                  onClick={() => onOpenChange(false)}
+                  disabled={isSubmitting}
+                >
+                  Отмена
+                </Button>
+                <Button
+                  type="submit"
+                  className="flex-1 rounded-xl font-semibold"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Публикуем...
+                    </>
+                  ) : (
+                    "Опубликовать"
+                  )}
+                </Button>
+              </div>
+            </div>
           </DialogFooter>
         </form>
       </DialogContent>
