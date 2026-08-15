@@ -455,7 +455,7 @@ function ChatMessages({ messages, isGenerating, currentModel, currentProviderId,
     <div className="max-w-[780px] mx-auto py-6 px-4 space-y-5">
       {messages.map((msg) => (
 
-        <div key={msg.id} className={cn("flex gap-3", msg.role === "user" ? "justify-end" : "justify-start")}>
+        <div key={msg.id} className={cn("flex gap-3 group", msg.role === "user" ? "justify-end" : "justify-start")}>
           {msg.role === "assistant" && (
             <ModelIcon providerId={msg.providerId || currentProviderId} size={24} className="mt-1" />
           )}
