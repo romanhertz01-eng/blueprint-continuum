@@ -1,10 +1,10 @@
 import { createFileRoute, Link, useSearch } from "@tanstack/react-router";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { 
   Plus, Heart, MessageSquare, Image as ImageIcon, Video, Music, 
-  User, LayoutGrid, UserPlus, Bookmark, Share2, Eye
+  User, LayoutGrid, UserPlus, Bookmark, Share2, Eye, Play, Pause
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { ru } from "date-fns/locale";
@@ -15,6 +15,7 @@ import { z } from "zod";
 
 const searchSchema = z.object({
   type: z.enum(["all", "text", "image", "video", "audio", "agent"]).optional().default("all"),
+  provider: z.string().optional().default("all"),
   sort: z.enum(["new", "popular"]).optional().default("new"),
   page: z.number().optional().default(0),
 });
@@ -30,6 +31,63 @@ export const Route = createFileRoute("/community")({
   }),
 });
 
+function AudioPlayer({ url }: { url: string }) {
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+
+  const togglePlay = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (audioRef.current) {
+      if (isPlaying) audioRef.current.pause();
+      else audioRef.current.play();
+      setIsPlaying(!isPlaying);
+    }
+  };
+
+  const formatTime = (time: number) => {
+    const min = Math.floor(time / 60);
+    const sec = Math.floor(time % 60);
+    return `${min}:${sec.toString().padStart(2, '0')}`;
+  };
+
+  return (
+    <div className="flex items-center gap-4 bg-muted/20 rounded-2xl p-3 border border-border/50">
+      <div className="relative w-[88px] h-[88px] rounded-xl bg-gradient-to-br from-primary/80 to-primary flex items-center justify-center shrink-0 overflow-hidden group/audio">
+        <Music size={32} className="text-white" />
+        <button 
+          onClick={togglePlay}
+          className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 group-hover/audio:opacity-100 transition-opacity"
+        >
+          {isPlaying ? <Pause size={24} className="text-white fill-current" /> : <Play size={24} className="text-white fill-current ml-1" />}
+        </button>
+      </div>
+      <div className="flex-1 min-w-0 pr-2">
+        <audio 
+          ref={audioRef} 
+          src={url} 
+          onTimeUpdate={() => setCurrentTime(audioRef.current?.currentTime || 0)}
+          onLoadedMetadata={() => setDuration(audioRef.current?.duration || 0)}
+          onEnded={() => setIsPlaying(false)}
+          className="hidden" 
+        />
+        <div className="relative w-full h-1.5 bg-muted rounded-full overflow-hidden mb-2">
+          <div 
+            className="absolute left-0 top-0 h-full bg-primary transition-all duration-100"
+            style={{ width: `${(currentTime / duration) * 100}%` }}
+          />
+        </div>
+        <div className="flex justify-between text-[11px] text-muted-foreground font-medium">
+          <span>{formatTime(currentTime)}</span>
+          <span>{formatTime(duration)}</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function PostCard({ post }: { post: any }) {
   const media = post.media as any[];
   
@@ -43,17 +101,29 @@ function PostCard({ post }: { post: any }) {
     navigator.clipboard.writeText(`${window.location.origin}/community/${post.id}`);
   };
 
+  const getPostGradient = (id: string) => {
+    const colors = [
+      'from-blue-500/20 to-indigo-500/20',
+      'from-purple-500/20 to-pink-500/20',
+      'from-emerald-500/20 to-teal-500/20',
+      'from-orange-500/20 to-amber-500/20',
+      'from-rose-500/20 to-purple-500/20'
+    ];
+    const index = id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % colors.length;
+    return colors[index];
+  };
+
   return (
-    <div className="rounded-2xl bg-card border border-border p-5 flex flex-col gap-4 w-full">
+    <div className="rounded-2xl bg-card border border-border p-4 flex flex-col gap-3.5 w-full">
       {/* Author Header */}
       <div className="flex items-center justify-between">
         <Link
           to="/u/$username"
           params={{ username: post.author?.username || "user" }}
-          className="flex items-center gap-3 group/author"
+          className="flex items-center gap-2.5 group/author"
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="w-10 h-10 rounded-full bg-secondary border border-border flex items-center justify-center text-sm font-bold overflow-hidden shrink-0">
+          <div className="w-8 h-8 rounded-full bg-secondary border border-border flex items-center justify-center text-[10px] font-bold overflow-hidden shrink-0">
             {post.author?.avatar_url ? (
               <img src={post.author.avatar_url} alt="" className="w-full h-full object-cover" />
             ) : (
@@ -61,23 +131,23 @@ function PostCard({ post }: { post: any }) {
             )}
           </div>
           <div className="min-w-0">
-            <div className="font-semibold text-foreground group-hover/author:text-primary transition-colors truncate">
+            <div className="font-semibold text-[14px] text-foreground group-hover/author:text-primary transition-colors truncate">
               {post.author?.display_name || "User"}
             </div>
-            <div className="text-[12px] text-muted-foreground">
+            <div className="text-[11px] text-muted-foreground">
               {formattedDate}
             </div>
           </div>
         </Link>
         
-        <button className="p-2 rounded-full hover:bg-muted text-muted-foreground transition-colors shrink-0">
-          <UserPlus size={20} />
+        <button className="p-1.5 rounded-full hover:bg-muted text-muted-foreground transition-colors shrink-0">
+          <UserPlus size={16} />
         </button>
       </div>
 
-      {/* Category */}
+      {/* Category Tag */}
       <div>
-        <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-[12px] font-medium border border-primary/20">
+        <span className="px-2.5 py-0.5 rounded-full bg-primary/10 text-primary text-[11px] font-medium border border-primary/20">
           {post.type === 'text' ? 'Текст' : 
            post.type === 'image' ? 'Изображение' : 
            post.type === 'video' ? 'Видео' : 
@@ -88,7 +158,7 @@ function PostCard({ post }: { post: any }) {
 
       {/* Title */}
       <Link to="/community/$id" params={{ id: post.id }}>
-        <h3 className="text-[20px] font-bold text-foreground leading-tight hover:text-primary transition-colors">
+        <h3 className="text-[17px] font-bold text-foreground leading-tight hover:text-primary transition-colors">
           {post.title}
         </h3>
       </Link>
@@ -100,43 +170,48 @@ function PostCard({ post }: { post: any }) {
             {media.map((item, idx) => (
               <div key={idx} className="w-full">
                 {item.type === 'video' ? (
-                  <video src={item.url} controls className="w-full aspect-video object-cover" />
+                  <video src={item.url} controls className="w-full max-h-[420px] object-cover" />
                 ) : item.type === 'audio' ? (
-                  <audio src={item.url} controls className="w-full p-2" />
+                  <AudioPlayer url={item.url} />
                 ) : (
-                  <img src={item.url} alt="" className="w-full h-auto object-cover" />
+                  <img src={item.url} alt="" className="w-full max-h-[420px] object-cover" />
                 )}
               </div>
             ))}
           </div>
         ) : (
-          <div className="bg-muted/30 p-4 italic text-muted-foreground text-[14px] line-clamp-3 whitespace-pre-wrap rounded-xl">
-            {post.prompt_ru}
+          <div className={cn(
+            "p-5 text-foreground font-medium text-[15px] leading-relaxed whitespace-pre-wrap rounded-xl bg-gradient-to-br min-h-[140px] flex flex-col justify-center",
+            getPostGradient(post.id)
+          )}>
+            <div className="line-clamp-2">
+              {post.prompt_ru}
+            </div>
           </div>
         )}
       </Link>
 
       {/* Actions */}
-      <div className="flex items-center gap-2 pt-2 flex-wrap">
-        <button className="flex items-center gap-1.5 bg-muted/50 rounded-full px-3 py-1.5 text-[13px] font-medium hover:bg-muted transition-colors">
-          <Heart size={16} />
+      <div className="flex items-center gap-2 pt-1 flex-wrap">
+        <button className="flex items-center gap-1.5 bg-muted/50 rounded-full px-3 py-1.5 text-[12px] font-medium hover:bg-muted transition-colors">
+          <Heart size={15} />
           <span>{post.likes_count || 0}</span>
         </button>
-        <button className="flex items-center gap-1.5 bg-muted/50 rounded-full px-3 py-1.5 text-[13px] font-medium hover:bg-muted transition-colors">
-          <MessageSquare size={16} />
+        <button className="flex items-center gap-1.5 bg-muted/50 rounded-full px-3 py-1.5 text-[12px] font-medium hover:bg-muted transition-colors">
+          <MessageSquare size={15} />
           <span>{post.comments_count || 0}</span>
         </button>
         <button className="p-2 bg-muted/50 rounded-full hover:bg-muted transition-colors">
-          <Bookmark size={16} />
+          <Bookmark size={15} />
         </button>
         <button 
           onClick={handleShare}
           className="p-2 bg-muted/50 rounded-full hover:bg-muted transition-colors"
         >
-          <Share2 size={16} />
+          <Share2 size={15} />
         </button>
-        <div className="flex items-center gap-1.5 bg-muted/50 rounded-full px-3 py-1.5 text-[13px] font-medium ml-auto">
-          <Eye size={16} />
+        <div className="flex items-center gap-1.5 bg-muted/50 rounded-full px-3 py-1.5 text-[12px] font-medium ml-auto">
+          <Eye size={15} />
           <span>{post.views || 0}</span>
         </div>
       </div>
