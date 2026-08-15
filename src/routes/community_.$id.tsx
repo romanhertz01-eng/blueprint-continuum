@@ -212,13 +212,14 @@ function PromptDetailContent() {
 
   // 5. Load other posts (Other Publications)
   const { data: otherPosts } = useQuery({
-    queryKey: ["community-other-posts", id],
+    queryKey: ["community-other-posts", id, post?.type],
     enabled: !!post,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("posts")
         .select("*")
         .eq("status", "published")
+        .eq("type", post!.type)
         .neq("id", id)
         .order("created_at", { ascending: false })
         .limit(5);
@@ -537,9 +538,9 @@ function PromptDetailContent() {
       {media.length > 0 && (
         <div className="space-y-4 mb-6">
           {media.map((item, idx) => (
-            <div key={idx} className="max-w-[640px] rounded-xl overflow-hidden bg-muted border border-border mx-auto md:mx-0">
+            <div key={idx} className="w-full max-w-[560px] mx-auto rounded-2xl overflow-hidden bg-muted">
               {item.type === 'image' && (
-                <img src={item.url} alt="" className="w-full max-h-[520px] object-contain" />
+                <img src={item.url} alt="" className="w-full h-auto block" />
               )}
               {item.type === 'video' && (
                 <video src={item.url} controls className="w-full aspect-video object-cover" poster={item.poster} />
@@ -706,7 +707,7 @@ function PromptDetailContent() {
       </section>
 
       {/* Other Publications Section */}
-      {otherPosts && otherPosts.length > 0 && (
+      {otherPosts && otherPosts.length >= 2 && (
         <section className="mt-6 pt-6 border-t border-border">
           <h2 className="text-[18px] font-bold mb-6">Другие публикации</h2>
           <div className="flex flex-col gap-4">
