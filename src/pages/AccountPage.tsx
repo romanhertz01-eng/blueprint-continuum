@@ -459,17 +459,10 @@ export default function AccountPage() {
           </div>
         )}
 
-                >
-                  Удалить аккаунт
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* 6. History tab */}
+        {/* 7. History tab */}
         {tab === "history" && (
           <div className={card}>
+
             <div className="overflow-hidden rounded-xl border border-border">
               <table className="w-full text-[13px]">
                 <thead>

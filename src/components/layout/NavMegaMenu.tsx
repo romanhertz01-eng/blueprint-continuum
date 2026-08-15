@@ -131,6 +131,7 @@ export const TABS: TabConfig[] = [
       { name: "Gemini", desc: "От Google", publicHref: "/tools/gemini" },
       { name: "DeepSeek", desc: "Reasoning модель", publicHref: "/tools/deepseek" },
     ],
+  },
   {
     key: "community", label: "Сообщество", route: "/community", publicRoute: "/community",
   },
