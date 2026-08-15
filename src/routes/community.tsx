@@ -211,7 +211,11 @@ function Sidebar({
             </Link>
           ))}
         </div>
-        <Link to="/community" className="block text-center text-primary text-[13px] font-medium mt-6 hover:underline">
+        <Link 
+          to="/community" 
+          search={{ type: 'all', sort: 'new', page: 0 }}
+          className="block text-center text-primary text-[13px] font-medium mt-6 hover:underline"
+        >
           Все авторы
         </Link>
       </div>
