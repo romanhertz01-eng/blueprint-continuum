@@ -164,25 +164,34 @@ function PostCard({ post }: { post: any }) {
       </Link>
 
       {/* Media or Prompt Preview */}
-      <Link to="/community/$id" params={{ id: post.id }} className="block overflow-hidden rounded-xl border border-border/50">
+      <Link to="/community/$id" params={{ id: post.id }} className="block overflow-hidden rounded-xl">
         {media && media.length > 0 ? (
           <div className="flex flex-col gap-2">
             {media.map((item, idx) => (
               <div key={idx} className="w-full">
                 {item.type === 'video' ? (
-                  <video src={item.url} controls className="w-full max-h-[420px] object-cover" />
+                  <video 
+                    src={item.url} 
+                    controls 
+                    className="w-full aspect-video object-cover rounded-xl"
+                    poster={item.thumbnail_url}
+                  />
                 ) : item.type === 'audio' ? (
                   <AudioPlayer url={item.url} />
                 ) : (
-                  <img src={item.url} alt="" className="w-full max-h-[420px] object-cover" />
+                  <img 
+                    src={item.url} 
+                    alt="" 
+                    className="w-full rounded-xl object-cover max-h-[560px]" 
+                  />
                 )}
               </div>
             ))}
           </div>
         ) : (
           <div className={cn(
-            "p-5 text-foreground font-medium text-[15px] leading-relaxed whitespace-pre-wrap rounded-xl bg-gradient-to-br min-h-[140px] flex flex-col justify-center",
-            getPostGradient(post.id)
+            "w-full aspect-[16/10] text-white font-medium text-[15px] leading-relaxed whitespace-pre-wrap rounded-xl bg-gradient-to-br flex items-center justify-center p-8 text-center",
+            getPostGradient(post.id).replace(/\/20/g, '/80') // Darker gradient for text-on-gradient
           )}>
             <div className="line-clamp-2">
               {post.prompt_ru}
