@@ -30,6 +30,7 @@ export function PublishModal({ open, onOpenChange, initialData }: PublishModalPr
   const [prompt, setPrompt] = useState(initialData.prompt);
   const [category, setCategory] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (open) {
