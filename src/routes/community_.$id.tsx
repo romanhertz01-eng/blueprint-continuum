@@ -230,7 +230,7 @@ function PromptDetailPage() {
         <p className="text-muted-foreground mb-8">Возможно, он был удален или еще находится на модерации.</p>
         <Link 
           to="/community" 
-          search={{ type: 'all', sort: 'new', page: 0 }}
+          search={{ type: 'all', provider: 'all', sort: 'new', page: 0 }}
           className="text-primary font-medium hover:underline"
         >
           Вернуться в сообщество
@@ -249,7 +249,7 @@ function PromptDetailPage() {
         <ChevronRight size={14} />
         <Link 
           to="/community" 
-          search={{ type: 'all', sort: 'new', page: 0 }}
+          search={{ type: 'all', provider: 'all', sort: 'new', page: 0 }}
           className="hover:text-foreground transition-colors"
         >
           Сообщество

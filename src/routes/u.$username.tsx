@@ -210,7 +210,7 @@ function AuthorProfilePage() {
         <p className="text-muted-foreground mb-8">Возможно, ссылка неверна или профиль был удален.</p>
         <Link 
           to="/community" 
-          search={{ type: 'all', sort: 'new', page: 0 }}
+          search={{ type: 'all', provider: 'all', sort: 'new', page: 0 }}
           className="text-primary font-medium hover:underline"
         >
           Вернуться в сообщество

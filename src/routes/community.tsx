@@ -288,7 +288,7 @@ function Sidebar({
         </div>
         <Link 
           to="/community" 
-          search={{ type: 'all', sort: 'new', page: 0 }}
+          search={{ type: 'all', provider: 'all', sort: 'new', page: 0 }}
           className="block text-center text-primary text-[13px] font-medium mt-6 hover:underline"
         >
           Все авторы
