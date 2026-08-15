@@ -2,7 +2,7 @@ import { ORIGIN } from "@/lib/origin";
 import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
 import { createIsomorphicFn } from "@tanstack/react-start";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ThemeProvider } from "@/contexts/ThemeContext";
+import { ThemeProvider, useTheme } from "@/contexts/ThemeContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { CreditsProvider } from "@/hooks/useCredits";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -13,6 +13,7 @@ import { CopyToastProvider } from "@/components/shared/CopyToast";
 import { CornerPromo } from "@/components/shared/CornerPromo";
 import { DailyCheckIn } from "@/components/shared/DailyCheckIn";
 
+import { Toaster } from "sonner";
 import appCss from "../styles.css?url";
 
 function NotFoundComponent() {
@@ -137,8 +138,18 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
-        <AuthProvider>
-          <CreditsProvider>
+        <RootWithToaster />
+      </ThemeProvider>
+    </QueryClientProvider>
+  );
+}
+
+function RootWithToaster() {
+  const { theme } = useTheme();
+
+  return (
+    <AuthProvider>
+      <CreditsProvider>
             <TooltipProvider>
               <Layout>
                 <ErrorBoundary>
@@ -149,10 +160,9 @@ function RootComponent() {
               <CopyToastProvider />
               <CornerPromo />
               <DailyCheckIn />
+              <Toaster position="bottom-right" theme={theme as "light" | "dark" | "system"} />
             </TooltipProvider>
           </CreditsProvider>
         </AuthProvider>
-      </ThemeProvider>
-    </QueryClientProvider>
   );
 }
