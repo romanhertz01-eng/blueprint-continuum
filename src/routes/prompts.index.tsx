@@ -180,8 +180,30 @@ function PromptsHub() {
       // Rhythm: shelf after row 2, 5, 8... banner after row 4, 9...
       // Real row index starts at 0. Row index 1 is the 2nd row.
       
-      // Video shelf after row 2 (rowIndex === 1)
-      if (rowIndex === 1) {
+      // Community shelf after row 2 (rowIndex === 1)
+      if (rowIndex === COMMUNITY_SHELF_INDEX) {
+        elements.push(
+          <CommunityShelf key="community-shelf" />
+        );
+      }
+
+      // Community banner after row 4 (rowIndex === 3)
+      if (rowIndex === COMMUNITY_BANNER_INDEX) {
+        elements.push(
+          <EditorialBanner 
+            key="community-banner"
+            label="СООБЩЕСТВО"
+            title="Поделитесь своим промптом"
+            subtitle="Опубликуйте работу — её увидят пользователи ERA2"
+            ctaLabel="Добавить промпт"
+            bgSrc="/community/02.jpg"
+            ctaHref={isAuthed ? '/community/new' : buildAuthHref('/community/new') as any}
+          />
+        );
+      }
+
+      // Video shelf after row 5 (rowIndex === 4)
+      if (rowIndex === 4) {
         elements.push(
           <VideoPromptsShelf 
             key="video-shelf-fixed" 
