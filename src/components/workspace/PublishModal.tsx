@@ -106,16 +106,7 @@ export function PublishModal({ open, onOpenChange, initialData }: PublishModalPr
         });
 
       if (insertError) throw insertError;
-
-      toast("Промпт отправлен на проверку — появится в сообществе после модерации", {
-        description: "Это может занять некоторое время",
-        duration: 5000,
-        action: {
-          label: "Мои промпты",
-          onClick: () => window.location.href = "/account"
-        }
-      });
-      onOpenChange(false);
+      setIsSuccess(true);
     } catch (err: any) {
       console.error("Error publishing post:", err);
       const errorMsg = err.message || 'попробуйте позже';
