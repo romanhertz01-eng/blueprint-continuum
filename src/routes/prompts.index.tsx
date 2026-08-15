@@ -1261,7 +1261,7 @@ function CommunityShelf() {
                 
                 <Link
                   to="/u/$username"
-                  params={{ username: post.author?.username || 'user' }}
+                  params={{ username: (post.author as any)?.username || 'user' }}
                   className="flex items-center gap-2 group/author"
                 >
                   <div className="w-5 h-5 rounded-full bg-secondary border border-border flex items-center justify-center text-[10px] font-bold overflow-hidden shrink-0">
