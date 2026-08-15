@@ -110,30 +110,35 @@ const AuthPage = () => {
       });
 
       if (signInError) {
-        // If user doesn't exist, sign up
-        if (signInError.message.toLowerCase().includes("invalid login credentials")) {
-          const { error: signUpError } = await supabase.auth.signUp({
-            email: demoEmail,
-            password: demoPassword,
-            options: {
-              data: {
-                display_name: demoName,
-              }
+        // If user doesn't exist or not confirmed, try to sign up
+        // Note: With auto_confirm_email: true, signUp will confirm immediately
+        const { error: signUpError } = await supabase.auth.signUp({
+          email: demoEmail,
+          password: demoPassword,
+          options: {
+            data: {
+              display_name: demoName,
             }
-          });
+          }
+        });
 
-          if (signUpError) throw signUpError;
-
-          // After successful signup, sign in
-          const { error: secondSignInError } = await supabase.auth.signInWithPassword({
-            email: demoEmail,
-            password: demoPassword,
-          });
-
-          if (secondSignInError) throw secondSignInError;
-        } else {
-          throw signInError;
+        if (signUpError) {
+          // If user already exists but we couldn't sign in (e.g. unconfirmed from previous settings)
+          // we can't do much but re-throw or handle specific cases.
+          // However, signUp on an existing user returns data without error usually, 
+          // or a "User already registered" error.
+          if (!signUpError.message.toLowerCase().includes("already registered")) {
+            throw signUpError;
+          }
         }
+
+        // After signup attempt, try sign in one last time
+        const { error: secondSignInError } = await supabase.auth.signInWithPassword({
+          email: demoEmail,
+          password: demoPassword,
+        });
+
+        if (secondSignInError) throw secondSignInError;
       }
       // Redirect handled by useEffect
     } catch (err: any) {
