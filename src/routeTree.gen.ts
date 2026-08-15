@@ -27,6 +27,7 @@ import { Route as AccountRouteImport } from './routes/account'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PromptsIndexRouteImport } from './routes/prompts.index'
 import { Route as GuidesIndexRouteImport } from './routes/guides.index'
+import { Route as UUsernameRouteImport } from './routes/u.$username'
 import { Route as ToolsTextGenerationRouteImport } from './routes/tools.text-generation'
 import { Route as ToolsAudioGenerationRouteImport } from './routes/tools.audio-generation'
 import { Route as ToolsAgentsRouteImport } from './routes/tools.agents'
@@ -135,6 +136,11 @@ const PromptsIndexRoute = PromptsIndexRouteImport.update({
 const GuidesIndexRoute = GuidesIndexRouteImport.update({
   id: '/guides/',
   path: '/guides/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UUsernameRoute = UUsernameRouteImport.update({
+  id: '/u/$username',
+  path: '/u/$username',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ToolsTextGenerationRoute = ToolsTextGenerationRouteImport.update({
@@ -263,6 +269,7 @@ export interface FileRoutesByFullPath {
   '/tools/agents': typeof ToolsAgentsRoute
   '/tools/audio-generation': typeof ToolsAudioGenerationRoute
   '/tools/text-generation': typeof ToolsTextGenerationRoute
+  '/u/$username': typeof UUsernameRoute
   '/guides/': typeof GuidesIndexRoute
   '/prompts/': typeof PromptsIndexRoute
   '/prompts/$topic/$slug': typeof PromptsTopicSlugRoute
@@ -302,6 +309,7 @@ export interface FileRoutesByTo {
   '/tools/agents': typeof ToolsAgentsRoute
   '/tools/audio-generation': typeof ToolsAudioGenerationRoute
   '/tools/text-generation': typeof ToolsTextGenerationRoute
+  '/u/$username': typeof UUsernameRoute
   '/guides': typeof GuidesIndexRoute
   '/prompts': typeof PromptsIndexRoute
   '/prompts/$topic/$slug': typeof PromptsTopicSlugRoute
@@ -342,6 +350,7 @@ export interface FileRoutesById {
   '/tools/agents': typeof ToolsAgentsRoute
   '/tools/audio-generation': typeof ToolsAudioGenerationRoute
   '/tools/text-generation': typeof ToolsTextGenerationRoute
+  '/u/$username': typeof UUsernameRoute
   '/guides/': typeof GuidesIndexRoute
   '/prompts/': typeof PromptsIndexRoute
   '/prompts/$topic/$slug': typeof PromptsTopicSlugRoute
@@ -383,6 +392,7 @@ export interface FileRouteTypes {
     | '/tools/agents'
     | '/tools/audio-generation'
     | '/tools/text-generation'
+    | '/u/$username'
     | '/guides/'
     | '/prompts/'
     | '/prompts/$topic/$slug'
@@ -422,6 +432,7 @@ export interface FileRouteTypes {
     | '/tools/agents'
     | '/tools/audio-generation'
     | '/tools/text-generation'
+    | '/u/$username'
     | '/guides'
     | '/prompts'
     | '/prompts/$topic/$slug'
@@ -461,6 +472,7 @@ export interface FileRouteTypes {
     | '/tools/agents'
     | '/tools/audio-generation'
     | '/tools/text-generation'
+    | '/u/$username'
     | '/guides/'
     | '/prompts/'
     | '/prompts/$topic/$slug'
@@ -501,6 +513,7 @@ export interface RootRouteChildren {
   ToolsAgentsRoute: typeof ToolsAgentsRoute
   ToolsAudioGenerationRoute: typeof ToolsAudioGenerationRoute
   ToolsTextGenerationRoute: typeof ToolsTextGenerationRoute
+  UUsernameRoute: typeof UUsernameRoute
   GuidesIndexRoute: typeof GuidesIndexRoute
   PromptsIndexRoute: typeof PromptsIndexRoute
   PromptsTopicSlugRoute: typeof PromptsTopicSlugRoute
@@ -637,6 +650,13 @@ declare module '@tanstack/react-router' {
       path: '/guides'
       fullPath: '/guides/'
       preLoaderRoute: typeof GuidesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/u/$username': {
+      id: '/u/$username'
+      path: '/u/$username'
+      fullPath: '/u/$username'
+      preLoaderRoute: typeof UUsernameRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/tools/text-generation': {
@@ -805,6 +825,7 @@ const rootRouteChildren: RootRouteChildren = {
   ToolsAgentsRoute: ToolsAgentsRoute,
   ToolsAudioGenerationRoute: ToolsAudioGenerationRoute,
   ToolsTextGenerationRoute: ToolsTextGenerationRoute,
+  UUsernameRoute: UUsernameRoute,
   GuidesIndexRoute: GuidesIndexRoute,
   PromptsIndexRoute: PromptsIndexRoute,
   PromptsTopicSlugRoute: PromptsTopicSlugRoute,

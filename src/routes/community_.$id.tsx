@@ -279,20 +279,28 @@ function PromptDetailPage() {
           {post.title}
         </h1>
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-secondary border border-border flex items-center justify-center overflow-hidden shrink-0">
-            {author?.avatar_url ? (
-              <img src={author.avatar_url} alt="" className="w-full h-full object-cover" />
-            ) : (
-              <User size={20} className="text-muted-foreground" />
-            )}
-          </div>
-          <div>
-            <div className="font-semibold text-[15px]">{author?.display_name || "Пользователь"}</div>
-            <div className="text-[13px] text-muted-foreground flex items-center gap-1.5">
-              <Clock size={12} />
-              {format(new Date(post.created_at), "d MMMM yyyy", { locale: ru })}
+          <Link
+            to="/u/$username"
+            params={{ username: author?.username || "user" }}
+            className="flex items-center gap-3 group/author"
+          >
+            <div className="w-10 h-10 rounded-full bg-secondary border border-border flex items-center justify-center overflow-hidden shrink-0 group-hover/author:border-primary/50 transition-colors">
+              {author?.avatar_url ? (
+                <img src={author.avatar_url} alt="" className="w-full h-full object-cover" />
+              ) : (
+                <User size={20} className="text-muted-foreground" />
+              )}
             </div>
-          </div>
+            <div>
+              <div className="font-semibold text-[15px] group-hover/author:text-primary transition-colors">
+                {author?.display_name || "Пользователь"}
+              </div>
+              <div className="text-[13px] text-muted-foreground flex items-center gap-1.5">
+                <Clock size={12} />
+                {format(new Date(post.created_at), "d MMMM yyyy", { locale: ru })}
+              </div>
+            </div>
+          </Link>
         </div>
       </header>
 
