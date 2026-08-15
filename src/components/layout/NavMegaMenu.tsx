@@ -132,6 +132,9 @@ export const TABS: TabConfig[] = [
       { name: "DeepSeek", desc: "Reasoning модель", publicHref: "/tools/deepseek" },
     ],
   },
+  {
+    key: "community", label: "Сообщество", route: "/community", publicRoute: "/community",
+  },
 ];
 
 export function NavMegaMenu() {

@@ -14,15 +14,25 @@ import {
   Users,
   HelpCircle,
   Plus,
+  MessageSquare,
+  Image,
+  Video,
+  Music,
+  User,
+  Clock,
+  ChevronRight,
 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCredits } from "@/hooks/useCredits";
+import { supabase } from "@/integrations/supabase/client";
+import { useQuery } from "@tanstack/react-query";
+
 
 type SubStatus = "active" | "cancelled" | "none";
 type Card = { brand: string; last4: string; exp: string } | null;
-type Tab = "profile" | "history";
+type Tab = "profile" | "history" | "posts";
 
 const PLAN_NAME = "Про";
 const NEXT_BILLING = "22 августа 2026";
@@ -288,7 +298,11 @@ export default function AccountPage() {
           <button className={tabBtn(tab === "history")} onClick={() => setTab("history")}>
             История
           </button>
+          <button className={tabBtn(tab === "posts")} onClick={() => setTab("posts")}>
+            Мои публикации
+          </button>
         </div>
+
 
         {/* 5. Profile tab */}
         {tab === "profile" && (
@@ -427,9 +441,30 @@ export default function AccountPage() {
           </div>
         )}
 
-        {/* 6. History tab */}
+        {/* 6. Posts tab */}
+        {tab === "posts" && (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-semibold">Ваши посты</h2>
+              <Link
+                to="/community/new"
+                search={{ type: "all", sort: "new", page: 0 }}
+
+                className="inline-flex items-center gap-1.5 h-9 px-4 rounded-lg text-[13px] font-semibold text-white bg-primary hover:bg-primary/90 transition-colors"
+              >
+                <Plus className="h-4 w-4" />
+                Опубликовать промпт
+              </Link>
+            </div>
+            
+            <MyPostsList />
+          </div>
+        )}
+
+        {/* 7. History tab */}
         {tab === "history" && (
           <div className={card}>
+
             <div className="overflow-hidden rounded-xl border border-border">
               <table className="w-full text-[13px]">
                 <thead>
@@ -537,3 +572,81 @@ export default function AccountPage() {
     </div>
   );
 }
+
+function MyPostsList() {
+  const { data: posts, isLoading } = useQuery({
+    queryKey: ["my-posts"],
+    queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return [];
+      const { data, error } = await supabase
+        .from("posts")
+        .select("*")
+        .eq("author_id", user.id)
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return data || [];
+    },
+  });
+
+  if (isLoading) return <div className="py-8 text-center text-muted-foreground text-sm">Загрузка постов...</div>;
+
+  if (!posts?.length) {
+    return (
+      <div className="py-12 text-center border border-dashed border-border rounded-2xl bg-muted/20">
+        <p className="text-sm text-muted-foreground">У вас пока нет публикаций</p>
+      </div>
+    );
+  }
+
+  const typeIcon = (type: string) => {
+    switch (type) {
+      case "text": return <MessageSquare size={14} />;
+      case "image": return <Image size={14} />;
+      case "video": return <Video size={14} />;
+      case "audio": return <Music size={14} />;
+      default: return <User size={14} />;
+    }
+  };
+
+  const statusLabel = (status: string) => {
+    switch (status) {
+      case "pending": return <span className="text-amber-500">На проверке</span>;
+      case "published": return <span className="text-emerald-500">Опубликован</span>;
+      case "rejected": return <span className="text-destructive">Отклонён</span>;
+      default: return <span>Черновик</span>;
+    }
+  };
+
+  return (
+    <div className="space-y-3">
+      {posts.map((post) => (
+        <div 
+          key={post.id}
+          className="flex items-center justify-between p-4 rounded-xl border border-border bg-card hover:border-primary/30 transition-colors"
+        >
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center text-muted-foreground shrink-0">
+              {typeIcon(post.type)}
+            </div>
+            <div className="min-w-0">
+              <h4 className="text-[14px] font-medium text-foreground truncate">{post.title}</h4>
+              <div className="flex items-center gap-2 mt-0.5 text-[12px]">
+                <span className="text-muted-foreground capitalize">{post.type}</span>
+                <span className="w-1 h-1 rounded-full bg-border" />
+                {statusLabel(post.status)}
+              </div>
+            </div>
+          </div>
+          <a 
+            href={`/community/${post.id}`}
+            className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
+          >
+            <ChevronRight size={18} />
+          </a>
+        </div>
+      ))}
+    </div>
+  );
+}
+
