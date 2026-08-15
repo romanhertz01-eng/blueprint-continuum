@@ -135,15 +135,15 @@ function AuthorProfilePage() {
         .order("created_at", { ascending: false });
       if (error) throw error;
       
-      if (data && data.length > 0) {
-        const pids = data.map(p => p.id);
-        const { data: likes } = await supabase.from("likes").select("post_id").in("post_id", pids);
-        return data.map(p => ({
-          ...(p as any),
-          likes_count: likes?.filter(l => l.post_id === p.id).length || 0
-        })) as EnrichedPost[];
-      }
-      return (data || []) as EnrichedPost[];
+      const pids = data?.map(p => p.id) || [];
+      const { data: likes } = pids.length > 0 
+        ? await supabase.from("likes").select("post_id").in("post_id", pids)
+        : { data: [] };
+        
+      return (data || []).map(p => ({
+        ...(p as any),
+        likes_count: likes?.filter(l => l.post_id === p.id).length || 0
+      })) as any as EnrichedPost[];
     },
   });
 
