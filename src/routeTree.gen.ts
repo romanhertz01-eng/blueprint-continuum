@@ -18,6 +18,7 @@ import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as HistoryRouteImport } from './routes/history'
 import { Route as DesignRouteImport } from './routes/design'
+import { Route as CommunityRouteImport } from './routes/community'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AudioRouteImport } from './routes/audio'
@@ -89,6 +90,11 @@ const DesignRoute = DesignRouteImport.update({
   path: '/design',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CommunityRoute = CommunityRouteImport.update({
+  id: '/community',
+  path: '/community',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CheckoutRoute = CheckoutRouteImport.update({
   id: '/checkout',
   path: '/checkout',
@@ -155,9 +161,9 @@ const GuidesSlugRoute = GuidesSlugRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const CommunityNewRoute = CommunityNewRouteImport.update({
-  id: '/community/new',
-  path: '/community/new',
-  getParentRoute: () => rootRouteImport,
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => CommunityRoute,
 } as any)
 const AiVideoRoute = AiVideoRouteImport.update({
   id: '/ai/video',
@@ -222,6 +228,7 @@ export interface FileRoutesByFullPath {
   '/audio': typeof AudioRoute
   '/auth': typeof AuthRoute
   '/checkout': typeof CheckoutRoute
+  '/community': typeof CommunityRouteWithChildren
   '/design': typeof DesignRoute
   '/history': typeof HistoryRoute
   '/pricing': typeof PricingRoute
@@ -258,6 +265,7 @@ export interface FileRoutesByTo {
   '/audio': typeof AudioRoute
   '/auth': typeof AuthRoute
   '/checkout': typeof CheckoutRoute
+  '/community': typeof CommunityRouteWithChildren
   '/design': typeof DesignRoute
   '/history': typeof HistoryRoute
   '/pricing': typeof PricingRoute
@@ -295,6 +303,7 @@ export interface FileRoutesById {
   '/audio': typeof AudioRoute
   '/auth': typeof AuthRoute
   '/checkout': typeof CheckoutRoute
+  '/community': typeof CommunityRouteWithChildren
   '/design': typeof DesignRoute
   '/history': typeof HistoryRoute
   '/pricing': typeof PricingRoute
@@ -333,6 +342,7 @@ export interface FileRouteTypes {
     | '/audio'
     | '/auth'
     | '/checkout'
+    | '/community'
     | '/design'
     | '/history'
     | '/pricing'
@@ -369,6 +379,7 @@ export interface FileRouteTypes {
     | '/audio'
     | '/auth'
     | '/checkout'
+    | '/community'
     | '/design'
     | '/history'
     | '/pricing'
@@ -405,6 +416,7 @@ export interface FileRouteTypes {
     | '/audio'
     | '/auth'
     | '/checkout'
+    | '/community'
     | '/design'
     | '/history'
     | '/pricing'
@@ -442,6 +454,7 @@ export interface RootRouteChildren {
   AudioRoute: typeof AudioRoute
   AuthRoute: typeof AuthRoute
   CheckoutRoute: typeof CheckoutRoute
+  CommunityRoute: typeof CommunityRouteWithChildren
   DesignRoute: typeof DesignRoute
   HistoryRoute: typeof HistoryRoute
   PricingRoute: typeof PricingRoute
@@ -456,7 +469,6 @@ export interface RootRouteChildren {
   AiImageRoute: typeof AiImageRoute
   AiTextRoute: typeof AiTextRoute
   AiVideoRoute: typeof AiVideoRoute
-  CommunityNewRoute: typeof CommunityNewRoute
   GuidesSlugRoute: typeof GuidesSlugRoute
   ToolsSlugRoute: typeof ToolsSlugRoute
   ToolsAgentsRoute: typeof ToolsAgentsRoute
@@ -535,6 +547,13 @@ declare module '@tanstack/react-router' {
       path: '/design'
       fullPath: '/design'
       preLoaderRoute: typeof DesignRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/community': {
+      id: '/community'
+      path: '/community'
+      fullPath: '/community'
+      preLoaderRoute: typeof CommunityRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/checkout': {
@@ -630,10 +649,10 @@ declare module '@tanstack/react-router' {
     }
     '/community/new': {
       id: '/community/new'
-      path: '/community/new'
+      path: '/new'
       fullPath: '/community/new'
       preLoaderRoute: typeof CommunityNewRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof CommunityRoute
     }
     '/ai/video': {
       id: '/ai/video'
@@ -715,6 +734,18 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface CommunityRouteChildren {
+  CommunityNewRoute: typeof CommunityNewRoute
+}
+
+const CommunityRouteChildren: CommunityRouteChildren = {
+  CommunityNewRoute: CommunityNewRoute,
+}
+
+const CommunityRouteWithChildren = CommunityRoute._addFileChildren(
+  CommunityRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AccountRoute: AccountRoute,
@@ -722,6 +753,7 @@ const rootRouteChildren: RootRouteChildren = {
   AudioRoute: AudioRoute,
   AuthRoute: AuthRoute,
   CheckoutRoute: CheckoutRoute,
+  CommunityRoute: CommunityRouteWithChildren,
   DesignRoute: DesignRoute,
   HistoryRoute: HistoryRoute,
   PricingRoute: PricingRoute,
@@ -736,7 +768,6 @@ const rootRouteChildren: RootRouteChildren = {
   AiImageRoute: AiImageRoute,
   AiTextRoute: AiTextRoute,
   AiVideoRoute: AiVideoRoute,
-  CommunityNewRoute: CommunityNewRoute,
   GuidesSlugRoute: GuidesSlugRoute,
   ToolsSlugRoute: ToolsSlugRoute,
   ToolsAgentsRoute: ToolsAgentsRoute,
