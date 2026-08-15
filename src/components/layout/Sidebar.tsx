@@ -46,6 +46,7 @@ const genItems = [
   { icon: Image, label: "Изображения", path: "/design" },
   { icon: Video, label: "Видео", path: "/video" },
   { icon: Mic, label: "Аудио", path: "/audio" },
+  { icon: Home, label: "Сообщество", path: "/community" },
 ];
 
 const toolItems: Array<{ icon: React.ElementType; label: string; path: string; badge?: "new" | "soon" }> = [
@@ -65,7 +66,12 @@ export function Sidebar({ open, collapsed, onClose, onToggleCollapse }: SidebarP
   const copy = useCopyToast();
   const [recentOpen, setRecentOpen] = useState(true);
   const [showReferral, setShowReferral] = useState(false);
-  const isActive = (path: string) => location.pathname === path;
+  const isActive = (path: string) => {
+    if (path === "/community") {
+      return location.pathname.startsWith("/community") || location.pathname.startsWith("/u/");
+    }
+    return location.pathname === path;
+  };
 
   const renderItem = (item: { icon: React.ElementType; label: string; path: string; badge?: "new" | "soon" }) => (
     <Link

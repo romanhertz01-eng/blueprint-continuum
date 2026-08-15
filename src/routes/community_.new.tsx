@@ -23,6 +23,14 @@ export const Route = createFileRoute("/community_/new")({
 });
 
 function NewPostPage() {
+  return (
+    <Layout>
+      <NewPostContent />
+    </Layout>
+  );
+}
+
+function NewPostContent() {
   const navigate = useNavigate();
   const { user } = useAuth();
   
@@ -338,3 +346,5 @@ function NewPostPage() {
     </div>
   );
 }
+
+import { Layout } from "@/components/layout/Layout";

@@ -307,6 +307,14 @@ function Sidebar({
 }
 
 function CommunityPage() {
+  return (
+    <Layout>
+      <CommunityContent />
+    </Layout>
+  );
+}
+
+function CommunityContent() {
   const { type, provider, sort, page } = useSearch({ from: "/community" });
   const { isAuthed } = useAuth();
   const navigate = Route.useNavigate();
@@ -692,5 +700,7 @@ function CommunityPage() {
     </div>
   );
 }
+
+import { Layout } from "@/components/layout/Layout";
 
 export default CommunityPage;

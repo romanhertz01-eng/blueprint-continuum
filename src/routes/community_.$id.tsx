@@ -95,6 +95,14 @@ function AudioPlayer({ url }: { url: string }) {
 }
 
 function PromptDetailPage() {
+  return (
+    <Layout>
+      <PromptDetailContent />
+    </Layout>
+  );
+}
+
+function PromptDetailContent() {
   const { id } = Route.useParams();
   const navigate = useNavigate();
   const { user, isAuthed, profile } = useAuth();
@@ -924,6 +932,8 @@ function SimilarFromCatalog({ category }: { category: string }) {
     </section>
   );
 }
+
+import { Layout } from "@/components/layout/Layout";
 
 
 
