@@ -12,13 +12,16 @@ import {
   User, 
   Clock,
   AlertCircle,
-  Loader2
+  Loader2,
+  ArrowRight
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { buildAuthHref } from "@/lib/authRedirect";
 import { useAuth } from "@/contexts/AuthContext";
 import { CopyPromptButton } from "@/components/prompts/CopyPromptButton";
+import { CatalogCard } from "@/components/prompts/CatalogCard";
 import { writePromptHandoff, CATEGORY_ROUTE } from "@/lib/promptHandoff";
+import { promptItems } from "@/data/prompts";
 import { format } from "date-fns";
 import { ru } from "date-fns/locale";
 import { toast } from "sonner";
