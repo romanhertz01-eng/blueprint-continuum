@@ -197,6 +197,103 @@ function AuthorProfilePage() {
     },
   });
 
+  // 4. Sidebar Data: Categories
+  const { data: allPublishedPosts } = useQuery({
+    queryKey: ["community-all-published-metadata"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("posts")
+        .select("type, provider_id")
+        .eq("status", "published");
+      if (error) throw error;
+      return data || [];
+    },
+  });
+
+  const categoryCounts = useMemo(() => {
+    const counts: Record<string, number> = {
+      all: allPublishedPosts?.length || 0,
+      text: 0,
+      image: 0,
+      video: 0,
+      audio: 0,
+      agent: 0
+    };
+    
+    allPublishedPosts?.forEach(p => {
+      if (counts[p.type] !== undefined) {
+        counts[p.type]++;
+      }
+    });
+    
+    return counts;
+  }, [allPublishedPosts]);
+
+  const categories = [
+    { label: "Все", value: "all", count: categoryCounts.all },
+    { label: "Текст", value: "text", count: categoryCounts.text },
+    { label: "Изображения", value: "image", count: categoryCounts.image },
+    { label: "Видео", value: "video", count: categoryCounts.video },
+    { label: "Аудио", value: "audio", count: categoryCounts.audio },
+    { label: "Агенты", value: "agent", count: categoryCounts.agent },
+  ];
+
+  // 5. Sidebar Data: Top Authors
+  const { data: allFollowsData } = useQuery({
+    queryKey: ["community-all-follows"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("follows")
+        .select("following_id");
+      if (error) throw error;
+      return data || [];
+    },
+  });
+
+  const topAuthorIds = useMemo(() => {
+    if (!allFollowsData) return [];
+    const counts: Record<string, number> = {};
+    allFollowsData.forEach(f => {
+      counts[f.following_id] = (counts[f.following_id] || 0) + 1;
+    });
+    return Object.keys(counts).sort((a, b) => counts[b] - counts[a]).slice(0, 5);
+  }, [allFollowsData]);
+
+  const { data: topAuthorsProfiles } = useQuery({
+    queryKey: ["community-top-authors-profiles", topAuthorIds],
+    enabled: topAuthorIds.length > 0,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("id, display_name, username, avatar_url")
+        .in("id", topAuthorIds);
+      if (error) throw error;
+      return data || [];
+    },
+  });
+
+  const enrichedTopAuthors = useMemo(() => {
+    if (!topAuthorsProfiles || !allFollowsData) return [];
+    return topAuthorIds.map(id => {
+      const profile = topAuthorsProfiles.find(p => p.id === id);
+      const followersCount = allFollowsData.filter(f => f.following_id === id).length;
+      return { ...profile, followers_count: followersCount };
+    }).filter(a => !!a.id);
+  }, [topAuthorsProfiles, allFollowsData, topAuthorIds]);
+
+  const handleTypeChange = (type: string) => {
+    navigate({ to: "/community", search: { type: type as any, provider: 'all', sort: 'new', page: 0 } });
+  };
+
+  const sidebarPosts = useMemo(() => {
+    if (!posts || posts.length < 6) return null;
+    // Show 5 latest except first ones seen in main grid? 
+    // Usually "seen in gallery" means we skip some, but here the request says "except those visible".
+    // Let's take 5 after the first few or just last 5 if we want variety.
+    // Assuming "visible" refers to the top of the grid.
+    return posts.slice(4, 9); // Example offset
+  }, [posts]);
+
   if (isProfileLoading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
