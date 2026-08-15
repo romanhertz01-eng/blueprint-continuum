@@ -132,7 +132,7 @@ function NewPostPage() {
 
       if (insertError) throw insertError;
 
-      toast.success("Пост отправлен на проверку — он появится в ленте после модерации");
+      toast.success("Промпт отправлен на проверку, он появится в ленте после модерации");
       navigate({ to: '/account' });
     } catch (err: any) {
       console.error("Error creating post:", err);
@@ -153,12 +153,12 @@ function NewPostPage() {
   return (
     <div className="container max-w-2xl py-12 px-4">
       <div className="bg-card border border-border rounded-3xl p-6 md:p-8 shadow-sm">
-        <h1 className="text-2xl font-bold mb-8">Создать пост</h1>
+        <h1 className="text-2xl font-bold mb-8">Добавить промпт</h1>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Post Type Chips */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-muted-foreground">Тип поста</label>
+            <label className="text-sm font-medium text-muted-foreground">Тип промпта</label>
             <div className="flex flex-wrap gap-2">
               {typeOptions.map((opt) => (
                 <button
