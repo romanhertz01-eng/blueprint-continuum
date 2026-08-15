@@ -153,7 +153,7 @@ function CommunityPage() {
           className="inline-flex items-center gap-2 h-11 px-6 rounded-full bg-primary text-white font-semibold hover:bg-primary/90 transition-all shadow-[0_4px_16px_rgba(232,84,32,0.3)] shrink-0 self-start md:self-auto"
         >
           <Plus size={18} />
-          <span>Опубликовать промпт</span>
+          <span>Добавить промпт</span>
         </Link>
       </div>
 
@@ -211,14 +211,14 @@ function CommunityPage() {
           </div>
           <h2 className="text-xl font-semibold mb-2">Здесь пока пусто</h2>
           <p className="text-muted-foreground mb-6 max-w-xs">
-            Станьте первым, кто поделится своим уникальным промптом с сообществом!
+            Станьте первым, кто поделится своим уникальным промптом с сообществом! Добавьте первый промпт.
           </p>
           <Link
             to={isAuthed ? "/community/new" : buildAuthHref("/community/new")}
             className="inline-flex items-center gap-2 h-10 px-6 rounded-full bg-primary text-white font-semibold hover:bg-primary/90 transition-all"
           >
             <Plus size={16} />
-            <span>Опубликовать первый промпт</span>
+            <span>Добавить первый промпт</span>
           </Link>
         </div>
       )}

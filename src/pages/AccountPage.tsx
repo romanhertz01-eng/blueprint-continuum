@@ -299,7 +299,7 @@ export default function AccountPage() {
             История
           </button>
           <button className={tabBtn(tab === "posts")} onClick={() => setTab("posts")}>
-            Мои публикации
+            Мои промпты
           </button>
         </div>
 
@@ -445,7 +445,7 @@ export default function AccountPage() {
         {tab === "posts" && (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold">Ваши посты</h2>
+              <h2 className="text-lg font-semibold">Ваши промпты</h2>
               <Link
                 to="/community/new"
                 search={{ type: "all", sort: "new", page: 0 }}
@@ -453,7 +453,7 @@ export default function AccountPage() {
                 className="inline-flex items-center gap-1.5 h-9 px-4 rounded-lg text-[13px] font-semibold text-white bg-primary hover:bg-primary/90 transition-colors"
               >
                 <Plus className="h-4 w-4" />
-                Опубликовать промпт
+                Добавить промпт
               </Link>
             </div>
             
@@ -589,12 +589,12 @@ function MyPostsList() {
     },
   });
 
-  if (isLoading) return <div className="py-8 text-center text-muted-foreground text-sm">Загрузка постов...</div>;
+  if (isLoading) return <div className="py-8 text-center text-muted-foreground text-sm">Загрузка промптов...</div>;
 
   if (!posts?.length) {
     return (
       <div className="py-12 text-center border border-dashed border-border rounded-2xl bg-muted/20">
-        <p className="text-sm text-muted-foreground">У вас пока нет публикаций</p>
+        <p className="text-sm text-muted-foreground">У вас пока нет промптов</p>
       </div>
     );
   }
