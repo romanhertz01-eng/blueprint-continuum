@@ -672,6 +672,41 @@ function PromptDetailPage() {
 );
 }
 
+function SimilarFromCatalog({ category }: { category: PromptCategory }) {
+  const similarItems = useMemo(() => {
+    return promptItems
+      .filter(item => item.category === category && item.status === 'published')
+      .slice(0, 4);
+  }, [category]);
+
+  if (similarItems.length < 2) return null;
+
+  return (
+    <section className="mt-16">
+      <div className="flex items-center justify-between mb-8">
+        <h2 className="text-[20px] font-bold">Похожее из каталога ERA2</h2>
+        <Link 
+          to="/prompts" 
+          className="text-[14px] text-muted-foreground hover:text-primary transition-colors flex items-center gap-1.5 font-medium"
+        >
+          Весь каталог
+          <ArrowRight size={14} />
+        </Link>
+      </div>
+      
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+        {similarItems.map((item, idx) => (
+          <CatalogCard 
+            key={`${item.topicSlug}-${item.slug}`} 
+            item={item} 
+            index={idx}
+          />
+        ))}
+      </div>
+    </section>
+  );
+}
+
 // Minimal PostCard for "Other Publications" block (matching /community style)
 function PostCardMinimal({ post }: { post: any }) {
 const media = post.media as any[] || [];
