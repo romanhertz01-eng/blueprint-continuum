@@ -323,132 +323,236 @@ function AuthorProfilePage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 md:py-12 min-h-screen">
-      {/* Profile Header */}
-      <div className="bg-card border border-border rounded-[32px] p-6 md:p-10 mb-10 shadow-sm">
-        <div className="flex flex-col md:flex-row gap-8 items-start">
-          {/* Avatar */}
-          <div className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-secondary border-4 border-background shadow-md flex items-center justify-center overflow-hidden shrink-0">
-            {author.avatar_url ? (
-              <img src={author.avatar_url} alt="" className="w-full h-full object-cover" />
-            ) : (
-              <span className="text-4xl font-bold text-muted-foreground uppercase">
-                {author.username.charAt(0)}
-              </span>
-            )}
-          </div>
-
-          {/* Info */}
-          <div className="flex-1 min-w-0">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
-              <div>
-                <h1 className="text-2xl md:text-3xl font-bold text-foreground">
-                  {author.display_name || author.username}
-                </h1>
-                <p className="text-primary font-medium">@{author.username}</p>
+      <div className="flex flex-col lg:flex-row gap-8">
+        {/* Main Column */}
+        <div className="lg:w-[70%]">
+          {/* Profile Header */}
+          <div className="bg-card border border-border rounded-[32px] p-6 md:p-10 mb-10 shadow-sm">
+            <div className="flex flex-col md:flex-row gap-8 items-start">
+              {/* Avatar */}
+              <div className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-secondary border-4 border-background shadow-md flex items-center justify-center overflow-hidden shrink-0">
+                {author.avatar_url ? (
+                  <img src={author.avatar_url} alt="" className="w-full h-full object-cover" />
+                ) : (
+                  <span className="text-4xl font-bold text-muted-foreground uppercase">
+                    {author.username.charAt(0)}
+                  </span>
+                )}
               </div>
 
-              {isSelf ? (
-                <Link
-                  to="/account"
-                  className="h-10 px-6 rounded-full border border-border bg-secondary hover:bg-card transition-colors flex items-center gap-2 text-sm font-semibold"
-                >
-                  <Settings size={16} />
-                  Редактировать профиль
-                </Link>
-              ) : (
-                <button
-                  onClick={() => followMutation.mutate()}
-                  disabled={followMutation.isPending}
-                  className={`
-                    h-10 px-6 rounded-full font-semibold transition-all flex items-center gap-2 text-sm
-                    ${stats?.isFollowing 
-                      ? 'border border-border bg-secondary text-foreground hover:bg-destructive/10 hover:text-destructive' 
-                      : 'bg-primary text-white hover:bg-primary/90 shadow-md'}
-                  `}
-                >
-                  {followMutation.isPending ? (
-                    <Loader2 size={16} className="animate-spin" />
-                  ) : stats?.isFollowing ? (
-                    <>
-                      <UserCheck size={16} />
-                      Вы подписаны
-                    </>
+              {/* Info */}
+              <div className="flex-1 min-w-0">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+                  <div>
+                    <h1 className="text-2xl md:text-3xl font-bold text-foreground">
+                      {author.display_name || author.username}
+                    </h1>
+                    <p className="text-primary font-medium">@{author.username}</p>
+                  </div>
+
+                  {isSelf ? (
+                    <Link
+                      to="/account"
+                      className="h-10 px-6 rounded-full border border-border bg-secondary hover:bg-card transition-colors flex items-center gap-2 text-sm font-semibold"
+                    >
+                      <Settings size={16} />
+                      Редактировать профиль
+                    </Link>
                   ) : (
-                    <>
-                      <UserPlus size={16} />
-                      Подписаться
-                    </>
+                    <button
+                      onClick={() => followMutation.mutate()}
+                      disabled={followMutation.isPending}
+                      className={cn(
+                        "h-10 px-6 rounded-full font-semibold transition-all flex items-center gap-2 text-sm",
+                        stats?.isFollowing 
+                          ? 'border border-border bg-secondary text-foreground hover:bg-destructive/10 hover:text-destructive' 
+                          : 'bg-primary text-white hover:bg-primary/90 shadow-md'
+                      )}
+                    >
+                      {followMutation.isPending ? (
+                        <Loader2 size={16} className="animate-spin" />
+                      ) : stats?.isFollowing ? (
+                        <>
+                          <UserCheck size={16} />
+                          Вы подписаны
+                        </>
+                      ) : (
+                        <>
+                          <UserPlus size={16} />
+                          Подписаться
+                        </>
+                      )}
+                    </button>
                   )}
-                </button>
-              )}
-            </div>
+                </div>
 
-            {author.bio && (
-              <p className="text-[15px] text-muted-foreground mb-6 max-w-2xl leading-relaxed">
-                {author.bio}
-              </p>
-            )}
+                {author.bio && (
+                  <p className="text-[15px] text-muted-foreground mb-6 max-w-2xl leading-relaxed">
+                    {author.bio}
+                  </p>
+                )}
 
-            {/* Stats Row */}
-            <div className="flex flex-wrap gap-8 pt-6 border-t border-border/50">
-              <div className="text-center md:text-left">
-                <div className="text-xl font-bold">{posts?.length || 0}</div>
-                <div className="text-[12px] text-muted-foreground uppercase tracking-wider">Публикаций</div>
-              </div>
-              <div className="text-center md:text-left">
-                <div className="text-xl font-bold">{stats?.followersCount || 0}</div>
-                <div className="text-[12px] text-muted-foreground uppercase tracking-wider">Подписчиков</div>
-              </div>
-              <div className="text-center md:text-left">
-                <div className="text-xl font-bold">{stats?.followingCount || 0}</div>
-                <div className="text-[12px] text-muted-foreground uppercase tracking-wider">Подписок</div>
-              </div>
-              <div className="text-center md:text-left">
-                <div className="text-xl font-bold">{stats?.totalLikes || 0}</div>
-                <div className="text-[12px] text-muted-foreground uppercase tracking-wider">Лайков</div>
+                {/* Stats Row */}
+                <div className="flex flex-wrap gap-8 pt-6 border-t border-border/50">
+                  <div className="text-center md:text-left">
+                    <div className="text-xl font-bold">{posts?.length || 0}</div>
+                    <div className="text-[12px] text-muted-foreground uppercase tracking-wider">Публикаций</div>
+                  </div>
+                  <div className="text-center md:text-left">
+                    <div className="text-xl font-bold">{stats?.followersCount || 0}</div>
+                    <div className="text-[12px] text-muted-foreground uppercase tracking-wider">Подписчиков</div>
+                  </div>
+                  <div className="text-center md:text-left">
+                    <div className="text-xl font-bold">{stats?.followingCount || 0}</div>
+                    <div className="text-[12px] text-muted-foreground uppercase tracking-wider">Подписок</div>
+                  </div>
+                  <div className="text-center md:text-left">
+                    <div className="text-xl font-bold">{stats?.totalLikes || 0}</div>
+                    <div className="text-[12px] text-muted-foreground uppercase tracking-wider">Лайков</div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
 
-      {/* Grid */}
-      <div className="mb-6 flex items-center justify-between">
-        <h2 className="text-xl font-bold flex items-center gap-2">
-          Работы автора
-          <span className="h-5 px-2 rounded-full bg-secondary text-[11px] font-bold flex items-center justify-center">
-            {posts?.length || 0}
-          </span>
-        </h2>
-      </div>
+          {/* Grid Section */}
+          <div className="mb-6 flex items-center justify-between">
+            <h2 className="text-xl font-bold flex items-center gap-2">
+              Работы автора
+              <span className="h-5 px-2 rounded-full bg-secondary text-[11px] font-bold flex items-center justify-center">
+                {posts?.length || 0}
+              </span>
+            </h2>
+          </div>
 
-      {isPostsLoading ? (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {[...Array(4)].map((_, i) => (
-            <div key={i} className="aspect-[4/5] rounded-[18px] bg-muted animate-pulse" />
-          ))}
+          {isPostsLoading ? (
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="aspect-[4/5] rounded-[18px] bg-muted animate-pulse" />
+              ))}
+            </div>
+          ) : posts && posts.length > 0 ? (
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              {posts.map(post => (
+                <PostCard 
+                  key={post.id} 
+                  post={{
+                    ...post,
+                    author: { 
+                      display_name: author.display_name, 
+                      avatar_url: author.avatar_url 
+                    }
+                  }} 
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-20 bg-muted/20 border border-dashed rounded-[32px]">
+              <LayoutGrid size={40} className="mx-auto text-muted-foreground/30 mb-4" />
+              <p className="text-muted-foreground">У автора пока нет публикаций</p>
+            </div>
+          )}
         </div>
-      ) : posts && posts.length > 0 ? (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {posts.map(post => (
-            <PostCard 
-              key={post.id} 
-              post={{
-                ...post,
-                author: { 
-                  display_name: author.display_name, 
-                  avatar_url: author.avatar_url 
-                }
-              }} 
-            />
-          ))}
-        </div>
-      ) : (
-        <div className="text-center py-20 bg-muted/20 border border-dashed rounded-[32px]">
-          <LayoutGrid size={40} className="mx-auto text-muted-foreground/30 mb-4" />
-          <p className="text-muted-foreground">У автора пока нет публикаций</p>
-        </div>
-      )}
+
+        {/* Sidebar Column */}
+        <aside className="lg:w-[30%]">
+          <div className="flex flex-col gap-6 lg:sticky lg:top-24">
+            {/* Categories Block */}
+            <div className="rounded-2xl bg-muted/30 border border-border p-5">
+              <h4 className="font-bold mb-4 text-[16px]">Категории</h4>
+              <div className="flex flex-col gap-1">
+                {categories.map((cat) => (
+                  <button
+                    key={cat.value}
+                    onClick={() => handleTypeChange(cat.value)}
+                    className={cn(
+                      "flex items-center justify-between py-2 px-3 rounded-xl transition-colors text-left text-[14px]",
+                      "hover:bg-muted text-muted-foreground hover:text-foreground"
+                    )}
+                  >
+                    <span>{cat.label}</span>
+                    <span className="text-[12px] opacity-60 bg-muted px-2 py-0.5 rounded-full">
+                      {cat.count}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Top Authors Block */}
+            <div className="rounded-2xl bg-muted/30 border border-border p-5">
+              <h4 className="font-bold mb-4 text-[16px]">Топ авторов</h4>
+              <div className="flex flex-col gap-4">
+                {enrichedTopAuthors.map((topAuthor, idx) => (
+                  <Link
+                    key={topAuthor.id}
+                    to="/u/$username"
+                    params={{ username: topAuthor.username! }}
+                    className="flex items-center gap-3 group"
+                  >
+                    <div className="text-[13px] font-bold text-muted-foreground w-4">
+                      {idx + 1}
+                    </div>
+                    <div className="w-9 h-9 rounded-full bg-secondary border border-border flex items-center justify-center text-[12px] font-bold overflow-hidden shrink-0">
+                      {topAuthor.avatar_url ? (
+                        <img src={topAuthor.avatar_url} alt="" className="w-full h-full object-cover" />
+                      ) : (
+                        (topAuthor.display_name || "U").charAt(0).toUpperCase()
+                      )}
+                    </div>
+                    <div className="min-w-0">
+                      <div className="font-semibold text-[14px] text-foreground group-hover:text-primary transition-colors truncate">
+                        {topAuthor.display_name}
+                      </div>
+                      <div className="text-[12px] text-muted-foreground">
+                        {topAuthor.followers_count} {topAuthor.followers_count === 1 ? 'подписчик' : 'подписчиков'}
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+              <Link 
+                to="/community" 
+                search={{ type: 'all', provider: 'all', sort: 'new', page: 0 }}
+                className="block text-center text-primary text-[13px] font-medium mt-6 hover:underline"
+              >
+                Все авторы
+              </Link>
+            </div>
+
+            {/* Author's Other Posts Sidebar Block */}
+            {sidebarPosts && sidebarPosts.length > 0 && (
+              <div className="rounded-2xl bg-muted/30 border border-border p-5">
+                <h4 className="font-bold mb-4 text-[16px]">Похожее</h4>
+                <div className="space-y-5">
+                  {sidebarPosts.map((sPost) => (
+                    <Link 
+                      key={sPost.id} 
+                      to="/community/$id" 
+                      params={{ id: sPost.id }}
+                      className="block group"
+                    >
+                      <div className="text-[13px] font-medium leading-snug line-clamp-2 mb-2 group-hover:text-primary transition-colors">
+                        {sPost.title}
+                      </div>
+                      <div className="flex items-center gap-3 text-[11px] text-muted-foreground">
+                        <div className="flex items-center gap-1">
+                          <Heart size={12} />
+                          <span>{sPost.likes_count || 0}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Eye size={12} />
+                          <span>{sPost.views || 0}</span>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </aside>
+      </div>
     </div>
   );
 }
