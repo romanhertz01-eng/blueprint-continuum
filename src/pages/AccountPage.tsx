@@ -14,15 +14,25 @@ import {
   Users,
   HelpCircle,
   Plus,
+  MessageSquare,
+  Image,
+  Video,
+  Music,
+  User,
+  Clock,
+  ChevronRight,
 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCredits } from "@/hooks/useCredits";
+import { supabase } from "@/integrations/supabase/client";
+import { useQuery } from "@tanstack/react-query";
+
 
 type SubStatus = "active" | "cancelled" | "none";
 type Card = { brand: string; last4: string; exp: string } | null;
-type Tab = "profile" | "history";
+type Tab = "profile" | "history" | "posts";
 
 const PLAN_NAME = "Про";
 const NEXT_BILLING = "22 августа 2026";
@@ -288,7 +298,11 @@ export default function AccountPage() {
           <button className={tabBtn(tab === "history")} onClick={() => setTab("history")}>
             История
           </button>
+          <button className={tabBtn(tab === "posts")} onClick={() => setTab("posts")}>
+            Мои публикации
+          </button>
         </div>
+
 
         {/* 5. Profile tab */}
         {tab === "profile" && (
@@ -419,6 +433,32 @@ export default function AccountPage() {
                 <button
                   onClick={() => setDeleteOpen(true)}
                   className="text-[13px] font-medium text-destructive hover:underline"
+                >
+                  Удалить аккаунт
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* 6. Posts tab */}
+        {tab === "posts" && (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-semibold">Ваши посты</h2>
+              <Link
+                to="/community/new"
+                className="inline-flex items-center gap-1.5 h-9 px-4 rounded-lg text-[13px] font-semibold text-white bg-primary hover:bg-primary/90 transition-colors"
+              >
+                <Plus className="h-4 w-4" />
+                Опубликовать промпт
+              </Link>
+            </div>
+            
+            <MyPostsList />
+          </div>
+        )}
+
                 >
                   Удалить аккаунт
                 </button>
