@@ -508,10 +508,11 @@ function SimilarFromCatalog({ category }: { category: PromptCategory }) {
       </div>
       
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-        {similarItems.map((item) => (
+        {similarItems.map((item, idx) => (
           <CatalogCard 
             key={`${item.topicSlug}-${item.slug}`} 
             item={item} 
+            index={idx}
           />
         ))}
       </div>
