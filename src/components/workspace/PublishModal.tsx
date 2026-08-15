@@ -37,6 +37,7 @@ export function PublishModal({ open, onOpenChange, initialData }: PublishModalPr
       setTitle("");
       setPrompt(initialData.prompt);
       setCategory("");
+      setError(null);
     }
   }, [open, initialData.prompt]);
 
