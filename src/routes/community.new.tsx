@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { RequireAuth } from "@/components/auth/RequireAuth";
 import { Button } from "@/components/ui/button";
@@ -38,9 +38,11 @@ function NewPostPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Filter categories based on selected type
-  const availableTopics = type === 'agent' 
-    ? agentTopics 
-    : promptTopics.filter(t => t.category === type as PromptCategory);
+  const availableTopics = useMemo(() => {
+    return type === 'agent' 
+      ? agentTopics 
+      : promptTopics.filter(t => t.category === type as PromptCategory);
+  }, [type]);
 
   useEffect(() => {
     // Reset category when type changes
@@ -237,7 +239,7 @@ function NewPostPage() {
               className="w-full h-10 px-3 rounded-xl border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring"
             >
               <option value="">Выберите категорию...</option>
-              {availableTopics.map(topic => (
+              {availableTopics.map((topic: any) => (
                 <option key={topic.slug} value={topic.slug}>
                   {topic.cardTitle}
                 </option>
