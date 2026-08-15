@@ -75,9 +75,10 @@ function PostCard({ post }: { post: any }) {
           </div>
         </div>
       </div>
-    </Link>
+    </a>
   );
 }
+
 
 function CommunityPage() {
   const { type, sort, page } = useSearch({ from: "/community" });
