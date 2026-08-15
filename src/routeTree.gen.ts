@@ -32,7 +32,7 @@ import { Route as ToolsAudioGenerationRouteImport } from './routes/tools.audio-g
 import { Route as ToolsAgentsRouteImport } from './routes/tools.agents'
 import { Route as ToolsSlugRouteImport } from './routes/tools.$slug'
 import { Route as GuidesSlugRouteImport } from './routes/guides.$slug'
-import { Route as CommunityNewRouteImport } from './routes/community.new'
+import { Route as CommunityNewRouteImport } from './routes/community_.new'
 import { Route as AiVideoRouteImport } from './routes/ai.video'
 import { Route as AiTextRouteImport } from './routes/ai.text'
 import { Route as AiImageRouteImport } from './routes/ai.image'
@@ -161,9 +161,9 @@ const GuidesSlugRoute = GuidesSlugRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const CommunityNewRoute = CommunityNewRouteImport.update({
-  id: '/new',
-  path: '/new',
-  getParentRoute: () => CommunityRoute,
+  id: '/community_/new',
+  path: '/community/new',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AiVideoRoute = AiVideoRouteImport.update({
   id: '/ai/video',
@@ -228,7 +228,7 @@ export interface FileRoutesByFullPath {
   '/audio': typeof AudioRoute
   '/auth': typeof AuthRoute
   '/checkout': typeof CheckoutRoute
-  '/community': typeof CommunityRouteWithChildren
+  '/community': typeof CommunityRoute
   '/design': typeof DesignRoute
   '/history': typeof HistoryRoute
   '/pricing': typeof PricingRoute
@@ -265,7 +265,7 @@ export interface FileRoutesByTo {
   '/audio': typeof AudioRoute
   '/auth': typeof AuthRoute
   '/checkout': typeof CheckoutRoute
-  '/community': typeof CommunityRouteWithChildren
+  '/community': typeof CommunityRoute
   '/design': typeof DesignRoute
   '/history': typeof HistoryRoute
   '/pricing': typeof PricingRoute
@@ -303,7 +303,7 @@ export interface FileRoutesById {
   '/audio': typeof AudioRoute
   '/auth': typeof AuthRoute
   '/checkout': typeof CheckoutRoute
-  '/community': typeof CommunityRouteWithChildren
+  '/community': typeof CommunityRoute
   '/design': typeof DesignRoute
   '/history': typeof HistoryRoute
   '/pricing': typeof PricingRoute
@@ -318,7 +318,7 @@ export interface FileRoutesById {
   '/ai/image': typeof AiImageRoute
   '/ai/text': typeof AiTextRoute
   '/ai/video': typeof AiVideoRoute
-  '/community/new': typeof CommunityNewRoute
+  '/community_/new': typeof CommunityNewRoute
   '/guides/$slug': typeof GuidesSlugRoute
   '/tools/$slug': typeof ToolsSlugRoute
   '/tools/agents': typeof ToolsAgentsRoute
@@ -431,7 +431,7 @@ export interface FileRouteTypes {
     | '/ai/image'
     | '/ai/text'
     | '/ai/video'
-    | '/community/new'
+    | '/community_/new'
     | '/guides/$slug'
     | '/tools/$slug'
     | '/tools/agents'
@@ -454,7 +454,7 @@ export interface RootRouteChildren {
   AudioRoute: typeof AudioRoute
   AuthRoute: typeof AuthRoute
   CheckoutRoute: typeof CheckoutRoute
-  CommunityRoute: typeof CommunityRouteWithChildren
+  CommunityRoute: typeof CommunityRoute
   DesignRoute: typeof DesignRoute
   HistoryRoute: typeof HistoryRoute
   PricingRoute: typeof PricingRoute
@@ -469,6 +469,7 @@ export interface RootRouteChildren {
   AiImageRoute: typeof AiImageRoute
   AiTextRoute: typeof AiTextRoute
   AiVideoRoute: typeof AiVideoRoute
+  CommunityNewRoute: typeof CommunityNewRoute
   GuidesSlugRoute: typeof GuidesSlugRoute
   ToolsSlugRoute: typeof ToolsSlugRoute
   ToolsAgentsRoute: typeof ToolsAgentsRoute
@@ -647,12 +648,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GuidesSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/community/new': {
-      id: '/community/new'
-      path: '/new'
+    '/community_/new': {
+      id: '/community_/new'
+      path: '/community/new'
       fullPath: '/community/new'
       preLoaderRoute: typeof CommunityNewRouteImport
-      parentRoute: typeof CommunityRoute
+      parentRoute: typeof rootRouteImport
     }
     '/ai/video': {
       id: '/ai/video'
@@ -734,18 +735,6 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface CommunityRouteChildren {
-  CommunityNewRoute: typeof CommunityNewRoute
-}
-
-const CommunityRouteChildren: CommunityRouteChildren = {
-  CommunityNewRoute: CommunityNewRoute,
-}
-
-const CommunityRouteWithChildren = CommunityRoute._addFileChildren(
-  CommunityRouteChildren,
-)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AccountRoute: AccountRoute,
@@ -753,7 +742,7 @@ const rootRouteChildren: RootRouteChildren = {
   AudioRoute: AudioRoute,
   AuthRoute: AuthRoute,
   CheckoutRoute: CheckoutRoute,
-  CommunityRoute: CommunityRouteWithChildren,
+  CommunityRoute: CommunityRoute,
   DesignRoute: DesignRoute,
   HistoryRoute: HistoryRoute,
   PricingRoute: PricingRoute,
@@ -768,6 +757,7 @@ const rootRouteChildren: RootRouteChildren = {
   AiImageRoute: AiImageRoute,
   AiTextRoute: AiTextRoute,
   AiVideoRoute: AiVideoRoute,
+  CommunityNewRoute: CommunityNewRoute,
   GuidesSlugRoute: GuidesSlugRoute,
   ToolsSlugRoute: ToolsSlugRoute,
   ToolsAgentsRoute: ToolsAgentsRoute,
