@@ -217,11 +217,16 @@ const AuthPage = () => {
         )}
 
         {/* Social buttons */}
-        <div className="grid grid-cols-2 gap-2.5 mb-5">
-          <SocialButton icon={<SiTelegram size={18} color="#26A5E4" />} label="Telegram" />
-          <SocialButton icon={<span className="text-[18px] leading-none font-bold" style={{ color: "#FC3F1D" }}>Я</span>} label="Яндекс" />
-          <SocialButton icon={<SiGoogle size={18} color="#4285F4" />} label="Google" />
-          <SocialButton icon={<SiVk size={18} color="#0077FF" />} label="VK" />
+        <div className="mb-5">
+          <div className="grid grid-cols-2 gap-2.5 mb-3">
+            <SocialButton icon={<SiTelegram size={18} color="#26A5E4" />} label="Telegram" />
+            <SocialButton icon={<span className="text-[18px] leading-none font-bold" style={{ color: "#FC3F1D" }}>Я</span>} label="Яндекс" />
+            <SocialButton icon={<SiGoogle size={18} color="#4285F4" />} label="Google" />
+            <SocialButton icon={<SiVk size={18} color="#0077FF" />} label="VK" />
+          </div>
+          <p className="text-[12px] text-muted-foreground text-center">
+            Вход через соцсети скоро — пока это демо-доступ
+          </p>
         </div>
 
         {/* Divider */}
