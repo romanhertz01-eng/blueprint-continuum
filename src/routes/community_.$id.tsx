@@ -32,7 +32,7 @@ import { ru } from "date-fns/locale";
 import { toast } from "sonner";
 import { PromptCategory } from "@/data/prompts/types";
 
-export const Route = createFileRoute("/community/$id")({
+export const Route = createFileRoute("/community_/$id")({
   component: PromptDetailPage,
 });
 
