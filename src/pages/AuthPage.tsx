@@ -137,7 +137,14 @@ const AuthPage = () => {
       }
       // Redirect handled by useEffect
     } catch (err: any) {
-      setError("Не удалось выполнить демо-вход. Пожалуйста, попробуйте позже.");
+      const message = err.message || "";
+      if (message.includes("weak")) {
+        setError("Пароль демо-аккаунта отклонён сервером");
+      } else if (message.includes("Email not confirmed")) {
+        setError("Включено подтверждение почты — отключите его в настройках Auth");
+      } else {
+        setError(message || "Не удалось выполнить демо-вход. Пожалуйста, попробуйте позже.");
+      }
       console.error("Demo login error:", err);
     } finally {
       setIsSubmitting(false);
