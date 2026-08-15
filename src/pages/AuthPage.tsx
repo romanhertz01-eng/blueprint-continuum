@@ -111,7 +111,7 @@ const AuthPage = () => {
 
       if (signInError) {
         // If user doesn't exist, sign up
-        if (signInError.message.includes("Invalid login credentials")) {
+        if (signInError.message.toLowerCase().includes("invalid login credentials")) {
           const { error: signUpError } = await supabase.auth.signUp({
             email: demoEmail,
             password: demoPassword,
@@ -137,15 +137,19 @@ const AuthPage = () => {
       }
       // Redirect handled by useEffect
     } catch (err: any) {
+      console.error("Demo login error:", err);
       const message = err.message || "";
-      if (message.includes("weak")) {
+      const lowerMsg = message.toLowerCase();
+      
+      if (lowerMsg.includes("weak")) {
         setError("Пароль демо-аккаунта отклонён сервером");
-      } else if (message.includes("Email not confirmed")) {
+      } else if (lowerMsg.includes("email not confirmed") || lowerMsg.includes("confirmation")) {
         setError("Включено подтверждение почты — отключите его в настройках Auth");
+      } else if (lowerMsg.includes("invalid login credentials")) {
+        setError("Неверные учетные данные для демо-входа");
       } else {
         setError(message || "Не удалось выполнить демо-вход. Пожалуйста, попробуйте позже.");
       }
-      console.error("Demo login error:", err);
     } finally {
       setIsSubmitting(false);
     }
