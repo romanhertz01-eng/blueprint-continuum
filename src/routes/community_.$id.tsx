@@ -529,7 +529,7 @@ function PromptDetailPage() {
       {media.length > 0 && (
         <div className="space-y-4 mb-6">
           {media.map((item, idx) => (
-            <div key={idx} className="max-w-[640px] rounded-xl overflow-hidden bg-muted border border-border">
+            <div key={idx} className="max-w-[640px] rounded-xl overflow-hidden bg-muted border border-border mx-auto md:mx-0">
               {item.type === 'image' && (
                 <img src={item.url} alt="" className="w-full max-h-[520px] object-contain" />
               )}
@@ -699,7 +699,7 @@ function PromptDetailPage() {
 
       {/* Other Publications Section */}
       {otherPosts && otherPosts.length > 0 && (
-        <section className="mt-12 pt-12 border-t border-border">
+        <section className="mt-6 pt-6 border-t border-border">
           <h2 className="text-[18px] font-bold mb-6">Другие публикации</h2>
           <div className="flex flex-col gap-4">
             {otherPosts.map((otherPost) => (
@@ -887,10 +887,10 @@ return (
 );
 }
 
-function SimilarFromCatalog({ category }: { category: PromptCategory }) {
+function SimilarFromCatalog({ category }: { category: string }) {
   const similarItems = useMemo(() => {
-    // Map community post type to catalog category if needed (e.g. agents -> agents)
-    const normalizedCategory = category === 'agents' ? 'agents' : category;
+    // Map community post type to catalog category (e.g. agent -> agents)
+    const normalizedCategory = category === 'agent' ? 'agents' : category;
     
     return promptItems
       .filter(item => item.category === normalizedCategory && item.status === 'published')
@@ -900,7 +900,7 @@ function SimilarFromCatalog({ category }: { category: PromptCategory }) {
   if (similarItems.length < 2) return null;
 
   return (
-    <section className="mt-12">
+    <section className="mt-6">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-[18px] font-bold">Похожее из каталога ERA2</h2>
         <Link 
