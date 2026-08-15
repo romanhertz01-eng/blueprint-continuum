@@ -33,6 +33,7 @@ import { Route as ToolsAgentsRouteImport } from './routes/tools.agents'
 import { Route as ToolsSlugRouteImport } from './routes/tools.$slug'
 import { Route as GuidesSlugRouteImport } from './routes/guides.$slug'
 import { Route as CommunityNewRouteImport } from './routes/community_.new'
+import { Route as CommunityIdRouteImport } from './routes/community_.$id'
 import { Route as AiVideoRouteImport } from './routes/ai.video'
 import { Route as AiTextRouteImport } from './routes/ai.text'
 import { Route as AiImageRouteImport } from './routes/ai.image'
@@ -165,6 +166,11 @@ const CommunityNewRoute = CommunityNewRouteImport.update({
   path: '/community/new',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CommunityIdRoute = CommunityIdRouteImport.update({
+  id: '/community_/$id',
+  path: '/community/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AiVideoRoute = AiVideoRouteImport.update({
   id: '/ai/video',
   path: '/ai/video',
@@ -243,6 +249,7 @@ export interface FileRoutesByFullPath {
   '/ai/image': typeof AiImageRoute
   '/ai/text': typeof AiTextRoute
   '/ai/video': typeof AiVideoRoute
+  '/community/$id': typeof CommunityIdRoute
   '/community/new': typeof CommunityNewRoute
   '/guides/$slug': typeof GuidesSlugRoute
   '/tools/$slug': typeof ToolsSlugRoute
@@ -280,6 +287,7 @@ export interface FileRoutesByTo {
   '/ai/image': typeof AiImageRoute
   '/ai/text': typeof AiTextRoute
   '/ai/video': typeof AiVideoRoute
+  '/community/$id': typeof CommunityIdRoute
   '/community/new': typeof CommunityNewRoute
   '/guides/$slug': typeof GuidesSlugRoute
   '/tools/$slug': typeof ToolsSlugRoute
@@ -318,6 +326,7 @@ export interface FileRoutesById {
   '/ai/image': typeof AiImageRoute
   '/ai/text': typeof AiTextRoute
   '/ai/video': typeof AiVideoRoute
+  '/community_/$id': typeof CommunityIdRoute
   '/community_/new': typeof CommunityNewRoute
   '/guides/$slug': typeof GuidesSlugRoute
   '/tools/$slug': typeof ToolsSlugRoute
@@ -357,6 +366,7 @@ export interface FileRouteTypes {
     | '/ai/image'
     | '/ai/text'
     | '/ai/video'
+    | '/community/$id'
     | '/community/new'
     | '/guides/$slug'
     | '/tools/$slug'
@@ -394,6 +404,7 @@ export interface FileRouteTypes {
     | '/ai/image'
     | '/ai/text'
     | '/ai/video'
+    | '/community/$id'
     | '/community/new'
     | '/guides/$slug'
     | '/tools/$slug'
@@ -431,6 +442,7 @@ export interface FileRouteTypes {
     | '/ai/image'
     | '/ai/text'
     | '/ai/video'
+    | '/community_/$id'
     | '/community_/new'
     | '/guides/$slug'
     | '/tools/$slug'
@@ -469,6 +481,7 @@ export interface RootRouteChildren {
   AiImageRoute: typeof AiImageRoute
   AiTextRoute: typeof AiTextRoute
   AiVideoRoute: typeof AiVideoRoute
+  CommunityIdRoute: typeof CommunityIdRoute
   CommunityNewRoute: typeof CommunityNewRoute
   GuidesSlugRoute: typeof GuidesSlugRoute
   ToolsSlugRoute: typeof ToolsSlugRoute
@@ -655,6 +668,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CommunityNewRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/community_/$id': {
+      id: '/community_/$id'
+      path: '/community/$id'
+      fullPath: '/community/$id'
+      preLoaderRoute: typeof CommunityIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/ai/video': {
       id: '/ai/video'
       path: '/ai/video'
@@ -757,6 +777,7 @@ const rootRouteChildren: RootRouteChildren = {
   AiImageRoute: AiImageRoute,
   AiTextRoute: AiTextRoute,
   AiVideoRoute: AiVideoRoute,
+  CommunityIdRoute: CommunityIdRoute,
   CommunityNewRoute: CommunityNewRoute,
   GuidesSlugRoute: GuidesSlugRoute,
   ToolsSlugRoute: ToolsSlugRoute,
