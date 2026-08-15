@@ -95,11 +95,7 @@ function AudioPlayer({ url }: { url: string }) {
 }
 
 function PromptDetailPage() {
-  return (
-    <Layout>
-      <PromptDetailContent />
-    </Layout>
-  );
+  return <PromptDetailContent />;
 }
 
 function PromptDetailContent() {
@@ -934,7 +930,7 @@ function SimilarFromCatalog({ category }: { category: string }) {
   );
 }
 
-import { Layout } from "@/components/layout/Layout";
+
 
 
 
