@@ -117,7 +117,16 @@ function AuthorProfilePage() {
         .eq("status", "published")
         .order("created_at", { ascending: false });
       if (error) throw error;
-      return data;
+      
+      if (data && data.length > 0) {
+        const pids = data.map(p => p.id);
+        const { data: likes } = await supabase.from("likes").select("post_id").in("post_id", pids);
+        return data.map(p => ({
+          ...p,
+          likes_count: likes?.filter(l => l.post_id === p.id).length || 0
+        }));
+      }
+      return data || [];
     },
   });
 
