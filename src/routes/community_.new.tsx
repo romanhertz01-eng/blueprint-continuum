@@ -151,8 +151,9 @@ function NewPostPage() {
   ];
 
   return (
-    <div className="container max-w-2xl py-12 px-4">
+    <div className="container max-w-[720px] mx-auto py-12 px-6">
       <div className="bg-card border border-border rounded-3xl p-6 md:p-8 shadow-sm">
+
         <h1 className="text-2xl font-bold mb-8">Добавить промпт</h1>
 
         <form onSubmit={handleSubmit} className="space-y-6">
