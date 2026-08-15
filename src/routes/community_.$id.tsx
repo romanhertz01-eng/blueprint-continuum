@@ -457,12 +457,12 @@ function PromptDetailPage() {
   const media = (post.media as any[]) || [];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8 md:py-12">
-      <div className="flex flex-col lg:flex-row gap-8">
+    <div className="max-w-7xl mx-auto px-4 py-6 md:py-8">
+      <div className="flex flex-col lg:flex-row gap-6">
         {/* Main Column */}
         <div className="lg:w-[70%]">
       {/* Breadcrumbs */}
-      <nav className="flex items-center gap-2 text-[13px] text-muted-foreground mb-8">
+      <nav className="flex items-center gap-2 text-[13px] text-muted-foreground mb-6">
         <Link to="/" className="hover:text-foreground transition-colors">Главная</Link>
         <ChevronRight size={14} />
         <Link 
@@ -479,7 +479,7 @@ function PromptDetailPage() {
       {/* Status Banner */}
       {post.status !== 'published' && (isOwner || isAdmin) && (
         <div className={cn(
-          "mb-8 p-4 rounded-2xl border flex items-center gap-3",
+          "mb-6 p-4 rounded-2xl border flex items-center gap-3",
           post.status === 'pending' ? "bg-amber-500/10 border-amber-500/20 text-amber-500" : "bg-destructive/10 border-destructive/20 text-destructive"
         )}>
           <AlertCircle size={20} />
@@ -495,8 +495,8 @@ function PromptDetailPage() {
       )}
 
       {/* Header */}
-      <header className="mb-8">
-        <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-6 leading-tight">
+      <header className="mb-6">
+        <h1 className="text-[26px] font-bold text-foreground mb-4 leading-tight">
           {post.title}
         </h1>
         <div className="flex items-center gap-3">
@@ -527,14 +527,14 @@ function PromptDetailPage() {
 
       {/* Media Content */}
       {media.length > 0 && (
-        <div className="space-y-6 mb-10">
+        <div className="space-y-4 mb-6">
           {media.map((item, idx) => (
-            <div key={idx} className="rounded-3xl overflow-hidden bg-muted border border-border">
+            <div key={idx} className="max-w-[640px] rounded-xl overflow-hidden bg-muted border border-border mx-auto md:mx-0">
               {item.type === 'image' && (
-                <img src={item.url} alt="" className="w-full h-auto" />
+                <img src={item.url} alt="" className="w-full max-h-[520px] object-contain" />
               )}
               {item.type === 'video' && (
-                <video src={item.url} controls className="w-full" />
+                <video src={item.url} controls className="w-full aspect-video object-cover" poster={item.poster} />
               )}
               {item.type === 'audio' && (
                 <div className="p-4">
@@ -547,20 +547,20 @@ function PromptDetailPage() {
       )}
 
       {/* Prompt Block */}
-      <div className="mb-10">
-        <h3 className="text-[15px] font-bold mb-4 uppercase tracking-wider text-muted-foreground">Промпт</h3>
+      <div className="mb-6">
+        <h3 className="text-[14px] font-bold mb-3 uppercase tracking-wider text-muted-foreground">Промпт</h3>
         <div className="relative group">
-          <div className="absolute top-4 right-4 z-10">
+          <div className="absolute top-3 right-3 z-10">
             <CopyPromptButton text={post.prompt_ru} />
           </div>
-          <div className="bg-muted/30 border border-border rounded-[24px] p-6 pt-14 md:pt-6 md:pr-40 text-[16px] leading-relaxed whitespace-pre-wrap text-foreground">
+          <div className="bg-muted/30 border border-border rounded-2xl p-5 pt-12 md:pt-5 md:pr-36 text-[15px] leading-relaxed whitespace-pre-wrap text-foreground">
             {post.prompt_ru}
           </div>
         </div>
       </div>
 
       {/* Info & Handoff */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10 pb-10 border-b border-border">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-6 pb-6 border-b border-border">
         <div className="space-y-2">
           {post.provider_id && (
             <div className="text-[14px]">
@@ -584,7 +584,7 @@ function PromptDetailPage() {
       </div>
 
       {/* Actions */}
-      <div className="flex items-center gap-4 mb-16">
+      <div className="flex items-center gap-4 mb-12">
         <button
           onClick={() => likeMutation.mutate()}
           className={cn(
@@ -615,7 +615,7 @@ function PromptDetailPage() {
       </div>
 
       {/* Comments Section */}
-      <section className="bg-card border border-border rounded-[32px] p-6 md:p-8">
+      <section className="bg-card border border-border rounded-[24px] p-5 md:p-6">
         <h2 className="text-xl font-bold mb-8 flex items-center gap-2">
           Комментарии
           <span className="text-muted-foreground font-normal ml-1">{comments?.length || 0}</span>
@@ -699,8 +699,8 @@ function PromptDetailPage() {
 
       {/* Other Publications Section */}
       {otherPosts && otherPosts.length > 0 && (
-        <section className="mt-16 pt-16 border-t border-border">
-          <h2 className="text-[20px] font-bold mb-8">Другие публикации</h2>
+        <section className="mt-6 pt-6 border-t border-border">
+          <h2 className="text-[18px] font-bold mb-6">Другие публикации</h2>
           <div className="flex flex-col gap-4">
             {otherPosts.map((otherPost) => (
               <PostCardMinimal key={otherPost.id} post={otherPost} />
@@ -887,19 +887,22 @@ return (
 );
 }
 
-function SimilarFromCatalog({ category }: { category: PromptCategory }) {
+function SimilarFromCatalog({ category }: { category: string }) {
   const similarItems = useMemo(() => {
+    // Map community post type to catalog category (e.g. agent -> agents)
+    const normalizedCategory = category === 'agent' ? 'agents' : category;
+    
     return promptItems
-      .filter(item => item.category === category && item.status === 'published')
+      .filter(item => item.category === normalizedCategory && item.status === 'published')
       .slice(0, 4);
   }, [category]);
 
   if (similarItems.length < 2) return null;
 
   return (
-    <section className="mt-16">
-      <div className="flex items-center justify-between mb-8">
-        <h2 className="text-[20px] font-bold">Похожее из каталога ERA2</h2>
+    <section className="mt-6">
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-[18px] font-bold">Похожее из каталога ERA2</h2>
         <Link 
           to="/prompts" 
           className="text-[14px] text-muted-foreground hover:text-primary transition-colors flex items-center gap-1.5 font-medium"
