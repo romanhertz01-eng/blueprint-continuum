@@ -94,9 +94,54 @@ const AuthPage = () => {
     }
   };
 
-  const handleSocial = () => {
-    // Social auth will be implemented in future tasks
-    setError("Вход через соцсети временно недоступен");
+  const handleSocial = async () => {
+    setError(null);
+    setIsSubmitting(true);
+    
+    const demoEmail = "demo@era2.ai";
+    const demoPassword = "demo12345";
+    const demoName = "Демо-пользователь";
+
+    try {
+      // Try to sign in first
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: demoEmail,
+        password: demoPassword,
+      });
+
+      if (signInError) {
+        // If user doesn't exist, sign up
+        if (signInError.message.includes("Invalid login credentials")) {
+          const { error: signUpError } = await supabase.auth.signUp({
+            email: demoEmail,
+            password: demoPassword,
+            options: {
+              data: {
+                display_name: demoName,
+              }
+            }
+          });
+
+          if (signUpError) throw signUpError;
+
+          // After successful signup, sign in
+          const { error: secondSignInError } = await supabase.auth.signInWithPassword({
+            email: demoEmail,
+            password: demoPassword,
+          });
+
+          if (secondSignInError) throw secondSignInError;
+        } else {
+          throw signInError;
+        }
+      }
+      // Redirect handled by useEffect
+    } catch (err: any) {
+      setError("Не удалось выполнить демо-вход. Пожалуйста, попробуйте позже.");
+      console.error("Demo login error:", err);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const SocialButton = ({ icon, label }: { icon: React.ReactNode; label: string }) => (
