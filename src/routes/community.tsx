@@ -37,8 +37,8 @@ function PostCard({ post }: { post: any }) {
   }[post.type as string] || <LayoutGrid className="h-5 w-5" />;
 
   return (
-    <Link 
-      to={`/community/${post.id}`}
+    <a
+      href={`/community/${post.id}`}
       className="group flex flex-col bg-card border border-border rounded-[18px] overflow-hidden transition-all hover:border-primary/40 hover:shadow-lg"
     >
       <div className="aspect-video relative bg-muted flex items-center justify-center overflow-hidden">
