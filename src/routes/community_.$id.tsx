@@ -422,7 +422,7 @@ function PromptDetailContent() {
   const handleHandoff = () => {
     if (!post) return;
     writePromptHandoff({
-      prompt: post.prompt_ru,
+      prompt: post.prompt_ru || "",
       category: post.type as PromptCategory,
       providerId: post.provider_id || undefined,
       sourceSlug: post.id
@@ -556,7 +556,7 @@ function PromptDetailContent() {
         <h3 className="text-[14px] font-bold mb-3 uppercase tracking-wider text-muted-foreground">Промпт</h3>
         <div className="relative group">
           <div className="absolute top-3 right-3 z-10">
-            <CopyPromptButton text={post.prompt_ru} />
+            <CopyPromptButton text={post.prompt_ru || ""} />
           </div>
           <div className="bg-muted/30 border border-border rounded-2xl p-5 pt-12 md:pt-5 md:pr-36 text-[15px] leading-relaxed whitespace-pre-wrap text-foreground">
             {post.prompt_ru}
