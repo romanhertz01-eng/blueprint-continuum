@@ -18,7 +18,7 @@ const PROD_HOSTS = new Set(["era2.ai", "www.era2.ai"]);
 
 type Entry = { path: string; lastmod?: string };
 
-export const Route = createFileRoute("/sitemap.xml")({
+export const Route = createFileRoute("/sitemap/xml")({
   server: {
     handlers: {
       GET: async ({ request }) => {
