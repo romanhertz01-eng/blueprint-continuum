@@ -29,6 +29,7 @@ type EnrichedPost = {
   title: string;
   type: string;
   media: any;
+  cover_url?: string | null;
   prompt_ru: string;
   author_id: string;
   views: number;
