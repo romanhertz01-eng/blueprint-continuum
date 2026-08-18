@@ -1,4 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { ORIGIN } from "@/lib/origin";
 import { useState, useMemo, useRef, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -34,6 +35,138 @@ import { toast } from "sonner";
 import { PromptCategory } from "@/data/prompts/types";
 
 export const Route = createFileRoute("/community_/$id")({
+  loader: async ({ params }) => {
+    try {
+      const { data } = await supabase
+        .from("posts")
+        .select("id, title, type, status, excerpt, cover_url, prompt_ru, media, created_at, published_at, author:profiles(username, display_name)")
+        .eq("id", params.id)
+        .maybeSingle();
+      return { post: data ?? null };
+    } catch (e) {
+      return { post: null };
+    }
+  },
+  head: ({ params, loaderData }) => {
+    if (!loaderData?.post) return {};
+
+    const post = loaderData.post as any;
+    const isArticle = post.type === 'article';
+    const canonical = `${ORIGIN}/community/${params.id}`;
+    const isPublished = post.status === 'published';
+
+    // Title logic
+    const title = isArticle 
+      ? `${post.title} | ERA2.ai` 
+      : `${post.title} — промпт | ERA2.ai`;
+
+    // Description logic
+    let description = isArticle ? (post.excerpt || "") : (post.prompt_ru || "");
+    if (!description) description = "Публикация в сообществе ERA2.ai";
+    
+    // Clean HTML and collapse whitespace
+    description = description
+      .replace(/<[^>]*>?/gm, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+    
+    if (description.length > 160) {
+      description = description.substring(0, 157) + "...";
+    }
+
+    // Image logic
+    let imageUrl = `${ORIGIN}/og-image.png`;
+    if (isArticle && post.cover_url) {
+      imageUrl = post.cover_url;
+    } else if (!isArticle && Array.isArray(post.media)) {
+      const firstImage = post.media.find((m: any) => m.type === 'image');
+      if (firstImage?.url) {
+        imageUrl = firstImage.url;
+      }
+    }
+
+    if (imageUrl.startsWith('/')) {
+      imageUrl = `${ORIGIN}${imageUrl}`;
+    }
+
+    const robots = isPublished ? "index, follow" : "noindex, nofollow";
+
+    const scripts: any[] = [];
+    if (isPublished) {
+      // BreadcrumbList
+      const breadcrumbs = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Главная",
+            "item": `${ORIGIN}/`
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Сообщество",
+            "item": `${ORIGIN}/community`
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": post.title,
+            "item": canonical
+          }
+        ]
+      };
+      scripts.push({ type: "application/ld+json", children: JSON.stringify(breadcrumbs) });
+
+      // Article Schema
+      if (isArticle) {
+        const author = post.author as any;
+        const articleSchema = {
+          "@context": "https://schema.org",
+          "@type": "Article",
+          "headline": post.title,
+          "description": description,
+          "image": imageUrl,
+          "datePublished": post.published_at || post.created_at,
+          "dateModified": post.published_at || post.created_at,
+          "mainEntityOfPage": { "@type": "WebPage", "@id": canonical },
+          "author": {
+            "@type": "Person",
+            "name": author?.display_name || "Автор ERA2",
+            ...(author?.username ? { "url": `${ORIGIN}/u/${author.username}` } : {})
+          },
+          "publisher": {
+            "@type": "Organization",
+            "name": "ERA2.ai",
+            "url": ORIGIN,
+            "logo": { "@type": "ImageObject", "url": `${ORIGIN}/og-image.png` }
+          }
+        };
+        scripts.push({ type: "application/ld+json", children: JSON.stringify(articleSchema) });
+      }
+    }
+
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        { name: "robots", content: robots },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+        { property: "og:url", content: canonical },
+        { property: "og:type", content: isArticle ? "article" : "website" },
+        { property: "og:image", content: imageUrl },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: title },
+        { name: "twitter:description", content: description },
+        { name: "twitter:image", content: imageUrl },
+      ],
+      links: [{ rel: "canonical", href: canonical }],
+      scripts
+    };
+  },
   component: PromptDetailPage,
 });
 
