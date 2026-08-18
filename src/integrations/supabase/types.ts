@@ -122,12 +122,16 @@ export type Database = {
       posts: {
         Row: {
           author_id: string
+          body_html: string | null
           category_slug: string | null
+          cover_url: string | null
           created_at: string
+          excerpt: string | null
           id: string
+          is_official: boolean
           media: Json
           params: Json
-          prompt_ru: string
+          prompt_ru: string | null
           provider_id: string | null
           published_at: string | null
           rejection_reason: string | null
@@ -139,12 +143,16 @@ export type Database = {
         }
         Insert: {
           author_id: string
+          body_html?: string | null
           category_slug?: string | null
+          cover_url?: string | null
           created_at?: string
+          excerpt?: string | null
           id?: string
+          is_official?: boolean
           media?: Json
           params?: Json
-          prompt_ru: string
+          prompt_ru?: string | null
           provider_id?: string | null
           published_at?: string | null
           rejection_reason?: string | null
@@ -156,12 +164,16 @@ export type Database = {
         }
         Update: {
           author_id?: string
+          body_html?: string | null
           category_slug?: string | null
+          cover_url?: string | null
           created_at?: string
+          excerpt?: string | null
           id?: string
+          is_official?: boolean
           media?: Json
           params?: Json
-          prompt_ru?: string
+          prompt_ru?: string | null
           provider_id?: string | null
           published_at?: string | null
           rejection_reason?: string | null
