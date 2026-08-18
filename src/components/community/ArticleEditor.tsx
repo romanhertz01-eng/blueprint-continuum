@@ -25,6 +25,38 @@ interface ArticleEditorProps {
   userId: string;
 }
 
+const ToolbarButton = ({ 
+  onClick, 
+  isActive = false, 
+  disabled = false, 
+  title, 
+  children 
+}: { 
+  onClick: () => void; 
+  isActive?: boolean; 
+  disabled?: boolean;
+  title: string;
+  children: React.ReactNode;
+}) => (
+  <button
+    type="button"
+    onClick={onClick}
+    disabled={disabled}
+    title={title}
+    className={`
+      h-9 min-w-9 px-2.5 rounded-lg text-sm font-medium transition-colors flex items-center justify-center
+      ${isActive 
+        ? 'bg-primary/10 text-primary' 
+        : 'text-muted-foreground hover:bg-muted hover:text-foreground'}
+      ${disabled ? 'opacity-40 pointer-events-none' : ''}
+    `}
+  >
+    {children}
+  </button>
+);
+
+const Divider = () => <div className="w-px h-6 bg-border mx-1" />;
+
 export function ArticleEditor({ value, onChange, userId }: ArticleEditorProps) {
   const [linkOpen, setLinkOpen] = useState(false);
   const [linkUrl, setLinkUrl] = useState('');
@@ -37,6 +69,7 @@ export function ArticleEditor({ value, onChange, userId }: ArticleEditorProps) {
         heading: { levels: [2, 3] },
         codeBlock: false,
         horizontalRule: false,
+        link: false,
       }),
       Link.configure({
         openOnClick: false,
@@ -103,38 +136,6 @@ export function ArticleEditor({ value, onChange, userId }: ArticleEditorProps) {
       if (fileInputRef.current) fileInputRef.current.value = '';
     }
   };
-
-  const ToolbarButton = ({ 
-    onClick, 
-    isActive = false, 
-    disabled = false, 
-    title, 
-    children 
-  }: { 
-    onClick: () => void; 
-    isActive?: boolean; 
-    disabled?: boolean;
-    title: string;
-    children: React.ReactNode;
-  }) => (
-    <button
-      type="button"
-      onClick={onClick}
-      disabled={disabled}
-      title={title}
-      className={`
-        h-9 min-w-9 px-2.5 rounded-lg text-sm font-medium transition-colors flex items-center justify-center
-        ${isActive 
-          ? 'bg-primary/10 text-primary' 
-          : 'text-muted-foreground hover:bg-muted hover:text-foreground'}
-        ${disabled ? 'opacity-40 pointer-events-none' : ''}
-      `}
-    >
-      {children}
-    </button>
-  );
-
-  const Divider = () => <div className="w-px h-6 bg-border mx-1" />;
 
   return (
     <div className="flex flex-col">
@@ -245,7 +246,16 @@ export function ArticleEditor({ value, onChange, userId }: ArticleEditorProps) {
             placeholder="https://…"
             value={linkUrl}
             onChange={(e) => setLinkUrl(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && setLink()}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                setLink();
+              } else if (e.key === 'Escape') {
+                e.preventDefault();
+                setLinkUrl('');
+                setLinkOpen(false);
+              }
+            }}
             className="flex-1 h-9 rounded-lg border border-border bg-background px-3 text-sm focus:outline-none"
             autoFocus
           />
