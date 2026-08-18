@@ -118,6 +118,8 @@ function AuthorProfileContent() {
   const { user, isAuthed } = useAuth();
   const queryClient = useQueryClient();
 
+  const [worksTab, setWorksTab] = useState<'all' | 'prompts' | 'articles'>('all');
+  
   // 1. Fetch Author Profile
   const { data: author, isLoading: isProfileLoading, error: profileError } = useQuery({
     queryKey: ["author-profile", username],
