@@ -513,8 +513,8 @@ function CommunityContent() {
     });
 
     // Interleave types while preserving sort order (within pages)
-    // types order: image -> video -> text -> audio -> agent
-    const typesOrder = ['image', 'video', 'text', 'audio', 'agent'];
+    // types order: image -> video -> text -> audio -> agent -> article
+    const typesOrder = ['image', 'video', 'text', 'audio', 'agent', 'article'];
     const buckets: Record<string, any[]> = {};
     typesOrder.forEach(t => buckets[t] = []);
     
