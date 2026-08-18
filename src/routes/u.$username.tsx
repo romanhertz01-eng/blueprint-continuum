@@ -18,7 +18,8 @@ import {
   Settings,
   UserPlus,
   UserCheck,
-  Eye
+  Eye,
+  Newspaper
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -28,6 +29,7 @@ type EnrichedPost = {
   title: string;
   type: string;
   media: any;
+  cover_url?: string | null;
   prompt_ru: string;
   author_id: string;
   views: number;
@@ -53,6 +55,7 @@ function PostCard({ post }: { post: EnrichedPost }) {
     video: <Video className="h-5 w-5" />,
     audio: <Music className="h-5 w-5" />,
     agent: <Bot className="h-5 w-5" />,
+    article: <Newspaper className="h-5 w-5" />,
   }[post.type as string] || <LayoutGrid className="h-5 w-5" />;
 
   return (
@@ -62,7 +65,13 @@ function PostCard({ post }: { post: EnrichedPost }) {
       className="group flex flex-col bg-card border border-border rounded-[18px] overflow-hidden transition-all hover:border-primary/40 hover:shadow-lg"
     >
       <div className="aspect-video relative bg-muted flex items-center justify-center overflow-hidden">
-        {firstMedia?.url ? (
+        {post.type === 'article' && post.cover_url ? (
+          <img 
+            src={post.cover_url} 
+            alt={post.title} 
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+        ) : firstMedia?.url ? (
           <img 
             src={firstMedia.url} 
             alt={post.title} 
@@ -109,6 +118,8 @@ function AuthorProfileContent() {
   const { user, isAuthed } = useAuth();
   const queryClient = useQueryClient();
 
+  const [worksTab, setWorksTab] = useState<'all' | 'prompts' | 'articles'>('all');
+  
   // 1. Fetch Author Profile
   const { data: author, isLoading: isProfileLoading, error: profileError } = useQuery({
     queryKey: ["author-profile", username],
@@ -226,6 +237,24 @@ function AuthorProfileContent() {
       }
     },
   });
+
+  // Derived lists for tabs
+  const { articlePosts, promptPosts, visiblePosts } = useMemo(() => {
+    if (!posts) return { articlePosts: [], promptPosts: [], visiblePosts: [] };
+    
+    const articles = posts.filter(p => p.type === 'article');
+    const prompts = posts.filter(p => p.type !== 'article');
+    
+    let visible = posts;
+    if (worksTab === 'articles') visible = articles;
+    if (worksTab === 'prompts') visible = prompts;
+    
+    return {
+      articlePosts: articles,
+      promptPosts: prompts,
+      visiblePosts: visible
+    };
+  }, [posts, worksTab]);
 
   // 4. Sidebar Data: Categories
   const { data: allPublishedPosts } = useQuery({
@@ -442,13 +471,55 @@ function AuthorProfileContent() {
           </div>
 
           {/* Grid Section */}
-          <div className="mb-6 flex items-center justify-between">
+          <div className="mb-6 flex items-center justify-between flex-wrap gap-4">
             <h2 className="text-xl font-bold flex items-center gap-2">
               Работы автора
               <span className="h-5 px-2 rounded-full bg-secondary text-[11px] font-bold flex items-center justify-center">
                 {posts?.length || 0}
               </span>
             </h2>
+
+            <div className="flex items-center gap-1">
+              <button
+                type="button"
+                onClick={() => setWorksTab('all')}
+                className={cn(
+                  "h-9 px-4 rounded-full text-[13px] font-medium transition-colors flex items-center gap-2",
+                  worksTab === 'all' 
+                    ? "bg-primary/10 text-primary" 
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                )}
+              >
+                Все
+                <span className="text-[11px] opacity-70 tabular-nums">{posts?.length || 0}</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setWorksTab('prompts')}
+                className={cn(
+                  "h-9 px-4 rounded-full text-[13px] font-medium transition-colors flex items-center gap-2",
+                  worksTab === 'prompts' 
+                    ? "bg-primary/10 text-primary" 
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                )}
+              >
+                Промпты
+                <span className="text-[11px] opacity-70 tabular-nums">{promptPosts.length}</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setWorksTab('articles')}
+                className={cn(
+                  "h-9 px-4 rounded-full text-[13px] font-medium transition-colors flex items-center gap-2",
+                  worksTab === 'articles' 
+                    ? "bg-primary/10 text-primary" 
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                )}
+              >
+                Статьи
+                <span className="text-[11px] opacity-70 tabular-nums">{articlePosts.length}</span>
+              </button>
+            </div>
           </div>
 
           {isPostsLoading ? (
@@ -458,20 +529,29 @@ function AuthorProfileContent() {
               ))}
             </div>
           ) : posts && posts.length > 0 ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {posts.map(post => (
-                <PostCard 
-                  key={post.id} 
-                  post={{
-                    ...post,
-                    author: { 
-                      display_name: author.display_name, 
-                      avatar_url: author.avatar_url 
-                    }
-                  }} 
-                />
-              ))}
-            </div>
+            visiblePosts.length > 0 ? (
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                {visiblePosts.map(post => (
+                  <PostCard 
+                    key={post.id} 
+                    post={{
+                      ...post,
+                      author: { 
+                        display_name: author.display_name, 
+                        avatar_url: author.avatar_url 
+                      }
+                    }} 
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-20 bg-muted/20 border border-dashed rounded-[32px]">
+                <LayoutGrid size={40} className="mx-auto text-muted-foreground/30 mb-4" />
+                <p className="text-muted-foreground">
+                  {worksTab === 'prompts' ? "У автора пока нет промптов" : "У автора пока нет статей"}
+                </p>
+              </div>
+            )
           ) : (
             <div className="text-center py-20 bg-muted/20 border border-dashed rounded-[32px]">
               <LayoutGrid size={40} className="mx-auto text-muted-foreground/30 mb-4" />
