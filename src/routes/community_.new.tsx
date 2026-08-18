@@ -7,12 +7,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { X, Upload, Image as ImageIcon, Video, Music, Bot, FileText, Loader2 } from "lucide-react";
+import { X, Upload, Image as ImageIcon, Video, Music, Bot, FileText, Loader2, Newspaper } from "lucide-react";
 import { promptTopics } from "@/data/prompts/topics";
 import { agentTopics } from "@/data/prompts/agentTopics";
 import { PromptCategory } from "@/data/prompts/types";
 
-type PostType = 'text' | 'image' | 'video' | 'audio' | 'agent';
+type PostType = 'text' | 'image' | 'video' | 'audio' | 'agent' | 'article';
+
 
 export const Route = createFileRoute("/community_/new")({
   component: () => (
@@ -36,10 +37,20 @@ function NewPostContent() {
   const [model, setModel] = useState('');
   const [category, setCategory] = useState('');
   const [files, setFiles] = useState<{ file: File; preview: string }[]>([]);
+  
+  // Article specific states
+  const [excerpt, setExcerpt] = useState('');
+  const [bodyText, setBodyText] = useState('');
+  const [cover, setCover] = useState<{ file: File; preview: string } | null>(null);
+  
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<number | null>(null);
   
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const coverInputRef = useRef<HTMLInputElement>(null);
+
+  const isArticle = type === 'article';
+
 
   // Filter categories based on selected type
   const availableTopics = useMemo(() => {
@@ -86,57 +97,152 @@ function NewPostContent() {
     });
   };
 
+  const handleCoverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 50 * 1024 * 1024) {
+      toast.error(`Файл ${file.name} слишком большой (макс. 50 МБ)`);
+      if (coverInputRef.current) coverInputRef.current.value = '';
+      return;
+    }
+
+    if (cover) {
+      URL.revokeObjectURL(cover.preview);
+    }
+
+    setCover({
+      file,
+      preview: URL.createObjectURL(file)
+    });
+  };
+
+  const removeCover = () => {
+    if (cover) {
+      URL.revokeObjectURL(cover.preview);
+      setCover(null);
+      if (coverInputRef.current) coverInputRef.current.value = '';
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
-    if (!title.trim() || !prompt.trim()) {
-      toast.error("Заполните обязательные поля");
-      return;
+
+    if (isArticle) {
+      if (!title.trim() || !excerpt.trim() || !bodyText.trim()) {
+        toast.error('Заполните заголовок, краткое описание и текст статьи');
+        return;
+      }
+    } else {
+      if (!title.trim() || !prompt.trim()) {
+        toast.error("Заполните обязательные поля");
+        return;
+      }
     }
 
     setIsSubmitting(true);
     try {
+      let coverUrl = null;
+      let bodyHtml = null;
       const uploadedMedia = [];
 
-      for (const item of files) {
-        const fileExt = item.file.name.split('.').pop();
-        const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
-        const filePath = `${user.id}/${fileName}`;
+      if (isArticle) {
+        // Upload cover if exists
+        if (cover) {
+          const fileExt = cover.file.name.split('.').pop();
+          const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
+          const filePath = `${user.id}/${fileName}`;
 
-        const { error: uploadError, data } = await supabase.storage
+          const { error: uploadError } = await supabase.storage
+            .from('posts')
+            .upload(filePath, cover.file);
+
+          if (uploadError) throw uploadError;
+
+          const { data: { publicUrl } } = supabase.storage
+            .from('posts')
+            .getPublicUrl(filePath);
+          
+          coverUrl = publicUrl;
+        }
+
+        // Convert bodyText to HTML
+        bodyHtml = bodyText
+          .split(/\n\n+/)
+          .filter(chunk => chunk.trim().length > 0)
+          .map(chunk => {
+            const escaped = chunk
+              .replace(/&/g, '&amp;')
+              .replace(/</g, '&lt;')
+              .replace(/>/g, '&gt;')
+              .replace(/\n/g, '<br />');
+            return `<p>${escaped}</p>`;
+          })
+          .join('');
+
+        const { error: insertError } = await supabase
           .from('posts')
-          .upload(filePath, item.file);
+          .insert({
+            author_id: user.id,
+            type: 'article',
+            title,
+            prompt_ru: null,
+            provider_id: null,
+            category_slug: null,
+            media: [],
+            excerpt,
+            cover_url: coverUrl,
+            body_html: bodyHtml,
+            status: 'pending',
+            params: {}
+          });
 
-        if (uploadError) throw uploadError;
+        if (insertError) throw insertError;
+        
+        toast.success('Статья отправлена на проверку, она появится в ленте после модерации');
+      } else {
+        // Handle existing logic for other types
+        for (const item of files) {
+          const fileExt = item.file.name.split('.').pop();
+          const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
+          const filePath = `${user.id}/${fileName}`;
 
-        const { data: { publicUrl } } = supabase.storage
+          const { error: uploadError } = await supabase.storage
+            .from('posts')
+            .upload(filePath, item.file);
+
+          if (uploadError) throw uploadError;
+
+          const { data: { publicUrl } } = supabase.storage
+            .from('posts')
+            .getPublicUrl(filePath);
+
+          uploadedMedia.push({
+            url: publicUrl,
+            type: item.file.type.startsWith('image') ? 'image' : 
+                  item.file.type.startsWith('video') ? 'video' : 'audio'
+          });
+        }
+
+        const { error: insertError } = await supabase
           .from('posts')
-          .getPublicUrl(filePath);
+          .insert({
+            author_id: user.id,
+            type,
+            title,
+            prompt_ru: prompt,
+            provider_id: model,
+            category_slug: category,
+            media: uploadedMedia,
+            status: 'pending',
+            params: {}
+          });
 
-        uploadedMedia.push({
-          url: publicUrl,
-          type: item.file.type.startsWith('image') ? 'image' : 
-                item.file.type.startsWith('video') ? 'video' : 'audio'
-        });
+        if (insertError) throw insertError;
+        toast.success("Промпт отправлен на проверку, он появится в ленте после модерации");
       }
 
-      const { error: insertError } = await supabase
-        .from('posts')
-        .insert({
-          author_id: user.id,
-          type,
-          title,
-          prompt_ru: prompt,
-          provider_id: model,
-          category_slug: category,
-          media: uploadedMedia,
-          status: 'pending',
-          params: {}
-        });
-
-      if (insertError) throw insertError;
-
-      toast.success("Промпт отправлен на проверку, он появится в ленте после модерации");
       navigate({ to: '/account' });
     } catch (err: any) {
       console.error("Error creating post:", err);
@@ -152,18 +258,21 @@ function NewPostContent() {
     { value: 'video', label: 'Видео', icon: Video },
     { value: 'audio', label: 'Аудио', icon: Music },
     { value: 'agent', label: 'Агент', icon: Bot },
+    { value: 'article', label: 'Статья', icon: Newspaper },
   ];
+
 
   return (
     <div className="container max-w-[720px] mx-auto py-12 px-6">
       <div className="bg-card border border-border rounded-3xl p-6 md:p-8 shadow-sm">
 
-        <h1 className="text-2xl font-bold mb-8">Добавить промпт</h1>
+        <h1 className="text-2xl font-bold mb-8">{isArticle ? 'Написать статью' : 'Добавить промпт'}</h1>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Post Type Chips */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-muted-foreground">Тип промпта</label>
+            <label className="text-sm font-medium text-muted-foreground">Тип публикации</label>
+
             <div className="flex flex-wrap gap-2">
               {typeOptions.map((opt) => (
                 <button
@@ -203,57 +312,137 @@ function NewPostContent() {
             />
           </div>
 
-          {/* Prompt Body */}
-          <div className="space-y-2">
-            <div className="flex justify-between items-center">
-              <label htmlFor="prompt" className="text-sm font-medium">Промпт *</label>
-              <span className={`text-xs ${prompt.length > 4000 ? 'text-destructive' : 'text-muted-foreground'}`}>
-                {prompt.length}/4000
-              </span>
-            </div>
-            <Textarea
-              id="prompt"
-              placeholder="Введите текст промпта..."
-              value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
-              required
-              maxLength={4000}
-              className="min-h-[160px] rounded-xl resize-none"
-            />
-          </div>
+          {!isArticle && (
+            <>
+              {/* Prompt Body */}
+              <div className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <label htmlFor="prompt" className="text-sm font-medium">Промпт *</label>
+                  <span className={`text-xs ${prompt.length > 4000 ? 'text-destructive' : 'text-muted-foreground'}`}>
+                    {prompt.length}/4000
+                  </span>
+                </div>
+                <Textarea
+                  id="prompt"
+                  placeholder="Введите текст промпта..."
+                  value={prompt}
+                  onChange={(e) => setPrompt(e.target.value)}
+                  required
+                  maxLength={4000}
+                  className="min-h-[160px] rounded-xl resize-none"
+                />
+              </div>
 
-          {/* Model */}
-          <div className="space-y-2">
-            <label htmlFor="model" className="text-sm font-medium">Модель</label>
-            <Input
-              id="model"
-              placeholder="Например: Kling AI, ChatGPT"
-              value={model}
-              onChange={(e) => setModel(e.target.value)}
-              className="rounded-xl"
-            />
-          </div>
+              {/* Model */}
+              <div className="space-y-2">
+                <label htmlFor="model" className="text-sm font-medium">Модель</label>
+                <Input
+                  id="model"
+                  placeholder="Например: Kling AI, ChatGPT"
+                  value={model}
+                  onChange={(e) => setModel(e.target.value)}
+                  className="rounded-xl"
+                />
+              </div>
 
-          {/* Category Dropdown */}
-          <div className="space-y-2">
-            <label htmlFor="category" className="text-sm font-medium">Категория</label>
-            <select
-              id="category"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              className="w-full h-10 px-3 rounded-xl border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-            >
-              <option value="">Выберите категорию...</option>
-              {availableTopics.map((topic: any) => (
-                <option key={topic.slug} value={topic.slug}>
-                  {topic.cardTitle}
-                </option>
-              ))}
-            </select>
-          </div>
+              {/* Category Dropdown */}
+              <div className="space-y-2">
+                <label htmlFor="category" className="text-sm font-medium">Категория</label>
+                <select
+                  id="category"
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  className="w-full h-10 px-3 rounded-xl border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                >
+                  <option value="">Выберите категорию...</option>
+                  {availableTopics.map((topic: any) => (
+                    <option key={topic.slug} value={topic.slug}>
+                      {topic.cardTitle}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </>
+          )}
+
+          {isArticle && (
+            <>
+              {/* Cover Block */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-muted-foreground">Обложка</label>
+                <input 
+                  type="file" 
+                  ref={coverInputRef}
+                  onChange={handleCoverChange}
+                  className="hidden" 
+                  accept="image/*"
+                />
+                
+                {!cover ? (
+                  <button
+                    type="button"
+                    onClick={() => coverInputRef.current?.click()}
+                    className="w-full aspect-[16/9] rounded-2xl border-2 border-dashed border-border flex flex-col items-center justify-center gap-2 text-muted-foreground hover:border-primary/40 transition-colors"
+                  >
+                    <Upload className="h-6 w-6" />
+                    <span className="text-sm">Загрузить обложку</span>
+                  </button>
+                ) : (
+                  <div className="relative">
+                    <img 
+                      src={cover.preview} 
+                      alt="" 
+                      className="w-full aspect-[16/9] object-cover rounded-2xl" 
+                    />
+                    <button
+                      type="button"
+                      onClick={removeCover}
+                      className="absolute top-3 right-3 w-8 h-8 rounded-full bg-background/80 border border-border flex items-center justify-center hover:bg-background transition-colors"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* Excerpt Block */}
+              <div className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <label htmlFor="excerpt" className="text-sm font-medium">Краткое описание</label>
+                  <span className={`text-xs ${excerpt.length > 200 ? 'text-destructive' : 'text-muted-foreground'}`}>
+                    {excerpt.length}/200
+                  </span>
+                </div>
+                <Textarea
+                  id="excerpt"
+                  placeholder="О чём эта статья в двух предложениях"
+                  value={excerpt}
+                  onChange={(e) => setExcerpt(e.target.value)}
+                  maxLength={200}
+                  rows={3}
+                  className="rounded-xl resize-none"
+                />
+                <p className="text-xs text-muted-foreground">Показывается в ленте под заголовком</p>
+              </div>
+
+              {/* Body Text Block */}
+              <div className="space-y-2">
+                <label htmlFor="bodyText" className="text-sm font-medium">Текст статьи</label>
+                <Textarea
+                  id="bodyText"
+                  placeholder="Пишите текст. Пустая строка между абзацами разделяет их."
+                  value={bodyText}
+                  onChange={(e) => setBodyText(e.target.value)}
+                  className="min-h-[400px] rounded-xl"
+                />
+                <p className="text-xs text-muted-foreground">Абзацы разделяйте пустой строкой</p>
+              </div>
+            </>
+          )}
 
           {/* File Upload Zone */}
-          {type !== 'text' && (
+          {!isArticle && type !== 'text' && (
+
             <div className="space-y-3">
               <label className="text-sm font-medium">Файлы (до 3 шт, макс 50 МБ)</label>
               
@@ -324,7 +513,8 @@ function NewPostContent() {
                   Публикация...
                 </>
               ) : (
-                'Опубликовать'
+                isArticle ? 'Отправить статью' : 'Опубликовать'
+
               )}
             </Button>
             <Button 
