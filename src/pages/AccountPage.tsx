@@ -21,6 +21,7 @@ import {
   User,
   Clock,
   ChevronRight,
+  Newspaper,
 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { toast } from "sonner";
@@ -32,7 +33,7 @@ import { useQuery } from "@tanstack/react-query";
 
 type SubStatus = "active" | "cancelled" | "none";
 type Card = { brand: string; last4: string; exp: string } | null;
-type Tab = "profile" | "history" | "posts";
+type Tab = "profile" | "history" | "posts" | "articles";
 
 const PLAN_NAME = "Про";
 const NEXT_BILLING = "22 августа 2026";
@@ -300,6 +301,9 @@ export default function AccountPage() {
           </button>
           <button className={tabBtn(tab === "posts")} onClick={() => setTab("posts")}>
             Мои промпты
+          </button>
+          <button className={tabBtn(tab === "articles")} onClick={() => setTab("articles")}>
+            Мои статьи
           </button>
         </div>
 
