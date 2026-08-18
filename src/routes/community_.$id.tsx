@@ -104,6 +104,7 @@ function PromptDetailContent() {
   const { user, isAuthed, profile } = useAuth();
   const queryClient = useQueryClient();
   const [commentText, setCommentText] = useState("");
+  const [activeSectionId, setActiveSectionId] = useState<string | null>(null);
   
   const isAdmin = profile?.is_admin || false;
 
@@ -120,6 +121,65 @@ function PromptDetailContent() {
       return data;
     },
   });
+
+  const isArticle = post?.type === 'article';
+
+  // Preparation of article body and headings
+  const { processedHtml, headings } = useMemo(() => {
+    if (!isArticle || !post?.body_html) return { processedHtml: "", headings: [] };
+
+    let html = post.body_html;
+    const headingsList: { id: string; text: string; level: number }[] = [];
+    let counter = 0;
+
+    // Regex to match h2 and h3 tags
+    const headingRegex = /<(h[23])([^>]*)>(.*?)<\/h[23]>/gi;
+
+    const newHtml = html.replace(headingRegex, (match, tag, attrs, content) => {
+      const level = tag.toLowerCase() === 'h2' ? 2 : 3;
+      // Extract text content without tags
+      const text = content.replace(/<[^>]*>?/gm, '').trim();
+      
+      // Check if it already has an id
+      const idMatch = attrs.match(/id=["'](.*?)["']/);
+      let headingId = idMatch ? idMatch[1] : `s${++counter}`;
+      
+      headingsList.push({ id: headingId, text, level });
+
+      if (idMatch) return match;
+      return `<${tag} id="${headingId}"${attrs}>${content}</${tag}>`;
+    });
+
+    return { processedHtml: newHtml, headings: headingsList };
+  }, [post?.body_html, isArticle]);
+
+  // Active section tracking
+  useEffect(() => {
+    if (!isArticle || headings.length < 2) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visibleHeaders = entries
+          .filter(entry => entry.isIntersecting)
+          .sort((a, b) => a.target.getBoundingClientRect().top - b.target.getBoundingClientRect().top);
+
+        if (visibleHeaders.length > 0) {
+          setActiveSectionId(visibleHeaders[0].target.id);
+        }
+      },
+      {
+        rootMargin: "-100px 0px -70% 0px",
+        threshold: 0
+      }
+    );
+
+    headings.forEach(h => {
+      const el = document.getElementById(h.id);
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, [isArticle, headings]);
 
   // 2. Load the author
   const { data: author } = useQuery({
