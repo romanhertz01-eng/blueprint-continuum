@@ -17,6 +17,9 @@ type PostType = 'text' | 'image' | 'video' | 'audio' | 'agent' | 'article';
 
 
 export const Route = createFileRoute("/community_/new")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    type: typeof search.type === 'string' ? search.type : undefined,
+  }),
   component: () => (
     <RequireAuth>
       <NewPostPage />
@@ -31,8 +34,11 @@ function NewPostPage() {
 function NewPostContent() {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { type: typeParam } = Route.useSearch();
   
-  const [type, setType] = useState<PostType>('image');
+  const [type, setType] = useState<PostType>(
+    typeParam === 'article' ? 'article' : 'image'
+  );
   const [title, setTitle] = useState('');
   const [prompt, setPrompt] = useState('');
   const [model, setModel] = useState('');
