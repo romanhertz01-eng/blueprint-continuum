@@ -238,6 +238,24 @@ function AuthorProfileContent() {
     },
   });
 
+  // Derived lists for tabs
+  const { articlePosts, promptPosts, visiblePosts } = useMemo(() => {
+    if (!posts) return { articlePosts: [], promptPosts: [], visiblePosts: [] };
+    
+    const articles = posts.filter(p => p.type === 'article');
+    const prompts = posts.filter(p => p.type !== 'article');
+    
+    let visible = posts;
+    if (worksTab === 'articles') visible = articles;
+    if (worksTab === 'prompts') visible = prompts;
+    
+    return {
+      articlePosts: articles,
+      promptPosts: prompts,
+      visiblePosts: visible
+    };
+  }, [posts, worksTab]);
+
   // 4. Sidebar Data: Categories
   const { data: allPublishedPosts } = useQuery({
     queryKey: ["community-all-published-metadata"],
