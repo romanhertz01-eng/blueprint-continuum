@@ -471,13 +471,55 @@ function AuthorProfileContent() {
           </div>
 
           {/* Grid Section */}
-          <div className="mb-6 flex items-center justify-between">
+          <div className="mb-6 flex items-center justify-between flex-wrap gap-4">
             <h2 className="text-xl font-bold flex items-center gap-2">
               Работы автора
               <span className="h-5 px-2 rounded-full bg-secondary text-[11px] font-bold flex items-center justify-center">
                 {posts?.length || 0}
               </span>
             </h2>
+
+            <div className="flex items-center gap-1">
+              <button
+                type="button"
+                onClick={() => setWorksTab('all')}
+                className={cn(
+                  "h-9 px-4 rounded-full text-[13px] font-medium transition-colors flex items-center gap-2",
+                  worksTab === 'all' 
+                    ? "bg-primary/10 text-primary" 
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                )}
+              >
+                Все
+                <span className="text-[11px] opacity-70 tabular-nums">{posts?.length || 0}</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setWorksTab('prompts')}
+                className={cn(
+                  "h-9 px-4 rounded-full text-[13px] font-medium transition-colors flex items-center gap-2",
+                  worksTab === 'prompts' 
+                    ? "bg-primary/10 text-primary" 
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                )}
+              >
+                Промпты
+                <span className="text-[11px] opacity-70 tabular-nums">{promptPosts.length}</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setWorksTab('articles')}
+                className={cn(
+                  "h-9 px-4 rounded-full text-[13px] font-medium transition-colors flex items-center gap-2",
+                  worksTab === 'articles' 
+                    ? "bg-primary/10 text-primary" 
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                )}
+              >
+                Статьи
+                <span className="text-[11px] opacity-70 tabular-nums">{articlePosts.length}</span>
+              </button>
+            </div>
           </div>
 
           {isPostsLoading ? (
