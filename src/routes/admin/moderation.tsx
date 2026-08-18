@@ -20,14 +20,15 @@ import {
   Bot, 
   FileText,
   ExternalLink,
-  Eye
+  Eye,
+  Newspaper
 } from "lucide-react";
 import { format } from "date-fns";
 import { ru } from "date-fns/locale";
 
 type PostMedia = {
   type: 'image' | 'video' | 'audio';
-  src: string;
+  url: string;
 };
 
 type Author = {
@@ -132,8 +133,18 @@ function ModerationPage() {
       case 'video': return <Video className="h-5 w-5" />;
       case 'audio': return <Music className="h-5 w-5" />;
       case 'agent': return <Bot className="h-5 w-5" />;
+      case 'article': return <Newspaper className="h-5 w-5" />;
       default: return <FileText className="h-5 w-5" />;
     }
+  };
+
+  const typeLabels: Record<string, string> = {
+    text: "Текст",
+    image: "Изображение",
+    video: "Видео",
+    audio: "Аудио",
+    agent: "Агент",
+    article: "Статья"
   };
 
   return (
@@ -185,9 +196,11 @@ function ModerationPage() {
                 <div className="flex items-center p-4 gap-4">
                   {/* Preview */}
                   <div className="w-20 h-20 rounded-xl bg-muted flex items-center justify-center overflow-hidden flex-shrink-0">
-                    {media[0] ? (
+                    {post.type === 'article' && post.cover_url ? (
+                      <img src={post.cover_url} className="w-full h-full object-cover" alt="" />
+                    ) : media[0] ? (
                       media[0].type === 'image' ? (
-                        <img src={media[0].src} className="w-full h-full object-cover" alt="" />
+                        <img src={media[0].url} className="w-full h-full object-cover" alt="" />
                       ) : (
                         getTypeIcon(post.type)
                       )
@@ -209,7 +222,7 @@ function ModerationPage() {
                     </div>
                     <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
                       <span className="flex items-center gap-1">
-                        {getTypeIcon(post.type)} {post.type}
+                        {getTypeIcon(post.type)} {typeLabels[post.type] || post.type}
                       </span>
                       {post.category_slug && (
                         <span>• {post.category_slug}</span>
@@ -303,13 +316,13 @@ function ModerationPage() {
                         {media.map((item: PostMedia, idx: number) => (
                           <div key={idx} className="rounded-xl overflow-hidden border border-border bg-muted/20">
                             {item.type === 'image' && (
-                              <img src={item.src} className="w-full h-auto" alt="" />
+                              <img src={item.url} className="w-full h-auto" alt="" />
                             )}
                             {item.type === 'video' && (
-                              <video src={item.src} controls className="w-full" />
+                              <video src={item.url} controls className="w-full" />
                             )}
                             {item.type === 'audio' && (
-                              <audio src={item.src} controls className="w-full p-2" />
+                              <audio src={item.url} controls className="w-full p-2" />
                             )}
                           </div>
                         ))}
@@ -317,12 +330,29 @@ function ModerationPage() {
                     )}
 
                     {/* Prompt Text */}
-                    <div className="space-y-2">
-                      <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Промпт</h4>
-                      <div className="bg-muted/30 border border-border rounded-xl p-4 text-sm whitespace-pre-wrap">
-                        {post.prompt_ru}
+                    {post.type !== 'article' ? (
+                      <div className="space-y-2">
+                        <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Промпт</h4>
+                        <div className="bg-muted/30 border border-border rounded-xl p-4 text-sm whitespace-pre-wrap">
+                          {post.prompt_ru}
+                        </div>
                       </div>
-                    </div>
+                    ) : (
+                      <>
+                        <div className="space-y-2">
+                          <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Краткое описание</h4>
+                          <div className="bg-muted/30 border border-border rounded-xl p-4 text-sm">
+                            {post.excerpt}
+                          </div>
+                        </div>
+                        <div className="space-y-2">
+                          <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Текст статьи</h4>
+                          <div className="bg-background border border-border rounded-xl p-4 max-h-[500px] overflow-y-auto">
+                            <div className="article-body" dangerouslySetInnerHTML={{ __html: post.body_html || '' }} />
+                          </div>
+                        </div>
+                      </>
+                    )}
 
                     {/* Meta */}
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
