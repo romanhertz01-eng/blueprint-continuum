@@ -21,6 +21,7 @@ import {
   User,
   Clock,
   ChevronRight,
+  Newspaper,
 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { toast } from "sonner";
@@ -32,7 +33,7 @@ import { useQuery } from "@tanstack/react-query";
 
 type SubStatus = "active" | "cancelled" | "none";
 type Card = { brand: string; last4: string; exp: string } | null;
-type Tab = "profile" | "history" | "posts";
+type Tab = "profile" | "history" | "posts" | "articles";
 
 const PLAN_NAME = "Про";
 const NEXT_BILLING = "22 августа 2026";
@@ -301,6 +302,9 @@ export default function AccountPage() {
           <button className={tabBtn(tab === "posts")} onClick={() => setTab("posts")}>
             Мои промпты
           </button>
+          <button className={tabBtn(tab === "articles")} onClick={() => setTab("articles")}>
+            Мои статьи
+          </button>
         </div>
 
 
@@ -449,7 +453,6 @@ export default function AccountPage() {
               <Link
                 to="/community/new"
                 search={{ type: "all", sort: "new", page: 0 }}
-
                 className="inline-flex items-center gap-1.5 h-9 px-4 rounded-lg text-[13px] font-semibold text-white bg-primary hover:bg-primary/90 transition-colors"
               >
                 <Plus className="h-4 w-4" />
@@ -457,7 +460,25 @@ export default function AccountPage() {
               </Link>
             </div>
             
-            <MyPostsList />
+            <MyPostsList kind="prompts" />
+          </div>
+        )}
+
+        {tab === "articles" && (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-semibold">Ваши статьи</h2>
+              <Link
+                to="/community/new"
+                search={{ type: "all", sort: "new", page: 0 }}
+                className="inline-flex items-center gap-1.5 h-9 px-4 rounded-lg text-[13px] font-semibold text-white bg-primary hover:bg-primary/90 transition-colors"
+              >
+                <Plus className="h-4 w-4" />
+                Написать статью
+              </Link>
+            </div>
+            
+            <MyPostsList kind="articles" />
           </div>
         )}
 
@@ -573,17 +594,24 @@ export default function AccountPage() {
   );
 }
 
-function MyPostsList() {
+function MyPostsList({ kind }: { kind: 'prompts' | 'articles' }) {
   const { data: posts, isLoading, error } = useQuery({
-    queryKey: ["my-posts"],
+    queryKey: ["my-posts", kind],
     queryFn: async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return [];
-      const { data, error } = await supabase
+      let query = supabase
         .from("posts")
         .select("*")
-        .eq("author_id", user.id)
-        .order("created_at", { ascending: false });
+        .eq("author_id", user.id);
+      
+      if (kind === 'articles') {
+        query = query.eq("type", "article");
+      } else {
+        query = query.neq("type", "article");
+      }
+
+      const { data, error } = await query.order("created_at", { ascending: false });
       if (error) throw error;
       return data || [];
     },
@@ -599,7 +627,7 @@ function MyPostsList() {
 
   if (error) return (
     <div className="py-8 text-center border border-destructive/20 rounded-xl bg-destructive/5">
-      <p className="text-sm text-destructive font-medium">Не удалось загрузить промпты</p>
+      <p className="text-sm text-destructive font-medium">Не удалось загрузить публикации</p>
       <p className="text-xs text-muted-foreground mt-1">{(error as Error).message}</p>
     </div>
   );
@@ -607,7 +635,11 @@ function MyPostsList() {
   if (!posts?.length) {
     return (
       <div className="py-12 text-center border border-dashed border-border rounded-2xl bg-muted/20">
-        <p className="text-sm text-muted-foreground">Здесь пока пусто — добавьте первый промпт</p>
+        <p className="text-sm text-muted-foreground">
+          {kind === 'prompts' 
+            ? "Здесь пока пусто — добавьте первый промпт" 
+            : "Здесь пока пусто — напишите первую статью"}
+        </p>
       </div>
     );
   }
@@ -618,8 +650,18 @@ function MyPostsList() {
       case "image": return <Image size={14} />;
       case "video": return <Video size={14} />;
       case "audio": return <Music size={14} />;
+      case "article": return <Newspaper size={14} />;
       default: return <User size={14} />;
     }
+  };
+
+  const typeLabels: Record<string, string> = {
+    text: "Текст",
+    image: "Изображение",
+    video: "Видео",
+    audio: "Аудио",
+    agent: "Агент",
+    article: "Статья"
   };
 
   const statusLabel = (status: string) => {
@@ -639,13 +681,17 @@ function MyPostsList() {
           className="flex items-center justify-between p-4 rounded-xl border border-border bg-card hover:border-primary/30 transition-colors"
         >
           <div className="flex items-center gap-3 min-w-0">
-            <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center text-muted-foreground shrink-0">
-              {typeIcon(post.type)}
+            <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center text-muted-foreground shrink-0 overflow-hidden">
+              {post.cover_url ? (
+                <img src={post.cover_url} alt="" className="w-full h-full object-cover" />
+              ) : (
+                typeIcon(post.type)
+              )}
             </div>
             <div className="min-w-0">
               <h4 className="text-[14px] font-medium text-foreground truncate">{post.title}</h4>
               <div className="flex items-center gap-2 mt-0.5 text-[12px]">
-                <span className="text-muted-foreground capitalize">{post.type}</span>
+                <span className="text-muted-foreground">{typeLabels[post.type] || post.type}</span>
                 <span className="w-1 h-1 rounded-full bg-border" />
                 {statusLabel(post.status)}
               </div>
