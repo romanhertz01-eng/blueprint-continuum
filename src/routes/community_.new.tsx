@@ -11,6 +11,7 @@ import { X, Upload, Image as ImageIcon, Video, Music, Bot, FileText, Loader2, Ne
 import { promptTopics } from "@/data/prompts/topics";
 import { agentTopics } from "@/data/prompts/agentTopics";
 import { PromptCategory } from "@/data/prompts/types";
+import { ArticleEditor } from "@/components/community/ArticleEditor";
 
 type PostType = 'text' | 'image' | 'video' | 'audio' | 'agent' | 'article';
 
@@ -130,7 +131,11 @@ function NewPostContent() {
     if (!user) return;
 
     if (isArticle) {
-      if (!title.trim() || !excerpt.trim() || !bodyText.trim()) {
+      const getCleanLength = (html: string) => {
+        return html.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, '').trim().length;
+      };
+
+      if (!title.trim() || !excerpt.trim() || getCleanLength(bodyText) === 0) {
         toast.error('Заполните заголовок, краткое описание и текст статьи');
         return;
       }
@@ -167,19 +172,8 @@ function NewPostContent() {
           coverUrl = publicUrl;
         }
 
-        // Convert bodyText to HTML
-        bodyHtml = bodyText
-          .split(/\n\n+/)
-          .filter(chunk => chunk.trim().length > 0)
-          .map(chunk => {
-            const escaped = chunk
-              .replace(/&/g, '&amp;')
-              .replace(/</g, '&lt;')
-              .replace(/>/g, '&gt;')
-              .replace(/\n/g, '<br />');
-            return `<p>${escaped}</p>`;
-          })
-          .join('');
+        // bodyText already contains HTML
+        bodyHtml = bodyText;
 
         const { error: insertError } = await supabase
           .from('posts')
@@ -408,7 +402,7 @@ function NewPostContent() {
               {/* Excerpt Block */}
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
-                  <label htmlFor="excerpt" className="text-sm font-medium">Краткое описание</label>
+                  <label htmlFor="excerpt" className="text-sm font-medium text-muted-foreground">Краткое описание</label>
                   <span className={`text-xs ${excerpt.length > 200 ? 'text-destructive' : 'text-muted-foreground'}`}>
                     {excerpt.length}/200
                   </span>
@@ -427,15 +421,13 @@ function NewPostContent() {
 
               {/* Body Text Block */}
               <div className="space-y-2">
-                <label htmlFor="bodyText" className="text-sm font-medium">Текст статьи</label>
-                <Textarea
-                  id="bodyText"
-                  placeholder="Пишите текст. Пустая строка между абзацами разделяет их."
-                  value={bodyText}
-                  onChange={(e) => setBodyText(e.target.value)}
-                  className="min-h-[400px] rounded-xl"
+                <label htmlFor="bodyText" className="text-sm font-medium text-muted-foreground">Текст статьи</label>
+                <ArticleEditor 
+                  value={bodyText} 
+                  onChange={setBodyText} 
+                  userId={user.id} 
                 />
-                <p className="text-xs text-muted-foreground">Абзацы разделяйте пустой строкой</p>
+                <p className="text-xs text-muted-foreground">Выделите текст, чтобы применить форматирование</p>
               </div>
             </>
           )}
