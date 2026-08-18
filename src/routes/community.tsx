@@ -547,7 +547,8 @@ function CommunityContent() {
       image: 0,
       video: 0,
       audio: 0,
-      agent: 0
+      agent: 0,
+      article: 0
     };
     
     allPublishedPosts?.forEach(p => {
@@ -566,6 +567,7 @@ function CommunityContent() {
     { label: "Видео", value: "video", count: categoryCounts.video },
     { label: "Аудио", value: "audio", count: categoryCounts.audio },
     { label: "Агенты", value: "agent", count: categoryCounts.agent },
+    { label: "Статьи", value: "article", count: categoryCounts.article },
   ];
 
   const handleTypeChange = (newType: string) => {
