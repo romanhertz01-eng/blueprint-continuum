@@ -65,7 +65,13 @@ function PostCard({ post }: { post: EnrichedPost }) {
       className="group flex flex-col bg-card border border-border rounded-[18px] overflow-hidden transition-all hover:border-primary/40 hover:shadow-lg"
     >
       <div className="aspect-video relative bg-muted flex items-center justify-center overflow-hidden">
-        {firstMedia?.url ? (
+        {post.type === 'article' && post.cover_url ? (
+          <img 
+            src={post.cover_url} 
+            alt={post.title} 
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+        ) : firstMedia?.url ? (
           <img 
             src={firstMedia.url} 
             alt={post.title} 
