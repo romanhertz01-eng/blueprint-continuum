@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
 import { toolPages } from "@/data/toolPages";
 import { guides } from "@/data/seo/guides";
+import { supabase } from "@/integrations/supabase/client";
 import { homePage } from "@/data/seo/pages/home";
 import { aiImagePage } from "@/data/seo/pages/aiImage";
 import { aiVideoPage } from "@/data/seo/pages/aiVideo";
@@ -60,6 +61,31 @@ export const Route = createFileRoute("/sitemap.xml")({
         for (const [slug, guide] of Object.entries(guides)) {
           if (guide.status !== "published") continue;
           entries.push({ path: `/guides/${slug}`, lastmod: guide.updatedAt });
+        }
+
+        const formatDate = (ts?: string | null) => (ts ? ts.substring(0, 10) : undefined);
+
+        try {
+          const { data: posts } = await supabase
+            .from("posts")
+            .select("id, published_at, created_at")
+            .eq("status", "published")
+            .order("published_at", { ascending: false })
+            .limit(5000);
+
+          if (posts && posts.length > 0) {
+            const latestDate = formatDate(posts[0].published_at || posts[0].created_at);
+            entries.push({ path: "/community", lastmod: latestDate });
+
+            for (const post of posts) {
+              entries.push({
+                path: `/community/${post.id}`,
+                lastmod: formatDate(post.published_at || post.created_at),
+              });
+            }
+          }
+        } catch (error) {
+          console.error("Sitemap: Error fetching community posts", error);
         }
 
         const urls = entries.map((e) =>

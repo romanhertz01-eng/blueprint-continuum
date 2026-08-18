@@ -32,7 +32,6 @@ import { Route as ToolsTextGenerationRouteImport } from './routes/tools.text-gen
 import { Route as ToolsAudioGenerationRouteImport } from './routes/tools.audio-generation'
 import { Route as ToolsAgentsRouteImport } from './routes/tools.agents'
 import { Route as ToolsSlugRouteImport } from './routes/tools.$slug'
-import { Route as SitemapXmlRouteImport } from './routes/sitemap.xml'
 import { Route as GuidesSlugRouteImport } from './routes/guides.$slug'
 import { Route as CommunityNewRouteImport } from './routes/community_.new'
 import { Route as CommunityIdRouteImport } from './routes/community_.$id'
@@ -164,11 +163,6 @@ const ToolsSlugRoute = ToolsSlugRouteImport.update({
   path: '/tools/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SitemapXmlRoute = SitemapXmlRouteImport.update({
-  id: '/sitemap/xml',
-  path: '/sitemap/xml',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const GuidesSlugRoute = GuidesSlugRouteImport.update({
   id: '/guides/$slug',
   path: '/guides/$slug',
@@ -271,7 +265,6 @@ export interface FileRoutesByFullPath {
   '/community/$id': typeof CommunityIdRoute
   '/community/new': typeof CommunityNewRoute
   '/guides/$slug': typeof GuidesSlugRoute
-  '/sitemap/xml': typeof SitemapXmlRoute
   '/tools/$slug': typeof ToolsSlugRoute
   '/tools/agents': typeof ToolsAgentsRoute
   '/tools/audio-generation': typeof ToolsAudioGenerationRoute
@@ -312,7 +305,6 @@ export interface FileRoutesByTo {
   '/community/$id': typeof CommunityIdRoute
   '/community/new': typeof CommunityNewRoute
   '/guides/$slug': typeof GuidesSlugRoute
-  '/sitemap/xml': typeof SitemapXmlRoute
   '/tools/$slug': typeof ToolsSlugRoute
   '/tools/agents': typeof ToolsAgentsRoute
   '/tools/audio-generation': typeof ToolsAudioGenerationRoute
@@ -354,7 +346,6 @@ export interface FileRoutesById {
   '/community_/$id': typeof CommunityIdRoute
   '/community_/new': typeof CommunityNewRoute
   '/guides/$slug': typeof GuidesSlugRoute
-  '/sitemap/xml': typeof SitemapXmlRoute
   '/tools/$slug': typeof ToolsSlugRoute
   '/tools/agents': typeof ToolsAgentsRoute
   '/tools/audio-generation': typeof ToolsAudioGenerationRoute
@@ -397,7 +388,6 @@ export interface FileRouteTypes {
     | '/community/$id'
     | '/community/new'
     | '/guides/$slug'
-    | '/sitemap/xml'
     | '/tools/$slug'
     | '/tools/agents'
     | '/tools/audio-generation'
@@ -438,7 +428,6 @@ export interface FileRouteTypes {
     | '/community/$id'
     | '/community/new'
     | '/guides/$slug'
-    | '/sitemap/xml'
     | '/tools/$slug'
     | '/tools/agents'
     | '/tools/audio-generation'
@@ -479,7 +468,6 @@ export interface FileRouteTypes {
     | '/community_/$id'
     | '/community_/new'
     | '/guides/$slug'
-    | '/sitemap/xml'
     | '/tools/$slug'
     | '/tools/agents'
     | '/tools/audio-generation'
@@ -521,7 +509,6 @@ export interface RootRouteChildren {
   CommunityIdRoute: typeof CommunityIdRoute
   CommunityNewRoute: typeof CommunityNewRoute
   GuidesSlugRoute: typeof GuidesSlugRoute
-  SitemapXmlRoute: typeof SitemapXmlRoute
   ToolsSlugRoute: typeof ToolsSlugRoute
   ToolsAgentsRoute: typeof ToolsAgentsRoute
   ToolsAudioGenerationRoute: typeof ToolsAudioGenerationRoute
@@ -700,13 +687,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ToolsSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/sitemap/xml': {
-      id: '/sitemap/xml'
-      path: '/sitemap/xml'
-      fullPath: '/sitemap/xml'
-      preLoaderRoute: typeof SitemapXmlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/guides/$slug': {
       id: '/guides/$slug'
       path: '/guides/$slug'
@@ -841,7 +821,6 @@ const rootRouteChildren: RootRouteChildren = {
   CommunityIdRoute: CommunityIdRoute,
   CommunityNewRoute: CommunityNewRoute,
   GuidesSlugRoute: GuidesSlugRoute,
-  SitemapXmlRoute: SitemapXmlRoute,
   ToolsSlugRoute: ToolsSlugRoute,
   ToolsAgentsRoute: ToolsAgentsRoute,
   ToolsAudioGenerationRoute: ToolsAudioGenerationRoute,
