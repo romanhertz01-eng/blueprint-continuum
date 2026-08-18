@@ -425,7 +425,7 @@ function NewPostContent() {
                 <ArticleEditor 
                   value={bodyText} 
                   onChange={setBodyText} 
-                  userId={user.id} 
+                  userId={user?.id || ''} 
                 />
                 <p className="text-xs text-muted-foreground">Выделите текст, чтобы применить форматирование</p>
               </div>
