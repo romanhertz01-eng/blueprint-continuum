@@ -86,6 +86,7 @@ export const Route = createFileRoute("/sitemap.xml")({
           }
         } catch (error) {
           console.error("Sitemap: Error fetching community posts", error);
+        }
 
         const urls = entries.map((e) =>
           [
