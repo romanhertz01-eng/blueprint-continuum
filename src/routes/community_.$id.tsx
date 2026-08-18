@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState, useMemo, useRef } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { 
@@ -104,6 +104,7 @@ function PromptDetailContent() {
   const { user, isAuthed, profile } = useAuth();
   const queryClient = useQueryClient();
   const [commentText, setCommentText] = useState("");
+  const [activeSectionId, setActiveSectionId] = useState<string | null>(null);
   
   const isAdmin = profile?.is_admin || false;
 
@@ -120,6 +121,65 @@ function PromptDetailContent() {
       return data;
     },
   });
+
+  const isArticle = post?.type === 'article';
+
+  // Preparation of article body and headings
+  const { processedHtml, headings } = useMemo(() => {
+    if (!isArticle || !post?.body_html) return { processedHtml: "", headings: [] };
+
+    let html = post.body_html;
+    const headingsList: { id: string; text: string; level: number }[] = [];
+    let counter = 0;
+
+    // Regex to match h2 and h3 tags
+    const headingRegex = /<(h[23])([^>]*)>(.*?)<\/h[23]>/gi;
+
+    const newHtml = html.replace(headingRegex, (match, tag, attrs, content) => {
+      const level = tag.toLowerCase() === 'h2' ? 2 : 3;
+      // Extract text content without tags
+      const text = content.replace(/<[^>]*>?/gm, '').trim();
+      
+      // Check if it already has an id
+      const idMatch = attrs.match(/id=["'](.*?)["']/);
+      let headingId = idMatch ? idMatch[1] : `s${++counter}`;
+      
+      headingsList.push({ id: headingId, text, level });
+
+      if (idMatch) return match;
+      return `<${tag} id="${headingId}"${attrs}>${content}</${tag}>`;
+    });
+
+    return { processedHtml: newHtml, headings: headingsList };
+  }, [post?.body_html, isArticle]);
+
+  // Active section tracking
+  useEffect(() => {
+    if (!isArticle || headings.length < 2) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visibleHeaders = entries
+          .filter(entry => entry.isIntersecting)
+          .sort((a, b) => a.target.getBoundingClientRect().top - b.target.getBoundingClientRect().top);
+
+        if (visibleHeaders.length > 0) {
+          setActiveSectionId(visibleHeaders[0].target.id);
+        }
+      },
+      {
+        rootMargin: "-100px 0px -70% 0px",
+        threshold: 0
+      }
+    );
+
+    headings.forEach(h => {
+      const el = document.getElementById(h.id);
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, [isArticle, headings]);
 
   // 2. Load the author
   const { data: author } = useQuery({
@@ -490,7 +550,9 @@ function PromptDetailContent() {
           <AlertCircle size={20} />
           <div>
             <div className="font-semibold">
-              {post.status === 'pending' ? "Промпт на проверке" : "Промпт отклонён"}
+              {post.status === 'pending' 
+                ? (isArticle ? "Статья на проверке" : "Промпт на проверке")
+                : (isArticle ? "Статья отклонена" : "Промпт отклонён")}
             </div>
             {post.status === 'rejected' && post.rejection_reason && (
               <div className="text-sm opacity-90">{post.rejection_reason}</div>
@@ -531,7 +593,7 @@ function PromptDetailContent() {
       </header>
 
       {/* Media Content */}
-      {media.length > 0 && (
+      {!isArticle && media.length > 0 && (
         <div className="space-y-4 mb-6">
           {media.map((item, idx) => (
             <div key={idx} className="w-full max-w-[560px] mx-auto rounded-2xl overflow-hidden bg-muted">
@@ -551,45 +613,70 @@ function PromptDetailContent() {
         </div>
       )}
 
+      {/* Article Content */}
+      {isArticle && (
+        <>
+          {post.cover_url && (
+            <img src={post.cover_url} alt="" className="w-full aspect-[16/9] object-cover rounded-2xl mb-6" />
+          )}
+          {post.excerpt && (
+            <p className="text-[17px] leading-relaxed text-muted-foreground mb-8">
+              {post.excerpt}
+            </p>
+          )}
+          <div 
+            className="article-body mb-10" 
+            dangerouslySetInnerHTML={{ __html: processedHtml }} 
+          />
+        </>
+      )}
+
       {/* Prompt Block */}
-      <div className="mb-6">
-        <h3 className="text-[14px] font-bold mb-3 uppercase tracking-wider text-muted-foreground">Промпт</h3>
-        <div className="relative group">
-          <div className="absolute top-3 right-3 z-10">
-            <CopyPromptButton text={post.prompt_ru || ""} />
-          </div>
-          <div className="bg-muted/30 border border-border rounded-2xl p-5 pt-12 md:pt-5 md:pr-36 text-[15px] leading-relaxed whitespace-pre-wrap text-foreground">
-            {post.prompt_ru}
+      {!isArticle && (
+        <div className="mb-6">
+          <h3 className="text-[14px] font-bold mb-3 uppercase tracking-wider text-muted-foreground">Промпт</h3>
+          <div className="relative group">
+            <div className="absolute top-3 right-3 z-10">
+              <CopyPromptButton text={post.prompt_ru || ""} />
+            </div>
+            <div className="bg-muted/30 border border-border rounded-2xl p-5 pt-12 md:pt-5 md:pr-36 text-[15px] leading-relaxed whitespace-pre-wrap text-foreground">
+              {post.prompt_ru}
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Info & Handoff */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-6 pb-6 border-b border-border">
-        <div className="space-y-2">
-          {post.provider_id && (
-            <div className="text-[14px]">
-              <span className="text-muted-foreground">Модель:</span>{" "}
-              <span className="font-medium text-foreground">{post.provider_id}</span>
-            </div>
-          )}
-          {post.category_slug && (
-            <div className="text-[14px]">
-              <span className="text-muted-foreground">Категория:</span>{" "}
-              <span className="font-medium text-foreground">{post.category_slug}</span>
-            </div>
-          )}
+      {!isArticle && (
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-6 pb-6 border-b border-border">
+          <div className="space-y-2">
+            {post.provider_id && (
+              <div className="text-[14px]">
+                <span className="text-muted-foreground">Модель:</span>{" "}
+                <span className="font-medium text-foreground">{post.provider_id}</span>
+              </div>
+            )}
+            {post.category_slug && (
+              <div className="text-[14px]">
+                <span className="text-muted-foreground">Категория:</span>{" "}
+                <span className="font-medium text-foreground">{post.category_slug}</span>
+              </div>
+            )}
+          </div>
+          <button
+            onClick={handleHandoff}
+            className="h-12 px-8 rounded-full bg-primary text-white font-bold hover:bg-primary/90 transition-all shadow-[0_4px_20px_rgba(232,84,32,0.3)] flex items-center justify-center gap-2"
+          >
+            Повторить генерацию
+          </button>
         </div>
-        <button
-          onClick={handleHandoff}
-          className="h-12 px-8 rounded-full bg-primary text-white font-bold hover:bg-primary/90 transition-all shadow-[0_4px_20px_rgba(232,84,32,0.3)] flex items-center justify-center gap-2"
-        >
-          Повторить генерацию
-        </button>
-      </div>
+      )}
 
       {/* Actions */}
-      <div className="flex items-center gap-4 mb-12">
+      <div className={cn(
+        "flex items-center gap-4 mb-12",
+        isArticle && "pt-6 border-t border-border"
+      )}>
         <button
           onClick={() => likeMutation.mutate()}
           className={cn(
@@ -723,12 +810,38 @@ function PromptDetailContent() {
       )}
 
       {/* Similar from Catalog */}
-      <SimilarFromCatalog category={post.type as PromptCategory} />
+      {!isArticle && <SimilarFromCatalog category={post.type as PromptCategory} />}
     </div>
 
         {/* Sidebar Column */}
         <aside className="lg:w-[30%]">
           <div className="flex flex-col gap-6 lg:sticky lg:top-24">
+            {/* Table of Contents */}
+            {isArticle && headings.length >= 2 && (
+              <div className="rounded-2xl bg-muted/30 border border-border p-5">
+                <h4 className="text-[12px] font-bold uppercase tracking-wider text-muted-foreground mb-4">На этой странице</h4>
+                <div className="flex flex-col gap-0.5">
+                  {headings.map((h) => (
+                    <button
+                      key={h.id}
+                      onClick={() => {
+                        const el = document.getElementById(h.id);
+                        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      }}
+                      className={cn(
+                        "w-full text-left py-2 px-3 rounded-xl transition-colors leading-snug",
+                        h.level === 2 ? "text-[14px]" : "text-[13px] pl-6",
+                        activeSectionId === h.id 
+                          ? "bg-primary/10 text-primary font-medium" 
+                          : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                      )}
+                    >
+                      {h.text}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
             {/* Categories Block */}
             <div className="rounded-2xl bg-muted/30 border border-border p-5">
               <h4 className="font-bold mb-4 text-[16px]">Категории</h4>
