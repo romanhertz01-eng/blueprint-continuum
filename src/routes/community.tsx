@@ -14,7 +14,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { z } from "zod";
 
 const searchSchema = z.object({
-  type: z.enum(["all", "text", "image", "video", "audio", "agent"]).optional().default("all"),
+  type: z.enum(["all", "text", "image", "video", "audio", "agent", "article"]).optional().default("all"),
   provider: z.string().optional().default("all"),
   sort: z.enum(["new", "popular"]).optional().default("new"),
   page: z.number().optional().default(0),
@@ -134,14 +134,20 @@ function PostCard({ post }: { post: any }) {
       </div>
 
       {/* Category Tag */}
-      <div>
+      <div className="flex items-center gap-2">
         <span className="px-2.5 py-0.5 rounded-full bg-primary/10 text-primary text-[11px] font-medium border border-primary/20">
           {post.type === 'text' ? 'Текст' : 
            post.type === 'image' ? 'Изображение' : 
            post.type === 'video' ? 'Видео' : 
            post.type === 'audio' ? 'Аудио' : 
-           post.type === 'agent' ? 'Агент' : post.type}
+           post.type === 'agent' ? 'Агент' : 
+           post.type === 'article' ? 'Статья' : post.type}
         </span>
+        {post.is_official && (
+          <span className="px-2.5 py-0.5 rounded-full bg-foreground/10 text-foreground text-[11px] font-medium border border-border">
+            ЭРА2
+          </span>
+        )}
       </div>
 
       {/* Title */}
@@ -152,7 +158,23 @@ function PostCard({ post }: { post: any }) {
       </Link>
 
       {/* Media or Prompt Preview */}
-      {post.type === 'text' || post.type === 'agent' ? (
+      {post.type === 'article' ? (
+        <Link to="/community/$id" params={{ id: post.id }} className="flex flex-col gap-3.5">
+          {post.cover_url && (
+            <img 
+              src={post.cover_url} 
+              alt="" 
+              className="w-full aspect-[16/9] object-cover rounded-xl"
+            />
+          )}
+          <p className="text-[14px] text-muted-foreground leading-relaxed line-clamp-3">
+            {post.excerpt}
+          </p>
+          <span className="text-[13px] font-medium text-primary">
+            Читать полностью
+          </span>
+        </Link>
+      ) : post.type === 'text' || post.type === 'agent' ? (
         <Link to="/community/$id" params={{ id: post.id }} className="block bg-muted/30 rounded-xl p-5">
           {post.type === 'agent' && (
             <div className="text-[12px] font-semibold text-primary mb-2 uppercase tracking-wider">
@@ -491,8 +513,8 @@ function CommunityContent() {
     });
 
     // Interleave types while preserving sort order (within pages)
-    // types order: image -> video -> text -> audio -> agent
-    const typesOrder = ['image', 'video', 'text', 'audio', 'agent'];
+    // types order: image -> video -> text -> audio -> agent -> article
+    const typesOrder = ['image', 'video', 'text', 'audio', 'agent', 'article'];
     const buckets: Record<string, any[]> = {};
     typesOrder.forEach(t => buckets[t] = []);
     
@@ -525,7 +547,8 @@ function CommunityContent() {
       image: 0,
       video: 0,
       audio: 0,
-      agent: 0
+      agent: 0,
+      article: 0
     };
     
     allPublishedPosts?.forEach(p => {
@@ -544,6 +567,7 @@ function CommunityContent() {
     { label: "Видео", value: "video", count: categoryCounts.video },
     { label: "Аудио", value: "audio", count: categoryCounts.audio },
     { label: "Агенты", value: "agent", count: categoryCounts.agent },
+    { label: "Статьи", value: "article", count: categoryCounts.article },
   ];
 
   const handleTypeChange = (newType: string) => {
