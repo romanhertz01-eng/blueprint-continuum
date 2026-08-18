@@ -529,20 +529,29 @@ function AuthorProfileContent() {
               ))}
             </div>
           ) : posts && posts.length > 0 ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {posts.map(post => (
-                <PostCard 
-                  key={post.id} 
-                  post={{
-                    ...post,
-                    author: { 
-                      display_name: author.display_name, 
-                      avatar_url: author.avatar_url 
-                    }
-                  }} 
-                />
-              ))}
-            </div>
+            visiblePosts.length > 0 ? (
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                {visiblePosts.map(post => (
+                  <PostCard 
+                    key={post.id} 
+                    post={{
+                      ...post,
+                      author: { 
+                        display_name: author.display_name, 
+                        avatar_url: author.avatar_url 
+                      }
+                    }} 
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-20 bg-muted/20 border border-dashed rounded-[32px]">
+                <LayoutGrid size={40} className="mx-auto text-muted-foreground/30 mb-4" />
+                <p className="text-muted-foreground">
+                  {worksTab === 'prompts' ? "У автора пока нет промптов" : "У автора пока нет статей"}
+                </p>
+              </div>
+            )
           ) : (
             <div className="text-center py-20 bg-muted/20 border border-dashed rounded-[32px]">
               <LayoutGrid size={40} className="mx-auto text-muted-foreground/30 mb-4" />
