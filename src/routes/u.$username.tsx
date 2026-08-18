@@ -55,6 +55,7 @@ function PostCard({ post }: { post: EnrichedPost }) {
     video: <Video className="h-5 w-5" />,
     audio: <Music className="h-5 w-5" />,
     agent: <Bot className="h-5 w-5" />,
+    article: <Newspaper className="h-5 w-5" />,
   }[post.type as string] || <LayoutGrid className="h-5 w-5" />;
 
   return (
