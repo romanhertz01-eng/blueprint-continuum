@@ -18,6 +18,7 @@ const searchSchema = z.object({
   provider: z.string().optional().default("all"),
   sort: z.enum(["new", "popular"]).optional().default("new"),
   page: z.number().optional().default(0),
+  topic: z.string().optional().default("all"),
 });
 
 export const Route = createFileRoute("/community")({
