@@ -842,7 +842,7 @@ function CommunityContent() {
             activeType={type}
             onTypeChange={handleTypeChange}
             activeTopic={topic}
-            onTopicChange={handleTopicChange}
+            onTopicChange={() => {}}
             onChildClick={handleChildClick}
             topicCounts={categoryCounts.topicCounts}
             articleTopics={articleTopics}
