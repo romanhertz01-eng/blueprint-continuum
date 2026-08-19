@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { sanitizeArticleHtml } from "@/lib/sanitizeArticleHtml";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { RequireAuth } from "@/components/auth/RequireAuth";
 import { useAuth } from "@/contexts/AuthContext";
@@ -348,7 +349,7 @@ function ModerationPage() {
                         <div className="space-y-2">
                           <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Текст статьи</h4>
                           <div className="bg-background border border-border rounded-xl p-4 max-h-[500px] overflow-y-auto">
-                            <div className="article-body" dangerouslySetInnerHTML={{ __html: post.body_html || '' }} />
+                            <div className="article-body" dangerouslySetInnerHTML={{ __html: sanitizeArticleHtml(post.body_html || '') }} />
                           </div>
                         </div>
                       </>

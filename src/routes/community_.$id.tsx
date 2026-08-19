@@ -33,6 +33,7 @@ import { format, formatDistanceToNow } from "date-fns";
 import { ru } from "date-fns/locale";
 import { toast } from "sonner";
 import { PromptCategory } from "@/data/prompts/types";
+import { sanitizeArticleHtml } from "@/lib/sanitizeArticleHtml";
 
 export const Route = createFileRoute("/community_/$id")({
   loader: async ({ params }) => {
@@ -261,7 +262,7 @@ function PromptDetailContent() {
   const { processedHtml, headings } = useMemo(() => {
     if (!isArticle || !post?.body_html) return { processedHtml: "", headings: [] };
 
-    let html = post.body_html;
+    let html = sanitizeArticleHtml(post.body_html);
     const headingsList: { id: string; text: string; level: number }[] = [];
     let counter = 0;
 
