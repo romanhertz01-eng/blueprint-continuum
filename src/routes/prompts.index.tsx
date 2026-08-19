@@ -1210,7 +1210,7 @@ function CommunityShelf() {
         </div>
         <Link 
           to="/community"
-          search={{ type: 'all', provider: 'all', sort: 'new', page: 0 }}
+          search={{ type: 'all', provider: 'all', sort: 'new', page: 0, topic: 'all' }}
           className="shrink-0 text-[13px] font-bold text-primary hover:opacity-80 transition-opacity whitespace-nowrap"
         >
           Смотреть все →

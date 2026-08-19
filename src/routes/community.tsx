@@ -319,7 +319,7 @@ function Sidebar({
         </div>
         <Link 
           to="/community" 
-          search={{ type: 'all', provider: 'all', sort: 'new', page: 0 }}
+          search={{ type: 'all', provider: 'all', sort: 'new', page: 0, topic: 'all' }}
           className="block text-center text-primary text-[13px] font-medium mt-6 hover:underline"
         >
           Все авторы

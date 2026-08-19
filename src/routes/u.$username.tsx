@@ -341,7 +341,7 @@ function AuthorProfileContent() {
   }, [topAuthorsProfiles, allFollowsData, topAuthorIds]);
 
   const handleTypeChange = (type: string) => {
-    navigate({ to: "/community", search: { type: type as any, provider: 'all', sort: 'new', page: 0 } });
+    navigate({ to: "/community", search: { type: type as any, provider: 'all', sort: 'new', page: 0, topic: 'all' } });
   };
 
   const sidebarPosts = useMemo(() => {
@@ -365,7 +365,7 @@ function AuthorProfileContent() {
         <p className="text-muted-foreground mb-8">Возможно, ссылка неверна или профиль был удален.</p>
         <Link 
           to="/community" 
-          search={{ type: 'all', provider: 'all', sort: 'new', page: 0 }}
+          search={{ type: 'all', provider: 'all', sort: 'new', page: 0, topic: 'all' }}
           className="text-primary font-medium hover:underline"
         >
           Вернуться в сообщество
@@ -619,7 +619,7 @@ function AuthorProfileContent() {
               </div>
               <Link 
                 to="/community" 
-                search={{ type: 'all', provider: 'all', sort: 'new', page: 0 }}
+                search={{ type: 'all', provider: 'all', sort: 'new', page: 0, topic: 'all' }}
                 className="block text-center text-primary text-[13px] font-medium mt-6 hover:underline"
               >
                 Все авторы
