@@ -271,8 +271,10 @@ function Sidebar({
   articleTopics: { id: string, label: string }[],
   onChildClick: (type: string, topic?: string) => void
 }) {
-  const isPromptsOpen = activeType === 'prompts' || ['text', 'image', 'video', 'audio', 'agent'].includes(activeType);
-  const isArticlesOpen = activeType === 'article';
+  const [isPromptsOpen, setIsPromptsOpen] = useState(
+    () => activeType === 'prompts' || ['text', 'image', 'video', 'audio', 'agent'].includes(activeType)
+  );
+  const [isArticlesOpen, setIsArticlesOpen] = useState(() => activeType === 'article');
   
   const ChevronDown = ({ className }: { className?: string }) => (
     <svg 
