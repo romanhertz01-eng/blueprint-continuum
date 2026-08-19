@@ -22,6 +22,7 @@ import {
   Clock,
   ChevronRight,
   Newspaper,
+  Pencil,
 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { toast } from "sonner";
@@ -452,7 +453,7 @@ export default function AccountPage() {
               <h2 className="text-lg font-semibold">Ваши промпты</h2>
               <Link
                 to="/community/new"
-                search={{ type: "image" }}
+                search={{ type: "image", edit: undefined }}
                 className="inline-flex items-center gap-1.5 h-9 px-4 rounded-lg text-[13px] font-semibold text-white bg-primary hover:bg-primary/90 transition-colors"
               >
                 <Plus className="h-4 w-4" />
@@ -470,7 +471,7 @@ export default function AccountPage() {
               <h2 className="text-lg font-semibold">Ваши статьи</h2>
               <Link
                 to="/community/new"
-                search={{ type: "article" }}
+                search={{ type: "article", edit: undefined }}
                 className="inline-flex items-center gap-1.5 h-9 px-4 rounded-lg text-[13px] font-semibold text-white bg-primary hover:bg-primary/90 transition-colors"
               >
                 <Plus className="h-4 w-4" />
@@ -697,12 +698,24 @@ function MyPostsList({ kind }: { kind: 'prompts' | 'articles' }) {
               </div>
             </div>
           </div>
-          <a 
-            href={`/community/${post.id}`}
-            className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
-          >
-            <ChevronRight size={18} />
-          </a>
+            <div className="flex items-center gap-1">
+              {post.type === 'article' && (
+                <Link
+                  to="/community/new"
+                  search={{ type: 'article', edit: post.id }}
+                  className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
+                  title="Редактировать"
+                >
+                  <Pencil size={16} />
+                </Link>
+              )}
+              <a 
+                href={`/community/${post.id}`}
+                className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
+              >
+                <ChevronRight size={18} />
+              </a>
+            </div>
         </div>
       ))}
     </div>

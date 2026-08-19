@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { RequireAuth } from "@/components/auth/RequireAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,7 +27,8 @@ const articleCategories = [
 
 export const Route = createFileRoute("/community_/new")({
   validateSearch: (search: Record<string, unknown>) => ({
-    type: typeof search.type === 'string' ? search.type : undefined,
+    type: typeof search.type === 'string' ? search.type : undefined as string | undefined,
+    edit: typeof search.edit === 'string' ? search.edit : undefined as string | undefined,
   }),
   component: () => (
     <RequireAuth>
@@ -41,8 +43,10 @@ function NewPostPage() {
 
 function NewPostContent() {
   const navigate = useNavigate();
-  const { user } = useAuth();
-  const { type: typeParam } = Route.useSearch();
+  const { user, profile } = useAuth();
+  const { type: typeParam, edit: editParam } = Route.useSearch();
+  const isEditMode = Boolean(editParam);
+  const isAdmin = profile?.is_admin || false;
   
   const [kind, setKind] = useState<PostKind | null>(() => {
     if (typeParam === 'article') return 'article';
@@ -65,12 +69,58 @@ function NewPostContent() {
   const [excerpt, setExcerpt] = useState('');
   const [bodyText, setBodyText] = useState('');
   const [cover, setCover] = useState<{ file: File; preview: string } | null>(null);
+  const [existingCoverUrl, setExistingCoverUrl] = useState<string | null>(null);
   
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<number | null>(null);
   
   const fileInputRef = useRef<HTMLInputElement>(null);
   const coverInputRef = useRef<HTMLInputElement>(null);
+
+  // Load post for editing
+  const { data: editingPost, isLoading: isPostLoading } = useQuery({
+    queryKey: ['editing-post', editParam],
+    enabled: isEditMode && !!editParam,
+    queryFn: async () => {
+      if (!editParam) return null;
+      const { data, error } = await supabase
+        .from('posts')
+        .select('id, author_id, type, status, title, excerpt, cover_url, body_html, category_slug')
+        .eq('id', editParam)
+        .single();
+      if (error) throw error;
+      return data;
+    }
+  });
+
+  useEffect(() => {
+    if (isEditMode && editingPost) {
+      if (editingPost.type !== 'article') {
+        toast.error('Пока можно редактировать только статьи');
+        navigate({ to: '/account' });
+        return;
+      }
+      if (editingPost.author_id !== user?.id && !isAdmin) {
+        toast.error('Нет доступа к этой публикации');
+        navigate({ to: '/account' });
+        return;
+      }
+
+      setKind('article');
+      setTitle(editingPost.title);
+      setCategory(editingPost.category_slug || '');
+      setExcerpt(editingPost.excerpt || '');
+      setBodyText(editingPost.body_html || '');
+      setExistingCoverUrl(editingPost.cover_url);
+    }
+  }, [editingPost, isEditMode, user?.id, isAdmin, navigate]);
+
+  useEffect(() => {
+    if (isEditMode && !isPostLoading && !editingPost) {
+      toast.error('Публикация не найдена');
+      navigate({ to: '/account' });
+    }
+  }, [editingPost, isPostLoading, isEditMode, navigate]);
 
   const isArticle = kind === 'article';
 
@@ -182,12 +232,12 @@ function NewPostContent() {
 
     setIsSubmitting(true);
     try {
-      let coverUrl = null;
+      let finalCoverUrl = isEditMode ? existingCoverUrl : null;
       let bodyHtml = null;
       const uploadedMedia = [];
 
       if (isArticle) {
-        // Upload cover if exists
+        // Upload cover if new file is selected
         if (cover) {
           const fileExt = cover.file.name.split('.').pop();
           const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
@@ -203,32 +253,48 @@ function NewPostContent() {
             .from('posts')
             .getPublicUrl(filePath);
           
-          coverUrl = publicUrl;
+          finalCoverUrl = publicUrl;
         }
 
         // bodyText already contains HTML
         bodyHtml = bodyText;
 
-        const { error: insertError } = await supabase
-          .from('posts')
-          .insert({
-            author_id: user.id,
-            type: 'article',
-            title,
-            prompt_ru: null,
-            provider_id: null,
-            category_slug: category,
-            media: [],
-            excerpt,
-            cover_url: coverUrl,
-            body_html: bodyHtml,
-            status: 'pending',
-            params: {}
-          });
+        if (isEditMode) {
+          const { error: updateError } = await supabase
+            .from('posts')
+            .update({
+              title,
+              category_slug: category,
+              excerpt,
+              cover_url: finalCoverUrl,
+              body_html: bodyHtml,
+              status: 'pending'
+            })
+            .eq('id', editParam as string);
 
-        if (insertError) throw insertError;
-        
-        toast.success('Статья отправлена на проверку, она появится в ленте после модерации');
+          if (updateError) throw updateError;
+          toast.success('Изменения сохранены, статья отправлена на повторную проверку');
+        } else {
+          const { error: insertError } = await supabase
+            .from('posts')
+            .insert({
+              author_id: user.id,
+              type: 'article',
+              title,
+              prompt_ru: null,
+              provider_id: null,
+              category_slug: category,
+              media: [],
+              excerpt,
+              cover_url: finalCoverUrl,
+              body_html: bodyHtml,
+              status: 'pending',
+              params: {}
+            });
+
+          if (insertError) throw insertError;
+          toast.success('Статья отправлена на проверку, она появится в ленте после модерации');
+        }
       } else {
         // Handle existing logic for other types
         for (const item of files) {
@@ -273,7 +339,7 @@ function NewPostContent() {
 
       navigate({ to: '/account' });
     } catch (err: any) {
-      console.error("Error creating post:", err);
+      console.error("Error creating/updating post:", err);
       toast.error(`Ошибка при сохранении: ${err.message || 'попробуйте позже'}`);
     } finally {
       setIsSubmitting(false);
@@ -289,10 +355,19 @@ function NewPostContent() {
   ];
 
   const getPageTitle = () => {
+    if (isEditMode) return 'Редактировать статью';
     if (kind === null) return 'Новая публикация';
     if (kind === 'article') return 'Написать статью';
     return 'Добавить промпт';
   };
+
+  if (isEditMode && isPostLoading) {
+    return (
+      <div className="container max-w-[720px] mx-auto py-12 px-6">
+        <div className="h-[600px] rounded-3xl bg-muted animate-pulse" />
+      </div>
+    );
+  }
 
   return (
     <div className="container max-w-[720px] mx-auto py-12 px-6">
@@ -302,9 +377,10 @@ function NewPostContent() {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Publication Kind Selection */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-muted-foreground">Что публикуем</label>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {!isEditMode && (
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-muted-foreground">Что публикуем</label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <button
                 type="button"
                 onClick={() => setKind('prompt')}
@@ -344,8 +420,9 @@ function NewPostContent() {
                   <span className="text-[13px] text-muted-foreground leading-snug mt-0.5">Текст с картинками и форматированием</span>
                 </div>
               </button>
+              </div>
             </div>
-          </div>
+          )}
 
           {kind && (
             <>
@@ -475,7 +552,7 @@ function NewPostContent() {
                       accept="image/*"
                     />
                     
-                    {!cover ? (
+                    {!cover && !existingCoverUrl ? (
                       <button
                         type="button"
                         onClick={() => coverInputRef.current?.click()}
@@ -487,13 +564,19 @@ function NewPostContent() {
                     ) : (
                       <div className="relative">
                         <img 
-                          src={cover.preview} 
+                          src={cover ? cover.preview : existingCoverUrl!} 
                           alt="" 
                           className="w-full aspect-[16/9] object-cover rounded-2xl" 
                         />
                         <button
                           type="button"
-                          onClick={removeCover}
+                          onClick={() => {
+                            if (cover) {
+                              removeCover();
+                            } else {
+                              setExistingCoverUrl(null);
+                            }
+                          }}
                           className="absolute top-3 right-3 w-8 h-8 rounded-full bg-background/80 border border-border flex items-center justify-center hover:bg-background transition-colors"
                         >
                           <X className="h-4 w-4" />
@@ -606,7 +689,7 @@ function NewPostContent() {
                       Сохранение...
                     </>
                   ) : (
-                    'Опубликовать'
+                    isEditMode ? 'Сохранить изменения' : 'Опубликовать'
                   )}
                 </Button>
                 <p className="text-center text-xs text-muted-foreground mt-4">
