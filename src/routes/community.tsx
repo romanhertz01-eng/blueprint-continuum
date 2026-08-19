@@ -332,7 +332,8 @@ function Sidebar({
             return (
               <div key={cat.value} className="flex flex-col">
                 <button
-                  onClick={() => onTypeChange(cat.value)}
+                  type="button"
+                  onClick={handleToggle}
                   className={cn(
                     "flex items-center justify-between py-2 px-3 rounded-xl transition-colors text-left",
                     isActive ? "bg-primary/10 text-primary font-medium" : "hover:bg-muted text-muted-foreground hover:text-foreground"
