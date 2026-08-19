@@ -606,7 +606,7 @@ function CommunityContent() {
           className="inline-flex items-center gap-2 h-11 px-6 rounded-full bg-primary text-white font-semibold hover:bg-primary/90 transition-all shadow-[0_4px_16px_rgba(232,84,32,0.3)] shrink-0 self-start md:self-auto"
         >
           <Plus size={18} />
-          <span>Добавить промпт</span>
+          <span>Опубликовать</span>
         </Link>
       </div>
 
