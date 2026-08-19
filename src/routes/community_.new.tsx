@@ -13,6 +13,7 @@ import { promptTopics } from "@/data/prompts/topics";
 import { agentTopics } from "@/data/prompts/agentTopics";
 import { PromptCategory } from "@/data/prompts/types";
 import { ArticleEditor } from "@/components/community/ArticleEditor";
+import { sanitizeArticleHtml } from "@/lib/sanitizeArticleHtml";
 import { cn } from "@/lib/utils";
 
 type PostType = 'text' | 'image' | 'video' | 'audio' | 'agent';
@@ -70,6 +71,7 @@ function NewPostContent() {
   const [bodyText, setBodyText] = useState('');
   const [cover, setCover] = useState<{ file: File; preview: string } | null>(null);
   const [existingCoverUrl, setExistingCoverUrl] = useState<string | null>(null);
+  const [isPreview, setIsPreview] = useState(false);
   
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<number | null>(null);
@@ -138,8 +140,9 @@ function NewPostContent() {
   }, [type, isArticle]);
 
   useEffect(() => {
-    // Reset category when type or kind changes
+    // Reset category and preview when type or kind changes
     setCategory('');
+    setIsPreview(false);
   }, [type, kind]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -382,7 +385,7 @@ function NewPostContent() {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Publication Kind Selection */}
-          {!isEditMode && (
+          {!isEditMode && (!isArticle || !isPreview) && (
             <div className="space-y-2">
               <label className="text-sm font-medium text-muted-foreground">Что публикуем</label>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -431,6 +434,37 @@ function NewPostContent() {
 
           {kind && (
             <>
+              {kind === 'article' && (
+                <div className="flex justify-end mb-6">
+                  <div className="inline-flex items-center gap-1 p-1 rounded-xl bg-muted/50">
+                    <button
+                      type="button"
+                      onClick={() => setIsPreview(false)}
+                      className={cn(
+                        "h-8 px-4 rounded-lg text-[13px] font-medium transition-colors",
+                        !isPreview 
+                          ? "bg-background text-foreground shadow-sm" 
+                          : "text-muted-foreground hover:text-foreground"
+                      )}
+                    >
+                      Редактор
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setIsPreview(true)}
+                      className={cn(
+                        "h-8 px-4 rounded-lg text-[13px] font-medium transition-colors",
+                        isPreview 
+                          ? "bg-background text-foreground shadow-sm" 
+                          : "text-muted-foreground hover:text-foreground"
+                      )}
+                    >
+                      Предпросмотр
+                    </button>
+                  </div>
+                </div>
+              )}
+
               {kind === 'prompt' && (
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-muted-foreground">Тип промпта</label>
@@ -456,7 +490,8 @@ function NewPostContent() {
               )}
 
               {/* Title */}
-              <div className="space-y-2">
+              {(!isArticle || !isPreview) && (
+                <div className="space-y-2">
                 <div className="flex justify-between items-center">
                   <label htmlFor="title" className="text-sm font-medium">Заголовок *</label>
                   <span className={`text-xs ${title.length > 120 ? 'text-destructive' : 'text-muted-foreground'}`}>
@@ -473,6 +508,7 @@ function NewPostContent() {
                   className="rounded-xl"
                 />
               </div>
+              )}
 
               {kind === 'prompt' ? (
                 <>
@@ -525,6 +561,45 @@ function NewPostContent() {
                     </select>
                   </div>
                 </>
+              ) : isPreview ? (
+                <div className="pt-2 pb-2">
+                  {/* Preview Cover */}
+                  {cover || existingCoverUrl ? (
+                    <img 
+                      src={cover ? cover.preview : existingCoverUrl!} 
+                      alt="" 
+                      className="w-full aspect-[16/9] object-cover rounded-2xl mb-6" 
+                    />
+                  ) : (
+                    <div className="w-full aspect-[16/9] rounded-2xl border-2 border-dashed border-border flex items-center justify-center mb-6">
+                      <span className="text-sm text-muted-foreground">Обложка не загружена</span>
+                    </div>
+                  )}
+
+                  {/* Preview Title */}
+                  <h2 className={cn(
+                    "text-[26px] font-bold text-foreground mb-4 leading-tight",
+                    !title.trim() && "text-muted-foreground"
+                  )}>
+                    {title.trim() || "Без заголовка"}
+                  </h2>
+
+                  {/* Preview Excerpt */}
+                  {excerpt.trim() && (
+                    <p className="text-[17px] leading-relaxed text-muted-foreground mb-8">
+                      {excerpt}
+                    </p>
+                  )}
+
+                  {/* Preview Body */}
+                  <div className="article-body">
+                    {bodyText.trim() ? (
+                      <div dangerouslySetInnerHTML={{ __html: sanitizeArticleHtml(bodyText) }} />
+                    ) : (
+                      <p className="text-sm text-muted-foreground">Текст статьи пока пуст</p>
+                    )}
+                  </div>
+                </div>
               ) : (
                 <>
                   {/* Rubric (Category) */}
