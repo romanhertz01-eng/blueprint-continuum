@@ -1081,6 +1081,38 @@ function PromptDetailContent() {
                 </div>
               </div>
             )}
+
+            {/* Guides block */}
+            {isArticle && communityGuides.length > 0 && (
+              <div className="rounded-2xl bg-muted/30 border border-border p-5">
+                <h3 className="font-bold mb-4 text-[16px]">Гайды ЭРА2</h3>
+                <div className="flex flex-col gap-3">
+                  {communityGuides.map((guide) => (
+                    <Link
+                      key={guide.slug}
+                      to="/guides/$slug"
+                      params={{ slug: guide.slug }}
+                      className="block group"
+                    >
+                      <p className="text-[14px] font-medium text-foreground group-hover:text-primary transition-colors leading-snug">
+                        {guide.title}
+                      </p>
+                      {guide.readingTime && (
+                        <p className="text-[12px] text-muted-foreground mt-0.5">
+                          {guide.readingTime}
+                        </p>
+                      )}
+                    </Link>
+                  ))}
+                </div>
+                <Link 
+                  to="/guides" 
+                  className="block text-center text-primary text-[13px] font-medium mt-5 hover:underline"
+                >
+                  Все гайды
+                </Link>
+              </div>
+            )}
           </div>
         </aside>
       </div>
