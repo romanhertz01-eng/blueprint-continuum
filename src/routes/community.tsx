@@ -14,7 +14,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { z } from "zod";
 
 const searchSchema = z.object({
-  type: z.enum(["all", "text", "image", "video", "audio", "agent", "article"]).optional().default("all"),
+  type: z.enum(["all", "prompts", "text", "image", "video", "audio", "agent", "article"]).optional().default("all"),
   provider: z.string().optional().default("all"),
   sort: z.enum(["new", "popular"]).optional().default("new"),
   page: z.number().optional().default(0),
@@ -258,73 +258,96 @@ function Sidebar({
   activeTopic,
   onTopicChange,
   topicCounts,
-  articleTopics
+  articleTopics,
+  onChildClick
 }: { 
-  categories: { label: string, value: string, count: number }[],
+  categories: any[],
   topAuthors: any[],
   activeType: string,
   onTypeChange: (type: string) => void,
   activeTopic: string,
   onTopicChange: (topic: string) => void,
   topicCounts: Record<string, number>,
-  articleTopics: { id: string, label: string }[]
+  articleTopics: { id: string, label: string }[],
+  onChildClick: (type: string, topic?: string) => void
 }) {
+  const isPromptsOpen = activeType === 'prompts' || ['text', 'image', 'video', 'audio', 'agent'].includes(activeType);
+  const isArticlesOpen = activeType === 'article';
+  
+  const ChevronDown = ({ className }: { className?: string }) => (
+    <svg 
+      width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" 
+      className={className}
+    >
+      <path d="m6 9 6 6 6-6"/>
+    </svg>
+  );
+
   return (
     <div className="flex flex-col gap-6 lg:sticky lg:top-24">
       {/* Categories Block */}
       <div className="rounded-2xl bg-muted/30 border border-border p-5">
         <h4 className="font-bold mb-4">Категории</h4>
         <div className="flex flex-col gap-1">
-          {categories.map((cat) => (
-            <div key={cat.value} className="flex flex-col">
-              <button
-                onClick={() => onTypeChange(cat.value)}
-                className={cn(
-                  "flex items-center justify-between py-2 px-3 rounded-xl transition-colors text-left",
-                  activeType === cat.value ? "bg-primary/10 text-primary font-medium" : "hover:bg-muted text-muted-foreground hover:text-foreground"
-                )}
-              >
-                <span>{cat.label}</span>
-                <span className="text-[12px] opacity-60 bg-muted px-2 py-0.5 rounded-full">
-                  {cat.count}
-                </span>
-              </button>
+          {categories.map((cat) => {
+            const hasChildren = !!cat.children;
+            const isOpen = cat.value === 'prompts' ? isPromptsOpen : (cat.value === 'article' ? isArticlesOpen : false);
+            const isActive = cat.value === 'all' 
+              ? activeType === 'all' 
+              : (cat.value === 'prompts' 
+                  ? activeType === 'prompts' 
+                  : (cat.value === 'article' ? (activeType === 'article' && activeTopic === 'all') : false));
 
-              {/* Nested topics for Articles */}
-              {cat.value === 'article' && activeType === 'article' && (
-                <div className="flex flex-col gap-0.5 mt-1 pl-3 border-l border-border ml-3">
-                  <button
-                    onClick={() => onTopicChange('all')}
-                    className={cn(
-                      "flex items-center justify-between py-1.5 px-3 rounded-lg transition-colors text-left text-[13px]",
-                      activeTopic === 'all' ? "bg-primary/10 text-primary font-medium" : "text-muted-foreground hover:bg-muted hover:text-foreground"
+            return (
+              <div key={cat.value} className="flex flex-col">
+                <button
+                  onClick={() => onTypeChange(cat.value)}
+                  className={cn(
+                    "flex items-center justify-between py-2 px-3 rounded-xl transition-colors text-left",
+                    isActive ? "bg-primary/10 text-primary font-medium" : "hover:bg-muted text-muted-foreground hover:text-foreground"
+                  )}
+                >
+                  <span>{cat.label}</span>
+                  <div className="flex items-center gap-1.5">
+                    {hasChildren && (
+                      <ChevronDown className={cn("transition-transform shrink-0", isOpen && "rotate-180")} />
                     )}
-                  >
-                    <span>Все рубрики</span>
-                    <span className="text-[11px] opacity-60 tabular-nums">{topicCounts.all}</span>
-                  </button>
-                  {articleTopics.map(topic => {
-                    const count = topicCounts[topic.id] || 0;
-                    return (
-                      <button
-                        key={topic.id}
-                        disabled={count === 0}
-                        onClick={() => onTopicChange(topic.id)}
-                        className={cn(
-                          "flex items-center justify-between py-1.5 px-3 rounded-lg transition-colors text-left text-[13px]",
-                          activeTopic === topic.id ? "bg-primary/10 text-primary font-medium" : "text-muted-foreground hover:bg-muted hover:text-foreground",
-                          count === 0 && "opacity-50"
-                        )}
-                      >
-                        <span>{topic.label}</span>
-                        <span className="text-[11px] opacity-60 tabular-nums">{count}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          ))}
+                    <span className="text-[12px] opacity-60 bg-muted px-2 py-0.5 rounded-full">
+                      {cat.count}
+                    </span>
+                  </div>
+                </button>
+
+                {/* Nested children */}
+                {hasChildren && isOpen && (
+                  <div className="flex flex-col gap-0.5 mt-1 pl-3 border-l border-border ml-3">
+                    {cat.children.map((child: any) => {
+                      const count = cat.value === 'article' ? topicCounts[child.value] : child.count;
+                      const isChildActive = cat.value === 'article' 
+                        ? (activeType === 'article' && activeTopic === child.value)
+                        : (activeType === child.value);
+                      
+                      return (
+                        <button
+                          key={child.value}
+                          disabled={count === 0}
+                          onClick={() => onChildClick(cat.value === 'article' ? 'article' : child.value, cat.value === 'article' ? child.value : undefined)}
+                          className={cn(
+                            "flex items-center justify-between py-1.5 px-3 rounded-lg transition-colors text-left text-[13px]",
+                            isChildActive ? "bg-primary/10 text-primary font-medium" : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                            count === 0 && "opacity-50"
+                          )}
+                        >
+                          <span>{child.label}</span>
+                          <span className="text-[11px] opacity-60 tabular-nums">{count}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
 
@@ -394,9 +417,13 @@ function CommunityContent() {
         .eq("status", "published");
 
       if (type !== "all") {
-        query = query.eq("type", type);
-        if (type === "article" && topic !== "all") {
-          query = query.eq("category_slug", topic);
+        if (type === "prompts") {
+          query = query.neq("type", "article");
+        } else {
+          query = query.eq("type", type);
+          if (type === "article" && topic !== "all") {
+            query = query.eq("category_slug", topic);
+          }
         }
       }
 
@@ -602,7 +629,8 @@ function CommunityContent() {
       video: 0,
       audio: 0,
       agent: 0,
-      article: 0
+      article: 0,
+      prompts: 0
     };
     
     const topicCounts: Record<string, number> = {
@@ -622,6 +650,9 @@ function CommunityContent() {
             topicCounts[p.category_slug]++;
           }
         }
+        if (['text', 'image', 'video', 'audio', 'agent'].includes(p.type)) {
+          counts.prompts++;
+        }
       }
     });
     
@@ -630,20 +661,44 @@ function CommunityContent() {
 
   const categories = [
     { label: "Все", value: "all", count: (categoryCounts as any).all },
-    { label: "Текст", value: "text", count: (categoryCounts as any).text },
-    { label: "Изображения", value: "image", count: (categoryCounts as any).image },
-    { label: "Видео", value: "video", count: (categoryCounts as any).video },
-    { label: "Аудио", value: "audio", count: (categoryCounts as any).audio },
-    { label: "Агенты", value: "agent", count: (categoryCounts as any).agent },
-    { label: "Статьи", value: "article", count: (categoryCounts as any).article },
+    { 
+      label: "Промпты", 
+      value: "prompts", 
+      count: (categoryCounts as any).prompts,
+      children: [
+        { label: "Текст", value: "text", count: (categoryCounts as any).text },
+        { label: "Изображения", value: "image", count: (categoryCounts as any).image },
+        { label: "Видео", value: "video", count: (categoryCounts as any).video },
+        { label: "Аудио", value: "audio", count: (categoryCounts as any).audio },
+        { label: "Агенты", value: "agent", count: (categoryCounts as any).agent },
+      ]
+    },
+    { 
+      label: "Статьи", 
+      value: "article", 
+      count: (categoryCounts as any).article,
+      children: articleTopics.map(t => ({ label: t.label, value: t.id }))
+    },
   ];
 
   const handleTypeChange = (newType: string) => {
-    navigate({ search: (prev) => ({ ...prev, type: newType as any, provider: 'all', page: 0, topic: 'all' }) });
+    if (newType === 'all') {
+      navigate({ search: (prev) => ({ ...prev, type: 'all', topic: 'all', page: 0, provider: 'all' }) });
+    } else if (newType === 'prompts') {
+      navigate({ search: (prev) => ({ ...prev, type: 'prompts', topic: 'all', page: 0, provider: 'all' }) });
+    } else if (newType === 'article') {
+      navigate({ search: (prev) => ({ ...prev, type: 'article', topic: 'all', page: 0, provider: 'all' }) });
+    } else {
+      navigate({ search: (prev) => ({ ...prev, type: newType as any, topic: 'all', page: 0, provider: 'all' }) });
+    }
   };
 
-  const handleTopicChange = (newTopic: string) => {
-    navigate({ search: (prev) => ({ ...prev, type: 'article', topic: newTopic, page: 0 }) });
+  const handleChildClick = (typeVal: string, topicVal?: string) => {
+    if (typeVal === 'article' && topicVal) {
+      navigate({ search: (prev) => ({ ...prev, type: 'article', topic: topicVal, page: 0 }) });
+    } else {
+      navigate({ search: (prev) => ({ ...prev, type: typeVal as any, topic: 'all', page: 0, provider: 'all' }) });
+    }
   };
 
   const handleProviderChange = (newProvider: string) => {
@@ -787,7 +842,8 @@ function CommunityContent() {
             activeType={type}
             onTypeChange={handleTypeChange}
             activeTopic={topic}
-            onTopicChange={handleTopicChange}
+            onTopicChange={() => {}}
+            onChildClick={handleChildClick}
             topicCounts={categoryCounts.topicCounts}
             articleTopics={articleTopics}
           />
