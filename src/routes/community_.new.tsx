@@ -82,6 +82,7 @@ function NewPostContent() {
     queryKey: ['editing-post', editParam],
     enabled: isEditMode && !!editParam,
     queryFn: async () => {
+      if (!editParam) return null;
       const { data, error } = await supabase
         .from('posts')
         .select('id, author_id, type, status, title, excerpt, cover_url, body_html, category_slug')
@@ -269,7 +270,7 @@ function NewPostContent() {
               body_html: bodyHtml,
               status: 'pending'
             })
-            .eq('id', editParam);
+            .eq('id', editParam as string);
 
           if (updateError) throw updateError;
           toast.success('Изменения сохранены, статья отправлена на повторную проверку');
