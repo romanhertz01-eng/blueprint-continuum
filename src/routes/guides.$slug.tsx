@@ -1,5 +1,5 @@
 import { ORIGIN } from "@/lib/origin";
-import { createFileRoute, notFound } from '@tanstack/react-router';
+import { createFileRoute, notFound, Link } from '@tanstack/react-router';
 import { SeoRenderer } from '@/components/seo/SeoPage';
 import { resolveRobots } from '@/data/seo/robots';
 import { guides } from '@/data/seo/guides';
@@ -32,5 +32,26 @@ export const Route = createFileRoute('/guides/$slug')({
 
 function GuidePage() {
   const { guide } = Route.useLoaderData();
-  return <SeoRenderer def={guide} />;
+  return (
+    <>
+      <SeoRenderer def={guide} />
+      <section className="max-w-5xl mx-auto px-4 pb-16">
+        <div className="rounded-2xl border border-border bg-muted/30 p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="flex flex-col">
+            <h2 className="text-xl md:text-2xl font-bold mb-2">Статьи и промпты сообщества</h2>
+            <p className="text-[15px] text-muted-foreground leading-relaxed max-w-xl">
+              Пользователи ЭРА2 разбирают модели, делятся находками и выкладывают готовые промпты с результатами.
+            </p>
+          </div>
+          <Link 
+            to="/community" 
+            search={{ type: 'article', provider: 'all', sort: 'new', page: 0, topic: 'all' }}
+            className="inline-flex items-center justify-center h-11 px-6 rounded-full bg-primary text-white font-semibold hover:bg-primary/90 transition-colors shrink-0"
+          >
+            Читать сообщество
+          </Link>
+        </div>
+      </section>
+    </>
+  );
 }
