@@ -453,7 +453,7 @@ export default function AccountPage() {
               <h2 className="text-lg font-semibold">Ваши промпты</h2>
               <Link
                 to="/community/new"
-                search={{ type: "image" }}
+                search={{ type: "image", edit: undefined }}
                 className="inline-flex items-center gap-1.5 h-9 px-4 rounded-lg text-[13px] font-semibold text-white bg-primary hover:bg-primary/90 transition-colors"
               >
                 <Plus className="h-4 w-4" />
@@ -471,7 +471,7 @@ export default function AccountPage() {
               <h2 className="text-lg font-semibold">Ваши статьи</h2>
               <Link
                 to="/community/new"
-                search={{ type: "article" }}
+                search={{ type: "article", edit: undefined }}
                 className="inline-flex items-center gap-1.5 h-9 px-4 rounded-lg text-[13px] font-semibold text-white bg-primary hover:bg-primary/90 transition-colors"
               >
                 <Plus className="h-4 w-4" />

@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { RequireAuth } from "@/components/auth/RequireAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,8 +27,8 @@ const articleCategories = [
 
 export const Route = createFileRoute("/community_/new")({
   validateSearch: (search: Record<string, unknown>) => ({
-    type: typeof search.type === 'string' ? search.type : undefined,
-    edit: typeof search.edit === 'string' ? search.edit : undefined,
+    type: typeof search.type === 'string' ? search.type : undefined as string | undefined,
+    edit: typeof search.edit === 'string' ? search.edit : undefined as string | undefined,
   }),
   component: () => (
     <RequireAuth>
