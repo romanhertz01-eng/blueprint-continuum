@@ -254,7 +254,11 @@ function Sidebar({
   categories, 
   topAuthors, 
   activeType, 
-  onTypeChange 
+  onTypeChange,
+  activeTopic,
+  onTopicChange,
+  topicCounts,
+  articleTopics
 }: { 
   categories: { label: string, value: string, count: number }[],
   topAuthors: any[],
@@ -625,13 +629,13 @@ function CommunityContent() {
   }, [allPublishedPosts]);
 
   const categories = [
-    { label: "Все", value: "all", count: categoryCounts.all },
-    { label: "Текст", value: "text", count: categoryCounts.text },
-    { label: "Изображения", value: "image", count: categoryCounts.image },
-    { label: "Видео", value: "video", count: categoryCounts.video },
-    { label: "Аудио", value: "audio", count: categoryCounts.audio },
-    { label: "Агенты", value: "agent", count: categoryCounts.agent },
-    { label: "Статьи", value: "article", count: categoryCounts.article },
+    { label: "Все", value: "all", count: (categoryCounts as any).all },
+    { label: "Текст", value: "text", count: (categoryCounts as any).text },
+    { label: "Изображения", value: "image", count: (categoryCounts as any).image },
+    { label: "Видео", value: "video", count: (categoryCounts as any).video },
+    { label: "Аудио", value: "audio", count: (categoryCounts as any).audio },
+    { label: "Агенты", value: "agent", count: (categoryCounts as any).agent },
+    { label: "Статьи", value: "article", count: (categoryCounts as any).article },
   ];
 
   const handleTypeChange = (newType: string) => {
