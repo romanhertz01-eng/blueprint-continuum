@@ -43,7 +43,7 @@ function NewPostPage() {
 
 function NewPostContent() {
   const navigate = useNavigate();
-  const { user, profile } = useAuth();
+  const { user, profile, isLoading: isAuthLoading } = useAuth();
   const { type: typeParam, edit: editParam } = Route.useSearch();
   const isEditMode = Boolean(editParam);
   const isAdmin = profile?.is_admin || false;
@@ -76,6 +76,7 @@ function NewPostContent() {
   
   const fileInputRef = useRef<HTMLInputElement>(null);
   const coverInputRef = useRef<HTMLInputElement>(null);
+  const prefilledRef = useRef(false);
 
   // Load post for editing
   const { data: editingPost, isLoading: isPostLoading } = useQuery({
@@ -94,33 +95,37 @@ function NewPostContent() {
   });
 
   useEffect(() => {
-    if (isEditMode && editingPost) {
-      if (editingPost.type !== 'article') {
-        toast.error('Пока можно редактировать только статьи');
-        navigate({ to: '/account' });
-        return;
-      }
-      if (editingPost.author_id !== user?.id && !isAdmin) {
-        toast.error('Нет доступа к этой публикации');
-        navigate({ to: '/account' });
-        return;
-      }
+    if (!isEditMode || !editingPost || isAuthLoading) return;
 
-      setKind('article');
-      setTitle(editingPost.title);
-      setCategory(editingPost.category_slug || '');
-      setExcerpt(editingPost.excerpt || '');
-      setBodyText(editingPost.body_html || '');
-      setExistingCoverUrl(editingPost.cover_url);
+    if (editingPost.type !== 'article') {
+      toast.error('Пока можно редактировать только статьи');
+      navigate({ to: '/account' });
+      return;
     }
-  }, [editingPost, isEditMode, user?.id, isAdmin, navigate]);
+    
+    if (editingPost.author_id !== user?.id && !isAdmin) {
+      toast.error('Нет доступа к этой публикации');
+      navigate({ to: '/account' });
+      return;
+    }
+
+    if (prefilledRef.current) return;
+    prefilledRef.current = true;
+
+    setKind('article');
+    setTitle(editingPost.title);
+    setCategory(editingPost.category_slug || '');
+    setExcerpt(editingPost.excerpt || '');
+    setBodyText(editingPost.body_html || '');
+    setExistingCoverUrl(editingPost.cover_url);
+  }, [editingPost, isEditMode, user?.id, isAdmin, navigate, isAuthLoading]);
 
   useEffect(() => {
-    if (isEditMode && !isPostLoading && !editingPost) {
+    if (isEditMode && !isPostLoading && !isAuthLoading && !editingPost) {
       toast.error('Публикация не найдена');
       navigate({ to: '/account' });
     }
-  }, [editingPost, isPostLoading, isEditMode, navigate]);
+  }, [editingPost, isPostLoading, isEditMode, navigate, isAuthLoading]);
 
   const isArticle = kind === 'article';
 
@@ -361,7 +366,7 @@ function NewPostContent() {
     return 'Добавить промпт';
   };
 
-  if (isEditMode && isPostLoading) {
+  if (isEditMode && (isPostLoading || isAuthLoading)) {
     return (
       <div className="container max-w-[720px] mx-auto py-12 px-6">
         <div className="h-[600px] rounded-3xl bg-muted animate-pulse" />
