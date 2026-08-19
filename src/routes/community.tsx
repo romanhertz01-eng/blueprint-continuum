@@ -294,11 +294,40 @@ function Sidebar({
           {categories.map((cat) => {
             const hasChildren = !!cat.children;
             const isOpen = cat.value === 'prompts' ? isPromptsOpen : (cat.value === 'article' ? isArticlesOpen : false);
+            
+            const isChildOfPromptsActive = ['text', 'image', 'video', 'audio', 'agent'].includes(activeType);
+            const isChildOfArticlesActive = activeType === 'article' && activeTopic !== 'all';
+
             const isActive = cat.value === 'all' 
               ? activeType === 'all' 
               : (cat.value === 'prompts' 
-                  ? activeType === 'prompts' 
-                  : (cat.value === 'article' ? (activeType === 'article' && activeTopic === 'all') : false));
+                  ? (activeType === 'prompts' || (!isPromptsOpen && isChildOfPromptsActive))
+                  : (cat.value === 'article' 
+                      ? ((activeType === 'article' && activeTopic === 'all') || (!isArticlesOpen && isChildOfArticlesActive))
+                      : false));
+
+            const handleToggle = () => {
+              if (cat.value === 'all') {
+                onTypeChange('all');
+                return;
+              }
+
+              if (cat.value === 'prompts') {
+                if (isPromptsOpen) {
+                  setIsPromptsOpen(false);
+                } else {
+                  setIsPromptsOpen(true);
+                  onTypeChange('prompts');
+                }
+              } else if (cat.value === 'article') {
+                if (isArticlesOpen) {
+                  setIsArticlesOpen(false);
+                } else {
+                  setIsArticlesOpen(true);
+                  onTypeChange('article');
+                }
+              }
+            };
 
             return (
               <div key={cat.value} className="flex flex-col">
