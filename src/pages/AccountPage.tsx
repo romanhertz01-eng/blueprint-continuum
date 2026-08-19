@@ -670,7 +670,8 @@ function MyPostsList({ kind }: { kind: 'prompts' | 'articles' }) {
       case "pending": return <span className="text-amber-500">На проверке</span>;
       case "published": return <span className="text-emerald-500">Опубликован</span>;
       case "rejected": return <span className="text-destructive">Отклонён</span>;
-      default: return <span>Черновик</span>;
+      case "draft": return <span className="text-muted-foreground">Черновик</span>;
+      default: return <span>{status}</span>;
     }
   };
 
@@ -709,12 +710,14 @@ function MyPostsList({ kind }: { kind: 'prompts' | 'articles' }) {
                   <Pencil size={16} />
                 </Link>
               )}
-              <a 
-                href={`/community/${post.id}`}
-                className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
-              >
-                <ChevronRight size={18} />
-              </a>
+              {post.status !== 'draft' && (
+                <a 
+                  href={`/community/${post.id}`}
+                  className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
+                >
+                  <ChevronRight size={18} />
+                </a>
+              )}
             </div>
         </div>
       ))}
