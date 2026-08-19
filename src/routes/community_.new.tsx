@@ -206,6 +206,91 @@ function NewPostContent() {
     }
   };
 
+  const handleSaveDraft = async () => {
+    if (!user) return;
+    if (!title.trim()) {
+      toast.error('Введите заголовок, чтобы сохранить черновик');
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      let finalCoverUrl = isEditMode ? existingCoverUrl : null;
+      
+      // Upload cover if new file is selected
+      if (cover) {
+        const fileExt = cover.file.name.split('.').pop();
+        const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
+        const filePath = `${user.id}/${fileName}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from('posts')
+          .upload(filePath, cover.file);
+
+        if (uploadError) throw uploadError;
+
+        const { data: { publicUrl } } = supabase.storage
+          .from('posts')
+          .getPublicUrl(filePath);
+        
+        finalCoverUrl = publicUrl;
+      }
+
+      if (isEditMode) {
+        const { error: updateError } = await supabase
+          .from('posts')
+          .update({
+            title,
+            category_slug: category,
+            excerpt,
+            cover_url: finalCoverUrl,
+            body_html: bodyText,
+            status: 'draft'
+          })
+          .eq('id', editParam as string);
+
+        if (updateError) throw updateError;
+      } else {
+        const { data: newPost, error: insertError } = await supabase
+          .from('posts')
+          .insert({
+            author_id: user.id,
+            type: 'article',
+            title,
+            prompt_ru: null,
+            provider_id: null,
+            category_slug: category,
+            media: [],
+            excerpt,
+            cover_url: finalCoverUrl,
+            body_html: bodyText,
+            status: 'draft',
+            params: {}
+          })
+          .select()
+          .single();
+
+        if (insertError) throw insertError;
+        
+        // Switch to edit mode for the newly created draft
+        if (newPost) {
+          navigate({ 
+            to: '/community/new', 
+            search: { type: 'article', edit: newPost.id },
+            replace: true 
+          });
+        }
+      }
+
+      toast.success('Черновик сохранён');
+    } catch (err: any) {
+      console.error("Error saving draft:", err);
+      toast.error(`Ошибка при сохранении черновика: ${err.message || 'попробуйте позже'}`);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
@@ -757,11 +842,11 @@ function NewPostContent() {
               )}
 
               {/* Submit Button */}
-              <div className="pt-4">
+              <div className="pt-4 flex flex-col sm:flex-row gap-3">
                 <Button 
                   type="submit" 
                   disabled={isSubmitting} 
-                  className="w-full h-12 rounded-xl text-base font-semibold"
+                  className="flex-1 h-12 rounded-xl text-base font-semibold"
                 >
                   {isSubmitting ? (
                     <>
@@ -772,10 +857,21 @@ function NewPostContent() {
                     isEditMode ? 'Сохранить изменения' : 'Опубликовать'
                   )}
                 </Button>
-                <p className="text-center text-xs text-muted-foreground mt-4">
-                  Публикация появится в ленте после прохождения модерации
-                </p>
+
+                {isArticle && (!isEditMode || editingPost?.status === 'draft') && (
+                  <button
+                    type="button"
+                    onClick={handleSaveDraft}
+                    disabled={isSubmitting}
+                    className="h-12 px-6 rounded-full border border-border bg-card text-foreground font-semibold hover:bg-secondary transition-colors shrink-0 disabled:opacity-50"
+                  >
+                    Сохранить черновик
+                  </button>
+                )}
               </div>
+              <p className="text-center text-xs text-muted-foreground mt-4">
+                Публикация появится в ленте после прохождения модерации
+              </p>
             </>
           )}
         </form>
