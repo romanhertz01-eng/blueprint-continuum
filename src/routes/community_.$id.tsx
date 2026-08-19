@@ -20,7 +20,8 @@ import {
   Music,
   Eye,
   MessageSquare,
-  UserPlus
+  UserPlus,
+  Pencil
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { buildAuthHref } from "@/lib/authRedirect";
@@ -843,6 +844,16 @@ function PromptDetailContent() {
           <Bookmark size={18} fill={socialState?.isSaved ? "currentColor" : "none"} />
           <span>{socialState?.isSaved ? "Сохранено" : "Сохранить"}</span>
         </button>
+        {(isOwner || isAdmin) && isArticle && (
+          <Link
+            to="/community/new"
+            search={{ type: 'article', edit: post.id }}
+            className="h-11 px-6 rounded-full border border-border bg-card hover:bg-secondary flex items-center gap-2 font-medium transition-all active:scale-95"
+          >
+            <Pencil size={18} />
+            <span className="hidden md:inline">Редактировать</span>
+          </Link>
+        )}
         <button
           onClick={handleShare}
           className="h-11 px-6 rounded-full border border-border bg-card hover:bg-secondary flex items-center gap-2 font-medium transition-all active:scale-95 ml-auto"

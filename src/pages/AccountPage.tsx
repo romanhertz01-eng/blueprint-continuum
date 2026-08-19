@@ -22,6 +22,7 @@ import {
   Clock,
   ChevronRight,
   Newspaper,
+  Pencil,
 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { toast } from "sonner";
@@ -697,12 +698,24 @@ function MyPostsList({ kind }: { kind: 'prompts' | 'articles' }) {
               </div>
             </div>
           </div>
-          <a 
-            href={`/community/${post.id}`}
-            className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
-          >
-            <ChevronRight size={18} />
-          </a>
+            <div className="flex items-center gap-1">
+              {post.type === 'article' && (
+                <Link
+                  to="/community/new"
+                  search={{ type: 'article', edit: post.id }}
+                  className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
+                  title="Редактировать"
+                >
+                  <Pencil size={16} />
+                </Link>
+              )}
+              <a 
+                href={`/community/${post.id}`}
+                className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
+              >
+                <ChevronRight size={18} />
+              </a>
+            </div>
         </div>
       ))}
     </div>
