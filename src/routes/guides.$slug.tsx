@@ -1,5 +1,5 @@
 import { ORIGIN } from "@/lib/origin";
-import { createFileRoute, notFound } from '@tanstack/react-router';
+import { createFileRoute, notFound, Link } from '@tanstack/react-router';
 import { SeoRenderer } from '@/components/seo/SeoPage';
 import { resolveRobots } from '@/data/seo/robots';
 import { guides } from '@/data/seo/guides';

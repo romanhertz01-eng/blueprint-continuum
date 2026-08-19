@@ -34,6 +34,7 @@ import { ru } from "date-fns/locale";
 import { toast } from "sonner";
 import { PromptCategory } from "@/data/prompts/types";
 import { sanitizeArticleHtml } from "@/lib/sanitizeArticleHtml";
+import { guides } from '@/data/seo/guides';
 
 export const Route = createFileRoute("/community_/$id")({
   loader: async ({ params }) => {
@@ -496,6 +497,17 @@ function PromptDetailContent() {
     
     return counts;
   }, [allPublishedPosts]);
+
+  const communityGuides = useMemo(() => {
+    return Object.entries(guides)
+      .filter(([_, g]) => g.status === 'published')
+      .slice(0, 3)
+      .map(([slug, g]) => ({
+        slug,
+        title: g.cardTitle || g.seo.title,
+        readingTime: g.readingTime
+      }));
+  }, []);
 
   const categories = [
     { label: "Все", value: "all", count: categoryCounts.all },
