@@ -549,7 +549,7 @@ function PromptDetailContent() {
   }, [topAuthorsProfiles, allFollowsData, topAuthorIds]);
 
   const handleTypeChange = (type: string) => {
-    navigate({ to: "/community", search: { type: type as any, provider: 'all', sort: 'new', page: 0 } });
+    navigate({ to: "/community", search: { type: type as any, provider: 'all', sort: 'new', page: 0, topic: 'all' } });
   };
 
   // Mutations
@@ -644,7 +644,7 @@ function PromptDetailContent() {
         <p className="text-muted-foreground mb-8">Возможно, он был удален или еще находится на модерации.</p>
         <Link 
           to="/community" 
-          search={{ type: 'all', provider: 'all', sort: 'new', page: 0 }}
+          search={{ type: 'all', provider: 'all', sort: 'new', page: 0, topic: 'all' }}
           className="text-primary font-medium hover:underline"
         >
           Вернуться в сообщество
@@ -666,7 +666,7 @@ function PromptDetailContent() {
         <ChevronRight size={14} />
         <Link 
           to="/community" 
-          search={{ type: 'all', provider: 'all', sort: 'new', page: 0 }}
+          search={{ type: 'all', provider: 'all', sort: 'new', page: 0, topic: 'all' }}
           className="hover:text-foreground transition-colors"
         >
           Сообщество
@@ -934,7 +934,7 @@ function PromptDetailContent() {
           </div>
           <Link 
             to="/community" 
-            search={{ type: 'all', provider: 'all', sort: 'new', page: 0 }}
+          search={{ type: 'all', provider: 'all', sort: 'new', page: 0, topic: 'all' }}
             className="mt-8 inline-flex items-center text-primary font-bold hover:underline"
           >
             Вся лента
@@ -1032,7 +1032,7 @@ function PromptDetailContent() {
               </div>
               <Link 
                 to="/community" 
-                search={{ type: 'all', provider: 'all', sort: 'new', page: 0 }}
+                search={{ type: 'all', provider: 'all', sort: 'new', page: 0, topic: 'all' }}
                 className="block text-center text-primary text-[13px] font-medium mt-6 hover:underline"
               >
                 Все авторы
