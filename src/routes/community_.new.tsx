@@ -274,7 +274,9 @@ function NewPostContent() {
         
         // Switch to edit mode for the newly created draft
         if (newPost) {
+          prefilledRef.current = true;
           navigate({ 
+
             to: '/community/new', 
             search: { type: 'article', edit: newPost.id },
             replace: true 
