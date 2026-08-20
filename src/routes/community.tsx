@@ -648,7 +648,7 @@ function CommunityContent() {
 
   const articleTopics = [
     { id: 'ai-news', label: 'Новости ИИ' },
-    { id: 'guides', label: 'Гайды и инструкции' },
+    { id: 'how-to', label: 'Как сделать' },
     { id: 'model-reviews', label: 'Обзоры моделей' },
     { id: 'cases', label: 'Кейсы и опыт' },
   ];
@@ -668,7 +668,7 @@ function CommunityContent() {
     const topicCounts: Record<string, number> = {
       all: 0,
       'ai-news': 0,
-      'guides': 0,
+      'how-to': 0,
       'model-reviews': 0,
       'cases': 0
     };
