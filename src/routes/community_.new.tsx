@@ -21,7 +21,7 @@ type PostKind = 'prompt' | 'article';
 
 const articleCategories = [
   { slug: 'ai-news', cardTitle: 'Новости ИИ' },
-  { slug: 'guides', cardTitle: 'Гайды и инструкции' },
+  { slug: 'how-to', cardTitle: 'Как сделать' },
   { slug: 'model-reviews', cardTitle: 'Обзоры моделей' },
   { slug: 'cases', cardTitle: 'Кейсы и опыт' },
 ];
