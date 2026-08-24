@@ -1,5 +1,6 @@
 import { PromptItem } from '@/data/prompts/types';
 import { LightPromptCard, ImagePromptCard, SoftPromptCard } from './BasePromptCards';
+import { TextPromptCard } from './TextPromptCard';
 
 interface CatalogCardProps {
   item: PromptItem;
