@@ -1,6 +1,5 @@
 import { PromptItem } from '@/data/prompts/types';
 import { LightPromptCard, ImagePromptCard, SoftPromptCard } from './BasePromptCards';
-import { TextPromptCard } from './TextPromptCard';
 
 interface CatalogCardProps {
   item: PromptItem;
@@ -18,11 +17,7 @@ export function CatalogCard({ item, index }: CatalogCardProps) {
   }
   
   // Non-media items (text, agents, audio)
-  if (item.category === 'text') {
-    return <TextPromptCard item={item} />;
-  }
-  
-  if (item.category === 'agents') {
+  if (item.category === 'text' || item.category === 'agents') {
     if (index % 3 === 0) return <SoftPromptCard item={item} />;
     return <LightPromptCard item={item} />;
   }

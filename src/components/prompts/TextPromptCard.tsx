@@ -1,11 +1,10 @@
 import { useNavigate } from '@tanstack/react-router';
-import { Heart, FileText } from 'lucide-react';
+import { Heart, Zap, Sparkles } from 'lucide-react';
 import { PromptItem } from '@/data/prompts/types';
 import { writePromptHandoff } from '@/lib/promptHandoff';
 import { useAuth } from '@/contexts/AuthContext';
 import { buildAuthHref } from '@/lib/authRedirect';
 import { cn } from '@/lib/utils';
-import { useMemo } from 'react';
 
 interface TextPromptCardProps {
   item: PromptItem;
@@ -14,6 +13,24 @@ interface TextPromptCardProps {
 export function TextPromptCard({ item }: TextPromptCardProps) {
   const navigate = useNavigate();
   const { isAuthed } = useAuth();
+
+  // Детерминированное определение стиля (темный/насыщенный или светлый)
+  const charSum = item.slug.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  const isLight = charSum % 4 === 0; // Каждая 4-я карточка светлая для ритма
+  
+  // Насыщенные градиенты из палитры (только токены или чистые цвета)
+  const getGradient = (slug: string) => {
+    const saturatedGradients = [
+      'from-[#4F46E5] to-[#3730A3]', // Indigo
+      'from-[#7C3AED] to-[#5B21B6]', // Violet
+      'from-[#EC4899] to-[#BE185D]', // Pink
+      'from-[#059669] to-[#047857]', // Emerald
+      'from-[#EA580C] to-[#C2410C]', // Orange
+      'from-[#2563EB] to-[#1E40AF]', // Blue
+    ];
+    const index = charSum % saturatedGradients.length;
+    return saturatedGradients[index];
+  };
 
   const handleAction = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -35,63 +52,73 @@ export function TextPromptCard({ item }: TextPromptCardProps) {
     }
   };
 
-  const gradientClass = useMemo(() => {
-    const gradients = [
-      'from-[#FF7E5F] to-[#FEB47B]', // закатное оранжево-розовое
-      'from-[#6A11CB] to-[#2575FC]', // сине-фиолетовое
-      'from-[#00B09B] to-[#96C93D]', // изумрудно-бирюзовое
-      'from-[#D4145A] to-[#FBB03B]', // малиново-пурпурное
-      'from-[#F2994A] to-[#F2C94C]', // охристо-золотое
-      'from-[#2F80ED] to-[#56CCF2]', // ультрамарин с розовым (blue-cyan variant)
-      'from-[#11998E] to-[#38EF7D]', // лаймово-зелёное
-      'from-[#232526] to-[#414345]', // графитово-синее
-    ];
-    
-    // Deterministic selection based on slug
-    const charSum = item.slug.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-    return gradients[charSum % gradients.length];
-  }, [item.slug]);
-
   return (
     <div 
       onClick={handleAction}
-      className="group relative w-full h-[300px] rounded-2xl bg-card border border-border p-5 flex flex-col items-center justify-between overflow-hidden cursor-pointer transition-all duration-300 ease-out hover:border-primary/40"
+      className={cn(
+        "group relative w-full h-[380px] rounded-2xl overflow-hidden cursor-pointer transition-all hover:shadow-2xl hover:-translate-y-1 flex flex-col",
+        isLight ? "bg-card border border-border" : "border-none"
+      )}
     >
-      {/* Верхняя строка */}
-      <div className="w-full flex justify-between items-center z-10">
-        <div className="w-[26px] h-[26px] rounded-full bg-muted flex items-center justify-center">
-          <FileText className="w-[14px] h-[14px] text-muted-foreground" />
-        </div>
-        <div className="flex items-center gap-1 text-muted-foreground">
-          <Heart className="w-[13px] h-[13px]" />
-          <span className="text-[12px] font-medium">{item.likes || 0}</span>
-        </div>
-      </div>
+      {/* Фон на всю карточку */}
+      {!isLight && (
+        <div className={cn(
+          "absolute inset-0 bg-gradient-to-br transition-transform duration-500 group-hover:scale-110",
+          getGradient(item.slug)
+        )} />
+      )}
+      
+      {/* Затемнение/оверлей для глубины на темных карточках */}
+      {!isLight && (
+        <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors" />
+      )}
 
-      {/* Круглая обложка */}
-      <div className={cn(
-        "relative mt-4 w-[108px] h-[108px] rounded-full bg-gradient-to-br transition-all duration-300 ease-out group-hover:opacity-0 group-hover:scale-90",
-        gradientClass
-      )} />
+      {/* Контент */}
+      <div className="relative z-10 p-6 flex flex-col h-full">
+        {/* ВЕРХ: Глиф и Лайк */}
+        <div className="flex justify-between items-center mb-4">
+          <div className={cn(
+            "w-8 h-8 rounded-lg flex items-center justify-center backdrop-blur-md",
+            isLight ? "bg-muted/50 text-foreground" : "bg-white/10 text-white"
+          )}>
+            <Sparkles className="w-4 h-4 fill-current" />
+          </div>
+          
+          <div className={cn(
+            "flex items-center gap-1.5 px-2.5 py-1 rounded-full backdrop-blur-md text-[13px] font-bold",
+            isLight ? "bg-muted/50 text-foreground" : "bg-white/10 text-white"
+          )}>
+            <Heart className={cn("w-3.5 h-3.5", !isLight && "fill-white")} />
+            <span>{item.likes}</span>
+          </div>
+        </div>
 
-      {/* Описание и кнопка */}
-      <div className="flex flex-col items-center w-full transition-all duration-300 ease-out group-hover:-translate-y-[124px]">
-        <h3 className="text-[15px] font-medium text-foreground text-center leading-snug line-clamp-3 group-hover:line-clamp-5 mt-4 transition-all duration-300">
-          {item.title}
-        </h3>
-        
-        <div className="mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        {/* НИЖНЯЯ ТРЕТЬ: Название и Кнопка */}
+        <div className="mt-auto">
+          <h3 className={cn(
+            "text-[16px] font-medium leading-snug line-clamp-3 mb-4 transition-colors",
+            isLight ? "text-foreground" : "text-white group-hover:text-white/90"
+          )}>
+            {item.title}
+          </h3>
+
           <button 
-            className="bg-primary text-white h-10 px-6 rounded-full text-[14px] font-semibold whitespace-nowrap"
             onClick={handleAction}
+            className={cn(
+              "h-10 px-6 rounded-full text-[13px] font-bold flex items-center gap-2 shadow-lg transition-all active:scale-95 relative z-20",
+              isLight 
+                ? "bg-primary text-white hover:brightness-110" 
+                : "bg-white text-primary hover:bg-white/90"
+            )}
           >
             Попробовать
+            <Zap className="w-3.5 h-3.5 fill-current" />
           </button>
         </div>
       </div>
-      
-      {/* Статическая кнопка для "дна" контейнера в обычном состоянии - скрыта */}
-      <div className="h-10 invisible" aria-hidden="true" />
     </div>
   );
 }
+
+
+
